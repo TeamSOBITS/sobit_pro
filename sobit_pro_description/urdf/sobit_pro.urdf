@@ -1,0 +1,392 @@
+<?xml version="1.0"?>
+<robot name="sobit_pro">
+
+  <!-- base -->
+  <link name="base_footprint" />
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint" />
+    <child link="base_link" />
+    <origin xyz="0 0 0.143" rpy="0 0 0" />
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 -0.143" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_base_body.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!--steering-->
+  <joint name="steer_b_l_joint" type="revolute">
+    <parent link="base_link" />
+    <child link="steer_b_l_link" />
+    <origin xyz="0.15841 0.15841 0.07" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="steer_b_l_link">
+    <visual>
+      <origin xyz="-0.15841 -0.15841 -0.213" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_steer_B_L.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="steer_b_r_joint" type="revolute">
+    <parent link="base_link" />
+    <child link="steer_b_r_link" />
+    <origin xyz="-0.15841 0.15841 0.07" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="steer_b_r_link">
+    <visual>
+      <origin xyz="0.15841 -0.15841 -0.213" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_steer_B_R.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="steer_f_l_joint" type="revolute">
+    <parent link="base_link" />
+    <child link="steer_f_l_link" />
+    <origin xyz="0.15841 -0.15841 0.07" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="steer_f_l_link">
+    <visual>
+      <origin xyz="-0.15841 0.15841 -0.213" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_steer_F_L.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="steer_f_r_joint" type="revolute">
+    <parent link="base_link" />
+    <child link="steer_f_r_link" />
+    <origin xyz="-0.15841 -0.15841 0.07" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="steer_f_r_link">
+    <visual>
+      <origin xyz="0.15841 0.15841 -0.213" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_steer_F_R.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!--wheel-->
+  <joint name="wheel_b_l_joint" type="continuous">
+    <parent link="steer_b_l_link" />
+    <child link="wheel_b_l_link" />
+    <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+    <axis xyz="1 1 0" />
+  </joint>
+
+  <link name="wheel_b_l_link">
+    <visual>
+      <origin xyz="-0.15841 -0.15841 -0.072" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_wheel_B_L.dae"/>
+      </geometry>
+    </visual>
+  </link>
+ 
+  <joint name="wheel_b_r_joint" type="continuous">
+    <parent link="steer_b_r_link" />
+    <child link="wheel_b_r_link" />
+    <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+    <axis xyz="-1 1 0" />
+  </joint>
+
+  <link name="wheel_b_r_link">
+    <visual>
+      <origin xyz="0.15841 -0.15841 -0.072" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_wheel_B_R.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="wheel_f_l_joint" type="continuous">
+    <parent link="steer_f_l_link" />
+    <child link="wheel_f_l_link" />
+    <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+    <axis xyz="-1 1 0" />
+  </joint>
+
+  <link name="wheel_f_l_link">
+    <visual>
+      <origin xyz="-0.15841 0.15841 -0.072" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_wheel_F_L.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="wheel_f_r_joint" type="continuous">
+    <parent link="steer_f_r_link" />
+    <child link="wheel_f_r_link" />
+    <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+    <axis xyz="1 1 0" />
+  </joint>
+
+  <link name="wheel_f_r_link">
+    <visual>
+      <origin xyz="0.15841 0.15841 -0.072" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_wheel_F_R.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!-- arm -->
+  <joint name="arm_base_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="arm_base_link" />
+    <origin xyz="0 -0.221 0.5995" rpy="0 0 0" />
+  </joint>
+   
+  <link name="arm_base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_arm_base.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="arm1_joint" type="revolute">
+    <parent link="arm_base_link" />
+    <child link="arm1_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit lower="0" upper="3.14" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="arm1_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_arm1.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="arm2_joint" type="revolute">
+    <parent link="arm1_link" />
+    <child link="arm2_link" />
+    <origin xyz="0 0 0.15" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit lower="-2.2" upper="0.42" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="arm2_link">
+    <visual>
+      <origin xyz="0 0 -0.15" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_arm2.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="arm3_joint" type="revolute">
+    <parent link="arm2_link" />
+    <child link="arm3_link" />
+    <origin xyz="0 -0.13594617 0.06339274" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit lower="-2.5" upper="0.36" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="arm3_link">
+    <visual>
+      <origin xyz="0 0.13594617 -0.21339274" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_arm3.dae"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="arm_wrist_joint" type="revolute">
+    <parent link="arm3_link" />
+    <child link="arm_wrist_link" />
+    <origin xyz="0 -0.09641814 -0.11490667" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit lower="-0.62" upper="2.44" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+
+  <link name="arm_wrist_link">
+    <visual>
+      <origin xyz="0 0.23236431 -0.09848607" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_arm_wrist.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="hand_main_r_joint" type="revolute">
+    <parent link="arm_wrist_link" />
+    <child link="hand_main_r_link" />
+    <origin xyz="-0.015 -0.07811569 0.02333593" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796327" upper="0" effort="1" velocity="1"/>
+  </joint>
+
+  <link name="hand_main_r_link">
+    <visual>
+      <origin xyz="0.015 0.31048 -0.121822" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_hand_main_r.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="hand_main_l_joint" type="revolute">
+    <parent link="arm_wrist_link" />
+    <child link="hand_main_l_link" />
+    <origin xyz="0.015 -0.07811569 0.02333593" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796327" upper="0" effort="1" velocity="1"/>
+    <mimic joint="hand_main_r_joint" multiplier="-1.0" offset="0"/>
+  </joint>
+
+  <link name="hand_main_l_link">
+    <visual>
+      <origin xyz="-0.015 0.31048 -0.121822" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_hand_main_l.dae"/>
+      </geometry>
+    </visual>
+  </link>
+  
+  <joint name="hand_sub_r_joint" type="revolute">
+    <parent link="arm_wrist_link" />
+    <child link="hand_sub_r_link" />
+    <origin xyz="-0.04 -0.0580698 0.02333593" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796327" upper="0" effort="1" velocity="1"/>
+    <mimic joint="hand_main_r_joint" multiplier="1.12" offset="0"/>
+  </joint>
+
+  <link name="hand_sub_r_link">
+    <visual>
+      <origin xyz="0.04 0.29043411 -0.121822" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_hand_sub_r.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="hand_sub_l_joint" type="revolute">
+    <parent link="arm_wrist_link" />
+    <child link="hand_sub_l_link" />
+    <origin xyz="0.04 -0.0580698 0.02333593" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796327" upper="0" effort="1" velocity="1"/>
+    <mimic joint="hand_main_r_joint" multiplier="-1.12" offset="0"/>
+  </joint>
+
+  <link name="hand_sub_l_link">
+    <visual>
+      <origin xyz="-0.04 0.29043411 -0.121822" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_hand_sub_l.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="finger_r_joint" type="revolute">
+    <parent link="hand_main_r_link" />
+    <child link="finger_r_link" />
+    <origin xyz="0 -0.080001 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796327" upper="0" effort="1" velocity="1"/>
+    <mimic joint="hand_main_r_joint" multiplier="-0.84" offset="0"/>
+  </joint>
+
+  <link name="finger_r_link">
+    <visual>
+      <origin xyz="0.015 0.390481 -0.121822" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_finger_r.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="finger_l_joint" type="revolute">
+    <parent link="hand_main_l_link" />
+    <child link="finger_l_link" />
+    <origin xyz="0 -0.080001 0" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.570796327" upper="0" effort="1" velocity="1"/>
+    <mimic joint="hand_main_r_joint" multiplier="0.84" offset="0"/>
+  </joint>
+
+  <link name="finger_l_link">
+    <visual>
+      <origin xyz="-0.015 0.390481 -0.121822" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_finger_l.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <!--AzureKinect-->
+  <joint name="neck_joint" type="continuous">
+    <parent link="base_link" />
+    <child link="neck_link" />
+    <origin xyz="0 -0.12985 1.117" rpy="0 0 0" />
+    <axis xyz="0 0 1" />
+    <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+   
+  <link name="neck_link">
+    <visual>
+      <origin xyz="0 0 -0.019" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_neck.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="AzureKinect_joint" type="revolute">
+    <parent link="neck_link" />
+    <child link="AzureKinect_link" />
+    <origin xyz="0 0 0.041" rpy="0 0 0" />
+    <axis xyz="1 0 0" />
+    <limit lower="-0.65" upper="1.5" effort="10" velocity="10"/>
+    <dynamics damping="0.2" friction="0"/>
+  </joint>
+   
+  <link name="AzureKinect_link">
+    <visual>
+      <origin xyz="0 0 -0.06" rpy="1.570796327 0 0" />
+      <geometry>
+        <mesh filename="package://sobit_pro_description/meshes/sobit_pro_AzureKinect.dae"/>
+      </geometry>
+    </visual>
+  </link>
+
+</robot>
