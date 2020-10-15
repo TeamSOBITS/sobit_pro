@@ -4,8 +4,8 @@ The project is ROS package to control the sobit_pro
 
 ## Prerequisites
 
-- OS: Ubuntu 16.04 
-- ROS distribution: Kinetic Kame
+- OS: Ubuntu 18.04 
+- ROS distribution: melodic Kame
 
 ## How to Install
 

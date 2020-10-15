@@ -30,8 +30,12 @@ apt install ros-kinetic-ros-control*
 echo "Install ros-control"
 apt install ros-kinetic-joint-*
 
-echo "SETING DYNAMIXEL"
-echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6015\", SYMLINK+=\"dynamixel\", MODE=\"0666\"" > /etc/udev/rules.d/dynamixel.rules
+echo "Seting wheel"
+echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6014\", ATTRS{serial}==\"E148\", SYMLINK+=\"wheel\", MODE=\"0666\"" > /etc/udev/rules.d/wheel.rules
+sudo /etc/init.d/udev reload
+
+echo "Setting arm_pantilt"
+echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6015\", ATTRS{serial}==\"E143\", SYMLINK+=\"arm_pantilt\", MODE=\"0666\"" > /etc/udev/rules.d/arm_pantilt.rules
 sudo /etc/init.d/udev reload
 
 echo "Install sympy"
