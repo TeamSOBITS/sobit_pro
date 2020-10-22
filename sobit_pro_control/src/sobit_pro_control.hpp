@@ -9,10 +9,11 @@
 
 // Define motion key value
 #define TRANSLATIONAL_MOTION            1
-#define ROTAIONAL_MOTION                2 // Motion can be added
+#define ROTATIONAL_MOTION               2 // Motion can be added
 
 #define LIMIT_VEL_VALUE                 100.
-#define WHEEL_LENGTH                    0.439823 //Circumference
+#define WHEEL_LENGTH                    0.144 //0.439823 //Circumference
+#define SOBIT_CAR_DIAMETER              0.448051
 #define PAI                             acos(-1.0)
 
 class SobitProControl{
@@ -22,7 +23,7 @@ class SobitProControl{
 
     enum MODE{
       NONE = 0,
-      TRANSLATIONAL_MOTION_MODE, ROTAIONAL_MOTION_MODE // Motion can be added
+      TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE // Motion can be added
     } motion_mode;
 
   public:
@@ -38,7 +39,7 @@ class SobitProControl{
     MODE getMotion(int motion){
       switch (motion){
         case (TRANSLATIONAL_MOTION): motion_mode = TRANSLATIONAL_MOTION_MODE; break;
-        case (ROTAIONAL_MOTION): motion_mode = ROTAIONAL_MOTION_MODE; break; // Motion can be added
+        case (ROTATIONAL_MOTION): motion_mode = ROTATIONAL_MOTION_MODE; break; // Motion can be added
 
         default: motion_mode = NONE; break;
       }

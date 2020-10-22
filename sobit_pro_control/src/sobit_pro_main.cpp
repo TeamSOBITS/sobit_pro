@@ -20,7 +20,7 @@ void callback(const geometry_msgs::Twist vel_twist){
   // Rotational motion
   else if(vel_twist.linear.x == 0 && vel_twist.linear.y == 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z != 0){
     printf("Rotational motion\n");
-    motion = ROTAIONAL_MOTION;
+    motion = ROTATIONAL_MOTION;
   }
   // Swivel motion(This motion can not move)
   else if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.angular.z != 0){
@@ -40,6 +40,7 @@ void callback(const geometry_msgs::Twist vel_twist){
   }
 
   sobit_pro_control.getMotion(motion);
+  sobit_pro_odometry.getMotion(motion);
   sobit_pro_control.setParams(vel_twist);
 }
 
@@ -62,7 +63,7 @@ int main(int argc, char **argv){
     // Write goal position value
     sobit_pro_motor_driver.controlSteers(sobit_pro_control.setSteerAngle());
 
-    // Continue until the steering positionreaches the goal
+    // Continue until the steering position reaches the goal
     do{
       steer_fr_present_angle = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
     }while(abs(*sobit_pro_control.setSteerAngle() - steer_fr_present_angle) > DXL_MOVING_STATUS_THRESHOLD);
@@ -71,13 +72,16 @@ int main(int argc, char **argv){
     sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
 
     // Odometry calculation
-    result_odom = sobit_pro_odometry.odom(sobit_pro_motor_driver.feedbackSteer(STEER_F_R),
-                                          sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
-                                          sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R),
-                                          sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L));
+    sobit_pro_odometry.odom(sobit_pro_motor_driver.feedbackSteer(STEER_F_R),
+                            sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
+                            sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R),
+                            sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L),
+                            &result_odom);
 
-    printf("position.x : %f\n", result_odom.pose.pose.position.x);
-    printf("position.y : %f\n", result_odom.pose.pose.position.y);
+    // std::cout << "\n[ Odometry ]" << result_odom << std::endl;
+
+    // printf("position.x : %f\n", result_odom.pose.pose.position.x);
+    // printf("position.y : %f\n", result_odom.pose.pose.position.y);
 
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
     //pub_hz.publish(std_msgs::Empty());
