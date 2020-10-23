@@ -12,6 +12,9 @@ uint8_t sobit_pro_wheel[4] = {WHEEL_F_R, WHEEL_F_L, WHEEL_B_R, WHEEL_B_L};
 void callback(const geometry_msgs::Twist vel_twist){
   int motion;
 
+  // debug
+  std::cout << "\n[ motion : ]" << motion << std::endl;
+
   // Translational motion
   if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z == 0){
     printf("Translational motion\n");
@@ -25,7 +28,7 @@ void callback(const geometry_msgs::Twist vel_twist){
   // Swivel motion(This motion can not move)
   else if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.angular.z != 0){
     printf("Failed to change the motion!\n");
-    //Motion can be added
+    // Motion can be added
     return;
   }
   // ERROR
@@ -49,12 +52,17 @@ int main(int argc, char **argv){
   ros::NodeHandle nh;
   ros::Subscriber sub_velocity = nh.subscribe("/mobile_base/commands/velocity", 1, callback);
   ros::Publisher pub_odometry = nh.advertise<nav_msgs::Odometry>("/odom", 1);
-  //ros::Publisher pub_hz = nh.advertise<std_msgs::Empty>("/hz", 1);
-  int32_t steer_fr_present_angle;
+  // ros::Publisher pub_hz = nh.advertise<std_msgs::Empty>("/hz", 1);
+  int32_t wheel_fr_initial_position;
+  int32_t wheel_fl_initial_position;
+  int32_t steer_fr_present_position;
   nav_msgs::Odometry result_odom;
 
   sobit_pro_motor_driver.init();
   sobit_pro_motor_driver.addPresentParam();
+
+  wheel_fr_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
+  wheel_fl_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
 
   ros::Rate rate(50);
   ros::AsyncSpinner spinner(1);
@@ -65,8 +73,8 @@ int main(int argc, char **argv){
 
     // Continue until the steering position reaches the goal
     do{
-      steer_fr_present_angle = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-    }while(abs(*sobit_pro_control.setSteerAngle() - steer_fr_present_angle) > DXL_MOVING_STATUS_THRESHOLD);
+      steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
+    }while(abs(*sobit_pro_control.setSteerAngle() - steer_fr_present_position) > DXL_MOVING_STATUS_THRESHOLD);
 
     // Write goal velocity value
     sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
@@ -76,15 +84,17 @@ int main(int argc, char **argv){
                             sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
                             sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R),
                             sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L),
+                            wheel_fr_initial_position,
+                            wheel_fl_initial_position,
                             &result_odom);
 
     // std::cout << "\n[ Odometry ]" << result_odom << std::endl;
 
-    // printf("position.x : %f\n", result_odom.pose.pose.position.x);
-    // printf("position.y : %f\n", result_odom.pose.pose.position.y);
+    printf("position.x : %f\n", result_odom.pose.pose.position.x);
+    printf("position.y : %f\n", result_odom.pose.pose.position.y);
 
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
-    //pub_hz.publish(std_msgs::Empty());
+    // pub_hz.publish(std_msgs::Empty());
 
     rate.sleep();
   }

@@ -3,10 +3,12 @@
 void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
 
   switch (motion_mode){
+
+    // Translational motion
     case TRANSLATIONAL_MOTION_MODE:{
       // Goal velocity calculation
       float vel_ms = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // Euclidean distance
-      float vel_rpm = vel_ms / WHEEL_LENGTH * 60.; //60:minute
+      float vel_rpm = vel_ms / WHEEL_LENGTH * 60.; // 60:minute
       float vel_value = vel_rpm / 0.229;
 
       // Goal angle calculation
@@ -113,11 +115,12 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
       break;
     }
 
+    // Rotational motion
     case ROTATIONAL_MOTION_MODE:{
       // Goal velocity calculation
       float vel_deg = vel_twist.angular.z * 180.0 / PAI; // rad to deg
       float vel_ms = vel_deg / 360 * SOBIT_CAR_DIAMETER * PAI;
-      float vel_rpm = vel_ms / WHEEL_LENGTH * 60.; //60:minute
+      float vel_rpm = vel_ms / WHEEL_LENGTH * 60.; // 60:minute
       float vel_value = vel_rpm / 0.229;
 
       // Goal angle calculation
@@ -155,6 +158,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
       break;
     }
 
+    // Other motion
     default:
       wheel_fr_goal_vel = 0; wheel_fl_goal_vel = 0; wheel_br_goal_vel = 0; wheel_bl_goal_vel = 0;
       break;

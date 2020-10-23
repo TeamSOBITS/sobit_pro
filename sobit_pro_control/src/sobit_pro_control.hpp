@@ -12,7 +12,7 @@
 #define ROTATIONAL_MOTION               2 // Motion can be added
 
 #define LIMIT_VEL_VALUE                 100.
-#define WHEEL_LENGTH                    0.144 //0.439823 //Circumference
+#define WHEEL_LENGTH                    0.452389 // Circumference
 #define SOBIT_CAR_DIAMETER              0.448051
 #define PAI                             acos(-1.0)
 
