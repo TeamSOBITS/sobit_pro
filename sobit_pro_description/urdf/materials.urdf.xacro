@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+<robot>
+  <material name="wheel">
+    <color rgba="0.2 0.2 0.2 1.0" />
+  </material>
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 1.0" />
+  </material>
+  <material name="red">
+    <color rgba="1.0 0.0 0.0 1.0" />
+  </material>
+  <material name="green">
+    <color rgba="0.0 1.0 0.0 1.0" />
+  </material>
+  <material name="blue">
+    <color rgba="0.0 0.0 1.0 1.0" />
+  </material>
+</robot>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="arm"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.transmission.xacro" />
+  
+  <xacro:macro name="arm" params="prefix parent">
+    <joint name="${prefix}_base_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${prefix}_base_link" />
+      <origin xyz="0 -0.221 0.5995" rpy="0 0 0" />
+    </joint>
+
+    <link name="${prefix}_base_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm_base.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}1_joint" type="revolute">
+      <parent link="${prefix}_base_link" />
+      <child link="${prefix}1_link" />
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+      <limit lower="0" upper="3.14" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}1_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm1.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}2_joint" type="revolute">
+      <parent link="${prefix}1_link" />
+      <child link="${prefix}2_link" />
+      <origin xyz="0 0 0.15" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+      <limit lower="-2.2" upper="0.42" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}2_link">
+      <visual>
+        <origin xyz="0 0 -0.15" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm2.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}3_joint" type="revolute">
+      <parent link="${prefix}2_link" />
+      <child link="${prefix}3_link" />
+      <origin xyz="0 -0.13594617 0.06339274" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+      <limit lower="-2.5" upper="0.36" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}3_link">
+      <visual>
+        <origin xyz="0 0.13594617 -0.21339274" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm3.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}4_joint" type="revolute">
+      <parent link="${prefix}3_link" />
+      <child link="${prefix}4_link" />
+      <origin xyz="0 -0.09641814 -0.11490667" rpy="0 0 0" />
+      <axis xyz="1 0 0" />
+      <limit lower="-0.62" upper="2.44" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}4_link">
+      <visual>
+        <origin xyz="0 0.23236431 -0.09848607" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm4.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <xacro:arm_transmission prefix="${prefix}"/>
+
+  </xacro:macro>
+</robot>
