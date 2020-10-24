@@ -23,9 +23,9 @@
     <joint name="${prefix}1_joint" type="revolute">
       <parent link="${prefix}_base_link" />
       <child link="${prefix}1_link" />
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <axis xyz="1 0 0" />
-      <limit lower="0" upper="3.14" effort="10" velocity="10"/>
+      <origin xyz="0 0 0" rpy="${M_PI / 2} 0 0" />
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -41,9 +41,9 @@
     <joint name="${prefix}2_joint" type="revolute">
       <parent link="${prefix}1_link" />
       <child link="${prefix}2_link" />
-      <origin xyz="0 0 0.15" rpy="0 0 0" />
-      <axis xyz="1 0 0" />
-      <limit lower="-2.2" upper="0.42" effort="10" velocity="10"/>
+      <origin xyz="0 0 0.15" rpy="-1.137 0 0" />
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -59,9 +59,9 @@
     <joint name="${prefix}3_joint" type="revolute">
       <parent link="${prefix}2_link" />
       <child link="${prefix}3_link" />
-      <origin xyz="0 -0.13594617 0.06339274" rpy="0 0 0" />
-      <axis xyz="1 0 0" />
-      <limit lower="-2.5" upper="0.36" effort="10" velocity="10"/>
+      <origin xyz="0 -0.13594617 0.06339274" rpy="-1.30 0 0" />
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -77,9 +77,9 @@
     <joint name="${prefix}4_joint" type="revolute">
       <parent link="${prefix}3_link" />
       <child link="${prefix}4_link" />
-      <origin xyz="0 -0.09641814 -0.11490667" rpy="0 0 0" />
-      <axis xyz="1 0 0" />
-      <limit lower="-0.62" upper="2.44" effort="10" velocity="10"/>
+      <origin xyz="0 -0.09641814 -0.11490667" rpy="0.87 0 0" />
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 

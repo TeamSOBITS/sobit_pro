@@ -6,12 +6,12 @@
 
   <xacro:macro name="head" params="prefix parent">
 
-    <joint name="${prefix}_pan_joint" type="continuous">
+    <joint name="${prefix}_pan_joint" type="revolute">
       <parent link="${parent}" />
       <child link="${prefix}_pan_link" />
       <origin xyz="0 -0.12985 1.117" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -28,8 +28,8 @@
       <parent link="${prefix}_pan_link" />
       <child link="${prefix}_tilt_link" />
       <origin xyz="0 0 0.041" rpy="0 0 0" />
-      <axis xyz="1 0 0" />
-      <limit lower="-0.65" upper="1.5" effort="10" velocity="10"/>
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
