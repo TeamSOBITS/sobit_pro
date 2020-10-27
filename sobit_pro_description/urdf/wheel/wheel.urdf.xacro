@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="wheel"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="wheel"  params="parent">
+    <!--steering-->
+    <joint name="steer_b_l_joint" type="revolute">
+      <parent link="${parent}" />
+      <child link="steer_b_l_link" />
+      <origin xyz="0.15841 0.15841 0.07" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="steer_b_l_link">
+      <visual>
+        <origin xyz="-0.15841 -0.15841 -0.213" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_b_l.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="steer_b_r_joint" type="revolute">
+      <parent link="${parent}" />
+      <child link="steer_b_r_link" />
+      <origin xyz="-0.15841 0.15841 0.07" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="steer_b_r_link">
+      <visual>
+        <origin xyz="0.15841 -0.15841 -0.213" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_b_r.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="steer_f_l_joint" type="revolute">
+      <parent link="${parent}" />
+      <child link="steer_f_l_link" />
+      <origin xyz="0.15841 -0.15841 0.07" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="steer_f_l_link">
+      <visual>
+        <origin xyz="-0.15841 0.15841 -0.213" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_f_l.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="steer_f_r_joint" type="revolute">
+      <parent link="${parent}" />
+      <child link="steer_f_r_link" />
+      <origin xyz="-0.15841 -0.15841 0.07" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="-1.5" upper="1.5" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="steer_f_r_link">
+      <visual>
+        <origin xyz="0.15841 0.15841 -0.213" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_f_r.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <!--wheel-->
+    <joint name="wheel_b_l_joint" type="continuous">
+      <parent link="steer_b_l_link" />
+      <child link="wheel_b_l_link" />
+      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+      <axis xyz="1 1 0" />
+    </joint>
+
+    <link name="wheel_b_l_link">
+      <visual>
+        <origin xyz="-0.15841 -0.15841 -0.072" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_b_l.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="wheel_b_r_joint" type="continuous">
+      <parent link="steer_b_r_link" />
+      <child link="wheel_b_r_link" />
+      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+      <axis xyz="-1 1 0" />
+    </joint>
+
+    <link name="wheel_b_r_link">
+      <visual>
+        <origin xyz="0.15841 -0.15841 -0.072" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_b_r.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="wheel_f_l_joint" type="continuous">
+      <parent link="steer_f_l_link" />
+      <child link="wheel_f_l_link" />
+      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+      <axis xyz="-1 1 0" />
+    </joint>
+
+    <link name="wheel_f_l_link">
+      <visual>
+        <origin xyz="-0.15841 0.15841 -0.072" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_f_l.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="wheel_f_r_joint" type="continuous">
+      <parent link="steer_f_r_link" />
+      <child link="wheel_f_r_link" />
+      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
+      <axis xyz="1 1 0" />
+    </joint>
+
+    <link name="wheel_f_r_link">
+      <visual>
+        <origin xyz="0.15841 0.15841 -0.072" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_f_r.dae"/>
+        </geometry>
+      </visual>
+    </link>
+  </xacro:macro>
+</robot>
