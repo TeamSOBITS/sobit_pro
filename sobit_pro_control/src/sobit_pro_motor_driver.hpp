@@ -39,7 +39,7 @@
 
 #define TORQUE_ENABLE                   1              // Value for enabling the torque
 #define TORQUE_DISABLE                  0              // Value for disabling the torque
-#define DXL_MOVING_STATUS_THRESHOLD     10             // Dynamixel moving status threshold
+#define DXL_MOVING_STATUS_THRESHOLD     20             // Dynamixel moving status threshold  // old param : 10
 
 class SobitProMotorDriver{
   public:

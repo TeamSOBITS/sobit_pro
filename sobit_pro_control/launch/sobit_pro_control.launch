@@ -1,3 +1,9 @@
 <launch>
-  <node name="sobit_pro_control" pkg="sobit_pro_control" type="sobit_pro_control" output="screen"/>
+
+  <!--arm and head control-->
+  <include file="$(find sobit_pro_control)/launch/sobit_pro_arm_head_control.launch"/>
+
+  <!--wheel control-->
+  <include file="$(find sobit_pro_control)/launch/sobit_pro_wheel_control.launch"/>
+
 </launch>

@@ -1,0 +1,3 @@
+<launch>
+  <node name="sobit_pro_control" pkg="sobit_pro_control" type="sobit_pro_control" output="screen"/>
+</launch>

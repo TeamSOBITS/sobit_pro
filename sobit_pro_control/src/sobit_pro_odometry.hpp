@@ -27,11 +27,10 @@ class SobitProOdometry{
               float wheel_fl_present_vel,
               int32_t wheel_fr_initial_position,
               int32_t wheel_fl_initial_position,
+              nav_msgs::Odometry old_odom,
               nav_msgs::Odometry* output_odom);
-    float translational_distance_calculation(float wheel_present_vel);
-    float translational_position_calculation(float steer_present_position);
-    float rotational_distance_calculation(float wheel_present_vel);
-    float rotational_position_calculation(float steer_present_position);
+    float distance_calculation(float wheel_present_vel);
+    float position_calculation(float steer_present_position);
 
     MODE getMotion(int motion){
       switch (motion){

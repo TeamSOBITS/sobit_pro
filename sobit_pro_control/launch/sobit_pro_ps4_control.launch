@@ -1,0 +1,9 @@
+<launch>
+
+    <!--joy_node-->
+    <node name="joy_node" pkg="joy" type="joy_node"/>
+
+    <!--joy_control-->
+    <node pkg="sobit_pro_control" type="sobit_pro_ps4_control.py" name="sobit_pro_ps4_control" output="screen"/>
+
+</launch>

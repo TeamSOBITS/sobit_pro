@@ -6,6 +6,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
 
     // Translational motion
     case TRANSLATIONAL_MOTION_MODE:{
+
       // Goal velocity calculation
       float vel_ms = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // Euclidean distance
       float vel_rpm = vel_ms / WHEEL_LENGTH * 60.; // 60:minute
