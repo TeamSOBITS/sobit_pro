@@ -1,4 +1,3 @@
-
 #include "sobit_pro_odometry.hpp"
 
 // Odometry calculation
@@ -39,7 +38,13 @@ bool SobitProOdometry::odom(float steer_fr_present_position, float steer_fl_pres
         printf("Odometry ERROR\n");
       }
 
+      // change quaternion 
+      // euler(x = 0, y = 0, z = old_odom.pose.pose.orientation.z)
+      tf::Quaternion quat=tf::createQuaternionFromRPY(0.0, 0.0, old_odom.pose.pose.orientation.z);
+      quaternionTFToMsg(quat, result_odom.pose.pose.orientation);
+
       *output_odom = result_odom;
+
       return true;
     }
 
@@ -70,26 +75,26 @@ bool SobitProOdometry::odom(float steer_fr_present_position, float steer_fl_pres
 
         rotational_position_rad = old_odom.pose.pose.orientation.z + rotational_position_deg * (PAI / 180.); // rad = deg * (PAI / 180.)
 
-        // debug
         // change quaternion 
         // euler(x = 0, y = 0, z = rotational_position_rad)
+        tf::Quaternion quat=tf::createQuaternionFromRPY(0.0, 0.0, rotational_position_rad);
+        quaternionTFToMsg(quat, result_odom.pose.pose.orientation);
 
-        result_odom.pose.pose.orientation.x = 1;
-        result_odom.pose.pose.orientation.y = 1;
-        result_odom.pose.pose.orientation.z = 1;
-        result_odom.pose.pose.orientation.w = 1;
       }
       else{
         printf("Odometry ERROR\n");
       }
 
       *output_odom = result_odom;
+    
       return true;
     }
 
     // Other motion
-    default:
+    default:{
+      *output_odom = old_odom;
       return true;
+    }
   }
 }
 
@@ -111,4 +116,14 @@ float SobitProOdometry::position_calculation(float steer_present_position){
   return direction_deg;
 }
 
+void SobitProOdometry::pose_broadcaster(nav_msgs::Odometry tf_odom){
+  static tf::TransformBroadcaster br;
+  tf::Transform transform;
+  tf::Quaternion tf_quat;
 
+  transform.setOrigin(tf::Vector3(tf_odom.pose.pose.position.x, tf_odom.pose.pose.position.y, tf_odom.pose.pose.position.z));
+  quaternionMsgToTF(tf_odom.pose.pose.orientation, tf_quat);
+  transform.setRotation(tf_quat);
+
+  br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_footprint"));
+}

@@ -1,7 +1,6 @@
 #ifndef SOBIT_PRO_CONTROL_H_
 #define SOBIT_PRO_CONTROL_H_
 
-#include <ros/ros.h>
 #include <math.h>
 #include <stdio.h> // printf etc.
 #include <geometry_msgs/Twist.h>

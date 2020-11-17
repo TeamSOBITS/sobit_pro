@@ -4,6 +4,7 @@
 #include <math.h>
 #include <nav_msgs/Odometry.h>
 #include <stdio.h> // printf etc.
+#include <tf/transform_broadcaster.h>
 
 // Define motion key value
 #define TRANSLATIONAL_MOTION            1
@@ -31,6 +32,7 @@ class SobitProOdometry{
               nav_msgs::Odometry* output_odom);
     float distance_calculation(float wheel_present_vel);
     float position_calculation(float steer_present_position);
+    void pose_broadcaster(const nav_msgs::Odometry tf_odom);
 
     MODE getMotion(int motion){
       switch (motion){

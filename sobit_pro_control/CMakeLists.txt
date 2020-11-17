@@ -12,6 +12,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   dynamixel_sdk
+  tf
 )
 
 ## System dependencies are found with CMake's conventions

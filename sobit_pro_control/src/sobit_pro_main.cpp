@@ -2,6 +2,8 @@
 #include "sobit_pro_motor_driver.hpp"
 #include "sobit_pro_odometry.hpp"
 
+#include <ros/ros.h>
+
 SobitProControl sobit_pro_control;
 SobitProMotorDriver sobit_pro_motor_driver;
 SobitProOdometry sobit_pro_odometry;
@@ -67,6 +69,9 @@ int main(int argc, char **argv){
   wheel_fr_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
   wheel_fl_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
 
+  // Set the initial Odometry
+  old_odom.pose.pose.orientation.w = 1;
+
   ros::Rate rate(50);
   ros::AsyncSpinner spinner(1);
   spinner.start();
@@ -80,7 +85,7 @@ int main(int argc, char **argv){
     // Continue until the steering position reaches the goal
     do{
       steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-    }while(abs(set_steer_angle - steer_fr_present_position) > DXL_MOVING_STATUS_THRESHOLD);
+    }while(DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle - steer_fr_present_position) );
 
     // Update the initial position of the wheel when the motion changes
     if(motion != old_motion && motion != 0){
@@ -106,8 +111,14 @@ int main(int argc, char **argv){
                             &result_odom);
 
     // std::cout << "\n[ Odometry ]" << result_odom << std::endl;
+    // std::cout << "\n[ Odometry position ]" << result_odom.pose.pose.position << std::endl;
+    // std::cout << "\n[ Odometry orientation ]" << result_odom.pose.pose.orientation << std::endl;
 
+    // debug
+    sobit_pro_odometry.pose_broadcaster(result_odom);
+    
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
+
     // pub_hz.publish(std_msgs::Empty());
 
     rate.sleep();
