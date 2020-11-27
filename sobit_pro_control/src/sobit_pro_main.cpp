@@ -56,11 +56,13 @@ int main(int argc, char **argv){
   // ros::Publisher pub_hz = nh.advertise<std_msgs::Empty>("/hz", 1);
   int32_t wheel_fr_initial_position;
   int32_t wheel_fl_initial_position;
+  int32_t wheel_fr_current_position;
+  int32_t wheel_fl_current_position;
   int32_t steer_fr_present_position;
   int32_t set_steer_angle;
+  int32_t old_motion = 3; // Non 0, 1, 2 motion
   nav_msgs::Odometry result_odom;
   nav_msgs::Odometry old_odom;
-  int old_motion = 3; // Non 0, 1, 2 motion
 
   sobit_pro_motor_driver.init();
   sobit_pro_motor_driver.addPresentParam();
@@ -86,37 +88,37 @@ int main(int argc, char **argv){
     do{
       steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
     }while(DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle - steer_fr_present_position) );
-
-    // Update the initial position of the wheel when the motion changes
-    if(motion != old_motion && motion != 0){
-      wheel_fr_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
-      wheel_fl_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
-      old_odom = result_odom;
-    }
-    if(motion != 0){
-      old_motion = motion;
-    }
-
+  
     // Write goal velocity value
     sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
+
+    // Set the current position of the wheel
+    wheel_fr_current_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
+    wheel_fl_current_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
 
     // Odometry calculation
     sobit_pro_odometry.odom(sobit_pro_motor_driver.feedbackSteer(STEER_F_R),
                             sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
-                            sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R),
-                            sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L),
+                            wheel_fr_current_position,
+                            wheel_fl_current_position,
                             wheel_fr_initial_position,
                             wheel_fl_initial_position,
+                            old_motion,
                             old_odom,
                             &result_odom);
-
-    // std::cout << "\n[ Odometry ]" << result_odom << std::endl;
-    // std::cout << "\n[ Odometry position ]" << result_odom.pose.pose.position << std::endl;
-    // std::cout << "\n[ Odometry orientation ]" << result_odom.pose.pose.orientation << std::endl;
-
-    // debug
-    sobit_pro_odometry.pose_broadcaster(result_odom);
     
+    // Update the initial position of the wheel
+    wheel_fr_initial_position = wheel_fr_current_position;
+    wheel_fl_initial_position = wheel_fl_current_position;
+
+    // Update the old odom
+    old_odom = result_odom;
+
+    // std::cout << "\n[ Odometry ]\n" << result_odom << std::endl;
+    // std::cout << "\n[ Odometry position ]\n" << result_odom.pose.pose.position << std::endl;
+    // std::cout << "\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation << std::endl;
+
+    sobit_pro_odometry.pose_broadcaster(result_odom);
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
 
     // pub_hz.publish(std_msgs::Empty());

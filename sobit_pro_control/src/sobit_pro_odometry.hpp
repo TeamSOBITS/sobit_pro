@@ -11,7 +11,7 @@
 #define ROTATIONAL_MOTION               2 // Motion can be added
 
 #define WHEEL_LENGTH                    0.452389 // Circumference
-#define SOBIT_CAR_DIAMETER              0.448051
+#define SOBIT_CAR_DIAMETER              0.448051 // Diamaster
 #define PAI                             acos(-1.0)
 
 class SobitProOdometry{
@@ -28,6 +28,7 @@ class SobitProOdometry{
               float wheel_fl_present_vel,
               int32_t wheel_fr_initial_position,
               int32_t wheel_fl_initial_position,
+              int32_t old_motion,
               nav_msgs::Odometry old_odom,
               nav_msgs::Odometry* output_odom);
     float distance_calculation(float wheel_present_vel);
