@@ -19,5 +19,29 @@
       </visual>
     </link>
 
+    <joint name="${prefix}_base_joint" type="fixed">
+      <parent link="${prefix}_link" />
+      <child link="${prefix}_base" />
+      <origin xyz="0. -0.055 0.04" rpy="0. 0. ${-M_PI / 2}" />
+    </joint>
+
+    <link name="${prefix}_body" />
+
+    <joint name="${prefix}_base_to_body" type="fixed">
+      <parent link="${prefix}_base" />
+      <child link="${prefix}_body" />
+      <origin xyz="-0.0757 0. 0.008" rpy="0. 0. 0." />
+    </joint>
+
+    <link name="${prefix}_base" />
+
+    <joint name="${prefix}_base_to_visor" type="fixed">
+      <parent link="${prefix}_base" />
+      <child link="${prefix}_visor" />
+      <origin xyz="0. 0. 0." rpy="0. 0. 0." />
+    </joint>
+
+    <link name="${prefix}_visor" />
+
   </xacro:macro>
 </robot>
