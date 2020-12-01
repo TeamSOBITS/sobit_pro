@@ -56,8 +56,8 @@ int main(int argc, char **argv){
   // ros::Publisher pub_hz = nh.advertise<std_msgs::Empty>("/hz", 1);
   int32_t wheel_fr_initial_position;
   int32_t wheel_fl_initial_position;
-  int32_t wheel_fr_current_position;
-  int32_t wheel_fl_current_position;
+  int32_t wheel_fr_present_position;
+  int32_t wheel_fl_present_position;
   int32_t steer_fr_present_position;
   int32_t set_steer_angle;
   int32_t old_motion = 3; // Non 0, 1, 2 motion
@@ -92,15 +92,15 @@ int main(int argc, char **argv){
     // Write goal velocity value
     sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
 
-    // Set the current position of the wheel
-    wheel_fr_current_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
-    wheel_fl_current_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
+    // Set the present position of the wheel
+    wheel_fr_present_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
+    wheel_fl_present_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
 
     // Odometry calculation
     sobit_pro_odometry.odom(sobit_pro_motor_driver.feedbackSteer(STEER_F_R),
                             sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
-                            wheel_fr_current_position,
-                            wheel_fl_current_position,
+                            wheel_fr_present_position,
+                            wheel_fl_present_position,
                             wheel_fr_initial_position,
                             wheel_fl_initial_position,
                             old_motion,
@@ -108,8 +108,8 @@ int main(int argc, char **argv){
                             &result_odom);
     
     // Update the initial position of the wheel
-    wheel_fr_initial_position = wheel_fr_current_position;
-    wheel_fl_initial_position = wheel_fl_current_position;
+    wheel_fr_initial_position = wheel_fr_present_position;
+    wheel_fl_initial_position = wheel_fl_present_position;
 
     // Update the old odom
     old_odom = result_odom;

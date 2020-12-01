@@ -30,7 +30,7 @@ class SobitProOdometry{
               int32_t wheel_fl_initial_position,
               int32_t old_motion,
               nav_msgs::Odometry old_odom,
-              nav_msgs::Odometry* output_odom);
+              nav_msgs::Odometry* result_odom);
     float distance_calculation(float wheel_present_vel);
     float position_calculation(float steer_present_position);
     void pose_broadcaster(const nav_msgs::Odometry tf_odom);
