@@ -1,0 +1,10 @@
+<launch>
+	<arg name="scan_topic_name" default="/scan"/>
+	<node name="urg_node" pkg="urg_node" type="urg_node">
+		<param name="frame_id" value="base_laser_link"/>
+		<param name="ip_address" type="string" value="192.168.0.10"/>
+		<param name="angle_min" value= "-1.57"/>
+		<param name="angle_max" value= "1.57"/>
+		<remap from="/scan" to="$(arg scan_topic_name)"/>
+	</node>
+</launch>

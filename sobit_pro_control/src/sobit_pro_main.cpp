@@ -64,6 +64,8 @@ int main(int argc, char **argv){
   nav_msgs::Odometry result_odom;
   nav_msgs::Odometry old_odom;
 
+  // Startup sound
+
   sobit_pro_motor_driver.init();
   sobit_pro_motor_driver.addPresentParam();
 
