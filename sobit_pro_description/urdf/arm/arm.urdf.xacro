@@ -3,7 +3,7 @@
   xmlns:xacro="http://ros.org/wiki/xacro">
 
   <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.transmission.xacro" />
-  
+
   <xacro:macro name="arm" params="prefix parent">
     <joint name="${prefix}_base_joint" type="fixed">
       <parent link="${parent}" />
@@ -19,6 +19,14 @@
         </geometry>
       </visual>
     </link>
+
+    <joint name="${prefix}_fixed_joint" type="fixed">
+      <parent link="${prefix}_base_link" />
+      <child link="${prefix}_fixed_link" />
+      <origin xyz="0 0 0" rpy="0 0 ${-M_PI / 2}" />
+    </joint>
+
+    <link name="${prefix}_fixed_link" />
 
     <joint name="${prefix}1_joint" type="revolute">
       <parent link="${prefix}_base_link" />
