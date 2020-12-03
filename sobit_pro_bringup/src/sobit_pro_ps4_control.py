@@ -34,13 +34,13 @@ class PS4_control:
         if self.joy_button[6] == True:
             self.move_wheel_stop_motion()
             # print("回転運動(左回り)")
-            self.move_wheel_rotational_motion(5)
+            self.move_wheel_rotational_motion(0.3)
 
         # R2ボタンが押される
         elif self.joy_button[7] == True:
             self.move_wheel_stop_motion()
             # print("回転運動(右回り)")
-            self.move_wheel_rotational_motion(-5)
+            self.move_wheel_rotational_motion(-0.3)
 
         # それ以外
         else:

@@ -6,7 +6,4 @@
   <!--wheel control-->
   <include file="$(find sobit_pro_control)/launch/sobit_pro_wheel_control.launch"/>
 
-  <!--rviz-->
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find sobit_pro_control)/config/odom.rviz"/>
-
 </launch>

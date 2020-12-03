@@ -136,10 +136,10 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
           wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
         }
         else{
-          wheel_fr_goal_vel = -vel_value;
-          wheel_fl_goal_vel = -vel_value;
-          wheel_br_goal_vel = -vel_value;
-          wheel_bl_goal_vel = -vel_value;
+          wheel_fr_goal_vel = vel_value;
+          wheel_fl_goal_vel = vel_value;
+          wheel_br_goal_vel = vel_value;
+          wheel_bl_goal_vel = vel_value;
         }
       }
       else{

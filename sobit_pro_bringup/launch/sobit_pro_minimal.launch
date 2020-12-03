@@ -1,0 +1,15 @@
+<launch>
+
+  <!--sobit pro control-->
+  <include file="$(find sobit_pro_control)/launch/sobit_pro_control.launch"/>
+
+  <!--urg-->
+  <include file="$(find sobit_pro_bringup)/launch/sobit_pro_urg.launch"/>
+
+  <!--azure kinect-->
+  <!--<include file="$(find sobit_pro_bringup)/launch/sobit_pro_azure_kinect.launch"/>-->
+
+  <!--rviz-->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find sobit_pro_bringup)/config/sobit_pro.rviz"/>
+
+</launch>
