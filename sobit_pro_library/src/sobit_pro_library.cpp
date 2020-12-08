@@ -1,5 +1,6 @@
 #include <sobit_pro_library/sobit_pro_library.h>
 #include <sobit_pro_library/sobit_pro_joint_controller.h>
+#include <sobit_pro_library/sobit_pro_wheel_controller.hpp>
 
 using namespace sobit;
 namespace py = pybind11;
@@ -40,4 +41,20 @@ PYBIND11_MODULE(sobit_pro_module, m) {
            &SobitProJointController::moveGripperToTarget,
            "move Gripper To Target",
            py::arg("target_name"));
+
+  py::class_<SobitProWheelController>(m, "SobitProWheelController")
+      .def(py::init<const std::string&>())
+      .def("controlWheelLinear", 
+           &SobitProWheelController::controlWheelLinear,
+           "control Wheel Linear", 
+           py::arg("distance"))
+      .def("controlWheelRotateRad", 
+           &SobitProWheelController::controlWheelRotateRad,
+           "control Wheel Rotate Rad", 
+           py::arg("angle_rad"))
+      .def("controlWheelRotateDeg", 
+           &SobitProWheelController::controlWheelRotateDeg,
+           "control Wheel Rotate Deg", 
+           py::arg("angle_deg"));
+
 }

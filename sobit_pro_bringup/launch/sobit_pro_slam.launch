@@ -1,7 +1,7 @@
 <launch>
 
   <!--sobit pro control-->
-  <include file="$(find sobit_slam)/launch/adaptive_mcl.launch"/>
+  <include file="$(find sobit_pro_navigation)/launch/adaptive_mcl.launch"/>
 
   <!--urg-->
   <include file="$(find sobit_pro_navigation)/launch/slam.launch"/>

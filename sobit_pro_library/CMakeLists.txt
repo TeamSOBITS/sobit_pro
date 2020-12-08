@@ -27,8 +27,10 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_library(${PROJECT_NAME} src/sobit_pro_joint_controller.cpp)
+add_library(${PROJECT_NAME} src/sobit_pro_joint_controller.cpp
+                            src/sobit_pro_wheel_controller.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 
 pybind_add_module(sobit_pro_module MODULE src/sobit_pro_library.cpp
-                                          src/sobit_pro_joint_controller.cpp)
+                                          src/sobit_pro_joint_controller.cpp
+                                          src/sobit_pro_wheel_controller.cpp)
