@@ -26,7 +26,7 @@ namespace sobit {
         public :
             SobitProWheelController( const std::string &name );
             SobitProWheelController( );
-            bool controlWheelLinear( const double distance );
+            bool controlWheelLinear( const double distance_x, const double distance_y );
             bool controlWheelRotateRad( const double angle_rad );
             bool controlWheelRotateDeg( const double angle_deg );
     };
@@ -41,7 +41,7 @@ inline void sobit::SobitProWheelController::checkPublishersConnection ( const ro
     return; 
 }
 
-inline void sobit::SobitProWheelController::callbackOdometry ( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; std::cout << curt_odom_ << std::endl;}
+inline void sobit::SobitProWheelController::callbackOdometry ( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; }
 
 inline double sobit::SobitProWheelController::geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat ) {
     tf::Quaternion quat;

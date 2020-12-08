@@ -3,6 +3,7 @@
 #include "sobit_pro_odometry.hpp"
 
 #include <ros/ros.h>
+#include <stdlib.h>
 
 SobitProControl sobit_pro_control;
 SobitProMotorDriver sobit_pro_motor_driver;
@@ -64,10 +65,12 @@ int main(int argc, char **argv){
   nav_msgs::Odometry result_odom;
   nav_msgs::Odometry old_odom;
 
-  // Startup sound
-
   sobit_pro_motor_driver.init();
   sobit_pro_motor_driver.addPresentParam();
+
+  // Start up sound
+  system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/start_up.mp3");
+  ros::Duration(3.0).sleep();
 
   // Set the initial position of the wheel
   wheel_fr_initial_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
@@ -129,6 +132,10 @@ int main(int argc, char **argv){
   }
 
   sobit_pro_motor_driver.closeDynamixel();
+
+  // Shut down sound
+  system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/shut_down.mp3");
+  ros::Duration(3.0).sleep();
 
   return 0;
 }

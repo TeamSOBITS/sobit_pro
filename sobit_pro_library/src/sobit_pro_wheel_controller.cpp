@@ -16,15 +16,15 @@ SobitProWheelController::SobitProWheelController ( ) : ROSCommonNode( ), nh_(), 
     ros::Duration(3.0).sleep();
 }
 
-bool SobitProWheelController::controlWheelLinear( const double distance ) {
+bool SobitProWheelController::controlWheelLinear( const double distance_x, const double distance_y ) {
     try {
         ros::spinOnce();
         double start_time = ros::Time::now().toSec();
         geometry_msgs::Twist output_vel, initial_vel;
         nav_msgs::Odometry init_odom = curt_odom_;
-        std::cout << "\n init_odom " << init_odom << std::endl;
         double moving_distance = 0.0;
-        double target_distance = std::fabs( distance );
+        double target_distance = std::hypotf( distance_x, distance_y );
+        double distance = target_distance;
         double Kp = 0.1;
         double Ki = 0.4;
         double Kd = 0.8;
@@ -40,14 +40,15 @@ bool SobitProWheelController::controlWheelLinear( const double distance ) {
                 vel_linear =  Kp * ( target_distance + 0.001 - moving_distance ) - Kd * velocity_differential + Ki / 0.8 * ( target_distance + 0.001 - moving_distance ) * std::pow( elapsed_time, 2 );
             } else {
                 vel_linear =  Kp * ( target_distance + 0.001 - moving_distance ) - Kd * velocity_differential + Ki / ( 8.0 / target_distance ) * ( target_distance + 0.001 - moving_distance ) * std::pow( elapsed_time, 2 );
-            } 
-            output_vel.linear.x = ( distance > 0 ) ? vel_linear : -vel_linear;
+            }
+            output_vel.linear.x = ( 0 < distance_x ) ? vel_linear * ( distance_x / ( distance_x + distance_y ) ) : -vel_linear * ( distance_x / ( distance_x + distance_y ) );
+            output_vel.linear.y = ( 0 < distance_y ) ? vel_linear * ( distance_y / ( distance_x + distance_y ) ) : -vel_linear * ( distance_y / ( distance_x + distance_y ) );
             velocity_differential = vel_linear;
             pub_cmd_vel_.publish( output_vel );
             double x_diif = curt_odom_.pose.pose.position.x - init_odom.pose.pose.position.x;
             double y_diif = curt_odom_.pose.pose.position.y - init_odom.pose.pose.position.y;
             moving_distance = std::hypotf( x_diif, y_diif );
-            ROS_INFO("target_distance = %f\tmoving_distance = %f", target_distance, moving_distance );
+            // ROS_INFO("target_distance = %f\tmoving_distance = %f", target_distance, moving_distance );
             loop_rate.sleep();
         }
         pub_cmd_vel_.publish( initial_vel );
@@ -61,6 +62,7 @@ bool SobitProWheelController::controlWheelLinear( const double distance ) {
 
 bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
     try {
+        ros::spinOnce();
         double start_time = ros::Time::now().toSec();
         int loop_cnt = 1;
         geometry_msgs::Twist output_vel, initial_vel;
@@ -107,7 +109,7 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
                 else moving_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
             }
 
-            ROS_INFO("target_angle = %f\tmoving_angle = %f", abs_angle_rad, moving_angle_rad );
+            // ROS_INFO("target_angle = %f\tmoving_angle = %f", abs_angle_rad, moving_angle_rad );
 
             loop_rate.sleep();
         }

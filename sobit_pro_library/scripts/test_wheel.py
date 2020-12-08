@@ -8,8 +8,9 @@ def test():
     r = rospy.Rate(1) # 10hz
     args = sys.argv
     pro_wheel_ctr = SobitProWheelController(args[0]) # args[0] : C++上でros::init()を行うための引数
-    pro_wheel_ctr.controlWheelLinear(1.0)
-    #pro_wheel_ctr.controlWheelRotateRad(1.57)
+    pro_wheel_ctr.controlWheelLinear(1.0, 1.0)
+    pro_wheel_ctr.controlWheelRotateRad(1.57)
+    pro_wheel_ctr.controlWheelLinear(0.0, -1.0)
     #pro_wheel_ctr.controlWheelRotateDeg(-90)
     #pro_wheel_ctr.controlWheelLinear(-1.0)
     r.sleep()
