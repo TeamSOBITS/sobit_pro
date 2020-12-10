@@ -4,8 +4,8 @@ Licensed under the MIT License.
 -->
 
 <launch>
-  <arg name="tf_prefix"         default="head_" />                       <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
-  <arg name="overwrite_robot_description" default="true" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
+  <arg name="tf_prefix"         default="head_" />                <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+  <arg name="overwrite_robot_description" default="true" />       <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
 
   <arg name="depth_enabled"           default="true" />           <!-- Enable or disable the depth camera -->
   <arg name="depth_mode"              default="WFOV_UNBINNED" />  <!-- Set the depth camera mode, which affects FOV, depth range, and camera resolution. See Azure Kinect documentation for full details. Valid options: NFOV_UNBINNED, NFOV_2X2BINNED, WFOV_UNBINNED, WFOV_2X2BINNED, and PASSIVE_IR -->
@@ -22,8 +22,8 @@ Licensed under the MIT License.
   <arg name="recording_loop_enabled"  default="false" />          <!-- If set to true the recording file will rewind the beginning once end of file is reached -->
   <arg name="body_tracking_enabled"           default="false" />  <!-- If set to true the joint positions will be published as marker arrays -->
   <arg name="body_tracking_smoothing_factor"  default="0.0" />    <!-- Set between 0 for no smoothing and 1 for full smoothing -->
-  <arg name="rescale_ir_to_mono8"  default="false" />    <!-- Whether to rescale the IR image to an 8-bit monochrome image for visualization and further processing. A scaling factor (ir_mono8_scaling_factor) is applied. -->
-  <arg name="ir_mono8_scaling_factor"  default="1.0" />    <!-- Scaling factor to apply when converting IR to mono8 (see rescale_ir_to_mono8). If using illumination, use the value 0.5-1. If using passive IR, use 10. -->
+  <arg name="rescale_ir_to_mono8"  default="false" />             <!-- Whether to rescale the IR image to an 8-bit monochrome image for visualization and further processing. A scaling factor (ir_mono8_scaling_factor) is applied. -->
+  <arg name="ir_mono8_scaling_factor"  default="1.0" />           <!-- Scaling factor to apply when converting IR to mono8 (see rescale_ir_to_mono8). If using illumination, use the value 0.5-1. If using passive IR, use 10. -->
   <arg name="imu_rate_target" default="0"/>                       <!-- Desired output rate of IMU messages. Set to 0 (default) for full rate (1.6 kHz). --> 
   <arg name="wired_sync_mode" default="0"/>                       <!-- Wired sync mode. 0: OFF, 1: MASTER, 2: SUBORDINATE. --> 
   <arg name="subordinate_delay_off_master_usec" default="0"/>     <!-- Delay subordinate camera off master camera by specified amount in usec. --> 
