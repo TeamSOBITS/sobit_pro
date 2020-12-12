@@ -1,0 +1,11 @@
+sobit_pro_pose:
+    - { 
+        pose_name: "initial_pose",
+        arm1_joint: 1.57,
+        arm2_joint: 1.57,
+        arm3_joint: -1.57,
+        arm4_joint: -1.57,
+        gripper_joint: 0.0,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }

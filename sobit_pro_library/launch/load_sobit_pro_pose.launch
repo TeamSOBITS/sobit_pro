@@ -1,0 +1,3 @@
+<launch>
+    <rosparam command="load" file="$(find sobit_pro_library)/config/sobit_pro_pose.yaml"/>
+</launch>

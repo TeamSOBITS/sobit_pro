@@ -1,4 +1,5 @@
 #include <sobit_pro_library/sobit_pro_joint_controller.h>
+#include <sobit_pro_library/sobit_pro_wheel_controller.hpp>
 
 #include <cmath>
 
@@ -290,11 +291,18 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
   geometry_msgs::Point result_xz1 = forwardKinematics(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2));
   geometry_msgs::Point result_xz2 = forwardKinematics(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2));
 
+  /** 車輪で最適な把持位置まで移動 **/
   std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
+  sobit::SobitProWheelController wheel_ctr;
+  wheel_ctr.controlWheelLinear(move_wheel_x, move_wheel_y);
+
+  /** アームを物体のところまで移動 **/
   std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
             << result_angles1.at(3) << std::endl;
   std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
             << result_angles2.at(3) << std::endl;
+  moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), -1.0);
+  //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
 
   std::cout << "order : (x, y, z): (" << transform_arm_to_object.getOrigin().x() << ", " << transform_arm_to_object.getOrigin().y() << ", "
             << transform_arm_to_object.getOrigin().z() << ")" << std::endl;

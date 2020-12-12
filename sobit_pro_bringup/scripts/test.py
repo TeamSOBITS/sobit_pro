@@ -2,18 +2,24 @@
 import rospy
 from sobit_pro_module import SobitProJointController
 from sobit_pro_module import Joint
+from geometry_msgs.msg import Point
 import sys
 
 def test():
     rospy.init_node('test')
     r = rospy.Rate(1) # 10hz
-    ang = 0.8
     args = sys.argv
     pro_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
-    while not rospy.is_shutdown():
-        ang = -1.0 * ang
-        pro_ctr.moveJoint( Joint.HEAD_CAMERA_PAN_JOINT, ang, 2.0, False )
-        r.sleep()
+
+    # pro_ctr.moveHeadPanTilt( 0.5, 0.5, 2.0, True )
+    #pro_ctr.moveArm( 1.57, 1.57, -1.57, -1.57, -1.0 )
+
+    pro_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_ctr.moveHeadPanTilt( 0.0, -0.8, 2.0, True )
+    rospy.sleep(5.0)
+
+    res = pro_ctr.moveGripperToTarget("onion_soup")
+    print("result : ", res)
 
 if __name__ == '__main__':
     try:

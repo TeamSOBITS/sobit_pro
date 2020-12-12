@@ -6,4 +6,7 @@
   <!--wheel control-->
   <include file="$(find sobit_pro_control)/launch/sobit_pro_wheel_control.launch"/>
 
+  <!--use library-->
+  <rosparam command="load" file="$(find sobit_pro_library)/config/sobit_pro_pose.yaml"/>
+
 </launch>

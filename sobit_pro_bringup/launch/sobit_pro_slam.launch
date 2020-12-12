@@ -1,6 +1,6 @@
 <launch>
 
-  <!--sobit pro control-->
+  <!--sobit pro navigation-->
   <include file="$(find sobit_pro_navigation)/launch/adaptive_mcl.launch"/>
 
   <!--urg-->
