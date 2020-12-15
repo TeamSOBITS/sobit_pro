@@ -239,6 +239,7 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
     std::cout << "Armが届きません。" << std::endl;
     return false;
   }
+
   // 先に、arm1_jointで目標値の3分の1の高さに調整
   double arm_to_arm2_joint_x = std::sqrt(std::pow(arm1_link_length, 2) - std::pow(arm_to_object_z / 3.0, 2));
   double arm1_joint_angle;

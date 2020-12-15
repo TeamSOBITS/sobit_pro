@@ -17,7 +17,7 @@ def test():
     pro_ctr.moveHeadPanTilt( 0.0, -0.8, 2.0, True )
     rospy.sleep(5.0)
 
-    res = pro_ctr.moveGripperToTarget("onion_soup", -0.15, 0.0, 0.03)
+    res = pro_ctr.moveGripperToTarget("beans", -0.15, 0.0, 0.03)
     print("result : ", res)
 
     #pro_wheel_ctr.controlWheelLinear(0.2, 0.0)
@@ -26,7 +26,7 @@ def test():
     pro_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
 
     pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0, 0.0 )
-    rospy.sleep(1.0)
+    rospy.sleep(0.5)
     pro_ctr.moveToRegisterdMotion( "initial_pose" )
 
 if __name__ == '__main__':
