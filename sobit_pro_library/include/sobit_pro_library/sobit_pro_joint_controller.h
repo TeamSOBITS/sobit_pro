@@ -59,7 +59,7 @@ class SobitProJointController : private ROSCommonNode {
   bool moveArm(const double arm1, const double arm2, const double arm3, const double arm4, const double gripper);
   bool moveHeadPanTilt(const double head_camera_pan, const double head_camera_tilt, const double sec, bool is_sleep = true);
   bool moveToRegisterdMotion(const std::string& pose_name);
-  bool moveGripperToTarget(const std::string& target_name);
+  bool moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
 };
 }  // namespace sobit
 

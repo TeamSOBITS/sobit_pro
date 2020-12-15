@@ -215,7 +215,7 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics(doub
   return result_angles_pairs;
 }
 
-bool SobitProJointController::moveGripperToTarget(const std::string& target_name) {
+bool SobitProJointController::moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
   geometry_msgs::Point shift;
 
   tf::StampedTransform transform_base_to_object;
@@ -230,9 +230,9 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
     return false;
   }
 
-  double arm_to_object_x = transform_arm_to_object.getOrigin().x() + shift.x;
-  double arm_to_object_y = transform_arm_to_object.getOrigin().y() + shift.y;
-  double arm_to_object_z = transform_arm_to_object.getOrigin().z() + shift.z;
+  double arm_to_object_x = transform_arm_to_object.getOrigin().x() + shift.x + diff_goal_position_x;
+  double arm_to_object_y = transform_arm_to_object.getOrigin().y() + shift.y + diff_goal_position_y;
+  double arm_to_object_z = transform_arm_to_object.getOrigin().z() + shift.z + diff_goal_position_z;
 
   double sum_arm123_link_length = arm1_link_length + arm2_link_length + arm3_link_length;
   if ((arm_to_object_z < -(sum_arm123_link_length)) || (sum_arm123_link_length < arm_to_object_z)) {

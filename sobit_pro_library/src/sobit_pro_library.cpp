@@ -41,7 +41,10 @@ PYBIND11_MODULE(sobit_pro_module, m) {
       .def("moveGripperToTarget",
            &SobitProJointController::moveGripperToTarget,
            "move Gripper To Target",
-           py::arg("target_name"));
+           py::arg("target_name"),
+           py::arg("diff_goal_position_x"),
+           py::arg("diff_goal_position_y"),
+           py::arg("diff_goal_position_z"));
 
   py::class_<SobitProWheelController>(m, "SobitProWheelController")
       .def(py::init<const std::string&>())

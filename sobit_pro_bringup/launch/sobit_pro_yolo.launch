@@ -36,7 +36,7 @@
     <param name="max_framerate" type="double" value="1.0"/>
     <param name="show_result" type="bool" value="true"/>
     <param name="sub_image_topic_name" type="string" value="/rgb/image_raw"/>
-    <param name="initial_predict" type="bool" value="false"/> <!--false-->
+    <param name="initial_predict" type="bool" value="true"/> <!--false-->
   </group>
 
   <!--YOLOv3 3D-->

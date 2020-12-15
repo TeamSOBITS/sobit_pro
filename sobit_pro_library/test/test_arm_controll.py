@@ -12,11 +12,11 @@ def test():
     pro_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
     pro_ctr.moveToRegisterdMotion( "initial_pose" )
-    #pro_ctr.moveArm( 0.0, 0.0, 0.0, 0.0, 0.0 )
-    pro_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.0, 2.0, True )
+    pro_ctr.moveArm( 0.0, 0.0, 0.0, 0.0, 0.0 )
+    #pro_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.0, 2.0, True )
     rospy.sleep(5.0)
-    pro_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
-    #pro_ctr.moveToRegisterdMotion( "initial_pose" )
+
+    pro_ctr.moveToRegisterdMotion( "initial_pose" )
 
 if __name__ == '__main__':
     try:
