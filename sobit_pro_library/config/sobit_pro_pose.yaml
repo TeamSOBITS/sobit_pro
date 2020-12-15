@@ -1,7 +1,8 @@
 sobit_pro_pose:
     - { 
         pose_name: "initial_pose",
-        arm1_joint: 1.57,
+        arm1_1_joint: 1.57,
+        arm1_2_joint: -1.57,
         arm2_joint: 1.57,
         arm3_joint: -1.57,
         arm4_joint: -1.57,

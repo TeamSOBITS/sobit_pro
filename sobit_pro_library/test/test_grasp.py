@@ -13,7 +13,6 @@ def test():
 
     pro_ctr.moveToRegisterdMotion( "initial_pose" )
     pro_ctr.moveHeadPanTilt( 0.0, -0.8, 2.0, True )
-    pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0, -1.0 )
     rospy.sleep(5.0)
 
     res = pro_ctr.moveGripperToTarget("onion_soup")
