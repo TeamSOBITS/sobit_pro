@@ -34,3 +34,8 @@ target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 pybind_add_module(sobit_pro_module MODULE src/sobit_pro_library.cpp
                                           src/sobit_pro_joint_controller.cpp
                                           src/sobit_pro_wheel_controller.cpp)
+
+add_executable(test_cpp scripts/test_cpp.cpp
+                        src/sobit_pro_joint_controller.cpp
+                        src/sobit_pro_wheel_controller.cpp)
+target_link_libraries(test_cpp ${catkin_LIBRARIES})

@@ -29,9 +29,10 @@ void SobitProJointController::loadPose() {
   pose_list_.clear();
   for (int i = 0; i < pose_num; i++) {
     Pose                pose;
-    std::vector<double> joint_val(7, 0.0);
+    std::vector<double> joint_val(8, 0.0);
     pose.pose_name                           = static_cast<std::string>(pose_val[i]["pose_name"]);
-    joint_val[Joint::ARM1_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM1_JOINT]]);
+    joint_val[Joint::ARM1_1_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM1_1_JOINT]]);
+    joint_val[Joint::ARM1_2_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM1_2_JOINT]]);
     joint_val[Joint::ARM2_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM2_JOINT]]);
     joint_val[Joint::ARM3_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM3_JOINT]]);
     joint_val[Joint::ARM4_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM4_JOINT]]);
@@ -56,7 +57,8 @@ bool SobitProJointController::moveAllJoint(const double arm1,
   try {
     trajectory_msgs::JointTrajectory arm_joint_trajectory;
     trajectory_msgs::JointTrajectory head_joint_trajectory;
-    setJointTrajectory(joint_names_[Joint::ARM1_JOINT], arm1, sec, &arm_joint_trajectory);
+    setJointTrajectory(joint_names_[Joint::ARM1_1_JOINT], arm1, sec, &arm_joint_trajectory);
+    addJointTrajectory(joint_names_[Joint::ARM1_2_JOINT], -arm1, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM2_JOINT], arm2, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM3_JOINT], arm3, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM4_JOINT], arm4, sec, &arm_joint_trajectory);
@@ -80,7 +82,13 @@ bool SobitProJointController::moveAllJoint(const double arm1,
 bool SobitProJointController::moveJoint(const Joint joint_num, const double rad, const double sec, bool is_sleep) {
   try {
     trajectory_msgs::JointTrajectory joint_trajectory;
-    setJointTrajectory(joint_names_[joint_num], rad, sec, &joint_trajectory);
+    if (joint_num == 0){
+      setJointTrajectory(joint_names_[joint_num], rad, sec, &joint_trajectory);
+      addJointTrajectory(joint_names_[joint_num + 1], -rad, sec, &joint_trajectory);
+    } else{
+      setJointTrajectory(joint_names_[joint_num], rad, sec, &joint_trajectory);
+    }
+
     if (joint_num < Joint::HEAD_CAMERA_PAN_JOINT) {
       checkPublishersConnection(pub_arm_joint_);
       pub_arm_joint_.publish(joint_trajectory);
@@ -119,7 +127,8 @@ bool SobitProJointController::moveHeadPanTilt(const double head_camera_pan, cons
 bool SobitProJointController::moveArm(const double arm1, const double arm2, const double arm3, const double arm4, const double gripper) {
   try {
     trajectory_msgs::JointTrajectory arm_joint_trajectory;
-    setJointTrajectory(joint_names_[Joint::ARM1_JOINT], arm1, 5.0, &arm_joint_trajectory);
+    setJointTrajectory(joint_names_[Joint::ARM1_1_JOINT], arm1, 5.0, &arm_joint_trajectory);
+    addJointTrajectory(joint_names_[Joint::ARM1_2_JOINT], -arm1, 5.0, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM2_JOINT], arm2, 5.0, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM3_JOINT], arm3, 5.0, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM4_JOINT], arm4, 5.0, &arm_joint_trajectory);
@@ -145,7 +154,7 @@ bool SobitProJointController::moveToRegisterdMotion(const std::string& pose_name
   }
   if (is_find) {
     ROS_INFO("I found a '%s'", pose_name.c_str());
-    return moveAllJoint(joint_val[Joint::ARM1_JOINT],
+    return moveAllJoint(joint_val[Joint::ARM1_1_JOINT],
                         joint_val[Joint::ARM2_JOINT],
                         joint_val[Joint::ARM3_JOINT],
                         joint_val[Joint::ARM4_JOINT],

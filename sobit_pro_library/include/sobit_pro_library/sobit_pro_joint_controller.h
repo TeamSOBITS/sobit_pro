@@ -12,7 +12,7 @@
 
 namespace sobit {
 
-enum Joint { ARM1_JOINT = 0, ARM2_JOINT, ARM3_JOINT, ARM4_JOINT, GRIPPER_JOINT, HEAD_CAMERA_PAN_JOINT, HEAD_CAMERA_TILT_JOINT, JOINT_NUM };
+enum Joint { ARM1_1_JOINT = 0, ARM1_2_JOINT, ARM2_JOINT, ARM3_JOINT, ARM4_JOINT, GRIPPER_JOINT, HEAD_CAMERA_PAN_JOINT, HEAD_CAMERA_TILT_JOINT, JOINT_NUM };
 
 typedef struct {
   std::string         pose_name;
@@ -28,7 +28,7 @@ class SobitProJointController : private ROSCommonNode {
   ros::Publisher        pub_head_camera_joint_;
 
   const std::vector<std::string> joint_names_
-      = {"arm1_joint", "arm2_joint", "arm3_joint", "arm4_joint", "gripper_joint", "head_camera_pan_joint", "head_camera_tilt_joint"};
+      = {"arm1_1_joint", "arm1_2_joint", "arm2_joint", "arm3_joint", "arm4_joint", "gripper_joint", "head_camera_pan_joint", "head_camera_tilt_joint"};
   std::vector<Pose> pose_list_;
 
   static const double arm1_link_length;

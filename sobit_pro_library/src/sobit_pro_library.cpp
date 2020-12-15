@@ -8,7 +8,8 @@ namespace py = pybind11;
 
 PYBIND11_MODULE(sobit_pro_module, m) {
   py::enum_<Joint>(m, "Joint")
-      .value("ARM1_JOINT", Joint::ARM1_JOINT)
+      .value("ARM1_1_JOINT", Joint::ARM1_1_JOINT)
+      .value("ARM1_2_JOINT", Joint::ARM1_2_JOINT)
       .value("ARM2_JOINT", Joint::ARM2_JOINT)
       .value("ARM3_JOINT", Joint::ARM3_JOINT)
       .value("ARM4_JOINT", Joint::ARM4_JOINT)
