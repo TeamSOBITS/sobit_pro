@@ -46,6 +46,6 @@ dynamixel_port:
   arm2_joint: {id: 11, center: 2048, home: 1.57, mode: 3, vel: 0, acc: 0, pos_i_gain: 300, gear_ratio: 1 }
   arm3_joint: {id: 12, center: 2048, home: -1.57, mode: 3, vel: 0, acc: 0, pos_i_gain: 300, gear_ratio: 1 }
   arm4_joint: {id: 13, center: 2048, home: -1.57, mode: 3, vel: 0, acc: 0, pos_i_gain: 300, gear_ratio: 1 }
-  gripper_joint: {id: 14, center: 2105, home: 0.0, mode: 5, vel: 0, acc: 0, pos_i_gain: 0, gear_ratio: 1, lim: 50 }
+  gripper_joint: {id: 14, center: 2105, home: 0.0, mode: 5, vel: 0, acc: 0, pos_i_gain: 0, gear_ratio: 1, lim: 200 }
   head_camera_pan_joint: {id: 15, center: 2048, home: 0.0, mode: 3, vel: 0, acc: 0, pos_i_gain: 300, gear_ratio: 1 }
   head_camera_tilt_joint: {id: 16, center: 2048, home: 0.0, mode: 3, vel: 0, acc: 0, pos_i_gain: 300, gear_ratio: 1 }
