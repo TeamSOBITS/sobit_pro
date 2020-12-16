@@ -72,18 +72,18 @@ int main(int argc, char **argv){
   // Start up sound
   std::random_device rnd;
   std::mt19937 mt(rnd()); 
-  std::uniform_real_distribution<> rand10(0, 10);
+  std::uniform_real_distribution<> rand10(0, 100);
   int rand_sound = rand10(mt);
 
-  if(rand_sound <= 1){
-    std::cout << "\nSoka University Gakuseika " << std::endl;
-    system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/soka_univ_gakuseika.mp3");
-    ros::Duration(12.0).sleep();
-  }
-  if(1 < rand_sound){
+  if(rand_sound <= 90){
     std::cout << "\nStart Up " << std::endl;
     system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/start_up.mp3");
     ros::Duration(3.0).sleep();
+  }
+  if(90 < rand_sound){
+    std::cout << "\nSoka University Gakuseika " << std::endl;
+    system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/soka_univ_gakuseika.mp3");
+    ros::Duration(12.0).sleep();
   }
 
   // Set the initial position of the wheel
