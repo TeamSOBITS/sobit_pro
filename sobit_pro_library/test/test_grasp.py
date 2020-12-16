@@ -31,7 +31,6 @@ def test():
 
     # 決められたポーズをする
     pro_arm_pantilt_ctr.moveToRegisterdMotion( "grasp_high_pose" )
-    rospy.sleep(0.5)
     pro_arm_pantilt_ctr.moveToRegisterdMotion( "initial_pose" )
 
 if __name__ == '__main__':

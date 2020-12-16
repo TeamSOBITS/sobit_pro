@@ -35,7 +35,6 @@ def test():
 
     # 決められたポーズをする
     pro_arm_pantilt_ctr.moveToRegisterdMotion( "put_high_pose" )
-    rospy.sleep(0.5)
     pro_arm_pantilt_ctr.moveToRegisterdMotion( "initial_pose" )
 
     Popen(['rosnode','kill','/placeable_position_estimator/placeable_position_estimater_node'])
