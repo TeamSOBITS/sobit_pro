@@ -44,7 +44,8 @@ PYBIND11_MODULE(sobit_pro_module, m) {
            py::arg("target_name"),
            py::arg("diff_goal_position_x"),
            py::arg("diff_goal_position_y"),
-           py::arg("diff_goal_position_z"));
+           py::arg("diff_goal_position_z"),
+           py::arg("grasp") = true);
 
   py::class_<SobitProWheelController>(m, "SobitProWheelController")
       .def(py::init<const std::string&>())

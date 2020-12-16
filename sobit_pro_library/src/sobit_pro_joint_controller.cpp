@@ -215,7 +215,7 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics(doub
   return result_angles_pairs;
 }
 
-bool SobitProJointController::moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
+bool SobitProJointController::moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, bool is_grasp) {
   geometry_msgs::Point shift;
 
   tf::StampedTransform transform_base_to_object;
@@ -311,8 +311,15 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
             << result_angles1.at(3) << std::endl;
   std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
             << result_angles2.at(3) << std::endl;
-  moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), -1.57);
-  //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
+  
+  if (is_grasp == true){
+    moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), -1.57);
+    //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
+  } else {
+    moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), 0.0);
+    //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
+  }
+  
 
   std::cout << "order : (x, y, z): (" << transform_arm_to_object.getOrigin().x() << ", " << transform_arm_to_object.getOrigin().y() << ", "
             << transform_arm_to_object.getOrigin().z() << ")" << std::endl;
