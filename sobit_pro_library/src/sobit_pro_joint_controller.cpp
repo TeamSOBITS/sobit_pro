@@ -311,7 +311,7 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
             << result_angles1.at(3) << std::endl;
   std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
             << result_angles2.at(3) << std::endl;
-  moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), -1.0);
+  moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), -1.57);
   //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
 
   std::cout << "order : (x, y, z): (" << transform_arm_to_object.getOrigin().x() << ", " << transform_arm_to_object.getOrigin().y() << ", "
