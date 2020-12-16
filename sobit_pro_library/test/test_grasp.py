@@ -14,15 +14,12 @@ def test():
     pro_wheel_ctr = SobitProWheelController(args[0])       # args[0] : C++上でros::init()を行うための引数
 
     # 決められたポーズをする
-    pro_arm_pantilt_ctr.moveToRegisterdMotion( "initial_pose" )
-
-    # カメラパンチルトを動かす
-    pro_arm_pantilt_ctr.moveHeadPanTilt( 0.0, -0.8, 2.0, True )
+    pro_arm_pantilt_ctr.moveToRegisterdMotion( "detecting_pose" )
     rospy.sleep(5.0)
 
     # 把持する対象の物体があった場合、
     # そこの位置までアームを移動させる
-    res = pro_arm_pantilt_ctr.moveGripperToTarget("onion_soup", -0.15, 0.0, 0.03, True)
+    res = pro_arm_pantilt_ctr.moveGripperToTarget("beans", -0.15, 0.0, 0.05, True)
     print("result : ", res)
     rospy.sleep(2.0)
     
