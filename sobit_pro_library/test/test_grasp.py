@@ -8,7 +8,6 @@ import sys
 
 def test():
     rospy.init_node('test')
-    r = rospy.Rate(1) # 10hz
     args = sys.argv
     pro_arm_pantilt_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
     pro_wheel_ctr = SobitProWheelController(args[0])       # args[0] : C++上でros::init()を行うための引数
