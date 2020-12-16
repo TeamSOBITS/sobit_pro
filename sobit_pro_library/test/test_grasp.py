@@ -10,24 +10,29 @@ def test():
     rospy.init_node('test')
     r = rospy.Rate(1) # 10hz
     args = sys.argv
-    pro_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
+    pro_arm_pantilt_ctr = SobitProJointController(args[0])       # args[0] : C++上でros::init()を行うための引数
     pro_wheel_ctr = SobitProWheelController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
-    pro_ctr.moveToRegisterdMotion( "initial_pose" )
-    pro_ctr.moveHeadPanTilt( 0.0, -0.8, 2.0, True )
+    # 決められたポーズをする
+    pro_arm_pantilt_ctr.moveToRegisterdMotion( "initial_pose" )
+
+    # カメラパンチルトを動かす
+    pro_arm_pantilt_ctr.moveHeadPanTilt( 0.0, -0.8, 2.0, True )
     rospy.sleep(5.0)
 
-    res = pro_ctr.moveGripperToTarget("beans", -0.15, 0.0, 0.03)
+    # 把持する対象の物体が合った場合、
+    # そこの位置までアームを移動させる
+    res = pro_arm_pantilt_ctr.moveGripperToTarget("onion_soup", -0.15, 0.0, 0.03)
     print("result : ", res)
-
-    #pro_wheel_ctr.controlWheelLinear(0.2, 0.0)
     rospy.sleep(2.0)
+    
+    # ハンドを動かす
+    pro_arm_pantilt_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
 
-    pro_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
-
-    pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0, 0.0 )
+    # 決められたポーズをする
+    pro_arm_pantilt_ctr.moveToRegisterdMotion( "high_pose" )
     rospy.sleep(0.5)
-    pro_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_arm_pantilt_ctr.moveToRegisterdMotion( "initial_pose" )
 
 if __name__ == '__main__':
     try:
