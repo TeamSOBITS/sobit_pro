@@ -10,3 +10,14 @@ sobit_pro_pose:
         head_camera_pan_joint: 0.0,
         head_camera_tilt_joint: 0.0
     }
+    - { 
+        pose_name: "high_pose",
+        arm1_1_joint: 1.0,
+        arm1_2_joint: -1.0,
+        arm2_joint: 1.0,
+        arm3_joint: -1.0,
+        arm4_joint: -1.0,
+        gripper_joint: 0.0,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
