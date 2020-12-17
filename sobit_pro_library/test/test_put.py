@@ -22,7 +22,7 @@ def test():
 
     # 物体を置くことができる位置があった場合、
     # そこの位置までアームを移動させる
-    res = pro_arm_pantilt_ctr.moveGripperToTarget("placeable_point", -0.15, 0.0, 0.08, False)
+    res = pro_arm_pantilt_ctr.moveGripperToTarget("placeable_point", -0.15, 0.0, 0.08)
     print("result : ", res)
     rospy.sleep(2.0)
 

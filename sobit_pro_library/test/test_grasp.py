@@ -16,9 +16,12 @@ def test():
     pro_arm_pantilt_ctr.moveToRegisterdMotion( "detecting_pose" )
     rospy.sleep(5.0)
 
+    # ハンドを動かす
+    pro_arm_pantilt_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+
     # 把持する対象の物体があった場合、
     # そこの位置までアームを移動させる
-    res = pro_arm_pantilt_ctr.moveGripperToTarget("beans", -0.15, 0.0, 0.05, True)
+    res = pro_arm_pantilt_ctr.moveGripperToTarget("beans", -0.15, 0.0, 0.05)
     print("result : ", res)
     rospy.sleep(2.0)
     

@@ -9,8 +9,7 @@ int main(int argc, char *argv[]) {
     /* arm2    =  1.0 */
     /* arm3    = -1.0 */
     /* arm4    = -1.0 */
-    /* gripper = -1.0 */
-    sobit_pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0, -1.0 );
+    sobit_pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0);
 
     return 0;
 }
