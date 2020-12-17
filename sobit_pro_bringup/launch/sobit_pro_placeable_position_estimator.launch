@@ -11,7 +11,7 @@
 
 		<param name="base_frame_name" type="str" value="/base_footprint"/>
 		<param name="camera_frame_name" type="str" value="/head_depth_camera_link"/>
-		<param name="map_frame_name" type="str" value="/map"/>
+		<param name="map_frame_name" type="str" value="/odom"/> <!--map-->
 
 		<param name="depth_range_min_x" type="double" value="0.1"/>
 		<param name="depth_range_max_x" type="double" value="2.0"/>
