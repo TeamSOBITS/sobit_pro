@@ -10,7 +10,8 @@ PYBIND11_MODULE(sobit_pro_module, m) {
   py::enum_<Joint>(m, "Joint")
       .value("ARM1_1_JOINT", Joint::ARM1_1_JOINT)
       .value("ARM1_2_JOINT", Joint::ARM1_2_JOINT)
-      .value("ARM2_JOINT", Joint::ARM2_JOINT)
+      .value("ARM2_1_JOINT", Joint::ARM2_1_JOINT)
+      .value("ARM2_2_JOINT", Joint::ARM2_2_JOINT)
       .value("ARM3_JOINT", Joint::ARM3_JOINT)
       .value("ARM4_JOINT", Joint::ARM4_JOINT)
       .value("GRIPPER_JOINT", Joint::GRIPPER_JOINT)
@@ -35,8 +36,7 @@ PYBIND11_MODULE(sobit_pro_module, m) {
            py::arg("arm1"),
            py::arg("arm2"),
            py::arg("arm3"),
-           py::arg("arm4"),
-           py::arg("gripper"))
+           py::arg("arm4"))
       .def("moveToRegisterdMotion", &SobitProJointController::moveToRegisterdMotion, "move to Registerd Motion", py::arg("pose_name"))
       .def("moveGripperToTarget",
            &SobitProJointController::moveGripperToTarget,
@@ -44,8 +44,7 @@ PYBIND11_MODULE(sobit_pro_module, m) {
            py::arg("target_name"),
            py::arg("diff_goal_position_x"),
            py::arg("diff_goal_position_y"),
-           py::arg("diff_goal_position_z"),
-           py::arg("grasp") = true);
+           py::arg("diff_goal_position_z"));
 
   py::class_<SobitProWheelController>(m, "SobitProWheelController")
       .def(py::init<const std::string&>())

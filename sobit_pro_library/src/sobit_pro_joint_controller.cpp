@@ -29,11 +29,12 @@ void SobitProJointController::loadPose() {
   pose_list_.clear();
   for (int i = 0; i < pose_num; i++) {
     Pose                pose;
-    std::vector<double> joint_val(8, 0.0);
+    std::vector<double> joint_val(9, 0.0);
     pose.pose_name                           = static_cast<std::string>(pose_val[i]["pose_name"]);
     joint_val[Joint::ARM1_1_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM1_1_JOINT]]);
     joint_val[Joint::ARM1_2_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM1_2_JOINT]]);
-    joint_val[Joint::ARM2_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM2_JOINT]]);
+    joint_val[Joint::ARM2_1_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM2_1_JOINT]]);
+    joint_val[Joint::ARM2_2_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM2_2_JOINT]]);
     joint_val[Joint::ARM3_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM3_JOINT]]);
     joint_val[Joint::ARM4_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM4_JOINT]]);
     joint_val[Joint::GRIPPER_JOINT]          = static_cast<double>(pose_val[i][joint_names_[Joint::GRIPPER_JOINT]]);
@@ -59,7 +60,8 @@ bool SobitProJointController::moveAllJoint(const double arm1,
     trajectory_msgs::JointTrajectory head_joint_trajectory;
     setJointTrajectory(joint_names_[Joint::ARM1_1_JOINT], arm1, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM1_2_JOINT], -arm1, sec, &arm_joint_trajectory);
-    addJointTrajectory(joint_names_[Joint::ARM2_JOINT], arm2, sec, &arm_joint_trajectory);
+    addJointTrajectory(joint_names_[Joint::ARM2_1_JOINT], arm2, sec, &arm_joint_trajectory);
+    addJointTrajectory(joint_names_[Joint::ARM2_2_JOINT], -arm2, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM3_JOINT], arm3, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM4_JOINT], arm4, sec, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::GRIPPER_JOINT], gripper, sec, &arm_joint_trajectory);
@@ -82,7 +84,10 @@ bool SobitProJointController::moveAllJoint(const double arm1,
 bool SobitProJointController::moveJoint(const Joint joint_num, const double rad, const double sec, bool is_sleep) {
   try {
     trajectory_msgs::JointTrajectory joint_trajectory;
-    if (joint_num == 0){
+  
+    // arm1_1_joint : joint_num = 0
+    // arm2_1_joint : joint_num = 2
+    if (joint_num == 0 || joint_num == 2 ){
       setJointTrajectory(joint_names_[joint_num], rad, sec, &joint_trajectory);
       addJointTrajectory(joint_names_[joint_num + 1], -rad, sec, &joint_trajectory);
     } else{
@@ -124,15 +129,15 @@ bool SobitProJointController::moveHeadPanTilt(const double head_camera_pan, cons
 }
 
 // TODO: 引数をmoveHeadPanTiltと同じに
-bool SobitProJointController::moveArm(const double arm1, const double arm2, const double arm3, const double arm4, const double gripper) {
+bool SobitProJointController::moveArm(const double arm1, const double arm2, const double arm3, const double arm4) {
   try {
     trajectory_msgs::JointTrajectory arm_joint_trajectory;
     setJointTrajectory(joint_names_[Joint::ARM1_1_JOINT], arm1, 5.0, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM1_2_JOINT], -arm1, 5.0, &arm_joint_trajectory);
-    addJointTrajectory(joint_names_[Joint::ARM2_JOINT], arm2, 5.0, &arm_joint_trajectory);
+    addJointTrajectory(joint_names_[Joint::ARM2_1_JOINT], arm2, 5.0, &arm_joint_trajectory);
+    addJointTrajectory(joint_names_[Joint::ARM2_2_JOINT], -arm2, 5.0, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM3_JOINT], arm3, 5.0, &arm_joint_trajectory);
     addJointTrajectory(joint_names_[Joint::ARM4_JOINT], arm4, 5.0, &arm_joint_trajectory);
-    addJointTrajectory(joint_names_[Joint::GRIPPER_JOINT], gripper, 5.0, &arm_joint_trajectory);
     checkPublishersConnection(pub_arm_joint_);
     pub_arm_joint_.publish(arm_joint_trajectory);
     ros::Duration(5.0).sleep();
@@ -155,7 +160,7 @@ bool SobitProJointController::moveToRegisterdMotion(const std::string& pose_name
   if (is_find) {
     ROS_INFO("I found a '%s'", pose_name.c_str());
     return moveAllJoint(joint_val[Joint::ARM1_1_JOINT],
-                        joint_val[Joint::ARM2_JOINT],
+                        joint_val[Joint::ARM2_1_JOINT],
                         joint_val[Joint::ARM3_JOINT],
                         joint_val[Joint::ARM4_JOINT],
                         joint_val[Joint::GRIPPER_JOINT],
@@ -215,7 +220,7 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics(doub
   return result_angles_pairs;
 }
 
-bool SobitProJointController::moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, bool is_grasp) {
+bool SobitProJointController::moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
   geometry_msgs::Point shift;
 
   tf::StampedTransform transform_base_to_object;
@@ -312,14 +317,8 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
   std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
             << result_angles2.at(3) << std::endl;
   
-  if (is_grasp == true){
-    moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), -1.57);
-    //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
-  } else {
-    moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3), 0.0);
-    //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3), -1.0);
-  }
-  
+  moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3));
+  //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3));
 
   std::cout << "order : (x, y, z): (" << transform_arm_to_object.getOrigin().x() << ", " << transform_arm_to_object.getOrigin().y() << ", "
             << transform_arm_to_object.getOrigin().z() << ")" << std::endl;
