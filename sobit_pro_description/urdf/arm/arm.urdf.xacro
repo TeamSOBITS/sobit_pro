@@ -46,9 +46,8 @@
       </visual>
     </link>
 
-
     <joint name="${prefix}1_2_joint" type="revolute">
-      <parent link="${prefix}1_1_link" />
+      <parent link="${prefix}_base_link" />
       <child link="${prefix}1_2_link" />
       <origin xyz="0 0 0" rpy="${M_PI / 2} 0 0" />
       <axis xyz="-1 0 0" />
@@ -60,17 +59,16 @@
       <origin xyz="0 0 0" rpy="1.570796327 0 0" />
     </link>
 
-
-    <joint name="${prefix}2_joint" type="revolute">
+    <joint name="${prefix}2_1_joint" type="revolute">
       <parent link="${prefix}1_1_link" />
-      <child link="${prefix}2_link" />
+      <child link="${prefix}2_1_link" />
       <origin xyz="0 0 0.15" rpy="-1.137 0 0" />
       <axis xyz="-1 0 0" />
       <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
-    <link name="${prefix}2_link">
+    <link name="${prefix}2_1_link">
       <visual>
         <origin xyz="0 0 -0.15" rpy="1.570796327 0 0" />
         <geometry>
@@ -79,8 +77,21 @@
       </visual>
     </link>
 
+    <joint name="${prefix}2_2_joint" type="revolute">
+      <parent link="${prefix}1_1_link" />
+      <child link="${prefix}2_2_link" />
+      <origin xyz="0 0 0.15" rpy="-1.137 0 0" />
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}2_2_link">
+      <origin xyz="0 0 -0.15" rpy="1.570796327 0 0" />
+    </link>
+
     <joint name="${prefix}3_joint" type="revolute">
-      <parent link="${prefix}2_link" />
+      <parent link="${prefix}2_1_link" />
       <child link="${prefix}3_link" />
       <origin xyz="0 -0.13594617 0.06339274" rpy="-1.30 0 0" />
       <axis xyz="-1 0 0" />
