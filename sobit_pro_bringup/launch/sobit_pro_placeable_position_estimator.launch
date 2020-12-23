@@ -3,7 +3,7 @@
 
 	<group ns = "placeable_position_estimator">
 
-		<param name="execute_default" type="bool" value="true"/>
+		<param name="execute_default" type="bool" value="false"/>
 		<param name="pub_plane_cloud" type="bool" value="true"/>
 
 		<param name="sub_point_topic_name" type="str" value="/points2"/>
