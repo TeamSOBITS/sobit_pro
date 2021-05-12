@@ -16,5 +16,5 @@ SOBIT_PROの制御を行うリポジトリ．
 また，それと同時にRvizも起動します．
 
 ```bash:
-$ roslaunch sobit_pro_bringup minimal.launch
+$ roslaunch sobit_pro_bringup sobit_pro_minimal.launch
 ```
