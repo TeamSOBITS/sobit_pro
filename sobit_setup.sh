@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/docker_ws/container/ros_melodic_sobit_pro/src/
+cd $(pwd)/src
 
 # git cloneしたいTeamSOBITSのROSパッケージを記述
 ros_packages=(
