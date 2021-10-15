@@ -2,6 +2,7 @@
 #define SOBIT_PRO_MOTOR_DRIVER_H_
 
 #include <stdio.h> // printf etc.
+#include <iostream>
 #include <dynamixel_sdk/dynamixel_sdk.h> // Uses Dynamixel SDK library
 
 // Control table address (Dynamixel X-series)
