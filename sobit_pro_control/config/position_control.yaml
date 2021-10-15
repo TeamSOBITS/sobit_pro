@@ -31,7 +31,7 @@ head_trajectory_controller:
   allow_partial_joints_goal: true
 
 dynamixel_port:
-  port_name: "/dev/input/arm_pantilt"
+  port_name: "/dev/input/dongle"
   baud_rate: 3000000
   joints:
     - arm1_1_joint
