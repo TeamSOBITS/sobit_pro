@@ -13,6 +13,8 @@ def test():
     pro_wheel_ctr.controlWheelRotateRad(1.57)
     pro_wheel_ctr.controlWheelRotateDeg(-90)
 
+    pro_wheel_ctr.controlWheelLinear(-1.0, 0.0)
+
 if __name__ == '__main__':
     try:
         test()

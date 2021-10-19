@@ -19,6 +19,10 @@ def test():
     ### gripper = -1.0 ###
     pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0)
 
+    rospy.sleep(2.0)
+
+    pro_ctr.moveArm( 1.57, 1.57, -1.57, -1.57)
+
 if __name__ == '__main__':
     try:
         test()

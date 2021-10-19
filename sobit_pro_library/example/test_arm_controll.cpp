@@ -2,7 +2,7 @@
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "sobit_pro_joiunt_controller_test");
-    sobit::SobitProJointController sobit_pro_ctr;
+    sobit_pro::SobitProJointController sobit_pro_ctr;
 
     /*  arm controll  */
     /* arm1    =  1.0 */
