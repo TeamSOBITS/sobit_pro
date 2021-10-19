@@ -35,7 +35,7 @@ pybind_add_module(sobit_pro_module MODULE src/sobit_pro_library.cpp
                                           src/sobit_pro_joint_controller.cpp
                                           src/sobit_pro_wheel_controller.cpp)
 
-add_executable(test_arm_controll test/test_arm_controll.cpp
+add_executable(test_arm_controll example/test_arm_controll.cpp
                         src/sobit_pro_joint_controller.cpp
                         src/sobit_pro_wheel_controller.cpp)
 target_link_libraries(test_arm_controll ${catkin_LIBRARIES})
