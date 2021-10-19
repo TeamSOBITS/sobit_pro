@@ -10,7 +10,7 @@
 #include <cmath>
 #include <cstring>
 
-namespace sobit {
+namespace sobit_pro {
 
 enum Joint { ARM1_1_JOINT = 0, ARM1_2_JOINT, ARM2_1_JOINT, ARM2_2_JOINT, ARM3_JOINT, ARM4_JOINT, GRIPPER_JOINT, HEAD_CAMERA_PAN_JOINT, HEAD_CAMERA_TILT_JOINT, JOINT_NUM };
 
@@ -63,7 +63,7 @@ class SobitProJointController : private ROSCommonNode {
 };
 }  // namespace sobit
 
-inline void sobit::SobitProJointController::setJointTrajectory(const std::string&                joint_name,
+inline void sobit_pro::SobitProJointController::setJointTrajectory(const std::string&                joint_name,
                                                                const double                      rad,
                                                                const double                      sec,
                                                                trajectory_msgs::JointTrajectory* jt) {
@@ -80,7 +80,7 @@ inline void sobit::SobitProJointController::setJointTrajectory(const std::string
   return;
 }
 
-inline void sobit::SobitProJointController::addJointTrajectory(const std::string&                joint_name,
+inline void sobit_pro::SobitProJointController::addJointTrajectory(const std::string&                joint_name,
                                                                const double                      rad,
                                                                const double                      sec,
                                                                trajectory_msgs::JointTrajectory* jt) {
@@ -95,7 +95,7 @@ inline void sobit::SobitProJointController::addJointTrajectory(const std::string
   return;
 }
 
-inline void sobit::SobitProJointController::checkPublishersConnection(const ros::Publisher& pub) {
+inline void sobit_pro::SobitProJointController::checkPublishersConnection(const ros::Publisher& pub) {
   ros::Rate loop_rate(10);
   while (pub.getNumSubscribers() == 0 && ros::ok()) {
     try {

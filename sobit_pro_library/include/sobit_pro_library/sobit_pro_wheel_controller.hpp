@@ -9,7 +9,7 @@
 #include <tf/transform_broadcaster.h>
 #include <sobit_pro_library/sobit_pro_library.h>
 
-namespace sobit {
+namespace sobit_pro {
     class SobitProWheelController  : private ROSCommonNode {
         protected :
             ros::NodeHandle nh_;
@@ -32,7 +32,7 @@ namespace sobit {
     };
 }
 
-inline void sobit::SobitProWheelController::checkPublishersConnection ( const ros::Publisher& pub ) {
+inline void sobit_pro::SobitProWheelController::checkPublishersConnection ( const ros::Publisher& pub ) {
     ros::Rate loop_rate(10);
     while ( pub.getNumSubscribers()	== 0 && ros::ok() ) {
         try { loop_rate.sleep(); }
@@ -41,9 +41,9 @@ inline void sobit::SobitProWheelController::checkPublishersConnection ( const ro
     return; 
 }
 
-inline void sobit::SobitProWheelController::callbackOdometry ( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; }
+inline void sobit_pro::SobitProWheelController::callbackOdometry ( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; }
 
-inline double sobit::SobitProWheelController::geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat ) {
+inline double sobit_pro::SobitProWheelController::geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat ) {
     tf::Quaternion quat;
     double roll, pitch, yaw;
     quaternionMsgToTF(geometry_quat, quat);
@@ -52,8 +52,8 @@ inline double sobit::SobitProWheelController::geometryQuat2Yaw( const geometry_m
     return yaw;
 }
 
-inline double sobit::SobitProWheelController::rad2Deg ( const double rad ) { return rad * 180.0 / M_PI;  }
+inline double sobit_pro::SobitProWheelController::rad2Deg ( const double rad ) { return rad * 180.0 / M_PI;  }
 
-inline double sobit::SobitProWheelController::deg2Rad ( const double deg ) { return deg * M_PI / 180.0; }
+inline double sobit_pro::SobitProWheelController::deg2Rad ( const double deg ) { return deg * M_PI / 180.0; }
 
 #endif /* _SOBIT_PRO_LIBRARY_WHEEL_CONTROLLER_H_ */
