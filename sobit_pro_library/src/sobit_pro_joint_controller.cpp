@@ -3,11 +3,11 @@
 
 #include <cmath>
 
-using namespace sobit;
+using namespace sobit_pro;
 
-const double sobit::SobitProJointController::arm1_link_length = 0.15;
-const double sobit::SobitProJointController::arm2_link_length = 0.15;
-const double sobit::SobitProJointController::arm3_link_length = 0.15;
+const double sobit_pro::SobitProJointController::arm1_link_length = 0.15;
+const double sobit_pro::SobitProJointController::arm2_link_length = 0.15;
+const double sobit_pro::SobitProJointController::arm3_link_length = 0.15;
 
 SobitProJointController::SobitProJointController(const std::string& name) : ROSCommonNode(name), nh_(), pnh_("~") {
   pub_arm_joint_         = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
@@ -308,7 +308,7 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
 
   /** 車輪で最適な把持位置まで移動 **/
   std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
-  sobit::SobitProWheelController wheel_ctr;
+  sobit_pro::SobitProWheelController wheel_ctr;
   wheel_ctr.controlWheelLinear(move_wheel_x, move_wheel_y);
 
   /** アームを物体のところまで移動 **/

@@ -2,7 +2,7 @@
 #include <sobit_pro_library/sobit_pro_joint_controller.h>
 #include <sobit_pro_library/sobit_pro_wheel_controller.hpp>
 
-using namespace sobit;
+using namespace sobit_pro;
 namespace py = pybind11;
 
 
