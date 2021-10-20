@@ -36,13 +36,15 @@ echo \"default-server = unix:/tmp/pulseaudio.socket \n
       enable-shm = false\" >> /tmp/pulseaudio.client.conf" | sudo tee /etc/profile.d/sound_setup.sh
 sudo bash /etc/profile.d/sound_setup.sh
 
-# Seting wheel USB
-echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6014\", ATTRS{serial}==\"E148\", SYMLINK+=\"input/dxhub\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dxhub.rules
-#sudo /etc/init.d/udev reload
+# Seting dynamixel USB1 (SOBIT PRO arm_pantilt)
+echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6015\", SYMLINK+=\"input/dynamixel1\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dynamixel1.rules
+# echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6015\", ATTRS{serial}==\"E143\", SYMLINK+=\"input/dongle\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dongle.rules
+# sudo /etc/init.d/udev reload
 
-# Seting arm_pantilt USB
-echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6015\", ATTRS{serial}==\"E143\", SYMLINK+=\"input/dongle\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dongle.rules
-#sudo /etc/init.d/udev reload
+# Seting dynamixel USB2 (SOBIT PRO wheel)
+echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6014\", SYMLINK+=\"input/dynamixel2\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dynamixel2.rules
+# echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6014\", ATTRS{serial}==\"E148\", SYMLINK+=\"input/dxhub\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dxhub.rules
+# sudo /etc/init.d/udev reload
 
 # Seting ps4_joy_control USB
 echo "KERNEL==\"uinput\", MODE=\"0666\"
@@ -50,7 +52,7 @@ echo "KERNEL==\"uinput\", MODE=\"0666\"
       KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", KERNELS==\"0005:054C:05C4.*\", MODE=\"0666\"
       KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"054c\", ATTRS{idProduct}==\"09cc\", MODE=\"0666\"
       KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", KERNELS==\"0005:054C:09CC.*\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/50-ds4drv.rules
-#sudo /etc/init.d/udev reload
+# sudo /etc/init.d/udev reload
 
 # Seting azure_kinect USB
 echo "# Bus 002 Device 116: ID 045e:097a Microsoft Corp.
@@ -65,10 +67,10 @@ echo "# Bus 002 Device 116: ID 045e:097a Microsoft Corp.
       ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"097d\", MODE=\"0666\", GROUP=\"plugdev\"
       ATTRS{idVendor}==\"045e\", ATTRS{idProduct}==\"097e\", MODE=\"0666\", GROUP=\"plugdev\"
       LABEL=\"k4a_logic_rules_end\"" | sudo tee /etc/udev/rules.d/99-k4a.rules
-#sudo /etc/init.d/udev reload
+# sudo /etc/init.d/udev reload
 
-#sudo udevadm control --reload-rules
-#sudo udevadm trigger
+sudo udevadm control --reload-rules
+sudo udevadm trigger
 
 # USB Reload
 sudo /etc/init.d/udev reload
