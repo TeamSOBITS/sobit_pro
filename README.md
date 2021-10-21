@@ -4,7 +4,7 @@ SOBIT PROを動かすために必要なリポジトリです．
 
 ※ 初めてロボットを動かす場合は，必ずロボットを動かしたことのある先輩方に付き添ってもらいながらロボットを動かしましょう．
 
-## SOBIT_PRO
+## SOBIT PRO
 ![](sobit_pro_bringup/img/sobit_pro.png)
 
 ## Prerequisites
