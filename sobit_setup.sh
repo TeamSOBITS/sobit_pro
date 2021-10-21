@@ -70,8 +70,8 @@ echo "# Bus 002 Device 116: ID 045e:097a Microsoft Corp.
 # sudo /etc/init.d/udev reload
 
 # Set up arduino-nano rules
-echo "ATTRS{idVendor}==\"1a86\", ATTRS{idProduct}==\"7523\", MODE=\"0666\", RUN+=\"/bin/stty -F /dev/ttyUSB0\"" | sudo tee /etc/udev/rules.d/60-arduino-nano.rules
-​# sudo /etc/init.d/udev reload
+# echo "ATTRS{idVendor}==\"1a86\", ATTRS{idProduct}==\"7523\", MODE=\"0666\", RUN+=\"/bin/stty -F /dev/ttyUSB0\"" | sudo tee /etc/udev/rules.d/60-arduino-nano.rules
+# sudo /etc/init.d/udev reload
 
 # Set up kobuki rules
 echo "# On precise, for some reason, USER and GROUP are getting ignored.
