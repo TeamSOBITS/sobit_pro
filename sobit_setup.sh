@@ -80,8 +80,8 @@ echo "# On precise, for some reason, USER and GROUP are getting ignored.
       ATTR{device/latency_timer}=\"1\", MODE:=\"0666\", GROUP:=\"dialout\", SYMLINK+=\"input/kobuki\", KERNEL==\"ttyUSB*\"
       # Bluetooth module (currently not supported and may have problems)
       # SUBSYSTEM==\"tty\", ATTRS{address}==\"00:00:00:41:48:22\", MODE:=\"0666\", GROUP:=\"dialout\", SYMLINK+=\"input/kobuki\"" | sudo tee /etc/udev/rules.d/57-kobuki.rules
-#sudo /etc/init.d/udev reload
-​
+# sudo /etc/init.d/udev reload
+
 # Set up xtion rules
 echo "# Make primesense device mount with writing permissions (default is read only for unknown devices)
       SUBSYSTEM==\"usb\", ATTR{idProduct}==\"0200\", ATTR{idVendor}==\"1d27\", MODE:=\"0666\", OWNER:=\"root\", GROUP:=\"video\"
@@ -95,7 +95,7 @@ echo "# Make primesense device mount with writing permissions (default is read o
       SUBSYSTEM==\"usb\", ATTR{idProduct}==\"2100\", ATTR{idVendor}==\"1d27\", MODE:=\"0666\", OWNER:=\"root\", GROUP:=\"video\"
       SUBSYSTEM==\"usb\", ATTR{idProduct}==\"2200\", ATTR{idVendor}==\"1d27\", MODE:=\"0666\", OWNER:=\"root\", GROUP:=\"video\"
       SUBSYSTEM==\"usb\", ATTR{idProduct}==\"f9db\", ATTR{idVendor}==\"1d27\", MODE:=\"0666\", OWNER:=\"root\", GROUP:=\"video\"" | sudo tee /etc/udev/rules.d/55-primesense-usb.rules
-#sudo /etc/init.d/udev reload
+# sudo /etc/init.d/udev reload
 
 sudo udevadm control --reload-rules
 sudo udevadm trigger
