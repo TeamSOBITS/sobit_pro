@@ -8,5 +8,5 @@ sobit_proの基本機能ノード起動用のパッケージ．
 また，それと同時にRvizも起動します．
 
 ```bash:
-$ roslaunch sobit_pro_bringup sobit_pro_minimal.launch
+$ roslaunch sobit_pro_bringup minimal.launch
 ```
