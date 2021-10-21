@@ -1,6 +1,6 @@
 #include <sobit_pro_library/sobit_pro_wheel_controller.hpp>
 
-using namespace sobit;
+using namespace sobit_pro;
 
 SobitProWheelController::SobitProWheelController ( const std::string &name ) : ROSCommonNode( name ), nh_(), pnh_("~") {
     sub_odom_ = nh_.subscribe( "/odom", 1, &SobitProWheelController::callbackOdometry, this );

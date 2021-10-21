@@ -1,4 +1,4 @@
-#include "sobit_pro_control.hpp"
+#include "sobit_pro_control/sobit_pro_control.hpp"
 
 void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
 

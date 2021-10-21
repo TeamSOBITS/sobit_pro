@@ -2,6 +2,7 @@
 #define SOBIT_PRO_MOTOR_DRIVER_H_
 
 #include <stdio.h> // printf etc.
+#include <iostream>
 #include <dynamixel_sdk/dynamixel_sdk.h> // Uses Dynamixel SDK library
 
 // Control table address (Dynamixel X-series)
@@ -35,7 +36,7 @@
 #define STEER_B_L                       8              // Dynamixel ID:8
 
 #define BAUDRATE                        3000000        // baud rate of Dynamixel
-#define DEVICENAME                      "/dev/input/wheel"
+#define DEVICENAME                      "/dev/input/dynamixel2"
 
 #define TORQUE_ENABLE                   1              // Value for enabling the torque
 #define TORQUE_DISABLE                  0              // Value for disabling the torque

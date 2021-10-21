@@ -1,6 +1,6 @@
-#include "sobit_pro_control.hpp"
-#include "sobit_pro_motor_driver.hpp"
-#include "sobit_pro_odometry.hpp"
+#include "sobit_pro_control/sobit_pro_control.hpp"
+#include "sobit_pro_control/sobit_pro_motor_driver.hpp"
+#include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 #include <ros/ros.h>
 #include <stdlib.h>

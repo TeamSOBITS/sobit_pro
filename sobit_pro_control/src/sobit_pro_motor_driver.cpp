@@ -1,4 +1,4 @@
-#include "sobit_pro_motor_driver.hpp"
+#include "sobit_pro_control/sobit_pro_motor_driver.hpp"
 
 // Constructor
 SobitProMotorDriver::SobitProMotorDriver():

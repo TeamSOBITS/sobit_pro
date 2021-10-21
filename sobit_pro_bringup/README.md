@@ -1,6 +1,6 @@
 # sobit_pro_bringup
 
-sobit_proの基本機能ノード起動用のパッケージ．
+sobit_proリポジトリの基本機能ノード起動用のパッケージ．
 
 ### How to use
 以下のコマンドを入力することで，SOBIT_PROを起動することができます．

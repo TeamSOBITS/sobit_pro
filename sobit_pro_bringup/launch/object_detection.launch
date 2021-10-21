@@ -1,6 +1,8 @@
 <launch>
+
   <!--YOLO objects detection-->
   <group ns = "objects_detection_yolo">
+
     <!--YOLOv3 2D-->
     <node name="pytorch_yolo_node" pkg="pytorch_yolo" type="run_yolo.py" output="screen">
       <remap from="/objects_detection_yolo/objects_rect" to="/objects_rect"/>
@@ -28,7 +30,5 @@
   <param name="cloud_topic_name" type="string" value="/points2"/>
   <param name="max_distance_to_object" type="double" value="8.0"/>
   <param name="image_width" type="int" value="1280"/>
-  
-
 
 </launch>
