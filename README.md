@@ -1,4 +1,4 @@
-# ROS Package for SOBIT_PRO
+# ROS Package for SOBIT PRO
 
 SOBIT PROを動かすために必要なリポジトリです．
 
