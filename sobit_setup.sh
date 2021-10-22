@@ -3,14 +3,11 @@
 cd $(pwd)/..
 
 # git cloneしたいTeamSOBITSのROSパッケージを記述
-# "azure_kinect_ros"
+# "azure_kinect_ros", "sobit_navigation_stack", "pytorch_yolo", "placeable_position_estimator"
 ros_packages=(
     "sobit_common" \
-    "pytorch_yolo" \
-    "sobit_navigation_stack" \
     "text_to_speech" \
-    "web_speech_recognition" \
-    "placeable_position_estimator"
+    "web_speech_recognition"
 )
 
 for ((i = 0; i < ${#ros_packages[@]}; i++)) {
