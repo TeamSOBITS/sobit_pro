@@ -27,6 +27,9 @@ $ bash sobit_setup.sh
 これにより，SOBIT PROのモータやRGB-Dカメラ，測域センサ(Lidar)などのデバイスが起動します．
 また，それと同時にRvizも起動します．
 
+:warning: ロボットをコンテナで動かす場合，動かしたいデバイスをホストPCと接続してから，コンテナを立ち上げてください．
+コンテナを立ち上げてからデバイスとの接続を行う場合，ロボットが動かない場合があります．
+
 ```bash:
 $ roslaunch sobit_pro_bringup minimal.launch
 ```
