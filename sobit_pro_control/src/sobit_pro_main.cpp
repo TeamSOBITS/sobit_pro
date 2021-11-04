@@ -114,17 +114,28 @@ int main(int argc, char **argv){
     // Publish JointState
     steer_joint_state.header.stamp = ros::Time::now();
 
+    steer_joint_state.name.resize(8);
     steer_joint_state.name[0] = "steer_f_r_joint";
     steer_joint_state.name[1] = "steer_f_l_joint";
     steer_joint_state.name[2] = "steer_b_r_joint";
     steer_joint_state.name[3] = "steer_b_l_joint";
+    steer_joint_state.name[4] = "wheel_f_r_joint";
+    steer_joint_state.name[5] = "wheel_f_l_joint";
+    steer_joint_state.name[6] = "wheel_b_r_joint";
+    steer_joint_state.name[7] = "wheel_b_l_joint";
 
-    steer_joint_state.position[0] = set_steer_angle[0];
-    steer_joint_state.position[1] = set_steer_angle[1];
-    steer_joint_state.position[2] = set_steer_angle[2];
-    steer_joint_state.position[3] = set_steer_angle[3];
+    steer_joint_state.position.resize(8);
+    steer_joint_state.position[0] = (set_steer_angle[0] - 2048) * (1.57 / 2048.);  // Convert 2048 to 1.57
+    steer_joint_state.position[1] = (set_steer_angle[1] - 2048) * (1.57 / 2048.);  // Convert 2048 to 1.57
+    steer_joint_state.position[2] = (set_steer_angle[2] - 2048) * (1.57 / 2048.);  // Convert 2048 to 1.57
+    steer_joint_state.position[3] = (set_steer_angle[3] - 2048) * (1.57 / 2048.);  // Convert 2048 to 1.57
+    steer_joint_state.position[4] = 0.0;
+    steer_joint_state.position[5] = 0.0;
+    steer_joint_state.position[6] = 0.0;
+    steer_joint_state.position[7] = 0.0;
 
     pub_joint_states.publish(sensor_msgs::JointState(steer_joint_state));
+    //std::cout << "\n[ steer_joint_state.name ]\n" << steer_joint_state << std::endl;
 
     // Write goal velocity value
     sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
@@ -151,14 +162,14 @@ int main(int argc, char **argv){
     // Update the old odom
     old_odom = result_odom;
 
-    // std::cout << "\n[ Odometry ]\n" << result_odom << std::endl;
-    // std::cout << "\n[ Odometry position ]\n" << result_odom.pose.pose.position << std::endl;
-    // std::cout << "\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation << std::endl;
-
     // Publish Odometry
     sobit_pro_odometry.pose_broadcaster(result_odom);
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
 
+    // std::cout << "\n[ Odometry ]\n" << result_odom << std::endl;
+    // std::cout << "\n[ Odometry position ]\n" << result_odom.pose.pose.position << std::endl;
+    // std::cout << "\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation << std::endl;
+  
     // pub_hz.publish(std_msgs::Empty());
 
     rate.sleep();
