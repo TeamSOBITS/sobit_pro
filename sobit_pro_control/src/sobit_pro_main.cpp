@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <stdlib.h>
 #include<bits/stdc++.h>
+#include <sensor_msgs/JointState.h>
 
 SobitProControl sobit_pro_control;
 SobitProMotorDriver sobit_pro_motor_driver;
@@ -55,14 +56,16 @@ int main(int argc, char **argv){
   ros::NodeHandle nh;
   ros::Subscriber sub_velocity = nh.subscribe("/mobile_base/commands/velocity", 1, callback);
   ros::Publisher pub_odometry = nh.advertise<nav_msgs::Odometry>("/odom", 1);
+  ros::Publisher pub_joint_states = nh.advertise<sensor_msgs::JointState>("/joint_states", 1);
   // ros::Publisher pub_hz = nh.advertise<std_msgs::Empty>("/hz", 1);
   int32_t wheel_fr_initial_position;
   int32_t wheel_fl_initial_position;
   int32_t wheel_fr_present_position;
   int32_t wheel_fl_present_position;
   int32_t steer_fr_present_position;
-  int32_t set_steer_angle;
+  int32_t *set_steer_angle;
   int32_t old_motion = 3; // Non 0, 1, 2 motion
+  sensor_msgs::JointState steer_joint_state;
   nav_msgs::Odometry result_odom;
   nav_msgs::Odometry old_odom;
 
@@ -100,14 +103,29 @@ int main(int argc, char **argv){
   while(ros::ok()){
 
     // Write goal position value
-    set_steer_angle = *sobit_pro_control.setSteerAngle();
-    sobit_pro_motor_driver.controlSteers(sobit_pro_control.setSteerAngle());    
+    set_steer_angle = sobit_pro_control.setSteerAngle();
+    sobit_pro_motor_driver.controlSteers(set_steer_angle);
 
     // Continue until the steering position reaches the goal
     do{
       steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-    }while(DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle - steer_fr_present_position) );
-  
+    }while( (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[0] - steer_fr_present_position)) & (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[1] - steer_fr_present_position)) );
+
+    // Publish JointState
+    steer_joint_state.header.stamp = ros::Time::now();
+
+    steer_joint_state.name[0] = "steer_f_r_joint";
+    steer_joint_state.name[1] = "steer_f_l_joint";
+    steer_joint_state.name[2] = "steer_b_r_joint";
+    steer_joint_state.name[3] = "steer_b_l_joint";
+
+    steer_joint_state.position[0] = set_steer_angle[0];
+    steer_joint_state.position[1] = set_steer_angle[1];
+    steer_joint_state.position[2] = set_steer_angle[2];
+    steer_joint_state.position[3] = set_steer_angle[3];
+
+    pub_joint_states.publish(sensor_msgs::JointState(steer_joint_state));
+
     // Write goal velocity value
     sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
 
@@ -137,6 +155,7 @@ int main(int argc, char **argv){
     // std::cout << "\n[ Odometry position ]\n" << result_odom.pose.pose.position << std::endl;
     // std::cout << "\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation << std::endl;
 
+    // Publish Odometry
     sobit_pro_odometry.pose_broadcaster(result_odom);
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
 
