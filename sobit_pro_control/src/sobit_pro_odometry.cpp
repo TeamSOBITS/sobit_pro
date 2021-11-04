@@ -133,6 +133,7 @@ float SobitProOdometry::position_calculation(float steer_present_position){
   return direction_deg;
 }
 
+// Pose broadcaster(Generate a pose from Odometry)
 void SobitProOdometry::pose_broadcaster(nav_msgs::Odometry tf_odom){
   static tf::TransformBroadcaster br;
   tf::Transform transform;
