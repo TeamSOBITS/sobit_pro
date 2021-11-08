@@ -106,7 +106,7 @@ class Ps3_Control:
         elif msg.axes[3] > 0.8:
             self.move_wheel_stop_motion()
             # print("カメラパンチルト（右）")
-            if self.pan_ang <= 0.6:
+            if self.pan_ang >= 0.6:
                 self.pan_ang = 0.6
             else:
                 self.pan_ang += 0.015
@@ -185,19 +185,19 @@ if __name__ == '__main__':
 # self.joy_button[5] == True
 
 # ×ボタンが押される
-# self.joy_button[1] == True
-
-# ○ボタンが押される
-# self.joy_button[2] == True
-
-# △ボタンが押される
-# self.joy_button[3] == True
-
-# □ボタンが押される
 # self.joy_button[0] == True
 
+# ○ボタンが押される
+# self.joy_button[1] == True
+
+# △ボタンが押される
+# self.joy_button[2] == True
+
+# □ボタンが押される
+# self.joy_button[3] == True
+
 # スタートボタン
-# self.joy_button[12] == True
+# self.joy_button[9] == True
 
 # 左スティック
 # self.left_joystick_lr
