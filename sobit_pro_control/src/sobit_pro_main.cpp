@@ -38,6 +38,8 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     motion = 0;
   }
 
+  set_wheel_vel = vel_twist;
+
   sobit_pro_control.getMotion(motion);
   sobit_pro_odometry.getMotion(motion);
   sobit_pro_control.setParams(vel_twist);
@@ -102,7 +104,7 @@ void SobitProMain::control_wheel(){
     sobit_pro_motor_driver.controlWheels(set_wheel_vel);
 
     // debug
-    std::cout << "\n[ set_wheel_vel ]\n" << set_wheel_vel[0] << std::endl;
+    std::cout << "\n[ set_wheel_vel ]\n" << sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)) << std::endl;
 
     // Publish JointState
     joint_state.header.stamp = ros::Time::now();
@@ -126,6 +128,12 @@ void SobitProMain::control_wheel(){
     joint_state.position[5] = 0.0;
     joint_state.position[6] = 0.0;
     joint_state.position[7] = 0.0;
+    /*
+    joint_state.position[4] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
+    joint_state.position[5] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
+    joint_state.position[6] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
+    joint_state.position[7] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
+    */
 
     pub_joint_states.publish(sensor_msgs::JointState(joint_state));
     //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;

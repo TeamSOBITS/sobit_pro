@@ -25,7 +25,7 @@ class SobitProMain{
     int32_t wheel_fl_present_position;
     int32_t steer_fr_present_position;
     int32_t *set_steer_angle;
-    int32_t *set_wheel_vel;
+    int32_t set_wheel_vel;
     int32_t old_motion = 3; // Non 0, 1, 2 motion
     sensor_msgs::JointState joint_state;
     nav_msgs::Odometry result_odom;
