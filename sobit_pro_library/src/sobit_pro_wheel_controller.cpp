@@ -66,6 +66,13 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
         double start_time = ros::Time::now().toSec();
         int loop_cnt = 1;
         geometry_msgs::Twist output_vel, initial_vel;
+        while ( curt_odom_.pose.pose.orientation.x == 0 &
+                curt_odom_.pose.pose.orientation.y == 0 &
+                curt_odom_.pose.pose.orientation.z == 0 &
+                curt_odom_.pose.pose.orientation.w == 0 ) {
+
+            ros::spinOnce();    
+        }
         double init_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
         double moving_angle_rad = 0.0;
         double abs_angle_rad =  std::fabs( angle_rad );
