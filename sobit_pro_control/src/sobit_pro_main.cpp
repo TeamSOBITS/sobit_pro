@@ -38,8 +38,6 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     motion = 0;
   }
 
-  set_wheel_vel = vel_twist;
-
   sobit_pro_control.getMotion(motion);
   sobit_pro_odometry.getMotion(motion);
   sobit_pro_control.setParams(vel_twist);
@@ -103,9 +101,6 @@ void SobitProMain::control_wheel(){
     set_wheel_vel = sobit_pro_control.setWheelVel();
     sobit_pro_motor_driver.controlWheels(set_wheel_vel);
 
-    // debug
-    std::cout << "\n[ set_wheel_vel ]\n" << sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)) << std::endl;
-
     // Publish JointState
     joint_state.header.stamp = ros::Time::now();
 
@@ -124,16 +119,10 @@ void SobitProMain::control_wheel(){
     joint_state.position[1] = (set_steer_angle[1] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
     joint_state.position[2] = (set_steer_angle[2] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
     joint_state.position[3] = (set_steer_angle[3] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    joint_state.position[4] = 0.0;
-    joint_state.position[5] = 0.0;
-    joint_state.position[6] = 0.0;
-    joint_state.position[7] = 0.0;
-    /*
-    joint_state.position[4] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
-    joint_state.position[5] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
-    joint_state.position[6] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
-    joint_state.position[7] = sqrtf(powf(set_wheel_vel.linear.x, 2.) + powf(set_wheel_vel.linear.y, 2.)); // Euclidean distance
-    */
+    joint_state.position[4] = set_wheel_vel[0] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+    joint_state.position[5] = set_wheel_vel[1] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+    joint_state.position[6] = set_wheel_vel[2] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+    joint_state.position[7] = set_wheel_vel[3] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
 
     pub_joint_states.publish(sensor_msgs::JointState(joint_state));
     //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;
