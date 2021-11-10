@@ -119,7 +119,7 @@ class Ps4_Control:
         elif msg.axes[3] > 0.8:
             self.move_wheel_stop_motion()
             # print("カメラパンチルト（右）")
-            if self.pan_ang >= 0.6:
+            if self.pan_ang <= 0.6:
                 self.pan_ang = 0.6
             else:
                 self.pan_ang += 0.015

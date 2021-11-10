@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <stdio.h> // printf etc.
+#include <stdlib.h>
 #include <geometry_msgs/Twist.h>
 #include <std_msgs/Empty.h>
 
