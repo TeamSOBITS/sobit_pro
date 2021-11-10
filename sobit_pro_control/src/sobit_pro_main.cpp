@@ -97,34 +97,38 @@ void SobitProMain::control_wheel(){
       steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
     }while( (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[0] - steer_fr_present_position)) & (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[1] - steer_fr_present_position)) );
 
-    // Publish JointState
-    steer_joint_state.header.stamp = ros::Time::now();
-
-    steer_joint_state.name.resize(8);
-    steer_joint_state.name[0] = "steer_f_r_joint";
-    steer_joint_state.name[1] = "steer_f_l_joint";
-    steer_joint_state.name[2] = "steer_b_r_joint";
-    steer_joint_state.name[3] = "steer_b_l_joint";
-    steer_joint_state.name[4] = "wheel_f_r_joint";
-    steer_joint_state.name[5] = "wheel_f_l_joint";
-    steer_joint_state.name[6] = "wheel_b_r_joint";
-    steer_joint_state.name[7] = "wheel_b_l_joint";
-
-    steer_joint_state.position.resize(8);
-    steer_joint_state.position[0] = (set_steer_angle[0] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[1] = (set_steer_angle[1] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[2] = (set_steer_angle[2] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[3] = (set_steer_angle[3] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[4] = 0.0;
-    steer_joint_state.position[5] = 0.0;
-    steer_joint_state.position[6] = 0.0;
-    steer_joint_state.position[7] = 0.0;
-
-    pub_joint_states.publish(sensor_msgs::JointState(steer_joint_state));
-    //std::cout << "\n[ steer_joint_state ]\n" << steer_joint_state << std::endl;
-
     // Write goal velocity value
-    sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
+    set_wheel_vel = sobit_pro_control.setWheelVel();
+    sobit_pro_motor_driver.controlWheels(set_wheel_vel);
+
+    // debug
+    std::cout << "\n[ set_wheel_vel ]\n" << set_wheel_vel[0] << std::endl;
+
+    // Publish JointState
+    joint_state.header.stamp = ros::Time::now();
+
+    joint_state.name.resize(8);
+    joint_state.name[0] = "steer_f_r_joint";
+    joint_state.name[1] = "steer_f_l_joint";
+    joint_state.name[2] = "steer_b_r_joint";
+    joint_state.name[3] = "steer_b_l_joint";
+    joint_state.name[4] = "wheel_f_r_joint";
+    joint_state.name[5] = "wheel_f_l_joint";
+    joint_state.name[6] = "wheel_b_r_joint";
+    joint_state.name[7] = "wheel_b_l_joint";
+
+    joint_state.position.resize(8);
+    joint_state.position[0] = (set_steer_angle[0] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[1] = (set_steer_angle[1] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[2] = (set_steer_angle[2] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[3] = (set_steer_angle[3] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[4] = 0.0;
+    joint_state.position[5] = 0.0;
+    joint_state.position[6] = 0.0;
+    joint_state.position[7] = 0.0;
+
+    pub_joint_states.publish(sensor_msgs::JointState(joint_state));
+    //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;
 
     // Set the present position of the wheel
     wheel_fr_present_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
@@ -170,8 +174,6 @@ int main(int argc, char **argv){
 
   // Create SobitProMain instance
   SobitProMain sobit_pro_main;
-
-
 
   // Start up motor
   sobit_pro_motor_driver.init();
