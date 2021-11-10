@@ -44,6 +44,13 @@ PYBIND11_MODULE(sobit_pro_module, m) {
            py::arg("target_name"),
            py::arg("diff_goal_position_x"),
            py::arg("diff_goal_position_y"),
+           py::arg("diff_goal_position_z"))
+      .def("moveGripperToPlaceablePosition",
+           &SobitProJointController::moveGripperToPlaceablePosition,
+           "move Gripper To Placeable Position",
+           py::arg("target_name"),
+           py::arg("diff_goal_position_x"),
+           py::arg("diff_goal_position_y"),
            py::arg("diff_goal_position_z"));
 
   py::class_<SobitProWheelController>(m, "SobitProWheelController")
