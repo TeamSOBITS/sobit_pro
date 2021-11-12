@@ -1,0 +1,53 @@
+<!--
+Copyright (c) Microsoft Corporation. All rights reserved.
+Licensed under the MIT License.
+-->
+
+<launch>
+   <!-- Start the K4A sensor driver -->
+  <group ns="k4a" >
+    <arg name="tf_prefix"         default="head_" />                <!-- Prefix added to tf frame IDs. It typically contains a trailing '_' unless empty. -->
+    <arg name="overwrite_robot_description" default="true" />       <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
+
+
+    <!-- Spawn a nodelet manager -->
+    <node pkg="nodelet" type="nodelet" name="manager" args="manager" output="screen">
+      <param name="num_worker_threads" value="16" />
+    </node>
+
+    <!-- Spawn an image_proc/rectify nodelet to rectify the RGB image -->
+    <node pkg="nodelet" type="nodelet" name="rectify_rgb"
+          args="load image_proc/rectify manager --no-bond"
+          respawn="true">
+      <remap from="image_mono"  to="rgb_to_depth/image_raw" />
+      <remap from="image_rect"  to="rgb_to_depth/image_rect" />
+      <param name="interpolation" value="0" />
+    </node>
+
+    <!-- Spawn an image_proc/rectify nodelet to rectify the depth image -->
+    <node pkg="nodelet" type="nodelet" name="rectify_depth"
+          args="load image_proc/rectify manager --no-bond"
+          respawn="true">
+      <remap from="image_mono"  to="depth/image_raw" />
+      <remap from="image_rect"  to="depth/image_rect" />
+      <param name="interpolation" value="0" />
+    </node>
+
+    <node pkg="nodelet" type="nodelet" name="k4a_ros_bridge"
+          args="load Azure_Kinect_ROS_Driver/K4AROSBridgeNodelet manager --no-bond"
+          respawn="true">
+      <param name="tf_prefix"         type="string" value="$(arg tf_prefix)" />
+      <param name="depth_enabled"     value="true" />
+      <param name="depth_mode"        value="WFOV_2X2BINNED" />
+      <param name="color_enabled"     value="true" />
+      <param name="color_resolution"  value="1536P" />
+      <param name="fps"               value="30" />
+      <param name="point_cloud"       value="true" />
+      <param name="rgb_point_cloud"   value="true" />
+      <param name="required"          value="true" />
+      <param name="imu_rate_target"   value="0" />
+
+    </node>
+
+  </group>
+</launch>

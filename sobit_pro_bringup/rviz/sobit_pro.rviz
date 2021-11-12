@@ -62,10 +62,14 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        arm1_link:
-          Value: false
-        arm2_link:
-          Value: false
+        arm1_1_link:
+          Value: true
+        arm1_2_link:
+          Value: true
+        arm2_1_link:
+          Value: true
+        arm2_2_link:
+          Value: true
         arm3_link:
           Value: false
         arm4_link:
@@ -94,15 +98,35 @@ Visualization Manager:
           Value: false
         gripper_outer_r_link:
           Value: false
-        head_camera_link:
-          Value: false
+        head_camera_base:
+          Value: true
         head_camera_pan_link:
           Value: false
         head_camera_tilt_link:
           Value: false
-        map:
+        head_depth_camera_link:
+          Value: true
+        head_imu_link:
+          Value: true
+        head_rgb_camera_link:
           Value: true
         odom:
+          Value: true
+        steer_b_l_link:
+          Value: true
+        steer_b_r_link:
+          Value: true
+        steer_f_l_link:
+          Value: true
+        steer_f_r_link:
+          Value: true
+        wheel_b_l_link:
+          Value: true
+        wheel_b_r_link:
+          Value: true
+        wheel_f_l_link:
+          Value: true
+        wheel_f_r_link:
           Value: true
       Marker Scale: 1
       Name: TF
@@ -110,14 +134,12 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        map:
-          {}
         odom:
           base_footprint:
             base_link:
               arm_base_link:
-                arm1_link:
-                  arm2_link:
+                arm1_1_link:
+                  arm2_1_link:
                     arm3_link:
                       arm4_link:
                         gripper_inner_l_link:
@@ -132,14 +154,34 @@ Visualization Manager:
                           {}
                         gripper_outer_r_link:
                           {}
+                  arm2_2_link:
+                    {}
+                arm1_2_link:
+                  {}
                 arm_fixed_link:
                   {}
               base_laser_link:
                 {}
               head_camera_pan_link:
                 head_camera_tilt_link:
-                  head_camera_link:
-                    {}
+                  head_camera_base:
+                    head_depth_camera_link:
+                      head_imu_link:
+                        {}
+                      head_rgb_camera_link:
+                        {}
+              steer_b_l_link:
+                wheel_b_l_link:
+                  {}
+              steer_b_r_link:
+                wheel_b_r_link:
+                  {}
+              steer_f_l_link:
+                wheel_f_l_link:
+                  {}
+              steer_f_r_link:
+                wheel_f_r_link:
+                  {}
       Update Interval: 0
       Value: true
     - Alpha: 1
@@ -152,16 +194,24 @@ Visualization Manager:
         Expand Link Details: false
         Expand Tree: false
         Link Tree Style: Links in Alphabetic Order
-        arm1_link:
+        arm1_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        arm2_link:
+        arm1_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        arm2_1_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        arm2_2_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         arm3_link:
           Alpha: 1
           Show Axes: false
@@ -228,7 +278,7 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
-        head_camera_link:
+        head_camera_base:
           Alpha: 1
           Show Axes: false
           Show Trail: false
@@ -303,9 +353,7 @@ Visualization Manager:
       Enabled: true
       Invert Rainbow: false
       Max Color: 255; 255; 255
-      Max Intensity: 1468
       Min Color: 0; 0; 0
-      Min Intensity: 509
       Name: LaserScan
       Position Transformer: XYZ
       Queue Size: 10
@@ -363,18 +411,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 2.9612889289855957
-        Y: 1.817298173904419
-        Z: 0.0033720540814101696
+        X: 3.2669594287872314
+        Y: 0.9555442929267883
+        Z: -0.02096697688102722
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.054796814918518
+      Pitch: 0.28979742527008057
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 3.430389404296875
+      Yaw: 3.4903907775878906
     Saved: ~
 Window Geometry:
   Displays:
