@@ -332,8 +332,8 @@ void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::
 
   /*
   for( int i = 0; i <= sizeof(msg) / sizeof(msg); ++i ) {
-    if(msg[i].joint_name == "arm_flex_joint") {
-      arm_flex_joint_current_ = msg[i].current_ma;
+    if(msg[i].joint_name == "arm1_1_joint") {
+      arm1_1_joint_current_ = msg[i].current_ma;
     }
   }
   */
@@ -454,7 +454,7 @@ bool SobitProJointController::moveGripperToPlaceablePosition(const std::string& 
     std::cout << "result: (x, y, z): (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
 
     // ハンドのジョイントに負荷がかかった場合、そこで停止する
-    if( arm_flex_joint_current_ < 13140 ){
+    if( arm1_1_joint_current_ < 13140 ){
       break;
     }
 
