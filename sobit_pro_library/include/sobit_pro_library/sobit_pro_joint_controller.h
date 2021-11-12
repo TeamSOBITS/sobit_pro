@@ -54,7 +54,7 @@ class SobitProJointController : private ROSCommonNode {
   geometry_msgs::Point forwardKinematics(double arm1_joint_angle, double arm2_joint_angle, double arm3_joint_angle);
   std::vector<std::vector<double>>  inverseKinematics(double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle);
 
-  double arm_flex_joint_current_ = 16140;
+  double arm1_1_joint_current_ = 16140;
   void callbackCurrentStateArray(const sobit_common_msg::current_state_array);
   ros::Subscriber sub_current_state_array = nh_.subscribe("/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this);
 
