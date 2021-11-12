@@ -328,11 +328,12 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
 }
 
 void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::current_state_array msg) {
-  std::cout << "sizeof(msg)" << sizeof(msg) << std::endl;
 
-  for( int i = 0; i <= sizeof(msg); ++i ) {
-    if(msg[i].joint_name == "arm1_1_joint") {
-      arm1_1_joint_current_ = msg[i].current_ma;
+  for( int i = 0; i <= sizeof(msg.current_state_array) / sizeof(msg.current_state_array[0]); ++i ) {
+    std::cout << "\nmsg:" << msg.current_state_array[i].joint_name << std::endl;
+
+    if(msg.current_state_array[i].joint_name == "arm1_1_joint") {
+      arm1_1_joint_current_ = msg.current_state_array[i].current_ma;
     }
   }
 
@@ -393,7 +394,7 @@ bool SobitProJointController::moveGripperToPlaceablePosition(const std::string& 
     double arm2_joint_to_target_x = arm_to_target_x - arm_to_arm2_joint_x;
     double arm2_joint_to_target_y = arm_to_target_y;
     double arm2_joint_to_target_z = arm_to_target_z - (arm_to_target_z / 3.0);
-    std::cout << "arm2_joint_to_target_x: " << arm2_joint_to_target_x << ", arm2_joint_to_target_z: " << arm2_joint_to_target_z << std::endl;
+    //std::cout << "arm2_joint_to_target_x: " << arm2_joint_to_target_x << ", arm2_joint_to_target_z: " << arm2_joint_to_target_z << std::endl;
 
     // 車輪の移動量の計算
     double move_wheel_y = arm2_joint_to_target_y;
@@ -405,7 +406,7 @@ bool SobitProJointController::moveGripperToPlaceablePosition(const std::string& 
     double diagonal_length = std::sqrt(std::pow(arm2_joint_to_target_x, 2) + std::pow(arm2_joint_to_target_z, 2));
     // arm2_joint_to_target_z を基準に移動量を算出
     // diagonal_lengthを30に固定して計算
-    std::cout << "diagonal_length: " << diagonal_length << std::endl;
+    //std::cout << "diagonal_length: " << diagonal_length << std::endl;
     if ((arm2_link_length + arm3_link_length) < diagonal_length || diagonal_length < arm2_link_length * std::sqrt(2) || arm2_joint_to_target_x <= 0) {
       double x               = std::sqrt(std::pow(0.30, 2) - std::pow(arm2_joint_to_target_z, 2));
       move_wheel_x           = arm2_joint_to_target_x - x;
@@ -431,8 +432,8 @@ bool SobitProJointController::moveGripperToPlaceablePosition(const std::string& 
       // std::cout << "diagonal_length: " << diagonal_length << std::endl;
     }
     */
-    std::cout << "move_wheel_x: " << move_wheel_x << ", move_whell_y: " << move_wheel_y << std::endl;
-    std::cout << "arm2_joint_to_target_x: " << arm2_joint_to_target_x << std::endl;
+    // std::cout << "move_wheel_x: " << move_wheel_x << ", move_whell_y: " << move_wheel_y << std::endl;
+    // std::cout << "arm2_joint_to_target_x: " << arm2_joint_to_target_x << std::endl;
 
     std::vector<std::vector<double>> result         = inverseKinematics(arm2_joint_to_target_x, arm2_joint_to_target_z, arm1_joint_angle);
     std::vector<double>              result_angles1 = result.at(0);
@@ -452,8 +453,8 @@ bool SobitProJointController::moveGripperToPlaceablePosition(const std::string& 
     /** アームを物体のところまで移動 **/
     std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
               << result_angles1.at(3) << std::endl;
-    std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
-              << result_angles2.at(3) << std::endl;
+    //std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
+    //          << result_angles2.at(3) << std::endl;
 
     moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3));
     //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3));
