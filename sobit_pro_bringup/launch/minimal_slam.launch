@@ -3,9 +3,6 @@
   <!--sobit pro control-->
   <include file="$(find sobit_pro_control)/launch/sobit_pro_control.launch"/>
 
-    <!-- Probability of main sound -->
-    <param name="sound_param" value="85"/>
-
   <!--urg-->
   <include file="$(find sobit_pro_bringup)/launch/urg.launch"/>
 
