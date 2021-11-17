@@ -329,10 +329,11 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
 
 void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::current_state_array msg) {
 
-  for( int i = 0; i <= sizeof(msg.current_state_array) / sizeof(msg.current_state_array[0]); ++i ) {
-    std::cout << "\nmsg:" << msg.current_state_array[i].joint_name << std::endl;
+  for( int i = 0; i <= sizeof(msg.current_state_array) / sizeof(msg.current_state_array[0]); ++i ) {    
+    if(msg.current_state_array[i].joint_name == "arm4_joint") {
+      std::cout << "\njoint_name:" << msg.current_state_array[i].joint_name << std::endl;
+      std::cout << "\njoint_current:" << msg.current_state_array[i].current_ma << std::endl;
 
-    if(msg.current_state_array[i].joint_name == "arm1_1_joint") {
       arm1_1_joint_current_ = msg.current_state_array[i].current_ma;
     }
   }
@@ -369,7 +370,7 @@ bool SobitProJointController::moveGripperToPlaceablePosition(const std::string& 
 
   /** 目標値から0.1[m]程下げた位置までアームを移動 **/
   /**  ハンドに負荷がかかった場合はそこで停止する  **/
-  while( -0.1 < target_z ) {
+  while( -target_z < diff_goal_position_z ) {
 
     // 目標値から差分を取った位置をゴールとする
     arm_to_target_x = const_arm_to_target_x - old_move_wheel_x;
