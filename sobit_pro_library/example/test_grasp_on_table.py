@@ -27,7 +27,10 @@ def test():
     # そこの位置までアームを移動させる
     # res = pro_joint_ctr.moveGripperToTargetCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.05 )
 
-    if( res == True ) {
+    # 物体を掴むことが出来たかの確認
+    grasp = pro_joint_ctr.graspDecision()
+
+    if( (res == True) and (grasp == True) ) {
 
         # ハンドを動かす
         pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
