@@ -12,7 +12,7 @@ def test():
     rospy.init_node('test')
     args = sys.argv
     pro_joint_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
-    pro_wheel_ctr = SobitProWheelController(args[0])       # args[0] : C++上でros::init()を行うための引数
+    pro_wheel_ctr = SobitProWheelController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
     # 決められたポーズをする
     pro_joint_ctr.moveToRegisterdMotion( "detecting_pose" )
@@ -33,27 +33,40 @@ def test():
     rospy.sleep(10.0)
     """
 
-    # 物体を置ける位置に置く処理をする
-    res = pro_joint_ctr.moveGripperToPlaceablePosition("placeable_point", -0.15, 0.0, 0.2)
-    print("result : ", res)
-
-    """
-    # 物体を置くことができる位置があった場合、
+    # 物体をおける位置のTF(placeable_point)があった場合、
     # そこの位置までアームを移動させる
-    res = pro_joint_ctr.moveGripperToTarget("placeable_point", -0.15, 0.0, 0.08)
-    print("result : ", res)
-    rospy.sleep(2.0)
-    """
+    res = pro_joint_ctr.moveGripperToTargetTF( "placeable_point", -0.15, 0.0, 0.07 )
 
-    # ハンドを動かす
-    pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+    # 物体をおける位置の座標を指定して、
+    # そこの位置までアームを移動させる
+    # res = pro_joint_ctr.moveGripperToTargetCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.07 )
+
+    # 物体をおける位置のTF(placeable_point)があった場合、
+    # そこの位置までアームを下げながら移動させる
+    # ただし、物体がおける位置に触れた時はその位置で停止する
+    # res = pro_joint_ctr.moveGripperToPlaceablePositionTF( "placeable_point", -0.15, 0.0, 0.2 )
+
+    # 物体をおける位置のTF(placeable_point)があった場合、
+    # そこの位置までアームを下げながら移動させる
+    # ただし、物体がおける位置に触れた時はその位置で停止する
+    # res = pro_joint_ctr.moveGripperToPlaceablePositionCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
+
+    if( res == True ){
+
+        # ハンドを動かす
+        pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+
+        # 決められたポーズをする
+        pro_joint_ctr.moveToRegisterdMotion( "put_high_pose" )
+    }
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "put_high_pose" )
     pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
 
+    """
     Popen(['rosnode','kill','/placeable_position_estimator/placeable_position_estimater_node'])
     rospy.sleep(6)
+    """
 
 if __name__ == '__main__':
     try:

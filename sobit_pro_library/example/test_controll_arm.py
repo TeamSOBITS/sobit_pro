@@ -9,19 +9,16 @@ def test():
     rospy.init_node('test')
     r = rospy.Rate(1) # 10hz
     args = sys.argv
-    pro_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
+    pro_joint_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
-    ###  arm controll  ###
-    ### arm1    =  1.0 ###
-    ### arm2    =  1.0 ###
-    ### arm3    = -1.0 ###
-    ### arm4    = -1.0 ###
-    ### gripper = -1.0 ###
-    pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0)
+    # アームを動かす
+    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, -1.0)
 
-    rospy.sleep(2.0)
+    # ハンドを動かす
+    pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
-    pro_ctr.moveArm( 1.57, 1.57, -1.57, -1.57)
+    # 決められたポーズをする
+    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
 
 if __name__ == '__main__':
     try:

@@ -2,14 +2,16 @@
 
 int main(int argc, char *argv[]) {
     ros::init(argc, argv, "sobit_pro_joiunt_controller_test");
-    sobit_pro::SobitProJointController sobit_pro_ctr;
+    sobit_pro::SobitProJointController pro_joint_ctr;
 
-    /*  arm controll  */
-    /* arm1    =  1.0 */
-    /* arm2    =  1.0 */
-    /* arm3    = -1.0 */
-    /* arm4    = -1.0 */
-    sobit_pro_ctr.moveArm( 1.0, 1.0, -1.0, -1.0);
+    // アームを動かす
+    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, -1.0 );
+
+    // ハンドを動かす
+    pro_joint_ctr.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
+
+    // 決められたポーズをする
+    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" );
 
     return 0;
 }
