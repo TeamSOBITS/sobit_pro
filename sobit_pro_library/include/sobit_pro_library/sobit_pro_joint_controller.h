@@ -54,7 +54,8 @@ class SobitProJointController : private ROSCommonNode {
   geometry_msgs::Point forwardKinematics(double arm1_joint_angle, double arm2_joint_angle, double arm3_joint_angle);
   std::vector<std::vector<double>>  inverseKinematics(double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle);
 
-  double arm1_1_joint_current_ = 16140;
+  double arm4_joint_current_ = 0.;
+  double gripper_joint_current_ = 0.;
   void callbackCurrentStateArray(const sobit_common_msg::current_state_array);
   ros::Subscriber sub_current_state_array = nh_.subscribe("/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this);
 
@@ -66,9 +67,11 @@ class SobitProJointController : private ROSCommonNode {
   bool moveArm(const double arm1, const double arm2, const double arm3, const double arm4);
   bool moveHeadPanTilt(const double head_camera_pan, const double head_camera_tilt, const double sec, bool is_sleep = true);
   bool moveToRegisterdMotion(const std::string& pose_name);
-  bool moveGripperToTargetCoord(const double goal_position_x, const double goal_position_y, const double goal_position_z);
-  bool moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
-  bool moveGripperToPlaceablePosition(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
+  bool moveGripperToTargetCoord(const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
+  bool moveGripperToTargetTF(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
+  bool moveGripperToPlaceablePositionCoord(const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
+  bool moveGripperToPlaceablePositionTF(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z);
+  bool graspDecision();
 };
 }  // namespace sobit
 
