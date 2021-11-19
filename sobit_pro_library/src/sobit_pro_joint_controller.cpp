@@ -223,7 +223,7 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics(doub
 bool SobitProJointController::moveGripperToTargetCoord(const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
   //debug
   geometry_msgs::Point shift;
-  
+
   double arm_to_object_x = goal_position_x + shift.x + diff_goal_position_x;
   double arm_to_object_y = goal_position_y + shift.y + diff_goal_position_y;
   double arm_to_object_z = goal_position_z + shift.z + diff_goal_position_z;
@@ -316,7 +316,7 @@ bool SobitProJointController::moveGripperToTargetCoord(const double goal_positio
 }
 
 void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::current_state_array msg) {
-
+  ros::spinOnce();
   for( int i = 0; i <= sizeof(msg.current_state_array) / sizeof(msg.current_state_array[0]); ++i ) {    
     if(msg.current_state_array[i].joint_name == "arm4_joint") {
       
@@ -326,7 +326,7 @@ void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::
       arm4_joint_current_ = msg.current_state_array[i].current_ma;
     }
 
-    else if(msg.current_state_array[i].joint_name == "gripper_joint") {
+    if(msg.current_state_array[i].joint_name == "gripper_joint") {
       
       std::cout << "\njoint_name:" << msg.current_state_array[i].joint_name << std::endl;
       std::cout << "\njoint_current:" << msg.current_state_array[i].current_ma << std::endl;
@@ -334,8 +334,6 @@ void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::
       gripper_joint_current_ = msg.current_state_array[i].current_ma;
     }
   }
-
-  return;
 }
 
 bool SobitProJointController::moveGripperToTargetTF(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
@@ -408,10 +406,14 @@ bool SobitProJointController::moveGripperToPlaceablePositionTF(const std::string
 
 bool SobitProJointController::graspDecision() {
 
-  if( 500 < gripper_joint_current_ && gripper_joint_current_ < 1000 ){
+  std::cout<< gripper_joint_current_ <<std::endl;
+  if( 500 <= gripper_joint_current_ && gripper_joint_current_ <= 1000 ) {
     return true;
   }
   else {
     return false;
   }
+
+  ros::spinOnce();
+
 }

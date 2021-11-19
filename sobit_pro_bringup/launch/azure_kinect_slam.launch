@@ -39,6 +39,7 @@ Licensed under the MIT License.
       <param name="point_cloud"       value="true" />
       <param name="rgb_point_cloud"   value="true" />
       <param name="required"          value="true" />
+      <param name="point_cloud_in_depth_frame"   type="bool"   value="false" />
       <param name="imu_rate_target"   value="0" />
     </node>
   </group>
