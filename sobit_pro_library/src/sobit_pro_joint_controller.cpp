@@ -320,18 +320,14 @@ void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::
 
   for ( const auto current_state : msg.current_state_array ) {
     if(current_state.joint_name == "arm4_joint") {
-      
-      std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
-      std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-
+      //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
+      //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
       arm4_joint_current_ = current_state.current_ma;
     }
 
     if(current_state.joint_name == "gripper_joint") {
-      
-      std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
-      std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-
+      //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
+      //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
       gripper_joint_current_ = current_state.current_ma;
     }
   }
