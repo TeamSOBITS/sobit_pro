@@ -37,6 +37,7 @@ class SobitProJointController : private ROSCommonNode {
   static const double arm1_link_length;
   static const double arm2_link_length;
   static const double arm3_link_length;
+  static const double hand_length;
 
   void                 setJointTrajectory(const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt);
   void                 addJointTrajectory(const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt);

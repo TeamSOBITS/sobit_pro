@@ -8,6 +8,7 @@ using namespace sobit_pro;
 const double sobit_pro::SobitProJointController::arm1_link_length = 0.15;
 const double sobit_pro::SobitProJointController::arm2_link_length = 0.15;
 const double sobit_pro::SobitProJointController::arm3_link_length = 0.15;
+const double sobit_pro::SobitProJointController::hand_length = 25.0;
 
 SobitProJointController::SobitProJointController(const std::string& name) : ROSCommonNode(name), nh_(), pnh_("~") {
   pub_arm_joint_         = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
@@ -229,7 +230,7 @@ bool SobitProJointController::moveGripperToTargetCoord(const double goal_positio
   double arm_to_object_z = goal_position_z + shift.z + diff_goal_position_z;
 
   double sum_arm123_link_length = arm1_link_length + arm2_link_length + arm3_link_length;
-  if ((arm_to_object_z < -(sum_arm123_link_length)) || (sum_arm123_link_length < arm_to_object_z)) {
+  if ((arm_to_object_z < -(sum_arm123_link_length+hand_length)) || (sum_arm123_link_length < arm_to_object_z)) {
     std::cout << "Armが届きません。" << std::endl;
     return false;
   }
@@ -306,7 +307,12 @@ bool SobitProJointController::moveGripperToTargetCoord(const double goal_positio
   //std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
   //          << result_angles2.at(3) << std::endl;
   
-  moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3));
+  if (arm_to_object_z < -sum_arm123_link_length){
+    moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3)-1.57); 
+  }
+  else{
+    moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3));
+  }
   //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3));
 
   std::cout << "order : (x, y, z): (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
