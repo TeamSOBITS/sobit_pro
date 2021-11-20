@@ -4,7 +4,7 @@
 
   <xacro:property name="M_PI" value="3.14159265359" />
 
-  <macro name="position_joint_transmission" params="joint reduction">
+  <xacro:macro name="position_joint_transmission" params="joint reduction">
     <transmission name="${joint}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${joint}">
@@ -15,6 +15,6 @@
         <mechanicalReduction>${reduction}</mechanicalReduction>
       </actuator>
     </transmission>
-  </macro>
+  </xacro:macro>
   
 </robot>
