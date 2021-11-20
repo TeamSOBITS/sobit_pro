@@ -15,21 +15,29 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
   if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z == 0){
     // printf("Translational motion\n");
     motion = TRANSLATIONAL_MOTION;
+    wheels_error.data = false;
+    pub_wheels_error.publish(wheels_error);
   }
   // Rotational motion
   else if(vel_twist.linear.x == 0 && vel_twist.linear.y == 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z != 0){
     // printf("Rotational motion\n");
     motion = ROTATIONAL_MOTION;
+    wheels_error.data = false;
+    pub_wheels_error.publish(wheels_error);
   }
   // Swivel motion(This motion can not move)
   else if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.angular.z != 0){
     printf("Failed to change the motion!\n");
     // Motion can be added
+    wheels_error.data = true;
+    pub_wheels_error.publish(wheels_error);
     return;
   }
   // ERROR
   else if(vel_twist.linear.z != 0 || vel_twist.angular.x != 0 || vel_twist.angular.y != 0){
     printf("Failed to change the motion!\n");
+    wheels_error.data = true;
+    pub_wheels_error.publish(wheels_error);
     return;
   }
   // Stop motion
