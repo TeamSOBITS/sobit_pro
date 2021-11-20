@@ -8,7 +8,7 @@ using namespace sobit_pro;
 const double sobit_pro::SobitProJointController::arm1_link_length = 0.15;
 const double sobit_pro::SobitProJointController::arm2_link_length = 0.15;
 const double sobit_pro::SobitProJointController::arm3_link_length = 0.15;
-const double sobit_pro::SobitProJointController::hand_length = 25.0;
+const double sobit_pro::SobitProJointController::hand_length      = 25.0;
 
 SobitProJointController::SobitProJointController(const std::string& name) : ROSCommonNode(name), nh_(), pnh_("~") {
   pub_arm_joint_         = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
@@ -230,7 +230,7 @@ bool SobitProJointController::moveGripperToTargetCoord(const double goal_positio
   double arm_to_object_z = goal_position_z + shift.z + diff_goal_position_z;
 
   double sum_arm123_link_length = arm1_link_length + arm2_link_length + arm3_link_length;
-  if ((arm_to_object_z < -(sum_arm123_link_length+hand_length)) || (sum_arm123_link_length < arm_to_object_z)) {
+  if ((arm_to_object_z < -(sum_arm123_link_length + hand_length)) || (sum_arm123_link_length < arm_to_object_z)) {
     std::cout << "Armが届きません。" << std::endl;
     return false;
   }
