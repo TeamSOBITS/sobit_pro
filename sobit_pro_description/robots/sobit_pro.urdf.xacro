@@ -27,8 +27,8 @@
   <xacro:head prefix="head_camera" parent="base_link" />
   <xacro:azure_kinect prefix="head_camera" parent="head_camera_tilt_link" />
   <xacro:urg parent="base_link"/>
-  <xacro:realsense_l515 parent="arm4_link" name="camera_l515" use_nominal_extrinsics="false" add_plug="false" use_mesh="true">
-    <origin xyz="0 -0.10 -0.03" rpy="0 0 -${M_PI/2.0}"/>
+  <xacro:realsense_l515 parent="arm4_link" name="camera_l515" use_nominal_extrinsics="true" add_plug="false" use_mesh="true">
+    <origin xyz="0 -0.09625 -0.0305" rpy="0 0 -${M_PI/2.0}"/>
   </xacro:realsense_l515>
   <!--
   <stack_hexagons parent="base_link" />
