@@ -317,21 +317,22 @@ bool SobitProJointController::moveGripperToTargetCoord(const double goal_positio
 
 void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::current_state_array msg) {
   ros::spinOnce();
-  for( int i = 0; i <= sizeof(msg.current_state_array) / sizeof(msg.current_state_array[0]); ++i ) {    
-    if(msg.current_state_array[i].joint_name == "arm4_joint") {
-      
-      std::cout << "\njoint_name:" << msg.current_state_array[i].joint_name << std::endl;
-      std::cout << "\njoint_current:" << msg.current_state_array[i].current_ma << std::endl;
 
-      arm4_joint_current_ = msg.current_state_array[i].current_ma;
+  for ( const auto current_state : msg.current_state_array ) {
+    if(current_state.joint_name == "arm4_joint") {
+      
+      std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
+      std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
+
+      arm4_joint_current_ = current_state.current_ma;
     }
 
-    if(msg.current_state_array[i].joint_name == "gripper_joint") {
+    if(current_state.joint_name == "gripper_joint") {
       
-      std::cout << "\njoint_name:" << msg.current_state_array[i].joint_name << std::endl;
-      std::cout << "\njoint_current:" << msg.current_state_array[i].current_ma << std::endl;
+      std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
+      std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
 
-      gripper_joint_current_ = msg.current_state_array[i].current_ma;
+      gripper_joint_current_ = current_state.current_ma;
     }
   }
 }
@@ -406,14 +407,15 @@ bool SobitProJointController::moveGripperToPlaceablePositionTF(const std::string
 
 bool SobitProJointController::graspDecision() {
 
-  std::cout<< gripper_joint_current_ <<std::endl;
+  while(gripper_joint_current_ == 0.){
+    ros::spinOnce();
+  }
+  ros::spinOnce();
+  std::cout << "gripper_joint_current_ :" << gripper_joint_current_ << std::endl;
   if( 500 <= gripper_joint_current_ && gripper_joint_current_ <= 1000 ) {
     return true;
   }
   else {
     return false;
   }
-
-  ros::spinOnce();
-
 }

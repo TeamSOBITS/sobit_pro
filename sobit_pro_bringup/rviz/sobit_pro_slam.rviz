@@ -7,7 +7,6 @@ Panels:
         - /Global Options1
         - /Status1
         - /TF1/Frames1
-        - /azure_kinect_Image1/Status1
       Splitter Ratio: 0.5
     Tree Height: 379
   - Class: rviz/Selection
@@ -81,15 +80,9 @@ Visualization Manager:
           Value: false
         base_link:
           Value: false
-        camera_confidence_frame:
-          Value: true
-        camera_confidence_optical_frame:
-          Value: true
         camera_l515_accel_frame:
           Value: true
         camera_l515_accel_optical_frame:
-          Value: true
-        camera_l515_aligned_depth_to_color_frame:
           Value: true
         camera_l515_bottom_screw_frame:
           Value: true
@@ -175,11 +168,6 @@ Visualization Manager:
                       arm4_link:
                         camera_l515_bottom_screw_frame:
                           camera_l515_link:
-                            camera_confidence_frame:
-                              camera_confidence_optical_frame:
-                                {}
-                            camera_l515_aligned_depth_to_color_frame:
-                              {}
                             camera_l515_color_frame:
                               camera_l515_accel_frame:
                                 camera_l515_accel_optical_frame:
@@ -574,7 +562,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: odom
+    Fixed Frame: base_footprint
     Frame Rate: 30
   Name: root
   Tools:
@@ -613,10 +601,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.2847972512245178
+      Pitch: 0.10979762673377991
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 2.8453896045684814
+      Yaw: 4.8703813552856445
     Saved: ~
 Window Geometry:
   Displays:

@@ -12,7 +12,7 @@ SobitProOdometry sobit_pro_odometry;
 void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
 
   // Translational motion
-  if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z == 0){
+  if((vel_twist.linear.x != 0 || vel_twist.linear.y != 0) && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z == 0){
     // printf("Translational motion\n");
     motion = TRANSLATIONAL_MOTION;
     wheels_error.data = false;
@@ -26,7 +26,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     pub_wheels_error.publish(wheels_error);
   }
   // Swivel motion(This motion can not move)
-  else if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.angular.z != 0){
+  else if((vel_twist.linear.x != 0 || vel_twist.linear.y != 0) && vel_twist.angular.z != 0){
     printf("Failed to change the motion!\n");
     // Motion can be added
     wheels_error.data = true;
@@ -36,6 +36,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
   // ERROR
   else if(vel_twist.linear.z != 0 || vel_twist.angular.x != 0 || vel_twist.angular.y != 0){
     printf("Failed to change the motion!\n");
+    printf("This motion is immvoable\n");
     wheels_error.data = true;
     pub_wheels_error.publish(wheels_error);
     return;
@@ -44,6 +45,8 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
   else{
     // printf("Stop motion\n");
     motion = 0;
+    wheels_error.data = false;
+    pub_wheels_error.publish(wheels_error);
   }
 
   sobit_pro_control.getMotion(motion);
@@ -71,7 +74,7 @@ void SobitProMain::start_up_sound(){
   if((sound_param < rand_sound) & (rand_sound <= 100)){
     std::cout << "\nSoka University Gakuseika " << std::endl;
     system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/soka_univ_gakuseika.mp3");
-    ros::Duration(12.0).sleep();
+    ros::Duration(2.0).sleep();
   }
 }
 
