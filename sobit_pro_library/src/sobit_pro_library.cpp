@@ -38,13 +38,39 @@ PYBIND11_MODULE(sobit_pro_module, m) {
            py::arg("arm3"),
            py::arg("arm4"))
       .def("moveToRegisterdMotion", &SobitProJointController::moveToRegisterdMotion, "move to Registerd Motion", py::arg("pose_name"))
-      .def("moveGripperToTarget",
-           &SobitProJointController::moveGripperToTarget,
-           "move Gripper To Target",
+      .def("moveGripperToTargetCoord",
+           &SobitProJointController::moveGripperToTargetCoord,
+           "move Gripper To Target Coordinate",
+           py::arg("goal_position_x"),
+           py::arg("goal_position_y"),
+           py::arg("goal_position_z"),
+           py::arg("diff_goal_position_x"),
+           py::arg("diff_goal_position_y"),
+           py::arg("diff_goal_position_z"))
+      .def("moveGripperToTargetTF",
+           &SobitProJointController::moveGripperToTargetTF,
+           "move Gripper To Target TF",
            py::arg("target_name"),
            py::arg("diff_goal_position_x"),
            py::arg("diff_goal_position_y"),
-           py::arg("diff_goal_position_z"));
+           py::arg("diff_goal_position_z"))
+      .def("moveGripperToPlaceablePositionCoord",
+           &SobitProJointController::moveGripperToPlaceablePositionCoord,
+           "move Gripper To Placeable Position Coordinate",
+           py::arg("goal_position_x"),
+           py::arg("goal_position_y"),
+           py::arg("goal_position_z"),
+           py::arg("diff_goal_position_x"),
+           py::arg("diff_goal_position_y"),
+           py::arg("diff_goal_position_z"))
+      .def("moveGripperToPlaceablePositionTF",
+           &SobitProJointController::moveGripperToPlaceablePositionTF,
+           "move Gripper To Placeable Position TF",
+           py::arg("target_name"),
+           py::arg("diff_goal_position_x"),
+           py::arg("diff_goal_position_y"),
+           py::arg("diff_goal_position_z"))
+      .def("graspDecision", &SobitProJointController::graspDecision, "grasp Decision");
 
   py::class_<SobitProWheelController>(m, "SobitProWheelController")
       .def(py::init<const std::string&>())

@@ -220,24 +220,13 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics(doub
   return result_angles_pairs;
 }
 
-bool SobitProJointController::moveGripperToTarget(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
+bool SobitProJointController::moveGripperToTargetCoord(const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
+  //debug
   geometry_msgs::Point shift;
 
-  tf::StampedTransform transform_base_to_object;
-  tf::StampedTransform transform_arm_to_object;
-  try {
-    listener_.waitForTransform("base_footprint", target_name, ros::Time(0), ros::Duration(2.0));
-    listener_.lookupTransform("base_footprint", target_name, ros::Time(0), transform_base_to_object);
-    listener_.waitForTransform("arm_fixed_link", target_name, ros::Time(0), ros::Duration(2.0));
-    listener_.lookupTransform("arm_fixed_link", target_name, ros::Time(0), transform_arm_to_object);
-  } catch (tf::TransformException ex) {
-    ROS_ERROR("%s", ex.what());
-    return false;
-  }
-
-  double arm_to_object_x = transform_arm_to_object.getOrigin().x() + shift.x + diff_goal_position_x;
-  double arm_to_object_y = transform_arm_to_object.getOrigin().y() + shift.y + diff_goal_position_y;
-  double arm_to_object_z = transform_arm_to_object.getOrigin().z() + shift.z + diff_goal_position_z;
+  double arm_to_object_x = goal_position_x + shift.x + diff_goal_position_x;
+  double arm_to_object_y = goal_position_y + shift.y + diff_goal_position_y;
+  double arm_to_object_z = goal_position_z + shift.z + diff_goal_position_z;
 
   double sum_arm123_link_length = arm1_link_length + arm2_link_length + arm3_link_length;
   if ((arm_to_object_z < -(sum_arm123_link_length)) || (sum_arm123_link_length < arm_to_object_z)) {
@@ -257,7 +246,7 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
   double arm2_joint_to_object_x = arm_to_object_x - arm_to_arm2_joint_x;
   double arm2_joint_to_object_y = arm_to_object_y;
   double arm2_joint_to_object_z = arm_to_object_z - (arm_to_object_z / 3.0);
-  std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << ", arm2_joint_to_object_z: " << arm2_joint_to_object_z << std::endl;
+  //std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << ", arm2_joint_to_object_z: " << arm2_joint_to_object_z << std::endl;
 
   // 車輪の移動量の計算
   double move_wheel_y = arm2_joint_to_object_y;
@@ -269,7 +258,7 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
   double diagonal_length = std::sqrt(std::pow(arm2_joint_to_object_x, 2) + std::pow(arm2_joint_to_object_z, 2));
   // arm2_joint_to_object_z を基準に移動量を算出
   // diagonal_lengthを30に固定して計算
-  std::cout << "diagonal_length: " << diagonal_length << std::endl;
+  //std::cout << "diagonal_length: " << diagonal_length << std::endl;
   if ((arm2_link_length + arm3_link_length) < diagonal_length || diagonal_length < arm2_link_length * std::sqrt(2) || arm2_joint_to_object_x <= 0) {
     double x               = std::sqrt(std::pow(0.30, 2) - std::pow(arm2_joint_to_object_z, 2));
     move_wheel_x           = arm2_joint_to_object_x - x;
@@ -295,8 +284,8 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
     // std::cout << "diagonal_length: " << diagonal_length << std::endl;
   }
   */
-  std::cout << "move_wheel_x: " << move_wheel_x << ", move_whell_y: " << move_wheel_y << std::endl;
-  std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << std::endl;
+  //std::cout << "move_wheel_x: " << move_wheel_x << ", move_whell_y: " << move_wheel_y << std::endl;
+  //std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << std::endl;
 
   std::vector<std::vector<double>> result         = inverseKinematics(arm2_joint_to_object_x, arm2_joint_to_object_z, arm1_joint_angle);
   std::vector<double>              result_angles1 = result.at(0);
@@ -314,15 +303,115 @@ bool SobitProJointController::moveGripperToTarget(const std::string& target_name
   /** アームを物体のところまで移動 **/
   std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
             << result_angles1.at(3) << std::endl;
-  std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
-            << result_angles2.at(3) << std::endl;
+  //std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
+  //          << result_angles2.at(3) << std::endl;
   
   moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3));
   //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3));
 
-  std::cout << "order : (x, y, z): (" << transform_arm_to_object.getOrigin().x() << ", " << transform_arm_to_object.getOrigin().y() << ", "
-            << transform_arm_to_object.getOrigin().z() << ")" << std::endl;
+  std::cout << "order : (x, y, z): (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
   std::cout << "result: (x, y, z): (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
 
   return true;
+}
+
+void SobitProJointController::callbackCurrentStateArray(const sobit_common_msg::current_state_array msg) {
+  ros::spinOnce();
+
+  for ( const auto current_state : msg.current_state_array ) {
+    if(current_state.joint_name == "arm4_joint") {
+      //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
+      //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
+      arm4_joint_current_ = current_state.current_ma;
+    }
+
+    if(current_state.joint_name == "gripper_joint") {
+      //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
+      //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
+      gripper_joint_current_ = current_state.current_ma;
+    }
+  }
+}
+
+bool SobitProJointController::moveGripperToTargetTF(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
+  //debug
+  geometry_msgs::Point shift;
+
+  //tf::StampedTransform transform_base_to_object;
+  tf::StampedTransform transform_arm_to_object;
+  try {
+    //listener_.waitForTransform("base_footprint", target_name, ros::Time(0), ros::Duration(2.0));
+    //listener_.lookupTransform("base_footprint", target_name, ros::Time(0), transform_base_to_object);
+    listener_.waitForTransform("arm_fixed_link", target_name, ros::Time(0), ros::Duration(2.0));
+    listener_.lookupTransform("arm_fixed_link", target_name, ros::Time(0), transform_arm_to_object);
+  } catch (tf::TransformException ex) {
+    ROS_ERROR("%s", ex.what());
+    return false;
+  }
+
+  moveGripperToTargetCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
+                            diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+  return true;
+}
+
+bool SobitProJointController::moveGripperToPlaceablePositionCoord(const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
+  //debug
+  geometry_msgs::Point shift;
+
+  // 作成中
+  double target_z         = 0.;
+
+  /** 目標値から0.1[m]程下げた位置までアームを移動 **/
+  /**  ハンドに負荷がかかった場合はそこで停止する  **/
+  while( -target_z < diff_goal_position_z ) {
+
+     moveGripperToTargetCoord( goal_position_x, goal_position_y, goal_position_z, 
+                               diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+    
+    // ハンドのジョイントに負荷がかかった場合、そこで停止する
+    if( 500 < arm4_joint_current_ && arm4_joint_current_ < 1000 ){
+      break;
+    }
+
+    // 目標値からの差分を追加
+    target_z -= 0.05;
+  }
+
+  return true;
+}
+
+bool SobitProJointController::moveGripperToPlaceablePositionTF(const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z) {
+  //debug
+  geometry_msgs::Point shift;
+
+  //tf::StampedTransform transform_base_to_object;
+  tf::StampedTransform transform_arm_to_object;
+  try {
+    //listener_.waitForTransform("base_footprint", target_name, ros::Time(0), ros::Duration(2.0));
+    //listener_.lookupTransform("base_footprint", target_name, ros::Time(0), transform_base_to_object);
+    listener_.waitForTransform("arm_fixed_link", target_name, ros::Time(0), ros::Duration(2.0));
+    listener_.lookupTransform("arm_fixed_link", target_name, ros::Time(0), transform_arm_to_object);
+  } catch (tf::TransformException ex) {
+    ROS_ERROR("%s", ex.what());
+    return false;
+  }
+
+  moveGripperToPlaceablePositionCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
+                                       diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+  return true;
+}
+
+bool SobitProJointController::graspDecision() {
+
+  while(gripper_joint_current_ == 0.){
+    ros::spinOnce();
+  }
+  ros::spinOnce();
+  std::cout << "gripper_joint_current_ :" << gripper_joint_current_ << std::endl;
+  if( 500 <= gripper_joint_current_ && gripper_joint_current_ <= 1000 ) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }

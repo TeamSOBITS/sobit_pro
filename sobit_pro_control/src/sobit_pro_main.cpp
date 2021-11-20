@@ -12,30 +12,41 @@ SobitProOdometry sobit_pro_odometry;
 void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
 
   // Translational motion
-  if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z == 0){
+  if((vel_twist.linear.x != 0 || vel_twist.linear.y != 0) && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z == 0){
     // printf("Translational motion\n");
     motion = TRANSLATIONAL_MOTION;
+    wheels_error.data = false;
+    pub_wheels_error.publish(wheels_error);
   }
   // Rotational motion
   else if(vel_twist.linear.x == 0 && vel_twist.linear.y == 0 && vel_twist.linear.z == 0 && vel_twist.angular.x == 0 && vel_twist.angular.y == 0 && vel_twist.angular.z != 0){
     // printf("Rotational motion\n");
     motion = ROTATIONAL_MOTION;
+    wheels_error.data = false;
+    pub_wheels_error.publish(wheels_error);
   }
   // Swivel motion(This motion can not move)
-  else if(vel_twist.linear.x != 0 || vel_twist.linear.y != 0 && vel_twist.angular.z != 0){
+  else if((vel_twist.linear.x != 0 || vel_twist.linear.y != 0) && vel_twist.angular.z != 0){
     printf("Failed to change the motion!\n");
     // Motion can be added
+    wheels_error.data = true;
+    pub_wheels_error.publish(wheels_error);
     return;
   }
   // ERROR
   else if(vel_twist.linear.z != 0 || vel_twist.angular.x != 0 || vel_twist.angular.y != 0){
     printf("Failed to change the motion!\n");
+    printf("This motion is immvoable\n");
+    wheels_error.data = true;
+    pub_wheels_error.publish(wheels_error);
     return;
   }
   // Stop motion
   else{
     // printf("Stop motion\n");
     motion = 0;
+    wheels_error.data = false;
+    pub_wheels_error.publish(wheels_error);
   }
 
   sobit_pro_control.getMotion(motion);
@@ -63,7 +74,7 @@ void SobitProMain::start_up_sound(){
   if((sound_param < rand_sound) & (rand_sound <= 100)){
     std::cout << "\nSoka University Gakuseika " << std::endl;
     system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/soka_univ_gakuseika.mp3");
-    ros::Duration(12.0).sleep();
+    ros::Duration(2.0).sleep();
   }
 }
 
@@ -97,34 +108,35 @@ void SobitProMain::control_wheel(){
       steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
     }while( (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[0] - steer_fr_present_position)) & (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[1] - steer_fr_present_position)) );
 
-    // Publish JointState
-    steer_joint_state.header.stamp = ros::Time::now();
-
-    steer_joint_state.name.resize(8);
-    steer_joint_state.name[0] = "steer_f_r_joint";
-    steer_joint_state.name[1] = "steer_f_l_joint";
-    steer_joint_state.name[2] = "steer_b_r_joint";
-    steer_joint_state.name[3] = "steer_b_l_joint";
-    steer_joint_state.name[4] = "wheel_f_r_joint";
-    steer_joint_state.name[5] = "wheel_f_l_joint";
-    steer_joint_state.name[6] = "wheel_b_r_joint";
-    steer_joint_state.name[7] = "wheel_b_l_joint";
-
-    steer_joint_state.position.resize(8);
-    steer_joint_state.position[0] = (set_steer_angle[0] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[1] = (set_steer_angle[1] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[2] = (set_steer_angle[2] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[3] = (set_steer_angle[3] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
-    steer_joint_state.position[4] = 0.0;
-    steer_joint_state.position[5] = 0.0;
-    steer_joint_state.position[6] = 0.0;
-    steer_joint_state.position[7] = 0.0;
-
-    pub_joint_states.publish(sensor_msgs::JointState(steer_joint_state));
-    //std::cout << "\n[ steer_joint_state ]\n" << steer_joint_state << std::endl;
-
     // Write goal velocity value
-    sobit_pro_motor_driver.controlWheels(sobit_pro_control.setWheelVel());
+    set_wheel_vel = sobit_pro_control.setWheelVel();
+    sobit_pro_motor_driver.controlWheels(set_wheel_vel);
+
+    // Publish JointState
+    joint_state.header.stamp = ros::Time::now();
+
+    joint_state.name.resize(8);
+    joint_state.name[0] = "steer_f_r_joint";
+    joint_state.name[1] = "steer_f_l_joint";
+    joint_state.name[2] = "steer_b_r_joint";
+    joint_state.name[3] = "steer_b_l_joint";
+    joint_state.name[4] = "wheel_f_r_joint";
+    joint_state.name[5] = "wheel_f_l_joint";
+    joint_state.name[6] = "wheel_b_r_joint";
+    joint_state.name[7] = "wheel_b_l_joint";
+
+    joint_state.position.resize(8);
+    joint_state.position[0] = (set_steer_angle[0] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[1] = (set_steer_angle[1] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[2] = (set_steer_angle[2] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[3] = (set_steer_angle[3] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
+    joint_state.position[4] = set_wheel_vel[0] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+    joint_state.position[5] = set_wheel_vel[1] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+    joint_state.position[6] = set_wheel_vel[2] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+    joint_state.position[7] = set_wheel_vel[3] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
+
+    pub_joint_states.publish(sensor_msgs::JointState(joint_state));
+    //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;
 
     // Set the present position of the wheel
     wheel_fr_present_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
@@ -170,8 +182,6 @@ int main(int argc, char **argv){
 
   // Create SobitProMain instance
   SobitProMain sobit_pro_main;
-
-
 
   // Start up motor
   sobit_pro_motor_driver.init();

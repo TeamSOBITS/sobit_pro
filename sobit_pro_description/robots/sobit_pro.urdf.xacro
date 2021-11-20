@@ -11,6 +11,7 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_kinect.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/urg.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_l515.urdf.xacro" />
   <!--
   <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/gripper/gripper.urdf.xacro" />
@@ -26,6 +27,9 @@
   <xacro:head prefix="head_camera" parent="base_link" />
   <xacro:azure_kinect prefix="head_camera" parent="head_camera_tilt_link" />
   <xacro:urg parent="base_link"/>
+  <xacro:realsense_l515 parent="arm4_link" name="camera_l515" use_nominal_extrinsics="true" add_plug="false" use_mesh="true">
+    <origin xyz="0 -0.09625 -0.0305" rpy="0 0 -${M_PI/2.0}"/>
+  </xacro:realsense_l515>
   <!--
   <stack_hexagons parent="base_link" />
   <xacro:arm prefix="arm" parent="plate_top_link"/>

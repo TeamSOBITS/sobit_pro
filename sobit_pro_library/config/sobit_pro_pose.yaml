@@ -1,4 +1,5 @@
 sobit_pro_pose:
+
     - { 
         pose_name: "initial_pose",
         arm1_1_joint: 1.57,
@@ -11,6 +12,7 @@ sobit_pro_pose:
         head_camera_pan_joint: 0.0,
         head_camera_tilt_joint: 0.0
     }
+
     - {
         pose_name: "detecting_pose",
         arm1_1_joint: 1.57,
@@ -18,11 +20,12 @@ sobit_pro_pose:
         arm2_1_joint: 1.57,
         arm2_2_joint: -1.57,
         arm3_joint: -1.57,
-        arm4_joint: -1.57,
-        gripper_joint: 0.0,
+        arm4_joint: 0.0,
+        gripper_joint: -1.0,
         head_camera_pan_joint: 0.0,
         head_camera_tilt_joint: -0.7
     }
+
     - { 
         pose_name: "grasp_high_pose",
         arm1_1_joint: 1.0,
@@ -35,6 +38,7 @@ sobit_pro_pose:
         head_camera_pan_joint: 0.0,
         head_camera_tilt_joint: 0.0
     }
+
     - { 
         pose_name: "put_high_pose",
         arm1_1_joint: 1.0,
@@ -44,6 +48,97 @@ sobit_pro_pose:
         arm3_joint: -1.0,
         arm4_joint: -1.0,
         gripper_joint: -1.57,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
+
+    - {
+        pose_name: "put_detecting_pose",
+        arm1_1_joint: 1.57,
+        arm1_2_joint: -1.57,
+        arm2_1_joint: 1.57,
+        arm2_2_joint: -1.57,
+        arm3_joint: -1.57,
+        arm4_joint: -1.57,
+        gripper_joint: 0.0,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: -0.7
+    }
+
+    - { 
+        pose_name: "grasp2initial_perpendicular_high_pose",
+        arm1_1_joint: 1.57,
+        arm1_2_joint: 0.00,
+        arm2_1_joint: 0.00,
+        arm2_2_joint: 0.00,
+        arm3_joint: -1.57,
+        arm4_joint: -1.57,
+        gripper_joint: 0.00,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
+
+    - { 
+        pose_name: "grasp2initial_perpendicular_middle_pose",
+        arm1_1_joint: 1.57,
+        arm1_2_joint: 0.00,
+        arm2_1_joint: -1.57,
+        arm2_2_joint: 0.00,
+        arm3_joint: -1.57,
+        arm4_joint: 0.00,
+        gripper_joint: 0.00,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
+
+    - { 
+        pose_name: "grasp2initial_perpendicular_low_pose",
+        arm1_1_joint: 0.00,
+        arm1_2_joint: 0.00,
+        arm2_1_joint: -1.57,
+        arm2_2_joint: 0.00,
+        arm3_joint: 0.00,
+        arm4_joint: 0.00,
+        gripper_joint: 0.00,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
+
+    - { 
+        pose_name: "grasp2initial_parallel_high_pose",
+        arm1_1_joint: 1.57,
+        arm1_2_joint: 0.00,
+        arm2_1_joint: 0.00,
+        arm2_2_joint: 0.00,
+        arm3_joint: -1.57,
+        arm4_joint: 0.00,
+        gripper_joint: 0.00,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
+
+    - { 
+        pose_name: "grasp2initial_parallel_middle_pose",
+        arm1_1_joint: 1.57,
+        arm1_2_joint: 0.00,
+        arm2_1_joint: -1.57,
+        arm2_2_joint: 0.00,
+        arm3_joint: -1.57,
+        arm4_joint: 1.57,
+        gripper_joint: 0.00,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: 0.0
+    }
+
+    - { 
+        pose_name: "grasp2initial_parallel_low_pose",
+        arm1_1_joint: 0.00,
+        arm1_2_joint: 0.00,
+        arm2_1_joint: -1.57,
+        arm2_2_joint: 0.00,
+        arm3_joint: 1.57,
+        arm4_joint: -1.0,
+        gripper_joint: 0.00,
         head_camera_pan_joint: 0.0,
         head_camera_tilt_joint: 0.0
     }
