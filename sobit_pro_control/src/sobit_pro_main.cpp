@@ -101,12 +101,24 @@ void SobitProMain::control_wheel(){
 
     // Write goal position value
     set_steer_angle = sobit_pro_control.setSteerAngle();
+
+    steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
+    steer_fl_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_L);
+
+    if( (1024 <= abs(set_steer_angle[0] - steer_fr_present_position)) || (1024 <= abs(set_steer_angle[1] - steer_fl_present_position)) ){
+      set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
+      sobit_pro_motor_driver.controlWheels(set_wheel_vel);
+      ros::Duration(0.1).sleep();
+    }
+
     sobit_pro_motor_driver.controlSteers(set_steer_angle);
 
     // Continue until the steering position reaches the goal
     do{
       steer_fr_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-    }while( (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[0] - steer_fr_present_position)) & (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[1] - steer_fr_present_position)) );
+      steer_fl_present_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_L);
+    }while( (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[0] - steer_fr_present_position)) & (DXL_MOVING_STATUS_THRESHOLD < abs(set_steer_angle[1] - steer_fl_present_position)) );
+
 
     // Write goal velocity value
     set_wheel_vel = sobit_pro_control.setWheelVel();
