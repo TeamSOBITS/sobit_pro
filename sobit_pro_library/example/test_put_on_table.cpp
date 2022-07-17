@@ -5,7 +5,7 @@ int main(int argc, char *argv[]) {
     sobit_pro::SobitProJointController pro_joint_ctr;
 
     // 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "detecting_pose" );
+    pro_joint_ctr.moveToPose( "detecting_pose" );
     ros::Duration(5.0).sleep();
 
     /* Python版
@@ -49,11 +49,11 @@ int main(int argc, char *argv[]) {
         pro_joint_ctr.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
 
         // 決められたポーズをする
-        pro_joint_ctr.moveToRegisterdMotion( "put_high_pose" );
+        pro_joint_ctr.moveToPose( "put_high_pose" );
     }
 
     // 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" );
+    pro_joint_ctr.moveToPose( "initial_pose" );
 
     /* Python版
     Popen(['rosnode','kill','/placeable_position_estimator/placeable_position_estimater_node'])
