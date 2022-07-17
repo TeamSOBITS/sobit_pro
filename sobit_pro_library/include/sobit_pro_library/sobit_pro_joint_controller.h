@@ -51,14 +51,14 @@ class SobitProJointController : private ROSCommonNode {
         void                 checkPublishersConnection( const ros::Publisher& pub );
         void                 loadPose( );
         bool                 moveAllJoint( const double arm1,
-                                        const double arm2,
-                                        const double arm3,
-                                        const double arm4,
-                                        const double gripper,
-                                        const double head_camera_pan,
-                                        const double head_camera_tilt,
-                                        const double sec,
-                                        bool         is_sleep = true );
+                                           const double arm2,
+                                           const double arm3,
+                                           const double arm4,
+                                           const double gripper,
+                                           const double head_camera_pan,
+                                           const double head_camera_tilt,
+                                           const double sec,
+                                           bool         is_sleep = true );
         geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm3_joint_angle );
         std::vector<std::vector<double>> inverseKinematics( double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle );
 
@@ -81,7 +81,7 @@ class SobitProJointController : private ROSCommonNode {
         bool moveGripperToPlaceablePositionTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
         bool graspDecision( );
 };
-}  // namespace sobit_pro
+} // namespace sobit_pro
 
 inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::string&                joint_name,
                                                                     const double                      rad,

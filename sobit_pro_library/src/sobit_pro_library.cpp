@@ -75,7 +75,7 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             py::arg( "distance_y" ) )
         .def( "controlWheelRotateRad", &SobitProWheelController::controlWheelRotateRad, "control Wheel Rotate Rad", 
             py::arg( "angle_rad" ) )
-        .def( "controlWheelRotateDeg", &SobitProWheelController::controlWheelRotateDeg,"control Wheel Rotate Deg", 
+        .def( "controlWheelRotateDeg", &SobitProWheelController::controlWheelRotateDeg,"control Wheel Rotate Deg",
             py::arg( "angle_deg" ) );
 
 }
