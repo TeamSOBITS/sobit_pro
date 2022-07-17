@@ -25,7 +25,7 @@ SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh
 
 void SobitProJointController::loadPose() {
     XmlRpc::XmlRpcValue pose_val;
-    if ( !nh_.hasParam("/sobit_pro_pose") ) return;
+    if ( !nh_.hasParam( "/sobit_pro_pose" ) ) return;
     nh_.getParam( "/sobit_pro_pose", pose_val );
     int pose_num = pose_val.size();
     pose_list_.clear();
@@ -58,17 +58,17 @@ bool SobitProJointController::moveToPose( const std::string& pose_name, const do
         break;
     }
     if ( is_find ) {
-        ROS_INFO("I found a '%s'", pose_name.c_str());
+        ROS_INFO( "I found a '%s'", pose_name.c_str() );
         return moveAllJoint( joint_val[Joint::ARM1_1_JOINT],
-                            joint_val[Joint::ARM2_1_JOINT],
-                            joint_val[Joint::ARM3_JOINT],
-                            joint_val[Joint::ARM4_JOINT],
-                            joint_val[Joint::GRIPPER_JOINT],
-                            joint_val[Joint::HEAD_CAMERA_PAN_JOINT],
-                            joint_val[Joint::HEAD_CAMERA_TILT_JOINT],
-                            sec );
+                             joint_val[Joint::ARM2_1_JOINT],
+                             joint_val[Joint::ARM3_JOINT],
+                             joint_val[Joint::ARM4_JOINT],
+                             joint_val[Joint::GRIPPER_JOINT],
+                             joint_val[Joint::HEAD_CAMERA_PAN_JOINT],
+                             joint_val[Joint::HEAD_CAMERA_TILT_JOINT],
+                             sec );
     } else {
-        ROS_ERROR("'%s' doesn't exist.", pose_name.c_str());
+        ROS_ERROR( "'%s' doesn't exist.", pose_name.c_str() );
         return false;
     }
 }
@@ -82,27 +82,27 @@ bool SobitProJointController::moveAllJoint( const double arm1,
                                             const double head_camera_tilt,
                                             const double sec,
                                             bool         is_sleep) {
-  try {
-      trajectory_msgs::JointTrajectory arm_joint_trajectory;
-      trajectory_msgs::JointTrajectory head_joint_trajectory;
-      setJointTrajectory( joint_names_[Joint::ARM1_1_JOINT], arm1, sec, &arm_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::ARM1_2_JOINT], -arm1, sec, &arm_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::ARM2_1_JOINT], arm2, sec, &arm_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::ARM2_2_JOINT], -arm2, sec, &arm_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::ARM3_JOINT], arm3, sec, &arm_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::ARM4_JOINT], arm4, sec, &arm_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::GRIPPER_JOINT], gripper, sec, &arm_joint_trajectory );
-      setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT], head_camera_pan, sec, &head_joint_trajectory );
-      addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT], head_camera_tilt, sec, &head_joint_trajectory );
-      checkPublishersConnection( pub_arm_joint_ );
-      checkPublishersConnection( pub_head_camera_joint_ );
-      pub_arm_joint_.publish( arm_joint_trajectory );
-      pub_head_camera_joint_.publish( head_joint_trajectory );
-      if ( is_sleep ) ros::Duration( sec ).sleep();
-      return true;
-    } catch ( const std::exception& ex ) {
-        ROS_ERROR("%s", ex.what());
-        return false;
+    try {
+        trajectory_msgs::JointTrajectory arm_joint_trajectory;
+        trajectory_msgs::JointTrajectory head_joint_trajectory;
+        setJointTrajectory( joint_names_[Joint::ARM1_1_JOINT], arm1, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM1_2_JOINT], -arm1, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM2_1_JOINT], arm2, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM2_2_JOINT], -arm2, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM3_JOINT], arm3, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM4_JOINT], arm4, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::GRIPPER_JOINT], gripper, sec, &arm_joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT], head_camera_pan, sec, &head_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT], head_camera_tilt, sec, &head_joint_trajectory );
+        checkPublishersConnection( pub_arm_joint_ );
+        checkPublishersConnection( pub_head_camera_joint_ );
+        pub_arm_joint_.publish( arm_joint_trajectory );
+        pub_head_camera_joint_.publish( head_joint_trajectory );
+        if ( is_sleep ) ros::Duration( sec ).sleep();
+        return true;
+        } catch ( const std::exception& ex ) {
+            ROS_ERROR( "%s", ex.what() );
+            return false;
     }
 }
 
@@ -114,10 +114,10 @@ bool SobitProJointController::moveJoint( const Joint joint_num, const double rad
         // ARM1_2_JOINT : joint_num = 1
         // ARM2_1_JOINT : joint_num = 2
         // ARM2_2_JOINT : joint_num = 3
-        if ( joint_num == 0 || joint_num == 2 ){
+        if ( joint_num == 0 || joint_num == 2 ) {
             setJointTrajectory( joint_names_[joint_num], rad, sec, &joint_trajectory );
             addJointTrajectory( joint_names_[joint_num + 1], -rad, sec, &joint_trajectory );
-        } else if ( joint_num == 1 || joint_num == 3 ){
+        } else if ( joint_num == 1 || joint_num == 3 ) {
             setJointTrajectory( joint_names_[joint_num], rad, sec, &joint_trajectory );
             addJointTrajectory( joint_names_[joint_num - 1], -rad, sec, &joint_trajectory );
         } else {
@@ -134,7 +134,7 @@ bool SobitProJointController::moveJoint( const Joint joint_num, const double rad
         if ( is_sleep ) ros::Duration( sec ).sleep();
         return true;
     } catch ( const std::exception& ex ) {
-        ROS_ERROR("%s", ex.what());
+        ROS_ERROR( "%s", ex.what() );
         return false;
     }
 }
@@ -149,7 +149,7 @@ bool SobitProJointController::moveHeadPanTilt( const double head_camera_pan, con
         if ( is_sleep ) ros::Duration( sec ).sleep();
         return true;
     } catch ( const std::exception& ex ) {
-        ROS_ERROR("%s", ex.what());
+        ROS_ERROR( "%s", ex.what() );
         return false;
     }
 }
@@ -168,7 +168,7 @@ bool SobitProJointController::moveArm( const double arm1, const double arm2, con
         if ( is_sleep ) ros::Duration( sec ).sleep();
         return true;
     } catch ( const std::exception& ex ) {
-        ROS_ERROR("%s", ex.what());
+        ROS_ERROR( "%s", ex.what() );
         return false;
     }
 }
@@ -306,7 +306,7 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     
     /** 床の物体を把持するための判定 **/
     bool is_reached;
-    if ( arm_to_object_z < -sum_arm123_link_length ){
+    if ( arm_to_object_z < -sum_arm123_link_length ) {
         is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), result_angles1.at(3)-1.57); 
     }
     else {

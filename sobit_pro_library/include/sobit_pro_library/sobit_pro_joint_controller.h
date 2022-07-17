@@ -23,63 +23,63 @@ typedef struct {
 } Pose;
 
 class SobitProJointController : private ROSCommonNode {
- private:
-  ros::NodeHandle       nh_;
-  ros::NodeHandle       pnh_;
-  tf::TransformListener listener_;
-  ros::Publisher        pub_arm_joint_;
-  ros::Publisher        pub_head_camera_joint_;
+    private:
+        ros::NodeHandle       nh_;
+        ros::NodeHandle       pnh_;
+        tf::TransformListener listener_;
+        ros::Publisher        pub_arm_joint_;
+        ros::Publisher        pub_head_camera_joint_;
 
-  const std::vector<std::string> joint_names_ = { "arm1_1_joint", 
-                                                  "arm1_2_joint",
-                                                  "arm2_1_joint",
-                                                  "arm2_2_joint",
-                                                  "arm3_joint",
-                                                  "arm4_joint",
-                                                  "gripper_joint",
-                                                  "head_camera_pan_joint",
-                                                  "head_camera_tilt_joint" };
-  std::vector<Pose> pose_list_;
+        const std::vector<std::string> joint_names_ = { "arm1_1_joint", 
+                                                        "arm1_2_joint",
+                                                        "arm2_1_joint",
+                                                        "arm2_2_joint",
+                                                        "arm3_joint",
+                                                        "arm4_joint",
+                                                        "gripper_joint",
+                                                        "head_camera_pan_joint",
+                                                        "head_camera_tilt_joint" };
+        std::vector<Pose> pose_list_;
 
-  static const double arm1_link_length;
-  static const double arm2_link_length;
-  static const double arm3_link_length;
-  static const double sum_arm123_link_length;
+        static const double arm1_link_length;
+        static const double arm2_link_length;
+        static const double arm3_link_length;
+        static const double sum_arm123_link_length;
 
-  void                 setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
-  void                 addJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
-  void                 checkPublishersConnection( const ros::Publisher& pub );
-  void                 loadPose( );
-  bool                 moveAllJoint( const double arm1,
-                                     const double arm2,
-                                     const double arm3,
-                                     const double arm4,
-                                     const double gripper,
-                                     const double head_camera_pan,
-                                     const double head_camera_tilt,
-                                     const double sec,
-                                     bool         is_sleep = true );
-  geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm3_joint_angle );
-  std::vector<std::vector<double>> inverseKinematics( double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle );
+        void                 setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
+        void                 addJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
+        void                 checkPublishersConnection( const ros::Publisher& pub );
+        void                 loadPose( );
+        bool                 moveAllJoint( const double arm1,
+                                        const double arm2,
+                                        const double arm3,
+                                        const double arm4,
+                                        const double gripper,
+                                        const double head_camera_pan,
+                                        const double head_camera_tilt,
+                                        const double sec,
+                                        bool         is_sleep = true );
+        geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm3_joint_angle );
+        std::vector<std::vector<double>> inverseKinematics( double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle );
 
-  double arm4_joint_current_ = 0.;
-  double gripper_joint_current_ = 0.;
-  void callbackCurrentStateArray( const sobit_common_msg::current_state_array );
-  ros::Subscriber sub_current_state_array = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this );
+        double arm4_joint_current_ = 0.;
+        double gripper_joint_current_ = 0.;
+        void callbackCurrentStateArray( const sobit_common_msg::current_state_array );
+        ros::Subscriber sub_current_state_array = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this );
 
- public:
-  SobitProJointController( const std::string& name );
-  SobitProJointController( );
+    public:
+        SobitProJointController( const std::string& name );
+        SobitProJointController( );
 
-  bool moveToPose( const std::string& pose_name, const double sec = 5.0 );
-  bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
-  bool moveArm( const double arm1, const double arm2, const double arm3, const double arm4, const double sec = 5.0, bool is_sleep = true );
-  bool moveHeadPanTilt( const double head_camera_pan, const double head_camera_tilt, const double sec = 5.0, bool is_sleep = true );
-  bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-  bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-  bool moveGripperToPlaceablePositionCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-  bool moveGripperToPlaceablePositionTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-  bool graspDecision( );
+        bool moveToPose( const std::string& pose_name, const double sec = 5.0 );
+        bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
+        bool moveArm( const double arm1, const double arm2, const double arm3, const double arm4, const double sec = 5.0, bool is_sleep = true );
+        bool moveHeadPanTilt( const double head_camera_pan, const double head_camera_tilt, const double sec = 5.0, bool is_sleep = true );
+        bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToPlaceablePositionCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToPlaceablePositionTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool graspDecision( );
 };
 }  // namespace sobit_pro
 

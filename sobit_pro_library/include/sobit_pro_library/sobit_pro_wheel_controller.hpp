@@ -18,11 +18,11 @@ namespace sobit_pro {
             ros::Subscriber sub_odom_;
             nav_msgs::Odometry curt_odom_;
 
-            void checkPublishersConnection ( const ros::Publisher& pub );
-            void callbackOdometry ( const nav_msgs::OdometryConstPtr &odom_msg );
+            void checkPublishersConnection( const ros::Publisher& pub );
+            void callbackOdometry( const nav_msgs::OdometryConstPtr &odom_msg );
             double geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat );
-            double rad2Deg ( const double rad );
-            double deg2Rad ( const double deg );
+            double rad2Deg( const double rad );
+            double deg2Rad( const double deg );
         public :
             SobitProWheelController( const std::string &name );
             SobitProWheelController( );
@@ -32,7 +32,7 @@ namespace sobit_pro {
     };
 }
 
-inline void sobit_pro::SobitProWheelController::checkPublishersConnection ( const ros::Publisher& pub ) {
+inline void sobit_pro::SobitProWheelController::checkPublishersConnection( const ros::Publisher& pub ) {
     ros::Rate loop_rate(10);
     while ( pub.getNumSubscribers()	== 0 && ros::ok() ) {
         try { loop_rate.sleep(); }
@@ -41,19 +41,19 @@ inline void sobit_pro::SobitProWheelController::checkPublishersConnection ( cons
     return; 
 }
 
-inline void sobit_pro::SobitProWheelController::callbackOdometry ( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; }
+inline void sobit_pro::SobitProWheelController::callbackOdometry( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; }
 
 inline double sobit_pro::SobitProWheelController::geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat ) {
     tf::Quaternion quat;
     double roll, pitch, yaw;
-    quaternionMsgToTF(geometry_quat, quat);
+    quaternionMsgToTF( geometry_quat, quat );
     quat.normalize();
-    tf::Matrix3x3(quat).getRPY(roll, pitch, yaw);
+    tf::Matrix3x3( quat ).getRPY( roll, pitch, yaw );
     return yaw;
 }
 
-inline double sobit_pro::SobitProWheelController::rad2Deg ( const double rad ) { return rad * 180.0 / M_PI;  }
+inline double sobit_pro::SobitProWheelController::rad2Deg( const double rad ) { return rad * 180.0 / M_PI;  }
 
-inline double sobit_pro::SobitProWheelController::deg2Rad ( const double deg ) { return deg * M_PI / 180.0; }
+inline double sobit_pro::SobitProWheelController::deg2Rad( const double deg ) { return deg * M_PI / 180.0; }
 
 #endif /* _SOBIT_PRO_LIBRARY_WHEEL_CONTROLLER_H_ */
