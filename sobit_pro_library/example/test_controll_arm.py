@@ -18,7 +18,7 @@ def test():
     pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_joint_ctr.moveToPose( "initial_pose" )
 
 if __name__ == '__main__':
     try:

@@ -34,12 +34,12 @@ int main(int argc, char *argv[]) {
     // 物体をおける位置のTF(placeable_point)があった場合、
     // そこの位置までアームを下げながら移動させる
     // ただし、物体がおける位置に触れた時はその位置で停止する
-    // bool res = pro_joint_ctr.moveGripperToPlaceablePositionTF( "placeable_point", -0.15, 0.0, 0.2 );
+    // bool res = pro_joint_ctr.moveGripperToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 );
 
     // 物体をおける位置のTF(placeable_point)があった場合、
     // そこの位置までアームを下げながら移動させる
     // ただし、物体がおける位置に触れた時はその位置で停止する
-    // bool res = pro_joint_ctr.moveGripperToPlaceablePositionCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 );
+    // bool res = pro_joint_ctr.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 );
 
     
 
