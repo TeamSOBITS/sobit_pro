@@ -54,14 +54,14 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),
             py::arg( "diff_goal_position_z" ) )
-        .def( "moveGripperToPlaceablePositionCoord", &SobitProJointController::moveGripperToPlaceablePositionCoord, "move Gripper To Placeable Position Coordinate",
+        .def( "moveGripperToPlaceCoord", &SobitProJointController::moveGripperToPlaceCoord, "move Gripper To Placeable Position Coordinate",
             py::arg( "goal_position_x" ),
             py::arg( "goal_position_y" ),
             py::arg( "goal_position_z" ),
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),
             py::arg( "diff_goal_position_z" ) )
-        .def( "moveGripperToPlaceablePositionTF", &SobitProJointController::moveGripperToPlaceablePositionTF, "move Gripper To Placeable Position TF",
+        .def( "moveGripperToPlaceTF", &SobitProJointController::moveGripperToPlaceTF, "move Gripper To Placeable Position TF",
             py::arg( "target_name" ),
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),

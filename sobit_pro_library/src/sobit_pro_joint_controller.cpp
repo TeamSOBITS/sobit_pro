@@ -341,7 +341,7 @@ bool SobitProJointController::moveGripperToTargetTF( const std::string& target_n
     return is_reached;
 }
 
-bool SobitProJointController::moveGripperToPlaceablePositionCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
+bool SobitProJointController::moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
     geometry_msgs::Point shift;
 
     // 作成中
@@ -365,7 +365,7 @@ bool SobitProJointController::moveGripperToPlaceablePositionCoord( const double 
     return true;
 }
 
-bool SobitProJointController::moveGripperToPlaceablePositionTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
+bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
     //debug
     geometry_msgs::Point shift;
 
@@ -381,7 +381,7 @@ bool SobitProJointController::moveGripperToPlaceablePositionTF( const std::strin
         return false;
     }
 
-    moveGripperToPlaceablePositionCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
+    moveGripperToPlaceCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
                                         diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
     return true;
 }
