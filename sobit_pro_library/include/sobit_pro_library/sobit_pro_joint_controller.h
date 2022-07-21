@@ -58,6 +58,8 @@ namespace sobit_pro {
             void setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
             void addJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
             void checkPublishersConnection( const ros::Publisher& pub );
+            double distanceToSec( const std::string& joint_name, const double rad, const double sec );
+
             void loadPose( );
             bool moveAllJoint( const double arm1,
                             const double arm2,
@@ -134,6 +136,14 @@ inline void sobit_pro::SobitProJointController::checkPublishersConnection( const
         }
     }
     return;
+}
+
+inline double sobit_pro::SobitProJointController::distanceToSec( const std::string& joint_name, const double rad, const double sec ) {
+    // get the current position of the joint
+    // calculate the distance to the target (current_pos - goal_pos) in rad
+    // calculate the seconds to be executed if to complete 90 degrees 1 sec is needed
+    // multiply the result by a constant so it can be faster or slower
+    return sec;
 }
 
 #endif /* _SOBIT_PRO_LIBRARY_JOINT_CONTROLLER_H_ */
