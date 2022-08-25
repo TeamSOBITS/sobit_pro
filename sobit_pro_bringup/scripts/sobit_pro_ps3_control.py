@@ -22,7 +22,7 @@ class Ps3_Control:
 
         self.tilt_ang = 0.0
         self.pan_ang = 0.0
-        self.time = 3.0
+        self.time = 0.5
         
         # rate
         self.rate = rospy.Rate(10)
@@ -31,8 +31,8 @@ class Ps3_Control:
         self.joy_button = [0] * 17
         self.left_joystick_lr = 0
         self.left_joystick_ud = 0
-        # self.right_joystick_lr = 0
-        # self.right_joystick_ud = 0
+        self.right_joystick_lr = 0
+        self.right_joystick_ud = 0
         self.magnifications = 0.2
 
 
@@ -40,8 +40,8 @@ class Ps3_Control:
         self.joy_button = msg.buttons
         self.left_joystick_lr = msg.axes[0] * self.magnifications
         self.left_joystick_ud = msg.axes[1] * self.magnifications
-        # self.right_joystick_lr = msg.axes[3] * self.magnifications
-        # self.right_joystick_ud = msg.axes[4] * self.magnifications
+        self.right_joystick_lr = msg.axes[3] * self.magnifications
+        self.right_joystick_ud = msg.axes[4] * self.magnifications
         
         # L2ボタンが押される
         if self.joy_button[6] == True:
@@ -62,8 +62,8 @@ class Ps3_Control:
             for i in range(4):
                 self.pro_wheel_ctr.controlWheelRotateDeg(90)
 
-        # 右スティックを上に傾ける
-        elif msg.axes[4] > 0.8:
+        # ↑ボタンが押される
+        elif self.joy_button[13] == True:
             self.move_wheel_stop_motion()
             # print("カメラパンチルト（上）")
             if self.tilt_ang >= 0.6:
@@ -76,8 +76,8 @@ class Ps3_Control:
             # print(self.tilt_ang)
 
 
-        # 右スティックを下に傾ける
-        elif msg.axes[4] < -0.8:
+        # ↓ボタンが押される
+        elif self.joy_button[14] == True:
             self.move_wheel_stop_motion()
         # print("カメラパンチルト（下）")
             if self.tilt_ang <= -0.6:
@@ -89,23 +89,10 @@ class Ps3_Control:
             self.rate.sleep()
             # print(self.tilt_ang)
              
-        # 右スティックを左に傾ける
-        elif msg.axes[3] < -0.8:
+        # ←ボタンが押される
+        elif self.joy_button[15] == True:
             self.move_wheel_stop_motion()
             # print("カメラパンチルト（左）")
-            if self.pan_ang <= -0.6:
-                self.pan_ang = -0.6
-            else:
-                self.pan_ang += -0.015
-            # カメラパンチルトを動かす
-            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_CAMERA_PAN_JOINT, self.pan_ang, self.time, False )
-            self.rate.sleep()
-            # print(self.pan_ang)
-        
-        # 右スティックを右に傾ける
-        elif msg.axes[3] > 0.8:
-            self.move_wheel_stop_motion()
-            # print("カメラパンチルト（右）")
             if self.pan_ang >= 0.6:
                 self.pan_ang = 0.6
             else:
@@ -115,10 +102,23 @@ class Ps3_Control:
             self.rate.sleep()
             # print(self.pan_ang)
         
+        # →ボタンが押される
+        elif self.joy_button[16] == True:
+            self.move_wheel_stop_motion()
+            # print("カメラパンチルト（右）")
+            if self.pan_ang <= -0.6:
+                self.pan_ang = -0.6
+            else:
+                self.pan_ang += -0.015
+            # カメラパンチルトを動かす
+            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_CAMERA_PAN_JOINT, self.pan_ang, self.time, False )
+            self.rate.sleep()
+            # print(self.pan_ang)
+
         # それ以外
         else:
             self.move_wheel_stop_motion()
-            # print("並進運動")
+            # print("並進運動 or 旋回運動")
             self.move_wheel_translational_motion(0.8)
             self.rate.sleep()
 
@@ -154,11 +154,19 @@ class Ps3_Control:
             elif abs(self.left_joystick_ud) >= abs(self.left_joystick_lr) :
                 speed.linear.x = self.left_joystick_ud * liner
                 speed.linear.y = 0
+                speed.angular.z = self.right_joystick_lr * 1.57
+                if abs(speed.angular.z) <= 0.1:
+                    speed.angular.z = 0
             self.check_publishers_connection(self.pub_wheel_control)
             self.pub_wheel_control.publish(speed)
         else:
             speed.linear.x = self.left_joystick_ud * liner
             speed.linear.y = self.left_joystick_lr * liner
+            speed.angular.z = self.right_joystick_lr * 1.57
+            if abs(speed.angular.z) <= 0.1:
+                speed.angular.z = 0
+            else:
+                speed.linear.y = 0
             self.check_publishers_connection(self.pub_wheel_control)
             self.pub_wheel_control.publish(speed)
             
@@ -172,18 +180,6 @@ if __name__ == '__main__':
 
 ############ メモ ############
 
-# L2ボタンが押される
-# self.joy_button[6] == True
-
-# R2ボタンが押される
-# self.joy_button[7] == True
-        
-# L1ボタンが押される
-# self.joy_button[4] == True
-
-# R1ボタンが押される
-# self.joy_button[5] == True
-
 # ×ボタンが押される
 # self.joy_button[0] == True
 
@@ -196,7 +192,22 @@ if __name__ == '__main__':
 # □ボタンが押される
 # self.joy_button[3] == True
 
-# スタートボタン
+# L1ボタンが押される
+# self.joy_button[4] == True
+
+# R1ボタンが押される
+# self.joy_button[5] == True
+
+# L2ボタンが押される
+# self.joy_button[6] == True
+
+# R2ボタンが押される
+# self.joy_button[7] == True
+
+# セレクトボタンが押される
+# self.joy_button[8] == True
+
+# スタートボタンが押される
 # self.joy_button[9] == True
 
 # 左スティック

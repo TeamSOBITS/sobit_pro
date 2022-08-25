@@ -8,7 +8,8 @@
 
 // Define motion key value
 #define TRANSLATIONAL_MOTION            1
-#define ROTATIONAL_MOTION               2 // Motion can be added
+#define ROTATIONAL_MOTION               2
+#define SWIVEL_MOTION                   3 // Motion can be added
 
 #define WHEEL_LENGTH                    0.452389 // Circumference
 #define SOBIT_CAR_DIAMETER              0.448051 // Diamaster
@@ -18,7 +19,7 @@ class SobitProOdometry{
   private:
     enum MODE{
       NONE = 0,
-      TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE // Motion can be added
+      TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE, SWIVEL_MOTION_MODE // Motion can be added
     } motion_mode;
 
   public:
@@ -38,7 +39,8 @@ class SobitProOdometry{
     MODE getMotion(int motion){
       switch (motion){
         case (TRANSLATIONAL_MOTION): motion_mode = TRANSLATIONAL_MOTION_MODE; break;
-        case (ROTATIONAL_MOTION): motion_mode = ROTATIONAL_MOTION_MODE; break; // Motion can be added
+        case (ROTATIONAL_MOTION): motion_mode = ROTATIONAL_MOTION_MODE; break;
+        case (SWIVEL_MOTION): motion_mode = SWIVEL_MOTION_MODE; break; // Motion can be added
 
         default: motion_mode = NONE; break;
       }

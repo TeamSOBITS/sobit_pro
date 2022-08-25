@@ -80,7 +80,7 @@
       <parent link="steer_b_l_link" />
       <child link="wheel_b_l_link" />
       <origin xyz="0 0 -0.1414" rpy="0 0 0" />
-      <axis xyz="1 1 0" />
+      <axis xyz="-1 -1 0" />
     </joint>
 
     <link name="wheel_b_l_link">
@@ -96,7 +96,7 @@
       <parent link="steer_b_r_link" />
       <child link="wheel_b_r_link" />
       <origin xyz="0 0 -0.1414" rpy="0 0 0" />
-      <axis xyz="-1 1 0" />
+      <axis xyz="1 -1 0" />
     </joint>
 
     <link name="wheel_b_r_link">
