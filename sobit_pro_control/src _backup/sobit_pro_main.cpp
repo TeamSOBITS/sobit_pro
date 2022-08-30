@@ -28,7 +28,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
   // Swivel motion
   else if((vel_twist.linear.x != 0 || vel_twist.linear.y != 0) && vel_twist.angular.z != 0){
     if(vel_twist.linear.y != 0){
-      printf("Failed to change the motion!\n");
+      ROS_ERROR("Failed to change the motion!\n");
       wheels_error.data = true;
       pub_wheels_error.publish(wheels_error);
       return;
@@ -40,8 +40,8 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
   }
   // ERROR
   else if(vel_twist.linear.z != 0 || vel_twist.angular.x != 0 || vel_twist.angular.y != 0){
-    printf("Failed to change the motion!\n");
-    printf("This motion is immvoable\n");
+    ROS_ERROR("Failed to change the motion!\n");
+    ROS_ERROR("This motion is immvoable\n");
     wheels_error.data = true;
     pub_wheels_error.publish(wheels_error);
     return;
@@ -69,15 +69,15 @@ void SobitProMain::start_up_sound(){
 
   pnh.getParam("sound_param", sound_param);
 
-  std::cout << "\nsound_param :" << sound_param << std::endl;
+  ROS_INFO_STREAM("\nsound_param :" << sound_param );
 
   if(rand_sound <= sound_param){
-    std::cout << "\nStart Up " << std::endl;
+    ROS_INFO_STREAM("\nStart Up " );
     system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/start_up.mp3");
     ros::Duration(2.0).sleep();
   }
   if((sound_param < rand_sound) & (rand_sound <= 100)){
-    std::cout << "\nSoka University Gakuseika " << std::endl;
+    ROS_INFO_STREAM("\nSoka University Gakuseika " );
     system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/soka_univ_gakuseika.mp3");
     ros::Duration(2.0).sleep();
   }
@@ -152,7 +152,7 @@ void SobitProMain::control_wheel(){
     joint_state.position[7] = set_wheel_vel[3] * 0.229 * WHEEL_LENGTH / 60.; // Convert RPM to m/s
 
     pub_joint_states.publish(sensor_msgs::JointState(joint_state));
-    //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;
+    //ROS_INFO_STREAM("\n[ joint_state ]\n" << joint_state );
 
     // Set the present position of the wheel
     wheel_fr_present_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
@@ -180,9 +180,9 @@ void SobitProMain::control_wheel(){
     sobit_pro_odometry.pose_broadcaster(result_odom);
     pub_odometry.publish(nav_msgs::Odometry(result_odom));
 
-    // std::cout << "\n[ Odometry ]\n" << result_odom << std::endl;
-    // std::cout << "\n[ Odometry position ]\n" << result_odom.pose.pose.position << std::endl;
-    // std::cout << "\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation << std::endl;
+    // ROS_INFO_STREAM("\n[ Odometry ]\n" << result_odom );
+    // ROS_INFO_STREAM("\n[ Odometry position ]\n" << result_odom.pose.pose.position );
+    // ROS_INFO_STREAM("\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation );
   
     // pub_hz.publish(std_msgs::Empty());
 

@@ -112,6 +112,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
       steer_fl_goal_angle = steer_fl_deg * 4096. / 360.;
       steer_br_goal_angle = steer_br_deg * 4096. / 360.;
       steer_bl_goal_angle = steer_bl_deg * 4096. / 360.;
+      // ROS_INFO("Wheel INFO(Translational motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_deg, steer_fl_deg, steer_br_deg, steer_bl_deg, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
 
       break;
     }
@@ -157,6 +158,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
           wheel_bl_goal_vel = vel_value;
         }
       }
+      // ROS_INFO("Wheel INFO(Rotational motion)\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
       break;
     }
 
@@ -179,7 +181,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
       float svl_r_in, svl_r_out;
       float goal_deg_in, goal_deg_out;
 
-      if(svl_r < SOBIT_CAR_DIAMETER / 2){
+      if(svl_r < d){
         svl_r_in = sqrtf(powf((d - svl_r), 2.) + powf(d, 2.));
         svl_r_out = sqrtf(powf((svl_r + d), 2.) + powf(d, 2.));
 
@@ -218,7 +220,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
           steer_br_deg = -goal_deg_out; // rad = deg * (PAI / 180.)
 
           if(LIMIT_VEL_VALUE < vel_value_in){
-            printf("Too Fast !!\n");
+            ROS_WARN_STREAM("Too Fast !! : vel_value_in = " << vel_value_in );
               if(vel_twist.linear.x > 0){
                 wheel_fl_goal_vel = LIMIT_VEL_VALUE;
                 wheel_bl_goal_vel = LIMIT_VEL_VALUE;
@@ -239,7 +241,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
             }
           }
           if(LIMIT_VEL_VALUE < vel_value_out){
-            printf("Too Fast !!\n");
+            ROS_WARN_STREAM("Too Fast !! : vel_value_out = " << vel_value_out );
             if(vel_twist.linear.x > 0){
               wheel_fr_goal_vel = LIMIT_VEL_VALUE;
               wheel_br_goal_vel = LIMIT_VEL_VALUE;
@@ -348,7 +350,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
           steer_br_deg = goal_deg_in;
 
           if(LIMIT_VEL_VALUE < vel_value_out){
-            printf("Too Fast !!\n");
+            ROS_WARN_STREAM("Too Fast !! : vel_value_out = " << vel_value_out );
               if(vel_twist.linear.x > 0){
                 wheel_fl_goal_vel = -LIMIT_VEL_VALUE;
                 wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
@@ -369,7 +371,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
             }
           }
           if(LIMIT_VEL_VALUE < vel_value_in){
-            printf("Too Fast !!\n");
+            ROS_WARN_STREAM("Too Fast !! : vel_value_in = " << vel_value_in );
             if(vel_twist.linear.x > 0){
               wheel_fr_goal_vel = -LIMIT_VEL_VALUE;
               wheel_br_goal_vel = -LIMIT_VEL_VALUE;
@@ -474,7 +476,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
       steer_fl_goal_angle = steer_fl_deg * 4096. / 360.;
       steer_br_goal_angle = steer_br_deg * 4096. / 360.;
       steer_bl_goal_angle = steer_bl_deg * 4096. / 360.;
-      
+      // ROS_INFO("Wheel INFO(Swivel motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_deg, steer_fl_deg, steer_br_deg, steer_bl_deg, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
       break;
     }
 

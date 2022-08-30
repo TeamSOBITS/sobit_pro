@@ -66,6 +66,12 @@ bool SobitProOdometry::odom(float steer_fr_present_position, float steer_fl_pres
                                                                             + distance_m * sin(fr_direction_deg * (PAI / 180.)) * sin(old_odom_orientation_z + 1.5708);
 
       calculation_odom.pose.pose.orientation = old_odom.pose.pose.orientation;
+      // calculation_odom.pose.covariance[0] = 0.1;
+      // calculation_odom.pose.covariance[7] = 0.1;
+      // calculation_odom.pose.covariance[35] = 0.05;
+      // calculation_odom.pose.covariance[14] = 1e6;
+      // calculation_odom.pose.covariance[21] = 1e6;
+      // calculation_odom.pose.covariance[28] = 1e6;
 
       *result_odom = calculation_odom;
 
@@ -101,7 +107,12 @@ bool SobitProOdometry::odom(float steer_fr_present_position, float steer_fl_pres
       // Change quaternion (calculation_odom)
       tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0.0, 0.0, rotational_position_rad);
       quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
-
+      // calculation_odom.pose.covariance[0] = 0.1;
+      // calculation_odom.pose.covariance[7] = 0.1;
+      // calculation_odom.pose.covariance[35] = 0.05;
+      // calculation_odom.pose.covariance[14] = 1e6;
+      // calculation_odom.pose.covariance[21] = 1e6;
+      // calculation_odom.pose.covariance[28] = 1e6;
       *result_odom = calculation_odom;
 
       return true;
@@ -109,6 +120,12 @@ bool SobitProOdometry::odom(float steer_fr_present_position, float steer_fl_pres
 
     // Other motion
     default:{
+      // old_odom.pose.covariance[0] = 0.1;
+      // old_odom.pose.covariance[7] = 0.1;
+      // old_odom.pose.covariance[35] = 0.05;
+      // old_odom.pose.covariance[14] = 1e6;
+      // old_odom.pose.covariance[21] = 1e6;
+      // old_odom.pose.covariance[28] = 1e6;
       *result_odom = old_odom;
       return true;
     }
