@@ -211,55 +211,34 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
       
       // Direction of wheel rotation
       float steer_fr_deg, steer_fl_deg, steer_br_deg, steer_bl_deg;
+      float rotate_dir_in = 1., rotate_dir_out = 1.;
 
       if(vel_twist.angular.z > 0){
-        if(svl_r < SOBIT_CAR_DIAMETER / 2){
+        if(svl_r < d){
           steer_fl_deg = goal_deg_in;
           steer_bl_deg = -goal_deg_in;
           steer_fr_deg = goal_deg_out; // rad = deg * (PAI / 180.)
           steer_br_deg = -goal_deg_out; // rad = deg * (PAI / 180.)
 
-          if(LIMIT_VEL_VALUE < vel_value_in){
-            ROS_WARN_STREAM("Too Fast !! : vel_value_in = " << vel_value_in );
-              if(vel_twist.linear.x > 0){
-                wheel_fl_goal_vel = LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = LIMIT_VEL_VALUE;
-              }
-              else{
-                wheel_fl_goal_vel = -LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
-              }
-          }
-          else{
-            if(vel_twist.linear.x > 0){
-              wheel_fl_goal_vel = vel_value_in;
-              wheel_bl_goal_vel = vel_value_in;
-            }
-            else{
-              wheel_fl_goal_vel = -vel_value_in;
-              wheel_bl_goal_vel = -vel_value_in;
-            }
-          }
+          if(vel_twist.linear.x > 0) { rotate_dir_out = 1.; rotate_dir_in = 1.; }
+          else { rotate_dir_out = -1.; rotate_dir_in = -1.; }
+
           if(LIMIT_VEL_VALUE < vel_value_out){
             ROS_WARN_STREAM("Too Fast !! : vel_value_out = " << vel_value_out );
-            if(vel_twist.linear.x > 0){
-              wheel_fr_goal_vel = LIMIT_VEL_VALUE;
-              wheel_br_goal_vel = LIMIT_VEL_VALUE;
-            }
-            else{
-              wheel_fr_goal_vel = -LIMIT_VEL_VALUE;
-              wheel_br_goal_vel = -LIMIT_VEL_VALUE;
-            }
+            // out
+            wheel_fr_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            wheel_br_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            // in
+            wheel_fl_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
+            wheel_bl_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
           }
           else{
-            if(vel_twist.linear.x > 0){
-              wheel_fr_goal_vel = vel_value_out;
-              wheel_br_goal_vel = vel_value_out;
-            }
-            else{
-              wheel_fr_goal_vel = -vel_value_out;
-              wheel_br_goal_vel = -vel_value_out;
-            }
+            // out
+            wheel_fr_goal_vel = rotate_dir_out * vel_value_out;
+            wheel_br_goal_vel = rotate_dir_out * vel_value_out;
+            // in
+            wheel_fl_goal_vel = rotate_dir_in * vel_value_in;
+            wheel_bl_goal_vel = rotate_dir_in * vel_value_in;
           }
         }
         
@@ -268,128 +247,70 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
             steer_fl_deg = goal_deg_in - 45.; // rad = deg * (PAI / 180.)
             steer_bl_deg = -(goal_deg_in - 45.); // rad = deg * (PAI / 180.)
 
-            if(LIMIT_VEL_VALUE < vel_value_in){
-              if(vel_twist.linear.x > 0){
-                wheel_fl_goal_vel = -LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
-              }
-              else{
-                wheel_fl_goal_vel = LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = LIMIT_VEL_VALUE;
-              }
-            }
-            else{
-              if(vel_twist.linear.x > 0){
-                wheel_fl_goal_vel = -vel_value_in;
-                wheel_bl_goal_vel = -vel_value_in;
-              }
-              else{
-                wheel_fl_goal_vel = vel_value_in;
-                wheel_bl_goal_vel = vel_value_in;
-              }
-            }
+            if(vel_twist.linear.x > 0) rotate_dir_in = -1.;
+            else rotate_dir_in = 1.;
           }
           else if(135 <= goal_deg_in && goal_deg_in <= 180){
             steer_fl_deg = goal_deg_in - 225.; // rad = deg * (PAI / 180.)
             steer_bl_deg = -(goal_deg_in - 225.); // rad = deg * (PAI / 180.)
 
-            if(LIMIT_VEL_VALUE < vel_value_in){
-              if(vel_twist.linear.x > 0){
-                wheel_fl_goal_vel = LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = LIMIT_VEL_VALUE;
-              }
-              else{
-                wheel_fl_goal_vel = -LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
-              }
-            }
-            else{
-              if(vel_twist.linear.x > 0){
-                wheel_fl_goal_vel = vel_value_in;
-                wheel_bl_goal_vel = vel_value_in;
-              }
-              else{
-                wheel_fl_goal_vel = -vel_value_in;
-                wheel_bl_goal_vel = -vel_value_in;
-              }
-            }
+            if(vel_twist.linear.x > 0) rotate_dir_in = 1.;
+            else rotate_dir_in = -1.;
           }
 
           steer_fr_deg = goal_deg_out - 135.; // rad = deg * (PAI / 180.)
           steer_br_deg = -(goal_deg_out - 135.); // rad = deg * (PAI / 180.)
 
+          if(vel_twist.linear.x > 0) rotate_dir_out = 1.;
+          else rotate_dir_out = -1.;
+
           if(LIMIT_VEL_VALUE < vel_value_out){
-            if(vel_twist.linear.x > 0){
-              wheel_fr_goal_vel = LIMIT_VEL_VALUE;
-              wheel_br_goal_vel = LIMIT_VEL_VALUE;
-            }
-            else{
-              wheel_fr_goal_vel = -LIMIT_VEL_VALUE;
-              wheel_br_goal_vel = -LIMIT_VEL_VALUE;
-            }
+            ROS_WARN_STREAM("Too Fast !! : vel_value_out = " << vel_value_out );
+            // out
+            wheel_fr_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            wheel_br_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            // in
+            wheel_fl_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
+            wheel_bl_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
           }
           else{
-            if(vel_twist.linear.x > 0){
-              wheel_fr_goal_vel = vel_value_out;
-              wheel_br_goal_vel = vel_value_out;
-            }
-            else{
-              wheel_fr_goal_vel = -vel_value_out;
-              wheel_br_goal_vel = -vel_value_out;
-            }
+            // out
+            wheel_fr_goal_vel = rotate_dir_out * vel_value_out;
+            wheel_br_goal_vel = rotate_dir_out * vel_value_out;
+            // in
+            wheel_fl_goal_vel = rotate_dir_in * vel_value_in;
+            wheel_bl_goal_vel = rotate_dir_in * vel_value_in;
           }
         }
 
       }
 
       else{
-        if(svl_r < SOBIT_CAR_DIAMETER / 2){
+        if(svl_r < d){
           steer_fl_deg = -goal_deg_out; // rad = deg * (PAI / 180.)
           steer_bl_deg = goal_deg_out; // rad = deg * (PAI / 180.)
           steer_fr_deg = -goal_deg_in;
           steer_br_deg = goal_deg_in;
 
+          if(vel_twist.linear.x > 0) { rotate_dir_out = -1.; rotate_dir_in = -1.; }
+          else { rotate_dir_out = 1.; rotate_dir_in = 1.; }
+
           if(LIMIT_VEL_VALUE < vel_value_out){
             ROS_WARN_STREAM("Too Fast !! : vel_value_out = " << vel_value_out );
-              if(vel_twist.linear.x > 0){
-                wheel_fl_goal_vel = -LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
-              }
-              else{
-                wheel_fl_goal_vel = LIMIT_VEL_VALUE;
-                wheel_bl_goal_vel = LIMIT_VEL_VALUE;
-              }
+            // out
+            wheel_fl_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            wheel_bl_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            // in
+            wheel_fr_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
+            wheel_br_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
           }
           else{
-            if(vel_twist.linear.x > 0){
-              wheel_fl_goal_vel = -vel_value_out;
-              wheel_bl_goal_vel = -vel_value_out;
-            }
-            else{
-              wheel_fl_goal_vel = vel_value_out;
-              wheel_bl_goal_vel = vel_value_out;
-            }
-          }
-          if(LIMIT_VEL_VALUE < vel_value_in){
-            ROS_WARN_STREAM("Too Fast !! : vel_value_in = " << vel_value_in );
-            if(vel_twist.linear.x > 0){
-              wheel_fr_goal_vel = -LIMIT_VEL_VALUE;
-              wheel_br_goal_vel = -LIMIT_VEL_VALUE;
-            }
-            else{
-              wheel_fr_goal_vel = LIMIT_VEL_VALUE;
-              wheel_br_goal_vel = LIMIT_VEL_VALUE;
-            }
-          }
-          else{
-            if(vel_twist.linear.x > 0){
-              wheel_fr_goal_vel = -vel_value_in;
-              wheel_br_goal_vel = -vel_value_in;
-            }
-            else{
-              wheel_fr_goal_vel = vel_value_in;
-              wheel_br_goal_vel = vel_value_in;
-            }
+            // out
+            wheel_fl_goal_vel = rotate_dir_out * vel_value_out;
+            wheel_bl_goal_vel = rotate_dir_out * vel_value_out;
+            // in
+            wheel_fr_goal_vel = rotate_dir_in * vel_value_in;
+            wheel_br_goal_vel = rotate_dir_in * vel_value_in;
           }
         }
 
@@ -398,80 +319,50 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
             steer_fr_deg = -(goal_deg_in - 45.); // rad = deg * (PAI / 180.)
             steer_br_deg = goal_deg_in - 45.; // rad = deg * (PAI / 180.)
 
-            if(LIMIT_VEL_VALUE < vel_value_in){
-              if(vel_twist.linear.x > 0){
-                wheel_fr_goal_vel = LIMIT_VEL_VALUE;
-                wheel_br_goal_vel = LIMIT_VEL_VALUE;
-              }
-              else{
-                wheel_fr_goal_vel = -LIMIT_VEL_VALUE;
-                wheel_br_goal_vel = -LIMIT_VEL_VALUE;
-              }
-            }
-            else{
-              if(vel_twist.linear.x > 0){
-                wheel_fr_goal_vel = vel_value_in;
-                wheel_br_goal_vel = vel_value_in;
-              }
-              else{
-                wheel_fr_goal_vel = -vel_value_in;
-                wheel_br_goal_vel = -vel_value_in;
-              }
-            }
+            if(vel_twist.linear.x > 0) rotate_dir_in = 1.;
+            else rotate_dir_in = -1.;
           }
           else if(135 <= goal_deg_in && goal_deg_in <= 180){
             steer_fr_deg = -(goal_deg_in - 225.); // rad = deg * (PAI / 180.)
             steer_br_deg = goal_deg_in - 225.; // rad = deg * (PAI / 180.)
 
-            if(LIMIT_VEL_VALUE < vel_value_in){
-              if(vel_twist.linear.x > 0){
-                wheel_fr_goal_vel = -LIMIT_VEL_VALUE;
-                wheel_br_goal_vel = -LIMIT_VEL_VALUE;
-              }
-              else{
-                wheel_fr_goal_vel = LIMIT_VEL_VALUE;
-                wheel_br_goal_vel = LIMIT_VEL_VALUE;
-              }
-            }
-            else{
-              if(vel_twist.linear.x > 0){
-                wheel_fr_goal_vel = -vel_value_in;
-                wheel_br_goal_vel = -vel_value_in;
-              }
-              else{
-                wheel_fr_goal_vel = vel_value_in;
-                wheel_br_goal_vel = vel_value_in;
-              }
-            }
+            if(vel_twist.linear.x > 0) rotate_dir_in = -1.;
+            else rotate_dir_in = 1.;
 
           }
 
           steer_fl_deg = -(goal_deg_out - 135.); // rad = deg * (PAI / 180.)
           steer_bl_deg = goal_deg_out - 135.; // rad = deg * (PAI / 180.)
 
+          if(vel_twist.linear.x > 0) rotate_dir_out = -1.;
+          else rotate_dir_out = 1.;
+
           if(LIMIT_VEL_VALUE < vel_value_out){
-            if(vel_twist.linear.x > 0){
-              wheel_fl_goal_vel = -LIMIT_VEL_VALUE;
-              wheel_bl_goal_vel = -LIMIT_VEL_VALUE;
-            }
-            else{
-              wheel_fl_goal_vel = LIMIT_VEL_VALUE;
-              wheel_bl_goal_vel = LIMIT_VEL_VALUE;
-            }
+            ROS_WARN_STREAM("Too Fast !! : vel_value_out = " << vel_value_out );
+            // out
+            wheel_fl_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            wheel_bl_goal_vel = rotate_dir_out * LIMIT_VEL_VALUE;
+            // in
+            wheel_fr_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
+            wheel_br_goal_vel = rotate_dir_in * vel_value_in / vel_value_out * LIMIT_VEL_VALUE;
           }
           else{
-            if(vel_twist.linear.x > 0){
-              wheel_fl_goal_vel = -vel_value_out;
-              wheel_bl_goal_vel = -vel_value_out;
-            }
-            else{
-              wheel_fl_goal_vel = vel_value_out;
-              wheel_bl_goal_vel = vel_value_out;
-            }
+            // out
+            wheel_fl_goal_vel = rotate_dir_out * vel_value_out;
+            wheel_bl_goal_vel = rotate_dir_out * vel_value_out;
+            // in
+            wheel_fr_goal_vel = rotate_dir_in * vel_value_in;
+            wheel_br_goal_vel = rotate_dir_in * vel_value_in;
           }
         }
       }  
       
+      // if ((abs(abs(steer_fr_deg) - 45.) <= 1.)||(abs(abs(steer_fl_deg) - 45.) <= 1.)) ROS_INFO("Wheel INFO(Swivel motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_deg, steer_fl_deg, steer_br_deg, steer_bl_deg, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
+      // Hardware limit
+      if (abs(steer_fr_deg) > 90 || abs(steer_fl_deg) > 90) {
+          ROS_ERROR("Over Hardware limit!!\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n", steer_fr_deg, steer_fl_deg, steer_br_deg, steer_bl_deg);
+          steer_fr_deg = 0.; steer_fl_deg = 0.; steer_br_deg = 0.; steer_bl_deg = 0.;
+      }
       steer_fr_goal_angle = steer_fr_deg * 4096. / 360.;
       steer_fl_goal_angle = steer_fl_deg * 4096. / 360.;
       steer_br_goal_angle = steer_br_deg * 4096. / 360.;
