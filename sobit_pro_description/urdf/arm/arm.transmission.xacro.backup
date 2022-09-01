@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="arm_transmission" params="prefix">
+    <position_joint_transmission joint="${prefix}1_1_joint" reduction="1" />
+    <position_joint_transmission joint="${prefix}1_2_joint" reduction="1" />
+    <position_joint_transmission joint="${prefix}2_1_joint" reduction="1" />
+    <position_joint_transmission joint="${prefix}2_2_joint" reduction="1" />
+    <position_joint_transmission joint="${prefix}3_joint" reduction="1" />
+    <position_joint_transmission joint="${prefix}4_joint" reduction="1" />
+  </xacro:macro>
+</robot>
