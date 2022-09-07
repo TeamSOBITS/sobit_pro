@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="plate" xmlns:xacro="http://ros.org/wiki/xacro">
+    <xacro:macro name="plate" params="prefix parent">>
+
+    <joint name="${prefix}_bottom_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <parent link="${parent}" />
+      <child link="${prefix}_bottom_link" />
+    </joint>
+
+    <link name="${prefix}_bottom_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix}_middle_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.064" rpy="0.0 0.0 0.0" />
+      <parent link="${prefix}_bottom_link" />
+      <child link="${prefix}_middle_link" />
+    </joint>
+
+    <link name="${prefix}_middle_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+    
+
+    <joint name="${prefix}_top_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.4800" rpy="0.0 0.0 0.0" />
+      <parent link="${prefix}_middle_link" />
+      <child link="${prefix}_top_link" />
+    </joint>
+
+    <link name="${prefix}_top_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+    </xacro:macro>
+</robot>

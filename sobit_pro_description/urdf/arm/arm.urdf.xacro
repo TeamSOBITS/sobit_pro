@@ -1,132 +1,176 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<robot name="arm"
-  xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="arm" xmlns:xacro="http://ros.org/wiki/xacro" >
 
-  <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.transmission.xacro" />
+  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.transmission.xacro" /> -->
 
-  <xacro:macro name="arm" params="prefix parent">
-    <joint name="${prefix}_base_joint" type="fixed">
+  <xacro:macro name="arm" params="prefix parent" >
+    <joint name="${prefix}_base_joint" type="fixed" >
       <parent link="${parent}" />
       <child link="${prefix}_base_link" />
-      <origin xyz="0 -0.221 0.5995" rpy="0 0 0" />
+      <origin xyz="0.065 0.0 0.0" rpy="0.0 0.0 0.0" />
     </joint>
 
-    <link name="${prefix}_base_link">
+    <link name="${prefix}_base_link" >
       <visual>
-        <origin xyz="0 0 0" rpy="1.570796327 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm_base.dae"/>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="black" />
       </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
     </link>
 
-    <joint name="${prefix}_fixed_joint" type="fixed">
+
+    <joint name="${prefix}_shoulder_1_tilt_joint" type="revolute" >
       <parent link="${prefix}_base_link" />
-      <child link="${prefix}_fixed_link" />
-      <origin xyz="0 0 0" rpy="0 0 ${-M_PI / 2}" />
+      <child link="${prefix}_shoulder_1_tilt_link" />
+      <origin xyz="0.1560 0.0 0.0215" rpy="0.0 0.0 0.0 " />
+      <axis xyz="0.0 -1.0 0.0 " />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="${prefix}_fixed_link" />
+    <link name="${prefix}_shoulder_1_tilt_link" >
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_upper.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_upper.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
 
-    <joint name="${prefix}1_1_joint" type="revolute">
+
+    <joint name="${prefix}_shoulder_2_tilt_joint" type="revolute" >
       <parent link="${prefix}_base_link" />
-      <child link="${prefix}1_1_link" />
-      <origin xyz="0 0 0" rpy="${M_PI / 2} 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+      <child link="${prefix}_shoulder_2_tilt_link" />
+      <origin xyz="0.1560 0.0 0.0215" rpy="0.0 0.0 ${M_PI}" />
+      <axis xyz="0.0 1.0 0.0 " />
+      <mimic joint="${prefix}_shoulder_1_tilt_joint" multiplier="1" offset="0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="${prefix}1_1_link">
+    <link name="${prefix}_shoulder_2_tilt_link" />
+
+
+    <joint name="${prefix}_elbow_upper_1_tilt_joint" type="revolute" >
+      <parent link="${prefix}_shoulder_1_tilt_link" />
+      <child link="${prefix}_elbow_upper_1_tilt_link" />
+      <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 -1.0 0.0 " />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
+    </joint>
+
+    <link name="${prefix}_elbow_upper_1_tilt_link" >
       <visual>
-        <origin xyz="0 0 0" rpy="1.570796327 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm1.dae"/>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_inner.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="black" />
       </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_inner.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
     </link>
 
-    <joint name="${prefix}1_2_joint" type="revolute">
-      <parent link="${prefix}_base_link" />
-      <child link="${prefix}1_2_link" />
-      <origin xyz="0 0 0" rpy="${M_PI / 2} 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+
+    <joint name="${prefix}_elbow_upper_2_tilt_joint" type="revolute" >
+      <parent link="${prefix}_shoulder_1_tilt_link" />
+      <child link="${prefix}_elbow_upper_2_tilt_link" />
+      <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
+      <axis xyz="0.0 1.0 0.0 " />
+      <mimic joint="${prefix}_elbow_upper_1_tilt_joint" multiplier="1" offset="0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="${prefix}1_2_link">
-      <origin xyz="0 0 0" rpy="1.570796327 0 0" />
-    </link>
+    <link name="${prefix}_elbow_upper_2_tilt_link" />
 
-    <joint name="${prefix}2_1_joint" type="revolute">
-      <parent link="${prefix}1_1_link" />
-      <child link="${prefix}2_1_link" />
-      <origin xyz="0 0 0.15" rpy="-1.137 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+
+    <joint name="${prefix}_elbow_lower_tilt_joint" type="revolute" >
+      <parent link="${prefix}_elbow_upper_1_tilt_link" />
+      <child link="${prefix}_elbow_lower_tilt_link" />
+      <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 -1.0 0.0 " />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="${prefix}2_1_link">
+    <link name="${prefix}_elbow_lower_tilt_link" >
       <visual>
-        <origin xyz="0 0 -0.15" rpy="1.570796327 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm2.dae"/>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_lower.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="black" />
       </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_lower.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
     </link>
 
-    <joint name="${prefix}2_2_joint" type="revolute">
-      <parent link="${prefix}1_1_link" />
-      <child link="${prefix}2_2_link" />
-      <origin xyz="0 0 0.15" rpy="-1.137 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+
+    <joint name="${prefix}_wrist_tilt_joint" type="revolute" >
+      <parent link="${prefix}_elbow_lower_tilt_link" />
+      <child link="${prefix}_wrist_tilt_link" />
+      <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 -1.0 0.0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="${prefix}2_2_link">
-      <origin xyz="0 0 -0.15" rpy="1.570796327 0 0" />
-    </link>
+    <link name="${prefix}_wrist_tilt_link" />
 
-    <joint name="${prefix}3_joint" type="revolute">
-      <parent link="${prefix}2_1_link" />
-      <child link="${prefix}3_link" />
-      <origin xyz="0 -0.13594617 0.06339274" rpy="-1.30 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
-    </joint>
-
-    <link name="${prefix}3_link">
-      <visual>
-        <origin xyz="0 0.13594617 -0.21339274" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm3.dae"/>
-        </geometry>
-      </visual>
-    </link>
-
-    <joint name="${prefix}4_joint" type="revolute">
-      <parent link="${prefix}3_link" />
-      <child link="${prefix}4_link" />
-      <origin xyz="0 -0.09641814 -0.11490667" rpy="0.87 0 0" />
-      <axis xyz="-1 0 0" />
-      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
-    </joint>
-
-    <link name="${prefix}4_link">
-      <visual>
-        <origin xyz="0 0.23236431 -0.09848607" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/sobit_pro_arm4.dae"/>
-        </geometry>
-      </visual>
-    </link>
-
-    <xacro:arm_transmission prefix="${prefix}"/>
+    <!-- <xacro:arm_transmission prefix="${prefix}" /> -->
 
   </xacro:macro>
 </robot>
