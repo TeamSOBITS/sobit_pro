@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <robot name="hand" xmlns:xacro="http://ros.org/wiki/xacro">
-  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.transmission.xacro" /> -->
+
+  <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.transmission.xacro" />
   
   <xacro:macro name="hand" params="prefix_hand prefix_finger parent">
-    <!-- <xacro:hand_transmission prefix_hand="${prefix_hand}" prefix_finger="${prefix_finger}" /> -->
 
     <joint name="${prefix_hand}_base_joint" type="fixed">
       <parent link="${parent}" />
@@ -243,6 +243,8 @@
                  izz="1.0" />
       </inertial>
     </link>
+
+    <xacro:hand_transmission prefix_hand="${prefix_hand}" prefix_finger="${prefix_finger}" />
 
   </xacro:macro>
 </robot>

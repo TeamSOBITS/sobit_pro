@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="head" xmlns:xacro="http://ros.org/wiki/xacro">
-  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.transmission.xacro" /> -->
+
+  <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.transmission.xacro" />
+  
   <xacro:macro name="head" params="prefix parent">
     <joint name="${prefix}_camera_base_joint" type="fixed">
       <parent link="${parent}" />
@@ -95,7 +97,7 @@
       </inertial>
     </link>
 
-    <!-- <xacro:head_transmission prefix="${prefix}" /> -->
+    <xacro:head_transmission prefix="${prefix}" />
 
   </xacro:macro>
 </robot>

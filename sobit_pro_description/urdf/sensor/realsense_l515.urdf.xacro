@@ -1,13 +1,4 @@
 <?xml version="1.0"?>
-
-<!--
-License: Apache 2.0. See LICENSE file in root directory.
-Copyright(c) 2017 Intel Corporation. All Rights Reserved
-
-This is the URDF model for the Intel RealSense L515 camera, in its
-aluminum peripherial evaluation case.
--->
-
 <robot name="realsense_l515" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="realsense_l515" params="prefix parent">
 

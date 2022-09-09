@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <!-- Reference: https://matrix-io.github.io/matrix-documentation/matrix-creator/resources/microphone/ -->
-
-<robot name="matrix" 
-  xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="matrix" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="matrix" params="prefix parent">
 
     <joint name="${prefix}_board_joint" type="fixed">
@@ -24,13 +21,16 @@
 
   </xacro:macro>
 
+
   <xacro:macro name="mic_sensor" params="prefix parent number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+
     <joint name="${prefix}_sensor_${number}_joint" type="fixed">
       <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
       <parent link="${parent}" />
       <child link="${prefix}_sensor_${number}_link" />
     </joint>
     <link name="${prefix}_sensor_${number}_link" />
+
   </xacro:macro>
 
 </robot>

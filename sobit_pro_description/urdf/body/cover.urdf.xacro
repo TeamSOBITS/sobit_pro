@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="cover" xmlns:xacro="http://ros.org/wiki/xacro" >
   <xacro:macro name="cover" params="prefix parent" >
+  
     <joint name="${prefix}_joint" type="fixed" >
       <origin xyz="0.179108 0.0 -0.034" rpy="0.0 0.0 0.0" />
       <parent link="${parent}" />

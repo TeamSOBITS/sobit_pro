@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="wheel" xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="stack_wheel_steer_base" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+
     <joint name="wheel_${prefix}_steer_base_joint" type="fixed">
       <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${(number-1)*M_PI/2.0+M_PI/4.0}" />
       <parent link="${parent}" />
@@ -32,7 +33,9 @@
     
   </xacro:macro>
 
+
   <xacro:macro name="stack_wheel_steer" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+
     <joint name="wheel_${prefix}_steer_joint" type="revolute">
       <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
       <parent link="${parent}" />
@@ -66,6 +69,7 @@
     </link>
 
   </xacro:macro>
+
 
   <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 

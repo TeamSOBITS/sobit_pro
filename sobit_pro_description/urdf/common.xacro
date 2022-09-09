@@ -1,10 +1,10 @@
 <?xml version="1.0" ?>
-
 <robot xmlns:xacro="http://www.ros.org/wiki.xacro">
 
   <xacro:property name="M_PI" value="3.14159265359" />
 
   <xacro:macro name="position_joint_transmission" params="joint reduction">
+
     <transmission name="${joint}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
       <joint name="${joint}">
@@ -15,6 +15,6 @@
         <mechanicalReduction>${reduction}</mechanicalReduction>
       </actuator>
     </transmission>
+
   </xacro:macro>
-  
 </robot>
