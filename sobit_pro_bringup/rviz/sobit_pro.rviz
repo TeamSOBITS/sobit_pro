@@ -58,17 +58,17 @@ Visualization Manager:
       Frame Timeout: 15
       Frames:
         All Enabled: false
-        arm1_1_link:
+        arm_shoulder_1_tilt_link:
           Value: true
-        arm1_2_link:
+        arm_shoulder_2_tilt_link:
           Value: true
-        arm2_1_link:
+        arm_elbow_upper_1_tilt_link:
           Value: true
-        arm2_2_link:
+        arm_elbow_upper_2_tilt_link:
           Value: true
-        arm3_link:
+        arm_elbow_lower_tilt_link:
           Value: false
-        arm4_link:
+        arm_wrist_tilt_link:
           Value: false
         arm_base_link:
           Value: false
@@ -122,7 +122,7 @@ Visualization Manager:
           Value: false
         gripper_inner_r_link:
           Value: false
-        gripper_link:
+        hand_link:
           Value: false
         gripper_outer_l_link:
           Value: false
@@ -149,10 +149,10 @@ Visualization Manager:
         base_footprint:
           base_link:
             arm_base_link:
-              arm1_1_link:
-                arm2_1_link:
-                  arm3_link:
-                    arm4_link:
+              arm_shoulder_1_tilt_link:
+                arm_elbow_upper_1_tilt_link:
+                  arm_elbow_lower_tilt_link:
+                    arm_wrist_tilt_link:
                       camera_l515_bottom_screw_frame:
                         camera_l515_link:
                           camera_confidence_frame:
@@ -185,15 +185,15 @@ Visualization Manager:
                       gripper_inner_r_link:
                         finger_r_link:
                           {}
-                      gripper_link:
+                      hand_link:
                         {}
                       gripper_outer_l_link:
                         {}
                       gripper_outer_r_link:
                         {}
-                arm2_2_link:
+                arm_elbow_upper_2_tilt_link:
                   {}
-              arm1_2_link:
+              arm_shoulder_2_tilt_link:
                 {}
               arm_fixed_link:
                 {}
