@@ -128,14 +128,14 @@ void SobitProMain::control_wheel(){
     joint_state.header.stamp = ros::Time::now();
 
     joint_state.name.resize(8);
-    joint_state.name[0] = "steer_f_r_joint";
-    joint_state.name[1] = "steer_f_l_joint";
-    joint_state.name[2] = "steer_b_r_joint";
-    joint_state.name[3] = "steer_b_l_joint";
-    joint_state.name[4] = "wheel_f_r_joint";
-    joint_state.name[5] = "wheel_f_l_joint";
-    joint_state.name[6] = "wheel_b_r_joint";
-    joint_state.name[7] = "wheel_b_l_joint";
+    joint_state.name[0] = "wheel_f_r_steer_joint";
+    joint_state.name[1] = "wheel_f_l_steer_joint";
+    joint_state.name[2] = "wheel_b_r_steer_joint";
+    joint_state.name[3] = "wheel_b_l_steer_joint";
+    joint_state.name[4] = "wheel_f_r_drive_joint";
+    joint_state.name[5] = "wheel_f_l_drive_joint";
+    joint_state.name[6] = "wheel_b_r_drive_joint";
+    joint_state.name[7] = "wheel_b_l_drive_joint";
 
     joint_state.position.resize(8);
     joint_state.position[0] = (set_steer_angle[0] - 2048) * (1.57 / 1024.);  // Convert 2048 to 1.57
