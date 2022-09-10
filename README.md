@@ -9,8 +9,8 @@ SOBIT PROを動かすために必要なリポジトリです．
 
 ## Prerequisites
 以下の環境で動作します．
-- OS: Ubuntu 18.04 
-- ROS distribution: melodic Kame
+- OS: Ubuntu 20.04 
+- ROS distribution: Noetic Ninjemys
 
 ### How to use
 まず，以下のコマンドを入力して，SOBIT PROを動かすための環境設定を行います．
