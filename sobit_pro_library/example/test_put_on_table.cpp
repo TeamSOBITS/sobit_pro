@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     if ( res == true ) {
 
         // 決められたポーズをする
-        pro_joint_ctr.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
+        pro_joint_ctr.moveJoint( sobit_pro::Joint::HAND_JOINT, -1.57, 2.0, true );
 
         // 決められたポーズをする
         pro_joint_ctr.moveToPose( "put_high_pose" );
