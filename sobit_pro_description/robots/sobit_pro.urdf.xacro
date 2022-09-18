@@ -14,13 +14,14 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.urdf.xacro" />
 
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_kinect.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_camera.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/matrix.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/mic.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/lidar.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_l515.urdf.xacro" />
   
   <xacro:include filename="$(find urg_node)/urdf/hokuyo_ust.urdf.xacro" />
+  <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" />
   <xacro:include filename="$(find realsense2_description)/urdf/_l515.urdf.xacro" />
 
   <xacro:base/>
@@ -33,7 +34,7 @@
   <xacro:arm   prefix="arm"  parent="plate_top_link" />
   <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
   <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
-  <xacro:azure_kinect prefix="head_camera" parent="head_camera_tilt_link" />
+  <xacro:azure_camera prefix="head_camera" parent="head_camera_tilt_link" />
   <xacro:matrix prefix="matrix" parent="head_camera_link" />
   <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" />
 
