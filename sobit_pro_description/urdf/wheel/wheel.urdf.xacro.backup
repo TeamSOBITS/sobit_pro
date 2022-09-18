@@ -8,7 +8,7 @@
       <child link="steer_b_l_link" />
       <origin xyz="0.15841 0.15841 0.07" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
+      <limit lower="-1.5708" upper="1.5708" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -26,7 +26,7 @@
       <child link="steer_b_r_link" />
       <origin xyz="-0.15841 0.15841 0.07" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
+      <limit lower="-1.5708" upper="1.5708" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -44,7 +44,7 @@
       <child link="steer_f_l_link" />
       <origin xyz="0.15841 -0.15841 0.07" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
+      <limit lower="-1.5708" upper="1.5708" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
@@ -62,7 +62,7 @@
       <child link="steer_f_r_link" />
       <origin xyz="-0.15841 -0.15841 0.07" rpy="0 0 0" />
       <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
+      <limit lower="-1.5708" upper="1.5708" effort="10" velocity="10"/>
       <dynamics damping="0.2" friction="0"/>
     </joint>
 
