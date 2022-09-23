@@ -13,7 +13,7 @@ ros_packages=(
 for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     # echo "array[$i] = ${array[i]}"
     echo "${ros_packages[i]}"
-    git clone https://gitlab.com/TeamSOBITS/${ros_packages[i]}.git
+    git clone https://github.com/TeamSOBITS/${ros_packages[i]}.git
 }
 
 # オープンソースのROSパッケージのgit clone
