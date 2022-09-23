@@ -70,6 +70,11 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        arm_elbow_lower_pan_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         arm_elbow_lower_tilt_link:
           Alpha: 1
           Show Axes: false
@@ -387,6 +392,8 @@ Visualization Manager:
         All Enabled: false
         arm_base_link:
           Value: true
+        arm_elbow_lower_pan_link:
+          Value: true
         arm_elbow_lower_tilt_link:
           Value: true
         arm_elbow_upper_1_tilt_link:
@@ -541,42 +548,43 @@ Visualization Manager:
                     arm_shoulder_1_tilt_link:
                       arm_elbow_upper_1_tilt_link:
                         arm_elbow_lower_tilt_link:
-                          arm_wrist_tilt_link:
-                            hand_base_link:
-                              hand_inner_l_link:
-                                {}
-                              hand_inner_r_link:
-                                {}
-                              hand_link:
-                                {}
-                              hand_outer_l_link:
-                                hand_finger_l_link:
+                          arm_elbow_lower_pan_link:
+                            arm_wrist_tilt_link:
+                              hand_base_link:
+                                hand_inner_l_link:
                                   {}
-                              hand_outer_r_link:
-                                hand_finger_r_link:
+                                hand_inner_r_link:
                                   {}
-                            hand_camera_base_link:
-                              hand_camera_bottom_screw_frame:
-                                hand_camera_link:
-                                  hand_camera_color_frame:
-                                    hand_camera_accel_frame:
-                                      hand_camera_accel_optical_frame:
+                                hand_link:
+                                  {}
+                                hand_outer_l_link:
+                                  hand_finger_l_link:
+                                    {}
+                                hand_outer_r_link:
+                                  hand_finger_r_link:
+                                    {}
+                              hand_camera_base_link:
+                                hand_camera_bottom_screw_frame:
+                                  hand_camera_link:
+                                    hand_camera_color_frame:
+                                      hand_camera_accel_frame:
+                                        hand_camera_accel_optical_frame:
+                                          {}
+                                      hand_camera_color_optical_frame:
                                         {}
-                                    hand_camera_color_optical_frame:
-                                      {}
-                                    hand_camera_gyro_frame:
-                                      hand_camera_gyro_optical_frame:
+                                      hand_camera_gyro_frame:
+                                        hand_camera_gyro_optical_frame:
+                                          {}
+                                    hand_camera_depth_frame:
+                                      hand_camera_depth_optical_frame:
                                         {}
-                                  hand_camera_depth_frame:
-                                    hand_camera_depth_optical_frame:
-                                      {}
-                                  hand_camera_infra_frame:
-                                    hand_camera_infra_optical_frame:
-                                      {}
-                                hand_camera_lower_mount:
-                                  {}
-                                hand_camera_upper_mount:
-                                  {}
+                                    hand_camera_infra_frame:
+                                      hand_camera_infra_optical_frame:
+                                        {}
+                                  hand_camera_lower_mount:
+                                    {}
+                                  hand_camera_upper_mount:
+                                    {}
                       arm_elbow_upper_2_tilt_link:
                         {}
                     arm_shoulder_2_tilt_link:
@@ -663,9 +671,9 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.3986181616783142
-        Y: 0.3211972713470459
-        Z: 0.5049048662185669
+        X: 0.27046388387680054
+        Y: 0.2549273669719696
+        Z: 0.4920833110809326
       Focal Shape Fixed Size: false
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false

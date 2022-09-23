@@ -139,14 +139,14 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_lower.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_tilt.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
       <collision>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_lower.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_tilt.stl" scale="0.001 0.001 0.001" />
         </geometry>
       </collision>
       <inertial>
@@ -159,10 +159,43 @@
     </link>
 
 
-    <joint name="${prefix}_wrist_tilt_joint" type="revolute" >
+    <joint name="${prefix}_elbow_lower_pan_joint" type="revolute" >
       <parent link="${prefix}_elbow_lower_tilt_link" />
+      <child link="${prefix}_elbow_lower_pan_link" />
+      <origin xyz="0.028 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <axis xyz="-1.0 0.0 0.0 " />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
+    </joint>
+
+    <link name="${prefix}_elbow_lower_pan_link" >
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_pan.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_pan.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+    
+
+    <joint name="${prefix}_wrist_tilt_joint" type="revolute" >
+      <parent link="${prefix}_elbow_lower_pan_link" />
       <child link="${prefix}_wrist_tilt_link" />
-      <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.122009 0.0 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 -1.0 0.0" />
       <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
