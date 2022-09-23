@@ -19,6 +19,7 @@ namespace sobit_pro {
                  ARM_ELBOW_UPPER_1_TILT_JOINT,
                  ARM_ELBOW_UPPER_2_TILT_JOINT,
                  ARM_ELBOW_LOWER_TILT_JOINT,
+                 ARM_ELBOW_LOWER_PAN_JOINT,
                  ARM_WRIST_TILT_JOINT,
                  HAND_JOINT,
                  HEAD_CAMERA_PAN_JOINT,
@@ -44,6 +45,7 @@ namespace sobit_pro {
                                                             "arm_elbow_upper_1_tilt_joint",
                                                             "arm_elbow_upper_2_tilt_joint",
                                                             "arm_elbow_lower_tilt_joint",
+                                                            "arm_elbow_lower_pan_joint",
                                                             "arm_wrist_tilt_joint",
                                                             "hand_joint",
                                                             "head_camera_pan_joint",
@@ -64,6 +66,7 @@ namespace sobit_pro {
             bool moveAllJoint( const double arm1,
                             const double arm2,
                             const double arm3,
+                            const double arm3_pan,
                             const double arm4,
                             const double gripper,
                             const double head_camera_pan,
@@ -84,7 +87,7 @@ namespace sobit_pro {
 
             bool moveToPose( const std::string& pose_name, const double sec = 5.0 );
             bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
-            bool moveArm( const double arm1, const double arm2, const double arm3, const double arm4, const double sec = 5.0, bool is_sleep = true );
+            bool moveArm( const double arm1, const double arm2, const double arm3, const double arm3_pan, const double arm4, const double sec = 5.0, bool is_sleep = true );
             bool moveHeadPanTilt( const double head_camera_pan, const double head_camera_tilt, const double sec = 5.0, bool is_sleep = true );
             bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
             bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );

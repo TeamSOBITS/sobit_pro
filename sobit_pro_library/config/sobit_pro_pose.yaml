@@ -7,9 +7,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 1.57,
         arm_elbow_upper_2_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.57,
-        hand_joint: 0.0,
-        head_camera_pan_joint: 0.0,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -20,9 +21,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 1.57,
         arm_elbow_upper_2_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -1.57,
-        arm_wrist_tilt_joint: 0.0,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 0.00,
         hand_joint: -1.0,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: -0.7
     }
 
@@ -33,9 +35,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 1.0,
         arm_elbow_upper_2_tilt_joint: -1.0,
         arm_elbow_lower_tilt_joint: -1.0,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.0,
-        hand_joint: 0.0,
-        head_camera_pan_joint: 0.0,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -46,9 +49,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 1.0,
         arm_elbow_upper_2_tilt_joint: -1.0,
         arm_elbow_lower_tilt_joint: -1.0,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.0,
         hand_joint: -1.57,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -59,9 +63,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 1.57,
         arm_elbow_upper_2_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.57,
-        hand_joint: 0.0,
-        head_camera_pan_joint: 0.0,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: -0.7
     }
 
@@ -72,9 +77,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 0.00,
         arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.57,
         hand_joint: 0.00,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -85,9 +91,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: -1.57,
         arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 0.00,
         hand_joint: 0.00,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -98,9 +105,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: -1.57,
         arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: 0.00,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 0.00,
         hand_joint: 0.00,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -111,9 +119,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: 0.00,
         arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 0.00,
         hand_joint: 0.00,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -124,9 +133,10 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: -1.57,
         arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 1.57,
         hand_joint: 0.00,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
 
@@ -137,8 +147,9 @@ sobit_pro_pose:
         arm_elbow_upper_1_tilt_joint: -1.57,
         arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: 1.57,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.0,
         hand_joint: 0.00,
-        head_camera_pan_joint: 0.0,
+        head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: 0.0
     }
