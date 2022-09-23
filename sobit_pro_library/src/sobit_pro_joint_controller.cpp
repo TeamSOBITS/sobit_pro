@@ -31,19 +31,19 @@ void SobitProJointController::loadPose() {
     pose_list_.clear();
     for ( int i = 0; i < pose_num; i++ ) {
         Pose                pose;
-        std::vector<double> joint_val(9, 0.0);
+        std::vector<double> joint_val(10, 0.0);
         pose.pose_name                           = static_cast<std::string>(pose_val[i]["pose_name"]);
-        joint_val[Joint::ARM_SHOULDER_1_TILT_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]]);
-        joint_val[Joint::ARM_SHOULDER_2_TILT_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT]           = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]]);
-        joint_val[Joint::ARM_WRIST_TILT_JOINT]             = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_WRIST_TILT_JOINT]]);
-        joint_val[Joint::HAND_JOINT]          = static_cast<double>(pose_val[i][joint_names_[Joint::HAND_JOINT]]);
-        joint_val[Joint::HEAD_CAMERA_PAN_JOINT]  = static_cast<double>(pose_val[i][joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]]);
-        joint_val[Joint::HEAD_CAMERA_TILT_JOINT] = static_cast<double>(pose_val[i][joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]]);
-        pose.joint_val                           = joint_val;
+        joint_val[Joint::ARM_SHOULDER_1_TILT_JOINT]    = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]]);
+        joint_val[Joint::ARM_SHOULDER_2_TILT_JOINT]    = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT] = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT] = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT]   = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT]    = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]]);
+        joint_val[Joint::ARM_WRIST_TILT_JOINT]         = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_WRIST_TILT_JOINT]]);
+        joint_val[Joint::HAND_JOINT]                   = static_cast<double>(pose_val[i][joint_names_[Joint::HAND_JOINT]]);
+        joint_val[Joint::HEAD_CAMERA_PAN_JOINT]        = static_cast<double>(pose_val[i][joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]]);
+        joint_val[Joint::HEAD_CAMERA_TILT_JOINT]       = static_cast<double>(pose_val[i][joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]]);
+        pose.joint_val                                 = joint_val;
         pose_list_.push_back( pose );
     }
     return;
@@ -104,9 +104,9 @@ bool SobitProJointController::moveAllJoint( const double arm1,
         pub_head_camera_joint_.publish( head_joint_trajectory );
         if ( is_sleep ) ros::Duration( sec ).sleep();
         return true;
-        } catch ( const std::exception& ex ) {
-            ROS_ERROR( "%s", ex.what() );
-            return false;
+    } catch ( const std::exception& ex ) {
+        ROS_ERROR( "%s", ex.what() );
+        return false;
     }
 }
 
@@ -114,8 +114,8 @@ bool SobitProJointController::moveJoint( const Joint joint_num, const double rad
     try {
         trajectory_msgs::JointTrajectory joint_trajectory;
       
-        // ARM_SHOULDER_1_TILT_JOINT : joint_num = 0
-        // ARM_SHOULDER_2_TILT_JOINT : joint_num = 1
+        // ARM_SHOULDER_1_TILT_JOINT    : joint_num = 0
+        // ARM_SHOULDER_2_TILT_JOINT    : joint_num = 1
         // ARM_ELBOW_UPPER_1_TILT_JOINT : joint_num = 2
         // ARM_ELBOW_UPPER_2_TILT_JOINT : joint_num = 3
         if ( joint_num == 0 || joint_num == 2 ) {

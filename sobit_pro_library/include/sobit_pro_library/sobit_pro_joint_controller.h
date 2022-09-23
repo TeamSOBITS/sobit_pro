@@ -64,15 +64,15 @@ namespace sobit_pro {
 
             void loadPose( );
             bool moveAllJoint( const double arm1,
-                            const double arm2,
-                            const double arm3,
-                            const double arm3_pan,
-                            const double arm4,
-                            const double gripper,
-                            const double head_camera_pan,
-                            const double head_camera_tilt,
-                            const double sec,
-                            bool         is_sleep = true );
+                               const double arm2,
+                               const double arm3,
+                               const double arm3_pan,
+                               const double arm4,
+                               const double gripper,
+                               const double head_camera_pan,
+                               const double head_camera_tilt,
+                               const double sec,
+                               bool         is_sleep = true );
             geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm_elbow_lower_tilt_joint_angle );
             std::vector<std::vector<double>> inverseKinematics( double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle );
 
