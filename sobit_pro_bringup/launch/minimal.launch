@@ -10,7 +10,7 @@
   <include file="$(find sobit_pro_bringup)/launch/urg.launch"/>
 
   <!--azure kinect-->
-  <include file="$(find sobit_pro_bringup)/launch/azure_kinect.launch"/>
+  <!-- <include file="$(find sobit_pro_bringup)/launch/azure_kinect.launch"/> -->
 
   <!--realsense-->
   <include file="$(find sobit_pro_bringup)/launch/realsense.launch"/>
