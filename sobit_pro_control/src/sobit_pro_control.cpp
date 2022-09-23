@@ -243,14 +243,14 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
         }
         
         else{
-          if(90 <= goal_deg_in && goal_deg_in < 135){
+          if(45 <= goal_deg_in && goal_deg_in < 90){
             steer_fl_deg = goal_deg_in; // rad = deg * (PAI / 180.)
             steer_bl_deg = -goal_deg_in; // rad = deg * (PAI / 180.)
 
             if(vel_twist.linear.x > 0) rotate_dir_in = -1.;
             else rotate_dir_in = 1.;
           }
-          else if(135 <= goal_deg_in && goal_deg_in <= 180){
+          else if(90 <= goal_deg_in && goal_deg_in <= 135){
             steer_fl_deg = goal_deg_in - 180.; // rad = deg * (PAI / 180.)
             steer_bl_deg = -(goal_deg_in - 180.); // rad = deg * (PAI / 180.)
 
@@ -315,24 +315,24 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
         }
 
         else {
-          if(90 <= goal_deg_in && goal_deg_in < 135){
-            steer_fr_deg = -(goal_deg_in - 45.); // rad = deg * (PAI / 180.)
-            steer_br_deg = goal_deg_in - 45.; // rad = deg * (PAI / 180.)
+          if(45 <= goal_deg_in && goal_deg_in < 90){
+            steer_fr_deg = -goal_deg_in; // rad = deg * (PAI / 180.)
+            steer_br_deg = goal_deg_in; // rad = deg * (PAI / 180.)
 
             if(vel_twist.linear.x > 0) rotate_dir_in = 1.;
             else rotate_dir_in = -1.;
           }
-          else if(135 <= goal_deg_in && goal_deg_in <= 180){
-            steer_fr_deg = -(goal_deg_in - 225.); // rad = deg * (PAI / 180.)
-            steer_br_deg = goal_deg_in - 225.; // rad = deg * (PAI / 180.)
+          else if(90 <= goal_deg_in && goal_deg_in <= 135){
+            steer_fr_deg = -(goal_deg_in - 180.); // rad = deg * (PAI / 180.)
+            steer_br_deg = goal_deg_in - 180.; // rad = deg * (PAI / 180.)
 
             if(vel_twist.linear.x > 0) rotate_dir_in = -1.;
             else rotate_dir_in = 1.;
 
           }
 
-          steer_fl_deg = -(goal_deg_out - 135.); // rad = deg * (PAI / 180.)
-          steer_bl_deg = goal_deg_out - 135.; // rad = deg * (PAI / 180.)
+          steer_fl_deg = -goal_deg_out; // rad = deg * (PAI / 180.)
+          steer_bl_deg = goal_deg_out; // rad = deg * (PAI / 180.)
 
           if(vel_twist.linear.x > 0) rotate_dir_out = -1.;
           else rotate_dir_out = 1.;
