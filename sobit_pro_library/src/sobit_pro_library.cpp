@@ -13,6 +13,7 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
         .value( "ARM_ELBOW_UPPER_1_TILT_JOINT", Joint::ARM_ELBOW_UPPER_1_TILT_JOINT )
         .value( "ARM_ELBOW_UPPER_2_TILT_JOINT", Joint::ARM_ELBOW_UPPER_2_TILT_JOINT )
         .value( "ARM_ELBOW_LOWER_TILT_JOINT", Joint::ARM_ELBOW_LOWER_TILT_JOINT )
+        .value( "ARM_ELBOW_LOWER_PAN_JOINT", Joint::ARM_ELBOW_LOWER_PAN_JOINT )
         .value( "ARM_WRIST_TILT_JOINT", Joint::ARM_WRIST_TILT_JOINT )
         .value( "HAND_JOINT", Joint::HAND_JOINT )
         .value( "HEAD_CAMERA_PAN_JOINT", Joint::HEAD_CAMERA_PAN_JOINT )
@@ -39,6 +40,7 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             py::arg( "arm1" ),
             py::arg( "arm2" ),
             py::arg( "arm3" ),
+            py::arg( "arm3_pan" ),
             py::arg( "arm4" ),
             py::arg( "sec" ) = 5.0,
             py::arg( "is_sleep" ) = true )

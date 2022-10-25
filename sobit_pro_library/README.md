@@ -24,6 +24,7 @@ SOBIT_PROのカメラパンチルトとマニピュレータを動かすクラ�
     * "arm_elbow_upper_1_tilt_joint"  :   ARM_ELBOW_UPPER_1_TILT_JOINT
     * "arm_elbow_upper_2_tilt_joint"  :   ARM_ELBOW_UPPER_2_TILT_JOINT
     * "arm_elbow_lower_tilt_joint"    :   ARM_ELBOW_LOWER_TILT_JOINT
+    * "arm_elbow_lower_pan_joint"    :   ARM_ELBOW_LOWER_PAN_JOINT
     * "arm_wrist_tilt_joint"          :   ARM_WRIST_TILT_JOINT
     * "hand_joint"                    :   HAND_JOINT
     * "head_camera_pan_joint"         :   HEAD_CAMERA_PAN_JOINT
@@ -75,7 +76,8 @@ SOBIT_PROのカメラパンチルトとマニピュレータを動かすクラ�
             arm_shoulder_2_tilt_joint: -1.57,
             arm_elbow_upper_1_tilt_joint: 1.57,
             arm_elbow_upper_2_tilt_joint: -1.57,
-            arm_elbow_lower_tilt_joint: -1.57,
+            arm_elbow_lower_tilt_joint: 0.0,
+            arm_elbow_lower_pan_joint: -1.57,
             arm_wrist_tilt_joint: -1.57,
             hand_joint: 0.0,
             head_camera_pan_joint: 0.0,
@@ -87,7 +89,8 @@ SOBIT_PROのカメラパンチルトとマニピュレータを動かすクラ�
             arm_shoulder_2_tilt_joint: -1.57,
             arm_elbow_upper_1_tilt_joint: 1.57,
             arm_elbow_upper_2_tilt_joint: -1.57,
-            arm_elbow_lower_tilt_joint: -1.57,
+            arm_elbow_lower_tilt_joint: 0.0,
+            arm_elbow_lower_pan_joint: -1.57,
             arm_wrist_tilt_joint: -1.57,
             hand_joint: 0.0,
             head_camera_pan_joint: 0.0,
