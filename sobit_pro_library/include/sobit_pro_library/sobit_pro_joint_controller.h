@@ -53,6 +53,7 @@ namespace sobit_pro {
             static const double arm1_link_length;
             static const double arm2_link_length;
             static const double arm_elbow_lower_tilt_joint_length;
+            static const double hand_length;
             static const double sum_arm123_link_length;
 
             void setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
