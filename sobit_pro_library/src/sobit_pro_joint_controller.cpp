@@ -8,6 +8,7 @@ using namespace sobit_pro;
 const double sobit_pro::SobitProJointController::arm1_link_length = 0.15;
 const double sobit_pro::SobitProJointController::arm2_link_length = 0.15;
 const double sobit_pro::SobitProJointController::arm_elbow_lower_tilt_joint_length = 0.15;
+const double sobit_pro::SobitProJointController::hand_length = 25.0;
 const double sobit_pro::SobitProJointController::sum_arm123_link_length = arm1_link_length + arm2_link_length + arm_elbow_lower_tilt_joint_length;
 
 
@@ -227,7 +228,7 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     double arm_to_object_y = goal_position_y + shift.y + diff_goal_position_y;
     double arm_to_object_z = goal_position_z + shift.z + diff_goal_position_z;
 
-    if ( (arm_to_object_z < -(sum_arm123_link_length)) || (sum_arm123_link_length < arm_to_object_z) ) {
+    if ( (arm_to_object_z < -(sum_arm123_link_length+hand_length)) || (sum_arm123_link_length < arm_to_object_z) ) {
         std::cout << "Armが届きません。" << std::endl;
         return false;
     }

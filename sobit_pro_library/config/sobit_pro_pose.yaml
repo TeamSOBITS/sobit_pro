@@ -142,3 +142,16 @@ sobit_pro_pose:
         head_camera_pan_joint: 0.0,
         head_camera_tilt_joint: 0.0
     }
+    
+    - { 
+        pose_name: "grasp_on_floor_pose",
+        arm_shoulder_1_tilt_joint: -1.30,
+        arm_shoulder_2_tilt_joint: 1.30,
+        arm_elbow_upper_1_tilt_joint: 0.00,
+        arm_elbow_upper_2_tilt_joint: 0.00,
+        arm_elbow_lower_tilt_joint: 0.00,
+        arm_wrist_tilt_joint: -0.25,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.0,
+        head_camera_tilt_joint: -0.7
+    }

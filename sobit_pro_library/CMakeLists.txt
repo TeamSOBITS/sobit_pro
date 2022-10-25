@@ -44,3 +44,8 @@ add_executable(test_put_on_table example/test_put_on_table.cpp
                                  src/sobit_pro_joint_controller.cpp
                                  src/sobit_pro_wheel_controller.cpp)
 target_link_libraries(test_put_on_table ${catkin_LIBRARIES})
+
+add_executable(test_grasp_on_floor example/test_grasp_on_floor.cpp
+                                   src/sobit_pro_joint_controller.cpp
+                                   src/sobit_pro_wheel_controller.cpp)
+target_link_libraries(test_grasp_on_floor ${catkin_LIBRARIES})
