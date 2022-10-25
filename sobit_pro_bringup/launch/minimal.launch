@@ -13,9 +13,9 @@
   <!-- <include file="$(find sobit_pro_bringup)/launch/azure_kinect.launch"/> -->
 
   <!--realsense-->
-  <include file="$(find sobit_pro_bringup)/launch/realsense.launch"/>
+  <!-- <include file="$(find sobit_pro_bringup)/launch/realsense.launch"/> -->
 
   <!--rviz-->
-  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro.rviz"/>
+  <!-- <node pkg="rviz" type="rviz" name="rviz" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro_swivel.rviz"/> -->
 
 </launch>
