@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="azure_camera" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="azure_camera" params="prefix parent">
+
+    <joint name="${prefix}_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${prefix}_link" />
+      <origin xyz="-0.0065 0.0 0.0395" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix}_link"/>
+
+    <xacro:azure_kinect parent="${prefix}_link" tf_prefix="${prefix}_" add_cover="false">
+      <origin xyz="0.0 0 0.0" rpy="0 0 0"/>
+    </xacro:azure_kinect>
+
+  </xacro:macro>
+</robot>

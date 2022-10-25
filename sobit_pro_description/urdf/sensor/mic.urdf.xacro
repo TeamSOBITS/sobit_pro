@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="mic" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="mic" params="prefix parent">
+
+    <joint name="${prefix}_base_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${prefix}_base_link" />
+      <origin xyz="0.0 0.0 0.5400" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix}_base_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/sensor/mic_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/sensor/mic_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix}_joint" type="fixed">
+      <parent link="${prefix}_base_link" />
+      <child link="${prefix}_link" />
+      <origin xyz="0.0 -0.099 0.0240" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix}_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/sensor/mic.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/sensor/mic.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+  </xacro:macro>
+</robot>

@@ -10,7 +10,8 @@
 		<param name="sub_ctrl_topic_name" type="str" value="execute_ctrl"/>
 
 		<param name="base_frame_name" type="str" value="/base_footprint"/>
-		<param name="camera_frame_name" type="str" value="/head_depth_camera_link"/>
+		<!-- <param name="camera_frame_name" type="str" value="/head_depth_camera_link"/> -->
+		<param name="camera_frame_name" type="str" value="/head_camera_depth_optical_link"/>
 		<param name="map_frame_name" type="str" value="/odom"/> <!--map-->
 
 		<param name="depth_range_min_x" type="double" value="0.1"/>

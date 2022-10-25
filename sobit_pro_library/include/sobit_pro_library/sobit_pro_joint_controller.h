@@ -14,13 +14,13 @@
 #include <cstring>
 
 namespace sobit_pro {
-    enum Joint { ARM1_1_JOINT = 0,
-                 ARM1_2_JOINT,
-                 ARM2_1_JOINT,
-                 ARM2_2_JOINT,
-                 ARM3_JOINT,
-                 ARM4_JOINT,
-                 GRIPPER_JOINT,
+    enum Joint { ARM_SHOULDER_1_TILT_JOINT = 0,
+                 ARM_SHOULDER_2_TILT_JOINT,
+                 ARM_ELBOW_UPPER_1_TILT_JOINT,
+                 ARM_ELBOW_UPPER_2_TILT_JOINT,
+                 ARM_ELBOW_LOWER_TILT_JOINT,
+                 ARM_WRIST_TILT_JOINT,
+                 HAND_JOINT,
                  HEAD_CAMERA_PAN_JOINT,
                  HEAD_CAMERA_TILT_JOINT,
                  JOINT_NUM };
@@ -39,20 +39,20 @@ namespace sobit_pro {
             ros::Publisher        pub_head_camera_joint_;
             tf::TransformListener listener_;
 
-            const std::vector<std::string> joint_names_ = { "arm1_1_joint", 
-                                                            "arm1_2_joint",
-                                                            "arm2_1_joint",
-                                                            "arm2_2_joint",
-                                                            "arm3_joint",
-                                                            "arm4_joint",
-                                                            "gripper_joint",
+            const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint", 
+                                                            "arm_shoulder_2_tilt_joint",
+                                                            "arm_elbow_upper_1_tilt_joint",
+                                                            "arm_elbow_upper_2_tilt_joint",
+                                                            "arm_elbow_lower_tilt_joint",
+                                                            "arm_wrist_tilt_joint",
+                                                            "hand_joint",
                                                             "head_camera_pan_joint",
                                                             "head_camera_tilt_joint" };
             std::vector<Pose> pose_list_;
 
             static const double arm1_link_length;
             static const double arm2_link_length;
-            static const double arm3_link_length;
+            static const double arm_elbow_lower_tilt_joint_length;
             static const double sum_arm123_link_length;
 
             void setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
@@ -70,11 +70,11 @@ namespace sobit_pro {
                             const double head_camera_tilt,
                             const double sec,
                             bool         is_sleep = true );
-            geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm3_joint_angle );
+            geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm_elbow_lower_tilt_joint_angle );
             std::vector<std::vector<double>> inverseKinematics( double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle );
 
-            double arm4_joint_current_ = 0.;
-            double gripper_joint_current_ = 0.;
+            double arm_wrist_tilt_joint_current_ = 0.;
+            double hand_joint_current_ = 0.;
             void callbackCurrentStateArray( const sobit_common_msg::current_state_array );
             ros::Subscriber sub_current_state_array = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this );
 

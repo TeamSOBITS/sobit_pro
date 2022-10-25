@@ -40,7 +40,8 @@ Processing enabled by this node:
 -->
 
 <launch>
-  <arg name="camera"              default="camera_l515"/>
+  <!-- <arg name="camera"              default="camera_l515"/> -->
+  <arg name="camera"              default="hand_camera"/>
   <arg name="tf_prefix"           default="$(arg camera)"/>
   <arg name="external_manager"    default="false"/>
   <arg name="manager"             default="realsense2_camera_manager"/>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="base"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="base">
+    <link name="base_footprint" />
+
+    <joint name="base_joint" type="fixed">
+      <parent link="base_footprint" />
+      <child link="base_link" />
+      <origin xyz="0 0 0.143" rpy="0 0 ${M_PI / 2}" />
+    </joint>
+
+    <link name="base_link">
+      <visual>
+        <origin xyz="0 0 -0.143" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/base/sobit_pro_body.dae"/>
+        </geometry>
+      </visual>
+    </link>
+  </xacro:macro>
+</robot>

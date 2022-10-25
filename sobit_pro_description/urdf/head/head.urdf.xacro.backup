@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="head"
+  xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.transmission.xacro" />
+
+  <xacro:macro name="head" params="prefix parent">
+
+    <joint name="${prefix}_pan_joint" type="revolute">
+      <parent link="${parent}" />
+      <child link="${prefix}_pan_link" />
+      <origin xyz="0 -0.12985 1.117" rpy="0 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}_pan_link">
+      <visual>
+        <origin xyz="0 0 -0.019" rpy="1.570796327 0 0" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/head/sobit_pro_head_pan.dae"/>
+        </geometry>
+      </visual>
+    </link>
+
+    <joint name="${prefix}_tilt_joint" type="revolute">
+      <parent link="${prefix}_pan_link" />
+      <child link="${prefix}_tilt_link" />
+      <origin xyz="0 0 0.041" rpy="0 0 0" />
+      <axis xyz="-1 0 0" />
+      <limit lower="${-M_PI / 2}" upper="${M_PI / 2}" effort="10" velocity="10"/>
+      <dynamics damping="0.2" friction="0"/>
+    </joint>
+
+    <link name="${prefix}_tilt_link" />
+
+    <xacro:head_transmission prefix="${prefix}"/>
+
+  </xacro:macro>
+</robot>

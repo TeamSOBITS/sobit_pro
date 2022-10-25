@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<robot name="hand" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.transmission.xacro" />
+  
+  <xacro:macro name="hand" params="prefix_hand prefix_finger parent">
+
+    <joint name="${prefix_hand}_base_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${prefix_hand}_base_link" />
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix_hand}_base_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix_hand}_joint" type="revolute">
+      <parent link="${prefix_hand}_base_link" />
+      <child link="${prefix_hand}_link" />
+      <origin xyz="0.0631932 -0.0151495 0.0222231" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_link" />
+
+
+    <joint name="${prefix_hand}_inner_l_joint" type="revolute">
+      <parent link="${prefix_hand}_base_link" />
+      <child link="${prefix_hand}_inner_l_link" />
+      <origin xyz="0.0631932 0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 -1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_inner_l_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_l.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_l.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix_hand}_inner_r_joint" type="revolute">
+      <parent link="${prefix_hand}_base_link" />
+      <child link="${prefix_hand}_inner_r_link" />
+      <origin xyz="0.0631932 -0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_inner_r_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_r.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_r.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix_hand}_outer_l_joint" type="revolute">
+      <parent link="${prefix_hand}_base_link" />
+      <child link="${prefix_hand}_outer_l_link" />
+      <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 -1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_outer_l_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_l.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_l.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix_hand}_outer_r_joint" type="revolute">
+      <parent link="${prefix_hand}_base_link" />
+      <child link="${prefix_hand}_outer_r_link" />
+      <origin xyz="0.043193 -0.04015 0.0282231" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_outer_r_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_r.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_r.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix_hand}_${prefix_finger}_l_joint" type="revolute">
+      <parent link="${prefix_hand}_outer_l_link" />
+      <child link="${prefix_hand}_${prefix_finger}_l_link" />
+      <origin xyz="0.1040 0.0 -0.0190" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_${prefix_finger}_l_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_l.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_l.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <joint name="${prefix_hand}_${prefix_finger}_r_joint" type="revolute">
+      <parent link="${prefix_hand}_outer_r_link" />
+      <child link="${prefix_hand}_${prefix_finger}_r_link" />
+      <origin xyz="0.1040 0.0 -0.0190" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 -1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
+    </joint>
+
+    <link name="${prefix_hand}_${prefix_finger}_r_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_r.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_r.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <mass value="0.08" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
+    </link>
+
+
+    <xacro:hand_transmission prefix_hand="${prefix_hand}" prefix_finger="${prefix_finger}" />
+
+  </xacro:macro>
+</robot>

@@ -1,143 +1,129 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="wheel" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="stack_wheel_steer_base" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 
-  <xacro:macro name="wheel"  params="parent">
-    <!--steering-->
-    <joint name="steer_b_l_joint" type="revolute">
+    <joint name="wheel_${prefix}_steer_base_joint" type="fixed">
+      <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${(number-1)*M_PI/2.0+M_PI/4.0}" />
       <parent link="${parent}" />
-      <child link="steer_b_l_link" />
-      <origin xyz="0.15841 0.15841 0.07" rpy="0 0 0" />
-      <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+      <child link="wheel_${prefix}_steer_base_link" />
     </joint>
 
-    <link name="steer_b_l_link">
+    <link name="wheel_${prefix}_steer_base_link">
       <visual>
-        <origin xyz="-0.15841 -0.15841 -0.213" rpy="1.570796327 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_b_l.dae"/>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="black" />
       </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_base.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
     </link>
+    
+  </xacro:macro>
 
-    <joint name="steer_b_r_joint" type="revolute">
+
+  <xacro:macro name="stack_wheel_steer" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+
+    <joint name="wheel_${prefix}_steer_joint" type="revolute">
+      <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
       <parent link="${parent}" />
-      <child link="steer_b_r_link" />
-      <origin xyz="-0.15841 0.15841 0.07" rpy="0 0 0" />
-      <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+      <child link="wheel_${prefix}_steer_link" />
+      <axis xyz="0.0 0.0 1.0 " />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="steer_b_r_link">
+    <link name="wheel_${prefix}_steer_link">
       <visual>
-        <origin xyz="0.15841 -0.15841 -0.213" rpy="1.570796327 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_b_r.dae"/>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_steer.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="black" />
       </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_steer.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
     </link>
 
-    <joint name="steer_f_l_joint" type="revolute">
+  </xacro:macro>
+
+
+  <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+
+    <joint name="wheel_${prefix}_drive_joint" type="revolute">
+      <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
       <parent link="${parent}" />
-      <child link="steer_f_l_link" />
-      <origin xyz="0.15841 -0.15841 0.07" rpy="0 0 0" />
-      <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
+      <child link="wheel_${prefix}_drive_link" />
+      <axis xyz="-1.0 0.0 0.0 " />
+      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
+      <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
-    <link name="steer_f_l_link">
+    <link name="wheel_${prefix}_drive_link">
       <visual>
-        <origin xyz="-0.15841 0.15841 -0.213" rpy="1.570796327 0 0" />
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_f_l.dae"/>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_drive.stl" scale="0.001 0.001 0.001" />
         </geometry>
+        <material name="wheel" />
       </visual>
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_drive.stl" scale="0.001 0.001 0.001" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" />
+        <mass value="1" />
+        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+                 iyy="1.0" iyz="0.0"
+                 izz="1.0" />
+      </inertial>
     </link>
 
-    <joint name="steer_f_r_joint" type="revolute">
-      <parent link="${parent}" />
-      <child link="steer_f_r_link" />
-      <origin xyz="-0.15841 -0.15841 0.07" rpy="0 0 0" />
-      <axis xyz="0 0 1" />
-      <limit lower="-1.57" upper="1.57" effort="10" velocity="10"/>
-      <dynamics damping="0.2" friction="0"/>
-    </joint>
+  </xacro:macro>
 
-    <link name="steer_f_r_link">
-      <visual>
-        <origin xyz="0.15841 0.15841 -0.213" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_steer_f_r.dae"/>
-        </geometry>
-      </visual>
-    </link>
 
-    <!--wheel-->
-    <joint name="wheel_b_l_joint" type="continuous">
-      <parent link="steer_b_l_link" />
-      <child link="wheel_b_l_link" />
-      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
-      <axis xyz="-1 -1 0" />
-    </joint>
+  <xacro:macro name="wheel" params="parent prefix">
 
-    <link name="wheel_b_l_link">
-      <visual>
-        <origin xyz="-0.15841 -0.15841 -0.072" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_b_l.dae"/>
-        </geometry>
-      </visual>
-    </link>
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_l" number="1" x_loc= "${0.210*cos(radians(45.))}"  y_loc= "${0.210*cos(radians(45.))}"  z_loc="-0.019" />
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="b_l" number="2" x_loc= "-${0.210*cos(radians(45.))}" y_loc= "${0.210*cos(radians(45.))}"  z_loc="-0.019" />
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="b_r" number="3" x_loc= "-${0.210*cos(radians(45.))}" y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_r" number="4" x_loc= "${0.210*cos(radians(45.))}"  y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
+    
+    <xacro:stack_wheel_steer parent="wheel_f_l_steer_base_link" prefix="f_l" number="1" x_loc= "0.013875"  y_loc= "0.0"  z_loc="-0.032" />
+    <xacro:stack_wheel_steer parent="wheel_b_l_steer_base_link" prefix="b_l" number="2" x_loc= "0.013875" y_loc= "0.0"  z_loc="-0.032" />
+    <xacro:stack_wheel_steer parent="wheel_b_r_steer_base_link" prefix="b_r" number="3" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
+    <xacro:stack_wheel_steer parent="wheel_f_r_steer_base_link" prefix="f_r" number="4" x_loc= "0.013875"  y_loc= "0.0" z_loc="-0.032" />
 
-    <joint name="wheel_b_r_joint" type="continuous">
-      <parent link="steer_b_r_link" />
-      <child link="wheel_b_r_link" />
-      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
-      <axis xyz="1 -1 0" />
-    </joint>
+    <xacro:stack_wheel_drive parent="wheel_f_l_steer_link" prefix="f_l" number="1" x_loc= "0.02"  y_loc= "0.0"  z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_b_l_steer_link" prefix="b_l" number="2" x_loc= "0.02" y_loc= "0.0"  z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_b_r_steer_link" prefix="b_r" number="3" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_f_r_steer_link" prefix="f_r" number="4" x_loc= "0.02"  y_loc= "0.0" z_loc="-0.118" />
 
-    <link name="wheel_b_r_link">
-      <visual>
-        <origin xyz="0.15841 -0.15841 -0.072" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_b_r.dae"/>
-        </geometry>
-      </visual>
-    </link>
-
-    <joint name="wheel_f_l_joint" type="continuous">
-      <parent link="steer_f_l_link" />
-      <child link="wheel_f_l_link" />
-      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
-      <axis xyz="-1 1 0" />
-    </joint>
-
-    <link name="wheel_f_l_link">
-      <visual>
-        <origin xyz="-0.15841 0.15841 -0.072" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_f_l.dae"/>
-        </geometry>
-      </visual>
-    </link>
-
-    <joint name="wheel_f_r_joint" type="continuous">
-      <parent link="steer_f_r_link" />
-      <child link="wheel_f_r_link" />
-      <origin xyz="0 0 -0.1414" rpy="0 0 0" />
-      <axis xyz="1 1 0" />
-    </joint>
-
-    <link name="wheel_f_r_link">
-      <visual>
-        <origin xyz="0.15841 0.15841 -0.072" rpy="1.570796327 0 0" />
-        <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/sobit_pro_wheel_f_r.dae"/>
-        </geometry>
-      </visual>
-    </link>
   </xacro:macro>
 </robot>

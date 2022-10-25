@@ -1,45 +1,41 @@
 <?xml version="1.0" ?>
 <robot name="sobit_pro" xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" xmlns:xacro="http://www.ros.org/wiki/xacro">
-  <!-- common xacro -->
+  <!-- Add Common Xacro: transmissions, colors -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/common.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/materials.urdf.xacro" />
-  <!-- links and joints -->
+  
+  <!-- Add URDF: links, joints -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/base/base.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/body/plate.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/body/cover.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/back/back.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/gripper/gripper.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_kinect.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/urg.urdf.xacro" />
+
+  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_camera.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/matrix.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/mic.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/lidar.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_l515.urdf.xacro" />
-  <!--
-  <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/gripper/gripper.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/pole/pole.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/sensor.urdf.xacro" />
-  -->
+  
+  <xacro:include filename="$(find urg_node)/urdf/hokuyo_ust.urdf.xacro" />
+  <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" />
+  <xacro:include filename="$(find realsense2_description)/urdf/_l515.urdf.xacro" />
 
   <xacro:base/>
-  <xacro:wheel parent="base_link" />
-  <xacro:arm prefix="arm" parent="base_link" />
-  <xacro:gripper prefix_grip="gripper" prefix_finger="finger" parent="arm4_link" />
-  <xacro:head prefix="head_camera" parent="base_link" />
-  <xacro:azure_kinect prefix="head_camera" parent="head_camera_tilt_link" />
-  <xacro:urg parent="base_link"/>
-  <xacro:realsense_l515 parent="arm4_link" name="camera_l515" use_nominal_extrinsics="true" add_plug="false" use_mesh="true">
-    <origin xyz="0 -0.09625 -0.0305" rpy="0 0 -${M_PI/2.0}"/>
-  </xacro:realsense_l515>
-  <!--
-  <stack_hexagons parent="base_link" />
-  <xacro:arm prefix="arm" parent="plate_top_link"/>
-  <xacro:hand prefix="hand_motor" parent="wrist_flex_link"/>
-  <xacro:pole parent="plate_top_link"/>
-  <xacro:xtion_motor prefix="xtion" parent="base_pole_link"/>
-  <xacro:sensor_asus_xtion_pro parent="xtion_double_sided_tape_link"/>
-  <xacro:mic parent="base_pole_link"/>
-  <xacro:matrix parent="base_pole_link"/>
-  <xacro:urg parent="base_link"/>
-  -->
-  
+  <xacro:plate prefix="plate" parent="base_link" />
+  <xacro:wheel prefix="wheel" parent="plate_middle_link" />
+  <xacro:cover prefix="cover" parent="plate_top_link" />
+  <xacro:back  prefix="back" parent="plate_top_link" />
+  <xacro:head  prefix="head" parent="back_base_link" />
+  <xacro:mic   prefix="mic"  parent="back_base_link" />
+  <xacro:arm   prefix="arm"  parent="plate_top_link" />
+  <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+  <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
+  <xacro:azure_camera prefix="head_camera" parent="head_camera_tilt_link" />
+  <xacro:matrix prefix="matrix" parent="head_camera_link" />
+  <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" />
+
 </robot>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Reference: https://matrix-io.github.io/matrix-documentation/matrix-creator/resources/microphone/ -->
+<robot name="matrix" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="matrix" params="prefix parent">
+
+    <joint name="${prefix}_board_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${prefix}_board_link" />
+      <origin xyz="-0.018625 0.0 0.023" rpy="0.0 0.0 0.0" />
+    </joint>
+
+    <link name="${prefix}_board_link" />
+
+
+    <!-- Matrix Sensor -->
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="0" x_loc= "0.0"  y_loc= "0.0"       z_loc="0.0" />
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="1" x_loc= "0.04" y_loc= "0.0"       z_loc="0.0" />
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="2" x_loc= "0.02" y_loc= "-0.034541" z_loc="0.0" />
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="3" x_loc="-0.02" y_loc="-0.034541"  z_loc="0.0" />
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="4" x_loc="-0.04" y_loc= "0.0"       z_loc="0.0" />
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="5" x_loc="-0.02" y_loc= "0.034541"  z_loc="0.0" />
+    <xacro:mic_sensor prefix="${prefix}" parent="${prefix}_board_link" number="6" x_loc= "0.02" y_loc= "0.034541"  z_loc="0.0" />
+
+  </xacro:macro>
+
+
+  <xacro:macro name="mic_sensor" params="prefix parent number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+
+    <joint name="${prefix}_sensor_${number}_joint" type="fixed">
+      <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
+      <parent link="${parent}" />
+      <child link="${prefix}_sensor_${number}_link" />
+    </joint>
+    
+    <link name="${prefix}_sensor_${number}_link" />
+
+  </xacro:macro>
+
+</robot>

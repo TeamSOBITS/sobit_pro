@@ -1,5 +1,5 @@
 joint_limits:
-  arm1_1_joint:
+  arm_shoulder_1_tilt_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 1.57
@@ -7,7 +7,7 @@ joint_limits:
     max_velocity: 5.969211435
     has_acceleration_limits: true
     max_acceleration: 4.0
-  arm1_2_joint:
+  arm_shoulder_2_tilt_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 1.57
@@ -15,7 +15,7 @@ joint_limits:
     max_velocity: 5.969211435
     has_acceleration_limits: true
     max_acceleration: 4.0
-  arm2_1_joint:
+  arm_elbow_upper_1_tilt_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 1.57
@@ -23,7 +23,7 @@ joint_limits:
     max_velocity: 5.969211435
     has_acceleration_limits: true
     max_acceleration: 4.0
-  arm2_2_joint:
+  arm_elbow_upper_2_tilt_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 1.57
@@ -31,7 +31,7 @@ joint_limits:
     max_velocity: 5.969211435
     has_acceleration_limits: true
     max_acceleration: 4.0
-  arm3_joint:
+  arm_elbow_lower_tilt_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 1.57
@@ -39,7 +39,7 @@ joint_limits:
     max_velocity: 5.969211435
     has_acceleration_limits: true
     max_acceleration: 4.0
-  arm4_joint:
+  arm_wrist_tilt_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 1.57
@@ -47,7 +47,7 @@ joint_limits:
     max_velocity: 5.969211435
     has_acceleration_limits: true
     max_acceleration: 4.0
-  gripper_joint:
+  hand_joint:
     has_position_limits: true
     min_position: -1.57
     max_position: 0

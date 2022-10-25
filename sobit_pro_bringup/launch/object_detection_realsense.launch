@@ -17,7 +17,8 @@
     <param name="iou_th" type="double" value="0.4"/>
     <param name="max_framerate" type="double" value="1.0"/>
     <param name="show_result" type="bool" value="true"/>
-    <param name="sub_image_topic_name" type="string" value="/camera_l515/color/image_raw"/>
+    <!-- <param name="sub_image_topic_name" type="string" value="/camera_l515/color/image_raw"/> -->
+    <param name="sub_image_topic_name" type="string" value="/hand_camera/color/image_raw"/>
     <param name="initial_predict" type="bool" value="true"/> <!--false-->
   </group>
 
