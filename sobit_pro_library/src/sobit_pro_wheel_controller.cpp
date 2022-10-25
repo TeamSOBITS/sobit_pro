@@ -55,7 +55,7 @@ bool SobitProWheelController::controlWheelLinear( const double distance_x, const
         ros::Duration(0.5).sleep();
         return true;
     } catch ( const std::exception& ex ) {
-        ROS_ERROR("%s", ex.what());
+        ROS_ERROR( "%s", ex.what() );
         return false;
     }
 }
@@ -102,8 +102,8 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             pub_cmd_vel_.publish( output_vel );
             double curt_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
             double pre_move_ang_rad = moving_angle_rad;
-            if(-0.00314 < curt_yaw - init_yaw && curt_yaw - init_yaw < 0 && 0 < angle_rad) continue;
-            else if(0 < curt_yaw - init_yaw && curt_yaw - init_yaw < 0.00314 && angle_rad < 0) continue;
+            if ( -0.00314 < curt_yaw - init_yaw && curt_yaw - init_yaw < 0 && 0 < angle_rad ) continue;
+            else if ( 0 < curt_yaw - init_yaw && curt_yaw - init_yaw < 0.00314 && angle_rad < 0 ) continue;
 
             if ( curt_yaw - init_yaw < 0 && 0 < angle_rad ) moving_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * loop_cnt));
             else if ( 0 < curt_yaw - init_yaw && angle_rad < 0 ) moving_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * loop_cnt));
@@ -124,7 +124,7 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
         ros::Duration(0.5).sleep();
         return true;
     } catch ( const std::exception& ex ) {
-        ROS_ERROR("%s", ex.what());
+        ROS_ERROR( "%s", ex.what() );
         return false;
     }
 }

@@ -15,7 +15,7 @@ def test():
     pro_wheel_ctr = SobitProWheelController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "detecting_pose" )
+    pro_joint_ctr.moveToPose( "detecting_pose" )
     rospy.sleep(5.0)
 
     """
@@ -44,12 +44,12 @@ def test():
     # 物体をおける位置のTF(placeable_point)があった場合、
     # そこの位置までアームを下げながら移動させる
     # ただし、物体がおける位置に触れた時はその位置で停止する
-    # res = pro_joint_ctr.moveGripperToPlaceablePositionTF( "placeable_point", -0.15, 0.0, 0.2 )
+    # res = pro_joint_ctr.moveGripperToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 )
 
     # 物体をおける位置のTF(placeable_point)があった場合、
     # そこの位置までアームを下げながら移動させる
     # ただし、物体がおける位置に触れた時はその位置で停止する
-    # res = pro_joint_ctr.moveGripperToPlaceablePositionCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
+    # res = pro_joint_ctr.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
 
     if( res == True ){
 
@@ -57,11 +57,11 @@ def test():
         pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
         # 決められたポーズをする
-        pro_joint_ctr.moveToRegisterdMotion( "put_high_pose" )
+        pro_joint_ctr.moveToPose( "put_high_pose" )
     }
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_joint_ctr.moveToPose( "initial_pose" )
 
     """
     Popen(['rosnode','kill','/placeable_position_estimator/placeable_position_estimater_node'])

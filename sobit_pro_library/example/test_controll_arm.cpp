@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     pro_joint_ctr.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
 
     // 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" );
+    pro_joint_ctr.moveToPose( "initial_pose" );
 
     return 0;
 }

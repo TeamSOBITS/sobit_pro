@@ -12,13 +12,13 @@ def test():
     pro_joint_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
     # アームを動かす
-    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, -1.0)
+    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, -1.0, 1.0)
 
     # ハンドを動かす
     pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_joint_ctr.moveToPose( "initial_pose", 1 )
 
 if __name__ == '__main__':
     try:

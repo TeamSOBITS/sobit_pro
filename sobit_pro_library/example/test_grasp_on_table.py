@@ -13,7 +13,7 @@ def test():
     pro_wheel_ctr = SobitProWheelController(args[0]) # args[0] : C++上でros::init()を行うための引数
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "detecting_pose" )
+    pro_joint_ctr.moveToPose( "detecting_pose" )
     rospy.sleep(5.0)
 
     # ハンドを動かす
@@ -36,11 +36,11 @@ def test():
         pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
 
         # 決められたポーズをする
-        pro_joint_ctr.moveToRegisterdMotion( "grasp_high_pose" )
+        pro_joint_ctr.moveToPose( "grasp_high_pose" )
     }
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_joint_ctr.moveToPose( "initial_pose" )
 
 if __name__ == '__main__':
     try:
