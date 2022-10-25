@@ -61,6 +61,8 @@ bool SobitProMotorDriver::setTorque(uint8_t id, bool onoff){
     if(onoff == true) printf("Dynamixel ID:%03d has been successfully connected!\n", id);
     if(onoff == false) printf("Dynamixel ID:%03d has been successfully disconnected!\n", id);
   }
+  
+  return dxl_comm_result;
 }
 
 void SobitProMotorDriver::closeDynamixel(void){
