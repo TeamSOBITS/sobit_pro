@@ -19,11 +19,11 @@ def test():
 
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "detecting_pose" )
+    pro_joint_ctr.moveToPose( "detecting_pose" )
     rospy.sleep(5.0)
 
     # ハンドを動かす（開く）
-    pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+    pro_joint_ctr.moveJoint( Joint.HAND_JOINT, -1.57, 2.0, True )
 
     # 把持する物体のTF(例：beans)があった場合、
     # そこの位置までアームを移動させる
@@ -38,13 +38,13 @@ def test():
 
     if( (res == True) and (grasp == True) ):
         # ハンドを動かす（閉じる）
-        pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
+        pro_joint_ctr.moveJoint( Joint.HAND_JOINT, 0.0, 2.0, True )
 
         # 決められたポーズをする
-        pro_joint_ctr.moveToRegisterdMotion( "grasp_high_pose" )
+        pro_joint_ctr.moveToPose( "grasp_high_pose" )
 
     # 決められたポーズをする
-    pro_joint_ctr.moveToRegisterdMotion( "initial_pose" )
+    pro_joint_ctr.moveToPose( "initial_pose" )
 
 if __name__ == '__main__':
     try:
