@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot name="realsense_d405" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="realsense_d405" params="prefix parent">
+
+    <joint name="${prefix}_base_joint" type="fixed">
+      <origin xyz="0.0908687 0.0 -0.01539994" rpy="0.0 0.0 0.0" />
+      <parent link="${parent}" />
+      <child link="${prefix}_base_link" />
+    </joint>
+
+    <link name="${prefix}_base_link" />
+
+
+    <xacro:sensor_d405 parent="${prefix}_base_link" name="${prefix}" use_nominal_extrinsics="true" use_mesh="true">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </xacro:sensor_d405>
+
+  </xacro:macro>
+</robot>
