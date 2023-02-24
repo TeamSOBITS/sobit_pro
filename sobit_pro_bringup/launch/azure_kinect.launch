@@ -4,11 +4,7 @@ Licensed under the MIT License.
 -->
 
 <launch>
-  <arg name="tf_prefix"          default="head_camera_" />          <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
-  <arg name="camera_base_frame"  default="visor_base_link" />
-  <arg name="rgb_camera_frame"   default="rgb_camera_link" />
-  <arg name="depth_camera_frame" default="depth_camera_link" />
-  <arg name="imu_frame"          default="imu_link" />
+  <arg name="tf_prefix"          default="head_" />          <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
   <arg name="overwrite_robot_description" default="true" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
 
   <!-- <group if="$(arg overwrite_robot_description)">
