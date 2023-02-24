@@ -4,17 +4,13 @@ Licensed under the MIT License.
 -->
 
 <launch>
-  <arg name="tf_prefix"          default="head_camera_" />                <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
-  <arg name="camera_base_frame"  default="visor_base_link" />
-  <arg name="rgb_camera_frame"   default="rgb_camera_link" />
-  <arg name="depth_camera_frame" default="depth_camera_link" />
-  <arg name="imu_frame"          default="imu_link" />
+  <arg name="tf_prefix"          default="head_" />                <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
 
   <param name="robot_description"
       command="xacro $(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
 
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+  <!-- <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" /> -->
 
   <!-- Start the K4A sensor driver -->
   <group ns="k4a" >
