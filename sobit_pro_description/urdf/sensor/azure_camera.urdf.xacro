@@ -4,13 +4,13 @@
 
     <joint name="${prefix}_joint" type="fixed">
       <parent link="${parent}" />
-      <child link="${prefix}_link" />
+      <child link="${prefix}_base" />
       <origin xyz="-0.0065 0.0 0.0395" rpy="0.0 0.0 0.0" />
     </joint>
 
-    <link name="${prefix}_link"/>
+    <link name="${prefix}_base"/>
 
-    <xacro:azure_kinect parent="${prefix}_link" tf_prefix="${prefix}_" add_cover="false">
+    <xacro:azure_kinect parent="${prefix}_base" tf_prefix="${prefix}_" add_cover="false">
       <origin xyz="0.0 0 0.0" rpy="0 0 0"/>
     </xacro:azure_kinect>
 
