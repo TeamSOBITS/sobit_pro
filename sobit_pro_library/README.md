@@ -59,7 +59,7 @@ SOBIT_PROのカメラパンチルトとマニピュレータを動かすクラ�
         const double arm_wrist_tilt               :   アームの関節4の角度
     )
     ```  
-4.  moveToRegisterdMotion()   :   予め設定したポーズに動かす
+4.  moveToPose()   :   予め設定したポーズに動かす
     ```bash
     bool sobit::SobitProJointController::movePose( 
         const std::string &pose_name 
