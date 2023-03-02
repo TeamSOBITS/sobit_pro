@@ -29,6 +29,10 @@ bool SobitProWheelController::controlWheelLinear( const double distance_x, const
         double Ki = 0.4;
         double Kd = 0.8;
         double velocity_differential = Kp * distance;
+
+        double dist_x = std::abs(distance_x);
+        double dist_y = std::abs(distance_y);
+
         ros::Rate loop_rate(20);
         while ( moving_distance < target_distance  ) {
             ros::spinOnce();
@@ -41,8 +45,10 @@ bool SobitProWheelController::controlWheelLinear( const double distance_x, const
             } else {
                 vel_linear =  Kp * ( target_distance + 0.001 - moving_distance ) - Kd * velocity_differential + Ki / ( 8.0 / target_distance ) * ( target_distance + 0.001 - moving_distance ) * std::pow( elapsed_time, 2 );
             }
-            output_vel.linear.x = ( 0 < distance_x ) ? vel_linear * ( distance_x / ( distance_x + distance_y ) ) : -vel_linear * ( distance_x / ( distance_x + distance_y ) );
-            output_vel.linear.y = ( 0 < distance_y ) ? vel_linear * ( distance_y / ( distance_x + distance_y ) ) : -vel_linear * ( distance_y / ( distance_x + distance_y ) );
+            // output_vel.linear.x = ( 0 < distance_x ) ? vel_linear * ( distance_x / ( distance_x + distance_y ) ) : -vel_linear * ( distance_x / ( distance_x + distance_y ) );
+            // output_vel.linear.y = ( 0 < distance_y ) ? vel_linear * ( distance_y / ( distance_x + distance_y ) ) : -vel_linear * ( distance_y / ( distance_x + distance_y ) );
+            output_vel.linear.x = ( 0 < dist_x ) ? vel_linear * ( dist_x / ( dist_x + dist_y ) ) : -vel_linear * ( dist_x / ( dist_x + dist_y ) );
+            output_vel.linear.y = ( 0 < dist_y ) ? vel_linear * ( dist_y / ( dist_x + dist_y ) ) : -vel_linear * ( dist_y / ( dist_x + dist_y ) );
             velocity_differential = vel_linear;
             pub_cmd_vel_.publish( output_vel );
             double x_diif = curt_odom_.pose.pose.position.x - init_odom.pose.pose.position.x;

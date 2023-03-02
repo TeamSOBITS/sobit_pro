@@ -106,9 +106,9 @@ inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::s
     trajectory_msgs::JointTrajectoryPoint joint_trajectory_point;
     joint_trajectory.joint_names.push_back( joint_name );
     joint_trajectory_point.positions.push_back( rad );
-    joint_trajectory_point.velocities.push_back( 0.0 );
-    joint_trajectory_point.accelerations.push_back( 0.0 );
-    joint_trajectory_point.effort.push_back( 0.0 );
+    // joint_trajectory_point.velocities.push_back( 0.0 );
+    // joint_trajectory_point.accelerations.push_back( 0.0 );
+    // joint_trajectory_point.effort.push_back( 0.0 );
     joint_trajectory_point.time_from_start = ros::Duration( sec );
     joint_trajectory.points.push_back( joint_trajectory_point );
     *jt = joint_trajectory;
@@ -122,9 +122,9 @@ inline void sobit_pro::SobitProJointController::addJointTrajectory( const std::s
     trajectory_msgs::JointTrajectory joint_trajectory = *jt;
     joint_trajectory.joint_names.push_back( joint_name );
     joint_trajectory.points[0].positions.push_back( rad );
-    joint_trajectory.points[0].velocities.push_back( 0.0 );
-    joint_trajectory.points[0].accelerations.push_back( 0.0 );
-    joint_trajectory.points[0].effort.push_back( 0.0 );
+    // joint_trajectory.points[0].velocities.push_back( 0.0 );
+    // joint_trajectory.points[0].accelerations.push_back( 0.0 );
+    // joint_trajectory.points[0].effort.push_back( 0.0 );
     joint_trajectory.points[0].time_from_start = ros::Duration( sec );
     *jt                                        = joint_trajectory;
     return;
