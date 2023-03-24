@@ -5,13 +5,13 @@ int main(int argc, char *argv[]) {
     sobit_pro::SobitProJointController pro_joint_ctr;
 
     // アームを動かす
-    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, 0.0, -1.0 );
+    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, 0.0, -1.0, 3.0 );
 
     // ハンドを動かす
     pro_joint_ctr.moveJoint( sobit_pro::Joint::HAND_JOINT, -1.57, 2.0, true );
 
     // 決められたポーズをする
-    pro_joint_ctr.moveToPose( "initial_pose" );
+    pro_joint_ctr.moveToPose( "initial_pose", 3.0 );
 
     return 0;
 }
