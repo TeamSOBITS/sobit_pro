@@ -21,6 +21,13 @@ bool SobitProWheelController::controlWheelLinear( const double distance_x, const
         ros::spinOnce();
         double start_time = ros::Time::now().toSec();
         geometry_msgs::Twist output_vel, initial_vel;
+        while ( curt_odom_.pose.pose.orientation.x == 0 &
+                curt_odom_.pose.pose.orientation.y == 0 &
+                curt_odom_.pose.pose.orientation.z == 0 &
+                curt_odom_.pose.pose.orientation.w == 0 ) {
+
+            ros::spinOnce();    
+        }
         nav_msgs::Odometry init_odom = curt_odom_;
         double moving_distance = 0.0;
         double target_distance = std::hypotf( distance_x, distance_y );
@@ -29,26 +36,33 @@ bool SobitProWheelController::controlWheelLinear( const double distance_x, const
         double Ki = 0.4;
         double Kd = 0.8;
         double velocity_differential = Kp * distance;
-
-        double dist_x = std::abs(distance_x);
-        double dist_y = std::abs(distance_y);
-
+        double max_velocity_differential = 0.075;
         ros::Rate loop_rate(20);
+
+        double Distance_x = std::abs(distance_x); //絶対値にする
+        double Distance_y = std::abs(distance_y);
+
+        // if ( target_distance < 0.01 ){ return true;}
+
         while ( moving_distance < target_distance  ) {
             ros::spinOnce();
             double end_time = ros::Time::now().toSec();
             double elapsed_time = end_time - start_time;
             double vel_linear = 0.0;
             // PID
+
+
+            // TODO: fix avoid overshoot (cahnge actuator with higher torque or improve PID controller)
+            if ( target_distance < 0.01 || target_distance-moving_distance < 0.01 ){ break;}
+            if ( target_distance < 0.60 && std::abs(velocity_differential) > max_velocity_differential) { velocity_differential = std::copysign(max_velocity_differential, velocity_differential); }
             if ( target_distance <= 0.1 ) {
+                ROS_INFO("here(1)");
                 vel_linear =  Kp * ( target_distance + 0.001 - moving_distance ) - Kd * velocity_differential + Ki / 0.8 * ( target_distance + 0.001 - moving_distance ) * std::pow( elapsed_time, 2 );
             } else {
                 vel_linear =  Kp * ( target_distance + 0.001 - moving_distance ) - Kd * velocity_differential + Ki / ( 8.0 / target_distance ) * ( target_distance + 0.001 - moving_distance ) * std::pow( elapsed_time, 2 );
             }
-            // output_vel.linear.x = ( 0 < distance_x ) ? vel_linear * ( distance_x / ( distance_x + distance_y ) ) : -vel_linear * ( distance_x / ( distance_x + distance_y ) );
-            // output_vel.linear.y = ( 0 < distance_y ) ? vel_linear * ( distance_y / ( distance_x + distance_y ) ) : -vel_linear * ( distance_y / ( distance_x + distance_y ) );
-            output_vel.linear.x = ( 0 < dist_x ) ? vel_linear * ( dist_x / ( dist_x + dist_y ) ) : -vel_linear * ( dist_x / ( dist_x + dist_y ) );
-            output_vel.linear.y = ( 0 < dist_y ) ? vel_linear * ( dist_y / ( dist_x + dist_y ) ) : -vel_linear * ( dist_y / ( dist_x + dist_y ) );
+            output_vel.linear.x = ( distance_x > 0 ) ? vel_linear * ( Distance_x / ( Distance_x + Distance_y ) ) : -vel_linear * ( Distance_x / ( Distance_x + Distance_y ) );
+            output_vel.linear.y = ( distance_y > 0 ) ? vel_linear * ( Distance_y / ( Distance_x + Distance_y ) ) : -vel_linear * ( Distance_y / ( Distance_x + Distance_y ) );
             velocity_differential = vel_linear;
             pub_cmd_vel_.publish( output_vel );
             double x_diif = curt_odom_.pose.pose.position.x - init_odom.pose.pose.position.x;

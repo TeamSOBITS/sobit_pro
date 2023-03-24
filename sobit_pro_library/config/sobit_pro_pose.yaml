@@ -3,166 +3,296 @@ sobit_pro_pose:
     - { 
         pose_name: "initial_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: -1.57,
         arm_elbow_upper_1_tilt_joint: 1.57,
-        arm_elbow_upper_2_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -1.57,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.57,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
 
     - {
         pose_name: "detecting_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: -1.57,
         arm_elbow_upper_1_tilt_joint: 1.57,
-        arm_elbow_upper_2_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -1.57,
-        arm_elbow_lower_pan_joint: 0.00,
-        arm_wrist_tilt_joint: 0.00,
-        hand_joint: -1.0,
+        arm_elbow_lower_pan_joint: -1.57,
+        arm_wrist_tilt_joint: -1.57,
+        hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: -0.7
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "grasp_low_table_pose",
+        arm_shoulder_1_tilt_joint: 0.00,
+        arm_elbow_upper_1_tilt_joint: -1.57,
+        arm_elbow_lower_tilt_joint: 1.0,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 0.57,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
     }
 
     - { 
         pose_name: "grasp_high_pose",
         arm_shoulder_1_tilt_joint: 1.0,
-        arm_shoulder_2_tilt_joint: -1.0,
         arm_elbow_upper_1_tilt_joint: 1.0,
-        arm_elbow_upper_2_tilt_joint: -1.0,
         arm_elbow_lower_tilt_joint: -1.0,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.0,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: -0.70,
     }
 
     - { 
         pose_name: "put_high_pose",
         arm_shoulder_1_tilt_joint: 1.0,
-        arm_shoulder_2_tilt_joint: -1.0,
         arm_elbow_upper_1_tilt_joint: 1.0,
-        arm_elbow_upper_2_tilt_joint: -1.0,
         arm_elbow_lower_tilt_joint: -1.0,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.0,
         hand_joint: -1.57,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: -0.70,
     }
 
     - {
         pose_name: "put_detecting_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: -1.57,
         arm_elbow_upper_1_tilt_joint: 1.57,
-        arm_elbow_upper_2_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -1.57,
-        arm_elbow_lower_pan_joint: 0.00,
+        arm_elbow_lower_pan_joint: -1.57,
         arm_wrist_tilt_joint: -1.57,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: -0.7
+        head_camera_tilt_joint: -0.70,
     }
 
     - { 
         pose_name: "grasp2initial_perpendicular_high_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: 0.00,
         arm_elbow_upper_1_tilt_joint: 0.00,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.57,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
 
     - { 
         pose_name: "grasp2initial_perpendicular_middle_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: 0.00,
         arm_elbow_upper_1_tilt_joint: -1.57,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 0.00,
-        hand_joint: 0.00,
+        hand_joint: -1.57,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
 
     - { 
         pose_name: "grasp2initial_perpendicular_low_pose",
         arm_shoulder_1_tilt_joint: 0.00,
-        arm_shoulder_2_tilt_joint: 0.00,
         arm_elbow_upper_1_tilt_joint: -1.57,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: 0.00,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 0.00,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
 
     - { 
         pose_name: "grasp2initial_parallel_high_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: 0.00,
         arm_elbow_upper_1_tilt_joint: 0.00,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 0.00,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
 
     - { 
         pose_name: "grasp2initial_parallel_middle_pose",
         arm_shoulder_1_tilt_joint: 1.57,
-        arm_shoulder_2_tilt_joint: 0.00,
         arm_elbow_upper_1_tilt_joint: -1.57,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: -1.57,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: 1.57,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
 
     - { 
         pose_name: "grasp2initial_parallel_low_pose",
         arm_shoulder_1_tilt_joint: 0.00,
-        arm_shoulder_2_tilt_joint: 0.00,
         arm_elbow_upper_1_tilt_joint: -1.57,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: 1.57,
         arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -1.0,
         hand_joint: 0.00,
         head_camera_pan_joint: 0.00,
-        head_camera_tilt_joint: 0.0
+        head_camera_tilt_joint: 0.00,
     }
     
     - { 
         pose_name: "grasp_on_floor_pose",
         arm_shoulder_1_tilt_joint: -1.30,
-        arm_shoulder_2_tilt_joint: 1.30,
         arm_elbow_upper_1_tilt_joint: 0.00,
-        arm_elbow_upper_2_tilt_joint: 0.00,
         arm_elbow_lower_tilt_joint: 0.00,
+        arm_elbow_lower_pan_joint: 0.00,
         arm_wrist_tilt_joint: -0.25,
         hand_joint: -1.57,
-        head_camera_pan_joint: 0.0,
-        head_camera_tilt_joint: -0.7
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "detection_high_pose",
+        arm_shoulder_1_tilt_joint: 0.80,
+        arm_elbow_upper_1_tilt_joint: 0.70,
+        arm_elbow_lower_tilt_joint: -0.50,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: -1.57,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+    - { 
+        pose_name: "pre_shelf_top_pose",
+        arm_shoulder_1_tilt_joint: 0.75,
+        arm_elbow_upper_1_tilt_joint: 0.45,
+        arm_elbow_lower_tilt_joint: -0.45,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: -1.0,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+    - { 
+        pose_name: "shelf_top_pose",
+        arm_shoulder_1_tilt_joint: 1.57,
+        arm_elbow_upper_1_tilt_joint: -1.15,
+        arm_elbow_lower_tilt_joint: 0.20,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: -0.50,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "pre_shelf_middle_top_pose",
+        arm_shoulder_1_tilt_joint: 1.57,
+        arm_elbow_upper_1_tilt_joint: 0.00,
+        arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.0,
+        arm_wrist_tilt_joint: -0.50,
+        hand_joint: 0.0,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+    - { 
+        pose_name: "shelf_middle_top_pose",
+        arm_shoulder_1_tilt_joint: 1.50,
+        arm_elbow_upper_1_tilt_joint: -0.70,
+        arm_elbow_lower_tilt_joint: -1.60,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 0.75,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "pre_shelf_middle_mid_pose",
+        arm_shoulder_1_tilt_joint: 1.57,
+        arm_elbow_upper_1_tilt_joint: 0.00,
+        arm_elbow_lower_tilt_joint: -1.57,
+        arm_elbow_lower_pan_joint: 0.0,
+        arm_wrist_tilt_joint: -1.57,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+    
+    - { 
+        pose_name: "shelf_middle_mid_pose",
+        arm_shoulder_1_tilt_joint: 0.90,
+        arm_elbow_upper_1_tilt_joint: -1.57,
+        arm_elbow_lower_tilt_joint: -0.85,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 1.35,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+
+    - { 
+        pose_name: "pre_shelf_middle_bot_pose",
+        arm_shoulder_1_tilt_joint: -0.40,
+        arm_elbow_upper_1_tilt_joint: 1.40,
+        arm_elbow_lower_tilt_joint: -0.25,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: -1.0,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+    - { 
+        pose_name: "shelf_middle_bot_pose",
+        arm_shoulder_1_tilt_joint: 0.50,
+        arm_elbow_upper_1_tilt_joint: -1.57,
+        arm_elbow_lower_tilt_joint: 1.25,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: -0.10,
+        hand_joint: -1.57,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "put_low_table_pose",
+        arm_shoulder_1_tilt_joint: -0.30,
+        arm_elbow_upper_1_tilt_joint: -0.35,
+        arm_elbow_lower_tilt_joint: 0.00,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 0.90,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "put_bin_pose",
+        arm_shoulder_1_tilt_joint: -0.30,
+        arm_elbow_upper_1_tilt_joint: -0.45,
+        arm_elbow_lower_tilt_joint: 0.10,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 0.65,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
+    }
+
+    - { 
+        pose_name: "put_container_pose",
+        arm_shoulder_1_tilt_joint: 0.00,
+        arm_elbow_upper_1_tilt_joint: -0.25,
+        arm_elbow_lower_tilt_joint: 0.10,
+        arm_elbow_lower_pan_joint: 0.00,
+        arm_wrist_tilt_joint: 0.20,
+        hand_joint: 0.00,
+        head_camera_pan_joint: 0.00,
+        head_camera_tilt_joint: -0.70,
     }
