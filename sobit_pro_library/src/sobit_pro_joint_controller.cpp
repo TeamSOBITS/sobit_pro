@@ -398,7 +398,7 @@ bool SobitProJointController::graspDecision() {
     }
     ros::spinOnce();
     std::cout << "hand_joint_current_ :" << hand_joint_current_ << std::endl;
-    if ( 500 <= hand_joint_current_ && hand_joint_current_ <= 1000 ) {
+    if ( 300 <= hand_joint_current_ && hand_joint_current_ <= 1000 ) {
         return true;
     } else {
         return false;
