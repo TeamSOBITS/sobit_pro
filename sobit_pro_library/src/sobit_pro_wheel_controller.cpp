@@ -94,10 +94,10 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
             vel_differential = vel_linear;
 
             // Debug log
-            ROS_INFO("vel_linear = %f", vel_linear );
-            ROS_INFO("output_vel.linear.x = %f", output_vel.linear.x );
-            ROS_INFO("output_vel.linear.y = %f", output_vel.linear.y );
-            ROS_INFO("curt_dist = %f/%f", curt_dist, goal_dist );
+            // ROS_INFO("vel_linear = %f", vel_linear );
+            // ROS_INFO("output_vel.linear.x = %f", output_vel.linear.x );
+            // ROS_INFO("output_vel.linear.y = %f", output_vel.linear.y );
+            // ROS_INFO("curt_dist = %f/%f", curt_dist, goal_dist );
 
             loop_rate.sleep();
         }
@@ -190,9 +190,9 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             vel_differential = vel_angular;
 
             // Debug log
-            ROS_INFO("vel_angular = %f", vel_angular );
-            ROS_INFO("output_vel.angular.z = %f", output_vel.angular.z );
-            ROS_INFO("curt_angle = %f/%f", curt_angle_deg, goal_angle_deg );
+            // ROS_INFO("vel_angular = %f", vel_angular );
+            // ROS_INFO("output_vel.angular.z = %f", output_vel.angular.z );
+            // ROS_INFO("curt_angle = %f/%f", curt_angle_deg, goal_angle_deg );
 
             loop_rate.sleep();
         }
