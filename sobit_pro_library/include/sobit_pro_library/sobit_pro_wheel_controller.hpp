@@ -38,10 +38,21 @@ inline void sobit_pro::SobitProWheelController::checkPublishersConnection( const
         try { loop_rate.sleep(); }
         catch ( const std::exception& ex ) { break; }
     }
+
     return; 
 }
 
-inline void sobit_pro::SobitProWheelController::callbackOdometry( const nav_msgs::OdometryConstPtr &odom_msg ) { curt_odom_ = *odom_msg; }
+inline void sobit_pro::SobitProWheelController::callbackOdometry( const nav_msgs::OdometryConstPtr &odom_msg ) { 
+    // curt_odom_ = *odom_msg;
+
+    curt_odom_.header = odom_msg->header;
+    curt_odom_.pose   = odom_msg->pose;
+    curt_odom_.twist  = odom_msg->twist;
+    curt_odom_.child_frame_id = odom_msg->child_frame_id;
+
+    return;
+
+}
 
 inline double sobit_pro::SobitProWheelController::geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat ) {
     tf::Quaternion quat;
