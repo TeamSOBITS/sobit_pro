@@ -18,9 +18,6 @@ SobitProWheelController::SobitProWheelController ( ) : ROSCommonNode( ), nh_(), 
 
 bool SobitProWheelController::controlWheelLinear( const double dist_x, const double dist_y ) {
     try {
-        // ros::spinOnce();
-        // double start_time = ros::Time::now().toSec();
-        // geometry_msgs::Twist output_vel, init_vel;
         while ( curt_odom_.pose.pose.orientation.x == 0 &
                 curt_odom_.pose.pose.orientation.y == 0 &
                 curt_odom_.pose.pose.orientation.z == 0 &
