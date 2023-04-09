@@ -50,7 +50,7 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
         double dist_x_abs = std::abs( dist_x );
         double dist_y_abs = std::abs( dist_y );
 
-        double vel_linear_max = 0.075; // This the is the max. vel. that SOBIT PRO can output 
+        double vel_linear_max = 0.75; // This the is the max. vel. that SOBIT PRO can output 
         double vel_linear = 0.0;
 
         double start_time = ros::Time::now().toSec();
@@ -147,7 +147,7 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
 
         ros::Rate loop_rate(20);
 
-        double vel_angular_max = 0.075; // This the is the max. vel. that SOBIT PRO can output 
+        double vel_angular_max = 0.75; // This the is the max. vel. that SOBIT PRO can output 
         double vel_angular = 0.0;
 
         double start_time = ros::Time::now().toSec();
