@@ -61,9 +61,7 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
             double curt_time    = ros::Time::now().toSec();
             double elapsed_time = curt_time - start_time;
             
-            // TODO: fix avoid overshoot (change actuator with higher torque or improve PID controller)
             if ( goal_dist < 0.01 || goal_dist-curt_dist < 0.01 ){ break; }
-            // if ( goal_dist < 0.60 && std::abs(vel_differential) > vel_linear_max) { vel_differential = std::copysign(vel_linear_max, vel_differential); }
             if ( goal_dist <= 0.1 ) {
                 ROS_INFO("Distance is under 0.1[m]: %f", goal_dist);
                 // vel_linear =  Kp * ( goal_dist + 0.001 - curt_dist ) - Kd * vel_differential + Ki / 0.8 * ( goal_dist + 0.001 - curt_dist ) * std::pow( elapsed_time, 2 );
