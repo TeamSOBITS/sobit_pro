@@ -30,10 +30,10 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
         geometry_msgs::Twist output_vel, init_vel;
 
         // Assign Linear and Angular value
-        init_vel.linear.x  = init_vel.linear.y  = init_vel.linear.z  = 0.0;
-        init_vel.angular.x = init_vel.angular.y = init_vel.angular.z = 0.0;
-        output_vel.linear.x   = output_vel.linear.y   = output_vel.linear.z   = 0.0;
-        output_vel.angular.x  = output_vel.angular.y  = output_vel.angular.z  = 0.0;
+        init_vel.linear.x    = init_vel.linear.y    = init_vel.linear.z    = 0.0;
+        init_vel.angular.x   = init_vel.angular.y   = init_vel.angular.z   = 0.0;
+        output_vel.linear.x  = output_vel.linear.y  = output_vel.linear.z  = 0.0;
+        output_vel.angular.x = output_vel.angular.y = output_vel.angular.z = 0.0;
 
         double curt_dist = 0.0;
         double goal_dist = std::hypotf( dist_x, dist_y );
@@ -98,7 +98,6 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
             ROS_INFO("output_vel.linear.x = %f", output_vel.linear.x );
             ROS_INFO("output_vel.linear.y = %f", output_vel.linear.y );
             ROS_INFO("curt_dist = %f/%f", curt_dist, goal_dist );
-            // ROS_INFO("goal_dist = %f\tcurt_dist = %f", goal_dist, curt_dist );
 
             loop_rate.sleep();
         }
@@ -129,10 +128,10 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
         geometry_msgs::Twist output_vel, init_vel;
 
         // Assign Linear and Angular value
-        init_vel.linear.x  = init_vel.linear.y  = init_vel.linear.z  = 0.0;
-        init_vel.angular.x = init_vel.angular.y = init_vel.angular.z = 0.0;
-        output_vel.linear.x   = output_vel.linear.y   = output_vel.linear.z   = 0.0;
-        output_vel.angular.x  = output_vel.angular.y  = output_vel.angular.z  = 0.0;
+        init_vel.linear.x    = init_vel.linear.y    = init_vel.linear.z    = 0.0;
+        init_vel.angular.x   = init_vel.angular.y   = init_vel.angular.z   = 0.0;
+        output_vel.linear.x  = output_vel.linear.y  = output_vel.linear.z  = 0.0;
+        output_vel.angular.x = output_vel.angular.y = output_vel.angular.z = 0.0;
 
         double init_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
         double curt_angle_rad = 0.0;
@@ -174,10 +173,10 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             output_vel.angular.z = ( angle_rad > 0.0 ) ? vel_angular : - vel_angular;
 
             // Clamp output limits
-            output_vel.angular.z = ( angle_rad > 0.0 ) ? std::min(output_vel.angular.z, vel_angular_max) : std::max(output_vel.angular.z, -vel_angular_max) ;
+            // output_vel.angular.z = ( angle_rad > 0.0 ) ? std::min(output_vel.angular.z, vel_angular_max) : std::max(output_vel.angular.z, -vel_angular_max) ;
 
             // Limit output based on a 'sigmoidal saturation function'
-            // output_vel.angular.z = vel_angular_max * (2.0 / (1.0 + exp(-output_vel.angular.z)) - 1.0);
+            output_vel.angular.z = vel_angular_max * (2.0 / (1.0 + exp(-output_vel.angular.z)) - 1.0);
 
             // Publish final velocity
             pub_cmd_vel_.publish( output_vel );
@@ -185,29 +184,15 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             // Update variables
             double curt_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
             double pre_ang_rad = curt_angle_rad;
-            
-            if      ( -0.00314<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) continue;
-            else if ( 0.0<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.00314 && angle_rad<0.0 )  continue;
 
-            if      ( (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * loop_cnt));
-            else if ( 0.0<(curt_yaw-init_yaw) && angle_rad<0.0 ) curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * loop_cnt));
-            else if ( 0.0<angle_rad )                            curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
-            else                                                 curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
-
-            if ( rad2Deg(curt_angle_rad) < (rad2Deg(pre_ang_rad)-0.0314) ) {
-                loop_cnt++;
-                if ( 0.0<angle_rad ) curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
-                else                 curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
-            }
-
+            curt_angle_rad = (0.0<angle_rad) ? curt_yaw - init_yaw : -(curt_yaw - init_yaw);
             curt_angle_deg = rad2Deg( curt_angle_rad );
             vel_differential = vel_angular;
 
             // Debug log
             ROS_INFO("vel_angular = %f", vel_angular );
             ROS_INFO("output_vel.angular.z = %f", output_vel.angular.z );
-            ROS_INFO("curt_dist = %f/%f", curt_angle_deg, goal_angle_deg );
-            // ROS_INFO("angle_deg = %f/%f", curt_angle_deg, goal_angle_deg );
+            ROS_INFO("curt_angle = %f/%f", curt_angle_deg, goal_angle_deg );
 
             loop_rate.sleep();
         }
