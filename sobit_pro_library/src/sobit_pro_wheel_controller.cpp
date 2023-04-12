@@ -182,6 +182,7 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             pub_cmd_vel_.publish( output_vel );
 
             // Update variables
+            vel_differential = vel_angular;
             double curt_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
             double pre_ang_rad = curt_angle_rad;
 
@@ -201,7 +202,6 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
 
             // curt_angle_rad = (0.0<angle_rad) ? curt_yaw - init_yaw : -(curt_yaw - init_yaw);
             curt_angle_deg = rad2Deg( curt_angle_rad );
-            vel_differential = vel_angular;
 
             // Debug log
             // ROS_INFO("vel_angular = %f", vel_angular );
