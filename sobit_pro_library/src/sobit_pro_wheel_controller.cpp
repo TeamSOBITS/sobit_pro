@@ -185,7 +185,21 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             double curt_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
             double pre_ang_rad = curt_angle_rad;
 
-            curt_angle_rad = (0.0<angle_rad) ? curt_yaw - init_yaw : -(curt_yaw - init_yaw);
+            if      ( -0.00314<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) continue;
+            else if ( 0.0<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.00314 && angle_rad<0.0 )  continue;
+
+            if      ( (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * loop_cnt));
+            else if ( 0.0<(curt_yaw-init_yaw) && angle_rad<0.0 ) curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * loop_cnt));
+            else if ( 0.0<angle_rad )                            curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
+            else                                                 curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
+
+            if ( rad2Deg(curt_angle_rad) < (rad2Deg(pre_ang_rad)-0.0314) ) {
+                loop_cnt++;
+                if ( 0.0<angle_rad ) curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
+                else                 curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
+            }
+
+            // curt_angle_rad = (0.0<angle_rad) ? curt_yaw - init_yaw : -(curt_yaw - init_yaw);
             curt_angle_deg = rad2Deg( curt_angle_rad );
             vel_differential = vel_angular;
 
