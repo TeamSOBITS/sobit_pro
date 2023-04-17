@@ -34,13 +34,10 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             fr_direction_deg = fr_direction_deg + 45.;
             fl_direction_deg = fl_direction_deg - 45.;
 
-            float error = std::abs(fr_direction_deg + fl_direction_deg);
-            std::cout << error << std::endl;
-
-            error = error > 85.? std::abs(error-90.) : error;
+            float error = std::abs(fr_direction_deg - fl_direction_deg);
             
             // Check the calculation
-            if(0.0 <= error/90. && error/90. <= 0.01){
+            if(true){
             // if(0.0 <= std::abs(std::abs(fr_direction_deg) - std::abs(fl_direction_deg)) <= 1.0){
 
                 // Positive distance or Negative distance
@@ -62,10 +59,9 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             }
             else {
                 std::cout << error << std::endl;
-                std::cout << error/90. << std::endl;
-                std::cout << (0.0 <= error/90. && error/90. <= 0.01) << std::endl;
-                std::cout << (0.0 <= error/90. ) << std::endl;
-                std::cout << (error/90. <= 0.01) << std::endl;
+                std::cout << (0.0 <= error && error <= 0.01) << std::endl;
+                std::cout << (0.0 <= error ) << std::endl;
+                std::cout << (error <= 0.01) << std::endl;
                 ROS_ERROR("Odometry ERROR : Translational motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
             }
 
