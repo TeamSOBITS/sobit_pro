@@ -127,15 +127,16 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
         int loop_cnt = 1;
         geometry_msgs::Twist output_vel, init_vel;
 
-        // Assign Linear and Angular value
+        // Assign Linear and Angular values
         init_vel.linear.x    = init_vel.linear.y    = init_vel.linear.z    = 0.0;
         init_vel.angular.x   = init_vel.angular.y   = init_vel.angular.z   = 0.0;
         output_vel.linear.x  = output_vel.linear.y  = output_vel.linear.z  = 0.0;
         output_vel.angular.x = output_vel.angular.y = output_vel.angular.z = 0.0;
 
+        // Init initial values
         double init_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
-        double curt_angle_rad = 0.0;
-        double curt_angle_deg = rad2Deg( curt_angle_rad );
+        double curt_angle_rad = std::fabs(tf::getYaw(curt_odom_.pose.pose.orientation) - init_yaw);
+        double curt_angle_deg = rad2Deg ( curt_angle_rad );
         double goal_angle_rad = std::fabs( angle_rad );
         double goal_angle_deg = rad2Deg ( goal_angle_rad );
 
@@ -144,21 +145,20 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
         double Ki = 0.4;
         double Kd = 0.8;
         double vel_differential = Kp * angle_rad;
-
-        ros::Rate loop_rate(20);
-
         double vel_angular_max = 0.75; // This the is the max. vel. that SOBIT PRO can output 
         double vel_angular = 0.0;
 
+        ros::Rate loop_rate(20);
+
         double start_time = ros::Time::now().toSec();
 
-        while ( curt_angle_rad < goal_angle_rad ) {
+        while ( curt_angle_deg < goal_angle_deg ) {
             ros::spinOnce();
-
             double curt_time    = ros::Time::now().toSec();
             double elapsed_time = curt_time - start_time;
 
-            // if ( goal_angle_deg < 1.0 || goal_angle_deg-curt_angle_deg < 1.0 ){ break; }
+            // PID control
+            if ( goal_angle_deg < 1.0 || goal_angle_deg-curt_angle_deg < 1.0 ){ break; }
             if ( goal_angle_deg <= 30.0 ) {
                 vel_angular = Kp * ( goal_angle_rad - curt_angle_rad )
                             - Kd * vel_differential
@@ -185,6 +185,9 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             vel_differential = vel_angular;
             double curt_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
             double pre_ang_rad = curt_angle_rad;
+
+            // curt_angle_rad = std::fabs(tf::getYaw(curt_odom_.pose.pose.orientation) - init_yaw);
+            // curt_angle_deg = rad2Deg ( curt_angle_rad );
 
             if      ( -0.00314<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) continue;
             else if ( 0.0<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.00314 && angle_rad<0.0 )  continue;
