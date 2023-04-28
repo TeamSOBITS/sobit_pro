@@ -50,32 +50,40 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             py::arg( "goal_position_z" ),
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),
-            py::arg( "diff_goal_position_z" ) )
+            py::arg( "diff_goal_position_z" ),
+            py::arg( "sec" ) = 5.0,
+            py::arg( "is_sleep" ) = true )
         .def( "moveGripperToTargetTF", &SobitProJointController::moveGripperToTargetTF, "move Gripper To Target TF",
             py::arg( "target_name" ),
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),
-            py::arg( "diff_goal_position_z" ) )
+            py::arg( "diff_goal_position_z" ),
+            py::arg( "sec" ) = 5.0,
+            py::arg( "is_sleep" ) = true )
         .def( "moveGripperToPlaceCoord", &SobitProJointController::moveGripperToPlaceCoord, "move Gripper To Placeable Position Coordinate",
             py::arg( "goal_position_x" ),
             py::arg( "goal_position_y" ),
             py::arg( "goal_position_z" ),
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),
-            py::arg( "diff_goal_position_z" ) )
+            py::arg( "diff_goal_position_z" ),
+            py::arg( "sec" ) = 5.0,
+            py::arg( "is_sleep" ) = true )
         .def( "moveGripperToPlaceTF", &SobitProJointController::moveGripperToPlaceTF, "move Gripper To Placeable Position TF",
             py::arg( "target_name" ),
             py::arg( "diff_goal_position_x" ),
             py::arg( "diff_goal_position_y" ),
-            py::arg( "diff_goal_position_z" ) )
+            py::arg( "diff_goal_position_z" ),
+            py::arg( "sec" ) = 5.0,
+            py::arg( "is_sleep" ) = true )
         .def( "graspDecision", &SobitProJointController::graspDecision, "grasp Decision" );
 
     py::class_<SobitProWheelController>( m, "SobitProWheelController" )
         .def( py::init<const std::string&>( ) )
-        .def( "controlWheelLinear", &SobitProWheelController::controlWheelLinear, "control Wheel Linear", 
+        .def( "controlWheelLinear", &SobitProWheelController::controlWheelLinear, "control Wheel Linear",
             py::arg( "distance_x" ),
             py::arg( "distance_y" ) )
-        .def( "controlWheelRotateRad", &SobitProWheelController::controlWheelRotateRad, "control Wheel Rotate Rad", 
+        .def( "controlWheelRotateRad", &SobitProWheelController::controlWheelRotateRad, "control Wheel Rotate Rad",
             py::arg( "angle_rad" ) )
         .def( "controlWheelRotateDeg", &SobitProWheelController::controlWheelRotateDeg,"control Wheel Rotate Deg",
             py::arg( "angle_deg" ) );

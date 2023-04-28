@@ -40,7 +40,7 @@ namespace sobit_pro {
             ros::Publisher        pub_head_camera_joint_;
             tf::TransformListener listener_;
 
-            const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint", 
+            const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint",
                                                             "arm_shoulder_2_tilt_joint",
                                                             "arm_elbow_upper_1_tilt_joint",
                                                             "arm_elbow_upper_2_tilt_joint",
@@ -90,10 +90,10 @@ namespace sobit_pro {
             bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
             bool moveArm( const double arm1, const double arm2, const double arm3, const double arm3_pan, const double arm4, const double sec = 5.0, bool is_sleep = true );
             bool moveHeadPanTilt( const double head_camera_pan, const double head_camera_tilt, const double sec = 5.0, bool is_sleep = true );
-            bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-            bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-            bool moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-            bool moveGripperToPlaceTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+            bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec = 5.0, bool is_sleep = true );
+            bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec = 5.0, bool is_sleep = true );
+            bool moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec = 5.0, bool is_sleep = true );
+            bool moveGripperToPlaceTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec = 5.0, bool is_sleep = true );
             bool graspDecision( );
     };
 } // namespace sobit_pro
