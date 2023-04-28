@@ -116,6 +116,10 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
 
 bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
     try {
+        ros::spinOnce();
+        double start_time = ros::Time::now().toSec();
+        int loop_cnt = 1;
+        geometry_msgs::Twist output_vel, initial_vel;
         while ( curt_odom_.pose.pose.orientation.x == 0 &
                 curt_odom_.pose.pose.orientation.y == 0 &
                 curt_odom_.pose.pose.orientation.z == 0 &
@@ -124,104 +128,64 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
             ros::spinOnce();    
         }
 
-        int loop_cnt = 1;
-        geometry_msgs::Twist output_vel, init_vel;
-
-        // Assign Linear and Angular values
-        init_vel.linear.x    = init_vel.linear.y    = init_vel.linear.z    = 0.0;
-        init_vel.angular.x   = init_vel.angular.y   = init_vel.angular.z   = 0.0;
+        // Assign Linear and Angular value
+        initial_vel.linear.x    = initial_vel.linear.y    = initial_vel.linear.z    = 0.0;
+        initial_vel.angular.x   = initial_vel.angular.y   = initial_vel.angular.z   = 0.0;
         output_vel.linear.x  = output_vel.linear.y  = output_vel.linear.z  = 0.0;
         output_vel.angular.x = output_vel.angular.y = output_vel.angular.z = 0.0;
 
-        // Init initial values
         double init_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
-        double curt_angle_rad = std::fabs(tf::getYaw(curt_odom_.pose.pose.orientation) - init_yaw);
-        double curt_angle_deg = rad2Deg ( curt_angle_rad );
-        double goal_angle_rad = std::fabs( angle_rad );
-        double goal_angle_deg = rad2Deg ( goal_angle_rad );
-
-        // PID params
+        double moving_angle_rad = 0.0;
+        double abs_angle_rad =  std::fabs( angle_rad );
+        double abs_angle_deg = rad2Deg ( abs_angle_rad );
         double Kp = 0.1;
         double Ki = 0.4;
         double Kd = 0.8;
-        double vel_differential = Kp * angle_rad;
-        double vel_angular_max = 0.75; // This the is the max. vel. that SOBIT PRO can output 
-        double vel_angular = 0.0;
-
+        double velocity_differential = Kp * angle_rad;
         ros::Rate loop_rate(20);
-
-        double start_time = ros::Time::now().toSec();
-
-        while ( curt_angle_deg < goal_angle_deg ) {
+        while ( moving_angle_rad < abs_angle_rad ) {
             ros::spinOnce();
-            double curt_time    = ros::Time::now().toSec();
-            double elapsed_time = curt_time - start_time;
-
-            // PID control
-            if ( goal_angle_deg < 1.0 || goal_angle_deg-curt_angle_deg < 1.0 ){ break; }
-            if ( goal_angle_deg <= 30.0 ) {
-                vel_angular = Kp * ( goal_angle_rad - curt_angle_rad )
-                            - Kd * vel_differential
-                            + Ki * ( goal_angle_rad - curt_angle_rad ) * std::pow( elapsed_time, 2 );
+            double end_time = ros::Time::now().toSec();
+            double elapsed_time = end_time - start_time;
+            double vel_angular = 0.0;
+            // PID
+            if ( abs_angle_deg <= 30 ) {
+                vel_angular = Kp * ( abs_angle_rad +0.001 - moving_angle_rad )
+                            - Kd * velocity_differential
+                            + Ki * ( abs_angle_rad + 0.001 - moving_angle_rad ) * std::pow( elapsed_time, 2 );
             } else {
-                vel_angular = Kp * ( goal_angle_rad - curt_angle_rad )
-                            - Kd * vel_differential
-                            + Ki * ( goal_angle_rad - curt_angle_rad ) * std::pow( elapsed_time, 2 ) * 0.75 * 30.0 / goal_angle_deg;
+                vel_angular = Kp * ( abs_angle_rad +0.001 - moving_angle_rad )
+                            - Kd * velocity_differential
+                            + Ki * ( abs_angle_rad + 0.001 - moving_angle_rad ) * std::pow( elapsed_time, 2 ) * 0.75 * 30 / abs_angle_deg;
             }
-
-            // Select orientation based on the goal
-            output_vel.angular.z = ( angle_rad > 0.0 ) ? vel_angular : - vel_angular;
-
-            // Clamp output limits
-            // output_vel.angular.z = ( angle_rad > 0.0 ) ? std::min(output_vel.angular.z, vel_angular_max) : std::max(output_vel.angular.z, -vel_angular_max) ;
-
-            // Limit output based on a 'sigmoidal saturation function'
-            output_vel.angular.z = vel_angular_max * (2.0 / (1.0 + exp(-output_vel.angular.z)) - 1.0);
-
-            // Publish final velocity
+            output_vel.angular.z = ( angle_rad > 0 ) ? vel_angular : - vel_angular;
+            velocity_differential = vel_angular;
             pub_cmd_vel_.publish( output_vel );
-
-            // Update variables
-            vel_differential = vel_angular;
             double curt_yaw = geometryQuat2Yaw ( curt_odom_.pose.pose.orientation );
-            double pre_ang_rad = curt_angle_rad;
+            double pre_move_ang_rad = moving_angle_rad;
+            if ( -0.00314 < curt_yaw - init_yaw && curt_yaw - init_yaw < 0 && 0 < angle_rad ) continue;
+            else if ( 0 < curt_yaw - init_yaw && curt_yaw - init_yaw < 0.00314 && angle_rad < 0 ) continue;
 
-            // curt_angle_rad = std::fabs(tf::getYaw(curt_odom_.pose.pose.orientation) - init_yaw);
-            // curt_angle_deg = rad2Deg ( curt_angle_rad );
+            if ( curt_yaw - init_yaw < 0 && 0 < angle_rad ) moving_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * loop_cnt));
+            else if ( 0 < curt_yaw - init_yaw && angle_rad < 0 ) moving_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * loop_cnt));
+            else if ( 0 < angle_rad ) moving_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
+            else moving_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
 
-            if      ( -0.00314<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) continue;
-            else if ( 0.0<(curt_yaw-init_yaw) && (curt_yaw-init_yaw)<0.00314 && angle_rad<0.0 )  continue;
-
-            if      ( (curt_yaw-init_yaw)<0.0 && 0.0<angle_rad ) curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * loop_cnt));
-            else if ( 0.0<(curt_yaw-init_yaw) && angle_rad<0.0 ) curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * loop_cnt));
-            else if ( 0.0<angle_rad )                            curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
-            else                                                 curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
-
-            if ( rad2Deg(curt_angle_rad) < (rad2Deg(pre_ang_rad)-0.0314) ) {
+            if ( rad2Deg(moving_angle_rad) < (rad2Deg(pre_move_ang_rad)-0.0314) ) {
                 loop_cnt++;
-                if ( 0.0<angle_rad ) curt_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
-                else                 curt_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
+                if ( 0 < angle_rad ) moving_angle_rad = abs(curt_yaw - init_yaw + deg2Rad(360 * (loop_cnt-1)));
+                else moving_angle_rad = abs(curt_yaw - init_yaw - deg2Rad(360 * (loop_cnt-1)));
             }
 
-            // curt_angle_rad = (0.0<angle_rad) ? curt_yaw - init_yaw : -(curt_yaw - init_yaw);
-            curt_angle_deg = rad2Deg( curt_angle_rad );
-
-            // Debug log
-            // ROS_INFO("vel_angular = %f", vel_angular );
-            // ROS_INFO("output_vel.angular.z = %f", output_vel.angular.z );
-            // ROS_INFO("curt_angle = %f/%f", curt_angle_deg, goal_angle_deg );
+            // ROS_INFO("target_angle = %f\tmoving_angle = %f", abs_angle_rad, moving_angle_rad );
 
             loop_rate.sleep();
         }
-
-        pub_cmd_vel_.publish( init_vel );
+        pub_cmd_vel_.publish( initial_vel );
         ros::Duration(0.5).sleep();
-
         return true;
-
     } catch ( const std::exception& ex ) {
         ROS_ERROR( "%s", ex.what() );
-
         return false;
     }
 }
