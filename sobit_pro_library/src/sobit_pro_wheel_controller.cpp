@@ -9,7 +9,7 @@ SobitProWheelController::SobitProWheelController ( const std::string &name ) : R
     ros::Duration(3.0).sleep();
 }
 
-SobitProWheelController::SobitProWheelController ( ) : ROSCommonNode( ), nh_(), pnh_("~") { 
+SobitProWheelController::SobitProWheelController ( ) : ROSCommonNode( ), nh_(), pnh_("~") {
     sub_odom_ = nh_.subscribe( "/odom", 1, &SobitProWheelController::callbackOdometry, this );
     pub_cmd_vel_ = nh_.advertise< geometry_msgs::Twist >( "/mobile_base/commands/velocity", 1 );
     ros::spinOnce();
@@ -23,7 +23,7 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
                 curt_odom_.pose.pose.orientation.z == 0 &
                 curt_odom_.pose.pose.orientation.w == 0 ) {
 
-            ros::spinOnce();    
+            ros::spinOnce();
         }
 
         nav_msgs::Odometry init_odom = curt_odom_;
@@ -50,7 +50,7 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
         double dist_x_abs = std::abs( dist_x );
         double dist_y_abs = std::abs( dist_y );
 
-        double vel_linear_max = 0.75; // This the is the max. vel. that SOBIT PRO can output 
+        double vel_linear_max = 0.75; // This the is the max. vel. that SOBIT PRO can output
         double vel_linear = 0.0;
 
         double start_time = ros::Time::now().toSec();
@@ -60,7 +60,7 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
 
             double curt_time    = ros::Time::now().toSec();
             double elapsed_time = curt_time - start_time;
-            
+
             if ( goal_dist < 0.01 || goal_dist-curt_dist < 0.01 ){ break; }
             if ( goal_dist <= 0.1 ) {
                 ROS_INFO("Distance is under 0.1[m]: %f", goal_dist);
@@ -125,7 +125,7 @@ bool SobitProWheelController::controlWheelRotateRad( const double angle_rad ) {
                 curt_odom_.pose.pose.orientation.z == 0 &
                 curt_odom_.pose.pose.orientation.w == 0 ) {
 
-            ros::spinOnce();    
+            ros::spinOnce();
         }
 
         // Assign Linear and Angular value
