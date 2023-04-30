@@ -77,12 +77,12 @@ bool SobitProWheelController::controlWheelLinear( const double dist_x, const dou
             output_vel.linear.y = ( dist_y > 0.0 ) ? vel_linear * ( dist_y_abs / ( dist_x_abs + dist_y_abs ) ) : -vel_linear * ( dist_y_abs / ( dist_x_abs + dist_y_abs ) );
 
             // Clamp output limits
-            // output_vel.linear.x = ( dist_x > 0.0 ) ? std::min(output_vel.linear.x, vel_linear_max) : std::max(output_vel.linear.x, -vel_linear_max) ;
-            // output_vel.linear.y = ( dist_y > 0.0 ) ? std::min(output_vel.linear.y, vel_linear_max) : std::max(output_vel.linear.y, -vel_linear_max) ;
+            output_vel.linear.x = ( dist_x > 0.0 ) ? std::min(output_vel.linear.x, vel_linear_max) : std::max(output_vel.linear.x, -vel_linear_max) ;
+            output_vel.linear.y = ( dist_y > 0.0 ) ? std::min(output_vel.linear.y, vel_linear_max) : std::max(output_vel.linear.y, -vel_linear_max) ;
 
             // Limit output based on a 'sigmoidal saturation function'
-            output_vel.linear.x = vel_linear_max * (2.0 / (1.0 + exp(-output_vel.linear.x)) - 1.0);
-            output_vel.linear.y = vel_linear_max * (2.0 / (1.0 + exp(-output_vel.linear.y)) - 1.0);
+            // output_vel.linear.x = vel_linear_max * (2.0 / (1.0 + exp(-output_vel.linear.x)) - 1.0);
+            // output_vel.linear.y = vel_linear_max * (2.0 / (1.0 + exp(-output_vel.linear.y)) - 1.0);
 
             // Publish final velocity
             pub_cmd_vel_.publish( output_vel );

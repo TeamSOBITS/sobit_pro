@@ -33,12 +33,10 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             // Convert Wheel Coordinates to Robot Coordinates
             fr_direction_deg = fr_direction_deg + 45.;
             fl_direction_deg = fl_direction_deg - 45.;
-
-            float error = std::abs(fr_direction_deg - fl_direction_deg);
             
             // Check the calculation
-            if(true){
-            // if(0.0 <= std::abs(std::abs(fr_direction_deg) - std::abs(fl_direction_deg)) <= 1.0){
+            // if(true){
+            if(0.0 <= std::abs(std::abs(fr_direction_deg) - std::abs(fl_direction_deg)) <= 1.0){
 
                 // Positive distance or Negative distance
                 if(-45. <= fr_direction_deg && fr_direction_deg <= 90.){
@@ -58,10 +56,6 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
                 else ROS_ERROR("Calculation ERROR : Translational motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
             }
             else {
-                std::cout << error << std::endl;
-                std::cout << (0.0 <= error && error <= 0.01) << std::endl;
-                std::cout << (0.0 <= error ) << std::endl;
-                std::cout << (error <= 0.01) << std::endl;
                 ROS_ERROR("Odometry ERROR : Translational motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
             }
 
@@ -128,7 +122,16 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             // Change quaternion (calculation_odom)
             tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0.0, 0.0, rotational_position_rad);
             quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
-
+            if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) {
+                ROS_ERROR("------ Odom calculation : Nan error !! : Rotational motion(orientation) ------\nx = %.3f,\ty = %.3f,\tz = %.3f,\tw = %.3f", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, calculation_odom.pose.pose.orientation.z, calculation_odom.pose.pose.orientation.w );
+                *result_odom = prev_odom;
+                return true;
+            }
+            if (std::isinf(calculation_odom.pose.pose.orientation.x) || std::isinf(calculation_odom.pose.pose.orientation.y) || std::isinf(calculation_odom.pose.pose.orientation.z) || std::isinf(calculation_odom.pose.pose.orientation.w)) {
+                ROS_ERROR("------ Odom calculation : Inf error !! : Rotational motion(orientation) ------\nx = %.3f,\ty = %.3f,\tz = %.3f,\tw = %.3f", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, calculation_odom.pose.pose.orientation.z, calculation_odom.pose.pose.orientation.w );
+                *result_odom = prev_odom;
+                return true;
+            }
             *result_odom = calculation_odom;
 
             return true;

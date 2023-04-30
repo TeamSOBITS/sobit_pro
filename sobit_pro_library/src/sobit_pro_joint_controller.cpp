@@ -187,10 +187,10 @@ geometry_msgs::Point SobitProJointController::forwardKinematics( double arm1_joi
     res_point.z = arm1_link_length * std::sin(arm1_joint_angle) + arm2_link_length * std::sin(arm1_joint_angle + arm2_joint_angle)
                   + arm_elbow_lower_tilt_joint_length * std::sin(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
 
-    std::cout << "\n=====================================================" << std::endl;
-    std::cout << __func__ << std::endl;
-    std::cout << "x: " << res_point.x << ", z: " << res_point.z << std::endl;
-    std::cout << "======================================================\n" << std::endl;
+    // std::cout << "\n=====================================================" << std::endl;
+    // std::cout << __func__ << std::endl;
+    // std::cout << "x: " << res_point.x << ", z: " << res_point.z << std::endl;
+    // std::cout << "======================================================\n" << std::endl;
     return res_point;
 }
 
@@ -215,8 +215,8 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics( dou
 
     double arm_wrist_tilt_joint_angle1 = -(arm1_joint_angle + arm2_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
     double arm_wrist_tilt_joint_angle2 = -(arm1_joint_angle + arm2_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
-    std::cout << "pair1: (" << arm1_joint_angle << ", " << arm2_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
-    std::cout << "pair2: (" << arm1_joint_angle << ", " << arm2_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
+    // std::cout << "pair1: (" << arm1_joint_angle << ", " << arm2_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
+    // std::cout << "pair2: (" << arm1_joint_angle << ", " << arm2_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
 
     std::vector<double> result_angles1{arm1_joint_angle, arm2_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
     std::vector<double> result_angles2{arm1_joint_angle, arm2_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
@@ -300,13 +300,13 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     geometry_msgs::Point result_xz2 = forwardKinematics(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2));
 
     /** 車輪で最適な把持位置まで移動 **/
-    std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
+    // std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
     sobit_pro::SobitProWheelController wheel_ctr;
     wheel_ctr.controlWheelLinear(move_wheel_x, move_wheel_y);
 
     /** アームを物体のところまで移動 **/
-    std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
-              << result_angles1.at(3) << std::endl;
+    // std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
+            //   << result_angles1.at(3) << std::endl;
     //std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
     //          << result_angles2.at(3) << std::endl;
 
@@ -320,8 +320,8 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     }
     //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3));
 
-    std::cout << "order : (x, y, z): (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
-    std::cout << "result: (x, y, z): (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
+    // std::cout << "order : (x, y, z): (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
+    // std::cout << "result: (x, y, z): (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
 
     return is_reached;
 }
@@ -397,7 +397,7 @@ bool SobitProJointController::graspDecision() {
         ros::spinOnce();
     }
     ros::spinOnce();
-    std::cout << "hand_joint_current_ :" << hand_joint_current_ << std::endl;
+    // std::cout << "hand_joint_current_ :" << hand_joint_current_ << std::endl;
     if ( 300 <= hand_joint_current_ && hand_joint_current_ <= 1000 ) {
         return true;
     } else {

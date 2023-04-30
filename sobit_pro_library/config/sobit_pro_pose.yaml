@@ -227,7 +227,7 @@ sobit_pro_pose:
 
     - {
         pose_name: "shelf_middle_mid_pose",
-        arm_shoulder_1_tilt_joint: 0.90,
+        arm_shoulder_1_tilt_joint: 1.00,
         arm_elbow_upper_1_tilt_joint: -1.57,
         arm_elbow_lower_tilt_joint: -0.85,
         arm_elbow_lower_pan_joint: 0.00,

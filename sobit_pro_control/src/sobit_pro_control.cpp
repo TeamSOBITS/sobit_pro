@@ -115,7 +115,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
         case ROTATIONAL_MOTION_MODE:{
             // Goal velocity calculation
             float vel_deg   = vel_twist.angular.z * 180.0 / M_PI; // rad to deg
-            float vel_ms    = vel_deg / 360 * BODY_DIAMETER * M_PI;
+            float vel_ms    = vel_deg / 360.0 * BODY_DIAMETER * M_PI;
             float vel_rpm   = vel_ms / WHEEL_LENGTH * 60.; // 60:minute
             float vel_value = vel_rpm / 0.229;
 
