@@ -114,7 +114,7 @@ bool SobitProJointController::moveAllJoint( const double arm1,
 bool SobitProJointController::moveJoint( const Joint joint_num, const double rad, const double sec, bool is_sleep ) {
     try {
         trajectory_msgs::JointTrajectory joint_trajectory;
-      
+
         // ARM_SHOULDER_1_TILT_JOINT    : joint_num = 0
         // ARM_SHOULDER_2_TILT_JOINT    : joint_num = 1
         // ARM_ELBOW_UPPER_1_TILT_JOINT : joint_num = 2
@@ -187,10 +187,10 @@ geometry_msgs::Point SobitProJointController::forwardKinematics( double arm1_joi
     res_point.z = arm1_link_length * std::sin(arm1_joint_angle) + arm2_link_length * std::sin(arm1_joint_angle + arm2_joint_angle)
                   + arm_elbow_lower_tilt_joint_length * std::sin(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
 
-    std::cout << "\n=====================================================" << std::endl;
-    std::cout << __func__ << std::endl;
-    std::cout << "x: " << res_point.x << ", z: " << res_point.z << std::endl;
-    std::cout << "======================================================\n" << std::endl;
+    // std::cout << "\n=====================================================" << std::endl;
+    // std::cout << __func__ << std::endl;
+    // std::cout << "x: " << res_point.x << ", z: " << res_point.z << std::endl;
+    // std::cout << "======================================================\n" << std::endl;
     return res_point;
 }
 
@@ -215,8 +215,8 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics( dou
 
     double arm_wrist_tilt_joint_angle1 = -(arm1_joint_angle + arm2_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
     double arm_wrist_tilt_joint_angle2 = -(arm1_joint_angle + arm2_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
-    std::cout << "pair1: (" << arm1_joint_angle << ", " << arm2_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
-    std::cout << "pair2: (" << arm1_joint_angle << ", " << arm2_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
+    // std::cout << "pair1: (" << arm1_joint_angle << ", " << arm2_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
+    // std::cout << "pair2: (" << arm1_joint_angle << ", " << arm2_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
 
     std::vector<double> result_angles1{arm1_joint_angle, arm2_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
     std::vector<double> result_angles2{arm1_joint_angle, arm2_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
@@ -226,7 +226,7 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics( dou
     return result_angles_pairs;
 }
 
-bool SobitProJointController::moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
+bool SobitProJointController::moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec, bool is_sleep ) {
     geometry_msgs::Point shift;
 
     double arm_to_object_x = goal_position_x + shift.x + diff_goal_position_x;
@@ -300,33 +300,33 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     geometry_msgs::Point result_xz2 = forwardKinematics(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2));
 
     /** 車輪で最適な把持位置まで移動 **/
-    std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
+    // std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
     sobit_pro::SobitProWheelController wheel_ctr;
     wheel_ctr.controlWheelLinear(move_wheel_x, move_wheel_y);
 
     /** アームを物体のところまで移動 **/
-    std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
-              << result_angles1.at(3) << std::endl;
+    // std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles1.at(0) << ", " << result_angles1.at(1) << ", " << result_angles1.at(2) << ", "
+            //   << result_angles1.at(3) << std::endl;
     //std::cout << "(joint1, joint2, joint3, joint4): (" << result_angles2.at(0) << ", " << result_angles2.at(1) << ", " << result_angles2.at(2) << ", "
     //          << result_angles2.at(3) << std::endl;
-    
+
     /** 床の物体を把持するための判定 **/
     bool is_reached;
     if ( arm_to_object_z < -sum_arm123_link_length ) {
-        is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3)-1.57); 
+        is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3)-1.57, sec, is_sleep);
     }
     else {
-        is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3));
+        is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3), sec, is_sleep);
     }
     //moveArm(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2), result_angles2.at(3));
 
-    std::cout << "order : (x, y, z): (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
-    std::cout << "result: (x, y, z): (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
+    // std::cout << "order : (x, y, z): (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
+    // std::cout << "result: (x, y, z): (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
 
     return is_reached;
 }
 
-bool SobitProJointController::moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
+bool SobitProJointController::moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec, bool is_sleep ) {
     geometry_msgs::Point shift;
 
     //tf::StampedTransform transform_base_to_object;
@@ -342,12 +342,12 @@ bool SobitProJointController::moveGripperToTargetTF( const std::string& target_n
     }
 
     bool is_reached = moveGripperToTargetCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
-                              diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
-    
+                              diff_goal_position_x, diff_goal_position_y, diff_goal_position_z, sec, is_sleep );
+
     return is_reached;
 }
 
-bool SobitProJointController::moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
+bool SobitProJointController::moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec, bool is_sleep ) {
     geometry_msgs::Point shift;
 
     // 作成中
@@ -356,9 +356,9 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double goal_positio
     /** 目標値から0.1[m]程下げた位置までアームを移動 **/
     /**  ハンドに負荷がかかった場合はそこで停止する  **/
     while( -target_z < diff_goal_position_z ) {
-        moveGripperToTargetCoord( goal_position_x, goal_position_y, goal_position_z, 
-                                  diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
-        
+        moveGripperToTargetCoord( goal_position_x, goal_position_y, goal_position_z,
+                                  diff_goal_position_x, diff_goal_position_y, diff_goal_position_z, sec, is_sleep );
+
         // ハンドのジョイントに負荷がかかった場合、そこで停止する
         if ( 500 < arm_wrist_tilt_joint_current_ && arm_wrist_tilt_joint_current_ < 1000 ) {
             break;
@@ -371,7 +371,7 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double goal_positio
     return true;
 }
 
-bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ) {
+bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z, const double sec, bool is_sleep ) {
     //debug
     geometry_msgs::Point shift;
 
@@ -388,7 +388,7 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
     }
 
     moveGripperToPlaceCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
-                                        diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+                                        diff_goal_position_x, diff_goal_position_y, diff_goal_position_z, sec, is_sleep );
     return true;
 }
 
@@ -397,7 +397,7 @@ bool SobitProJointController::graspDecision() {
         ros::spinOnce();
     }
     ros::spinOnce();
-    std::cout << "hand_joint_current_ :" << hand_joint_current_ << std::endl;
+    // std::cout << "hand_joint_current_ :" << hand_joint_current_ << std::endl;
     if ( 300 <= hand_joint_current_ && hand_joint_current_ <= 1000 ) {
         return true;
     } else {
