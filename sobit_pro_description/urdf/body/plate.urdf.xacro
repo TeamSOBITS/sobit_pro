@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="plate" xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:macro name="plate" params="prefix parent">>
+    <xacro:macro name="plate" params="prefix parent">
 
     <joint name="${prefix}_bottom_joint" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
@@ -62,7 +62,7 @@
     </link>
     
 
-    <joint name="${prefix}_top_joint" type="fixed">
+    <!-- <joint name="${prefix}_top_joint" type="fixed">
       <origin xyz="0.0 0.0 0.4800" rpy="0.0 0.0 0.0" />
       <parent link="${prefix}_middle_link" />
       <child link="${prefix}_top_link" />
@@ -89,7 +89,7 @@
                  iyy="1.0" iyz="0.0"
                  izz="1.0" />
       </inertial>
-    </link>
+    </link> -->
 
     </xacro:macro>
 </robot>
