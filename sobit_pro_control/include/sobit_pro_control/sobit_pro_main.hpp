@@ -2,11 +2,14 @@
 #define SOBIT_PRO_MAIN_H_
 
 #include <ros/ros.h>
+#include <math.h>
 #include <stdlib.h>
 #include <bits/stdc++.h>
 #include <sensor_msgs/JointState.h>
 #include <nav_msgs/Odometry.h>
 #include <std_msgs/Bool.h>
+
+#define VEL_UNIT             0.229
 
 class SobitProMain{
     private:
@@ -23,10 +26,18 @@ class SobitProMain{
 
         int32_t wheel_fr_init_position;
         int32_t wheel_fl_init_position;
+        int32_t wheel_br_init_position;
+        int32_t wheel_bl_init_position;
+
         int32_t wheel_fr_curt_position;
         int32_t wheel_fl_curt_position;
+        int32_t wheel_br_curt_position;
+        int32_t wheel_bl_curt_position;
+
         int32_t steer_fr_curt_position;
         int32_t steer_fl_curt_position;
+        int32_t steer_br_curt_position;
+        int32_t steer_bl_curt_position;
 
         int32_t *set_steer_angle;
         int32_t *set_wheel_vel;
@@ -37,6 +48,8 @@ class SobitProMain{
 
         nav_msgs::Odometry result_odom;
         nav_msgs::Odometry prev_odom;
+        
+        ros::Time prev_time;
 
         std_msgs::Bool wheels_error;
 

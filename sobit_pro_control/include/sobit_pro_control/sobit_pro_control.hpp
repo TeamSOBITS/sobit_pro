@@ -12,9 +12,19 @@
 #define ROTATIONAL_MOTION    2
 #define SWIVEL_MOTION        3 // Motion can be added
 
-#define LIMIT_VEL_VALUE      200.
+// #define LIMIT_VEL_VALUE      200.
+#define LIMIT_VEL_VALUE      1023.
+#define VEL_UNIT             0.229
 #define WHEEL_LENGTH         0.452389 // Wheel Circumference
+#define WHEEL_DIAMETER       0.144    // Wheel Circumference
+#define WHEEL_RADIUS         WHEEL_DIAMETER/2.0
+#define WHEEL_BASE           0.32060706 // Distance between front and rear wheel
+
 #define BODY_DIAMETER        0.448051 // Robot Diameter
+#define TRACK                0.32060706 // Distance between left and right wheels
+#define WHEEL_STEER_Y_OFFSET 0.0 // Distance between a wheel joint and the associated steering joint
+
+
 
 class SobitProControl{
     private:

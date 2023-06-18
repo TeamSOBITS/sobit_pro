@@ -39,7 +39,7 @@
 
 #define TORQUE_ENABLE                   1              // Value for enabling the torque
 #define TORQUE_DISABLE                  0              // Value for disabling the torque
-#define DXL_MOVING_STATUS_THRESHOLD     20             // Dynamixel moving status threshold  // old param : 10
+#define DXL_MOVING_STATUS_THRESHOLD     20             // Dynamixel moving status threshold  (previous param : 10)
 
 class SobitProMotorDriver{
   public:
@@ -54,7 +54,8 @@ class SobitProMotorDriver{
     bool controlWheels(int32_t *value);
     bool addPresentParam(void);
     int32_t feedbackSteer(uint8_t);
-    int32_t feedbackWheel(uint8_t);
+    int32_t feedbackWheelPos(uint8_t);
+    int32_t feedbackWheelVel(uint8_t);
 
   private:
     uint32_t baudrate_;
