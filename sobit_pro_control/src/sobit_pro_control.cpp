@@ -3,6 +3,13 @@
 void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
 
     switch (motion_mode){
+        // Stop motion
+        case STOP_MOTION_MODE:{
+            steer_fr_goal_angle = 0.; steer_fl_goal_angle = 0.;
+            steer_br_goal_angle = 0.; steer_bl_goal_angle = 0.;
+            wheel_fr_goal_vel = 0.; wheel_fl_goal_vel = 0.; wheel_br_goal_vel = 0.; wheel_bl_goal_vel = 0.;
+            break;
+        }
         // Translational motion
         case TRANSLATIONAL_MOTION_MODE:{
             // Goal velocity calculation
@@ -161,6 +168,7 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
             // Radius calculation
             float vel_ms = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // Euclidean distance
             float vel_deg = abs(vel_twist.angular.z) * 180. / M_PI; // rad to deg
+            // float vel_deg = abs(vel_twist.angular.z) * 180. / M_PI + atan2(vel_twist.linear.y, vel_twist.linear.x); // rad to deg
             float cycle_sec = 360. / vel_deg;
             float svl_r = vel_ms * cycle_sec / 2. / M_PI;    // meter
 
@@ -353,8 +361,12 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
             steer_br_goal_angle = steer_br_deg * 4096. / 360.;
             steer_bl_goal_angle = steer_bl_deg * 4096. / 360.;
 
-            // ROS_INFO("Wheel INFO(Swivel motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_goal_angle, steer_fl_goal_angle, steer_br_goal_angle, steer_bl_goal_angle, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
+            ROS_INFO("Wheel INFO(Swivel motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_goal_angle, steer_fl_goal_angle, steer_br_goal_angle, steer_bl_goal_angle, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
             
+            // steer_fr_goal_angle += atan2(vel_twist.linear.y, vel_twist.linear.x);
+            // steer_fl_goal_angle += atan2(vel_twist.linear.y, vel_twist.linear.x);
+            // steer_br_goal_angle += atan2(vel_twist.linear.y, vel_twist.linear.x);
+            // steer_bl_goal_angle += atan2(vel_twist.linear.y, vel_twist.linear.x);
             break;
         }
 

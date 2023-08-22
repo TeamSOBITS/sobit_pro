@@ -28,7 +28,10 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
     nav_msgs::Odometry calculation_odom = *result_odom;
     tf::Quaternion quat_tf; 
 
-    if     ( prev_motion == 1 ){
+    if     ( prev_motion == 0 ){
+        motion_mode = STOP_MOTION_MODE;
+    }
+    else if( prev_motion == 1 ){
         motion_mode = TRANSLATIONAL_MOTION_MODE;
     }
     else if( prev_motion == 2 ){

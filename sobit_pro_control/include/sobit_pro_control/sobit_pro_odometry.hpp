@@ -6,6 +6,7 @@
 #include <tf/transform_broadcaster.h>
 
 // Define motion key value
+#define STOP_MOTION          0
 #define TRANSLATIONAL_MOTION 1
 #define ROTATIONAL_MOTION    2
 #define SWIVEL_MOTION        3 // Motion can be added
@@ -17,7 +18,7 @@ class SobitProOdometry{
     private:
         enum MODE{
         NONE = 0,
-        TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE, SWIVEL_MOTION_MODE // Motion can be added
+        STOP_MOTION_MODE, TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE, SWIVEL_MOTION_MODE // Motion can be added
         } motion_mode;
 
   public:
@@ -39,6 +40,7 @@ class SobitProOdometry{
 
         MODE getMotion(int motion){
             switch (motion){
+                case (STOP_MOTION): motion_mode = STOP_MOTION_MODE; break;
                 case (TRANSLATIONAL_MOTION): motion_mode = TRANSLATIONAL_MOTION_MODE; break;
                 case (ROTATIONAL_MOTION)   : motion_mode = ROTATIONAL_MOTION_MODE;    break;
                 case (SWIVEL_MOTION)       : motion_mode = SWIVEL_MOTION_MODE;        break; // Motion can be added
