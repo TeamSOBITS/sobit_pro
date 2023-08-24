@@ -167,6 +167,9 @@ void SobitProControl::setParams(geometry_msgs::Twist vel_twist){
         case SWIVEL_MOTION_MODE:{
             // float vel_value = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.));
             // float r = vel_twist.linear.x / vel_twist.angular.z;
+            // float base_theta = atan2(vel_twist.linear.y , vel_twist.linear.x) + (M_PI/2) * (vel_twist.angular.z/abs(vel_twist.angular.z));
+            // float base_center[2] = {r * cos(base_theta), r * sin(base_theta)};
+            // float wheel_point[4][2] = {{TRACK, TRACK}, {TRACK, TRACK}, {TRACK, TRACK}, {TRACK, TRACK}};
             // Radius calculation
             float vel_ms = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // Euclidean distance
             float vel_deg = abs(vel_twist.angular.z) * 180. / M_PI; // rad to deg

@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/Point.h>
 #include <std_msgs/Empty.h>
 
 // Define motion key value
