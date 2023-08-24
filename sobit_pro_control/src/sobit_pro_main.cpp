@@ -37,7 +37,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     // Swivel
     else if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) > 0.000))
     {
-        const double steering_track = 0.32060706;
+        const double steering_track = TRACK;
         // if(fabs(2.0*vel_twist.linear.x) > fabs(vel_twist.angular.z*steering_track) && fabs(vel_twist.linear.y) < 0.001){
         if(fabs(2.0*(sqrtf(powf(vel_twist.linear.x,2.) + powf(vel_twist.linear.y,2.)))) > fabs(vel_twist.angular.z*steering_track)){
             ROS_INFO("Swivel motion.\n");
