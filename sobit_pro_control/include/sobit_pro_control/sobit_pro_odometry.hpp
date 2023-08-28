@@ -3,6 +3,7 @@
 
 #include <math.h>
 #include <nav_msgs/Odometry.h>
+#include <geometry_msgs/Point.h>
 #include <tf/transform_broadcaster.h>
 
 // Define motion key value
@@ -40,7 +41,7 @@ class SobitProOdometry{
 
         MODE getMotion(int motion){
             switch (motion){
-                case (STOP_MOTION): motion_mode = STOP_MOTION_MODE; break;
+                case (STOP_MOTION)         : motion_mode = STOP_MOTION_MODE;          break;
                 case (TRANSLATIONAL_MOTION): motion_mode = TRANSLATIONAL_MOTION_MODE; break;
                 case (ROTATIONAL_MOTION)   : motion_mode = ROTATIONAL_MOTION_MODE;    break;
                 case (SWIVEL_MOTION)       : motion_mode = SWIVEL_MOTION_MODE;        break; // Motion can be added

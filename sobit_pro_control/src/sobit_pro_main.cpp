@@ -10,18 +10,10 @@ SobitProOdometry    sobit_pro_odometry;
 
 // Twist callback
 void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
-    // Not supported motion
-    // if ((vel_twist.linear.z != 0.0) || (vel_twist.angular.x != 0.0) || (vel_twist.angular.y != 0.0))
-    // {
-    //     ROS_WARN("vellocity error... fix the value zero.");
-    //     vel_twist.linear.z = 0.0;
-    //     vel_twist.angular.x = 0.0;
-    //     vel_twist.angular.y = 0.0;
-    // }
     // Translational
     if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) <= 0.001))
     {
-        ROS_INFO("Translational motion.\n");
+        // ROS_INFO("Translational motion.\n");
         motion = TRANSLATIONAL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
@@ -29,7 +21,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     // Rotational
     else if (((std::abs(vel_twist.linear.x) <= 0.001) && (std::abs(vel_twist.linear.y) <= 0.001)) && (std::abs(vel_twist.angular.z) > 0.000))
     {
-        ROS_INFO("Rotational motion.\n");
+        // ROS_INFO("Rotational motion.\n");
         motion = ROTATIONAL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
@@ -37,10 +29,8 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     // Swivel
     else if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) > 0.000))
     {
-        const double steering_track = TRACK;
-        // if(fabs(2.0*vel_twist.linear.x) > fabs(vel_twist.angular.z*steering_track) && fabs(vel_twist.linear.y) < 0.001){
-        if(fabs(2.0*(sqrtf(powf(vel_twist.linear.x,2.) + powf(vel_twist.linear.y,2.)))) > fabs(vel_twist.angular.z*steering_track)){
-            ROS_INFO("Swivel motion.\n");
+        if(fabs(2.0*(sqrtf(powf(vel_twist.linear.x,2.) + powf(vel_twist.linear.y,2.)))) > fabs(vel_twist.angular.z*TRACK)){
+            // ROS_INFO("Swivel motion.\n");
             motion = SWIVEL_MOTION;
 
         }
@@ -48,14 +38,12 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
             ROS_INFO("Swivel motion to Rotational motion.\n");
             motion = ROTATIONAL_MOTION;
         }
-        // ROS_INFO("Swivel motion.\n");
-        // motion = SWIVEL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
     }
     // Stop motion
     else{
-        ROS_INFO("Stop motion.\n");
+        // ROS_INFO("Stop motion.\n");
         motion = STOP_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
