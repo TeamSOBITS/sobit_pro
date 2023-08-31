@@ -157,6 +157,9 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
 
         // Swivel motion
         case SWIVEL_MOTION_MODE:{
+            quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
+            tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            float pose_x = 0., pose_y = 0., yaw = 0.;
             geometry_msgs::Point wheel_point_fr, wheel_point_fl, wheel_point_br, wheel_point_bl;
             wheel_point_fr.x = TRACK / 2.;
             wheel_point_fr.y = TRACK / 2. * (-1);
@@ -180,13 +183,46 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
                 // fr and bl
                 base_center.x = (a_fr * wheel_point_fr.x - a_bl * wheel_point_bl.x) / (a_fr - a_bl);
                 base_center.y = a_fr * a_bl * (wheel_point_fr.x - wheel_point_bl.x) + wheel_point_fr.y;
+                if (sqrtf(powf((wheel_point_fr.x - base_center.x), 2.) + powf((wheel_point_fr.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_bl.x - base_center.x), 2.) + powf((wheel_point_bl.y - base_center.y), 2.)))
+                {
+                    yaw = fr_distance_m / sqrtf(powf((wheel_point_fr.x - base_center.x), 2.) + powf((wheel_point_fr.y - base_center.y), 2.));
+                }
+                else
+                {
+                    yaw = bl_distance_m / sqrtf(powf((wheel_point_bl.x - base_center.x), 2.) + powf((wheel_point_bl.y - base_center.y), 2.));
+                }
             }
             else
             {
                 // fl and br
                 base_center.x = (a_fl * wheel_point_fl.x - a_br * wheel_point_br.x) / (a_fl - a_br);
                 base_center.y = a_fl * a_br * (wheel_point_fl.x - wheel_point_br.x) + wheel_point_fl.y;
+                if (sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.)))
+                {
+                    yaw = fl_distance_m / sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.));
+                }
+                else
+                {
+                    yaw = br_distance_m / sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.));
+                }
             }
+            pose_x = (0. - base_center.x) * cos(prev_yaw + yaw) - (0. - base_center.y) * sin(prev_yaw + yaw) + base_center.x;
+            pose_y = (0. - base_center.y) * sin(prev_yaw + yaw) + (0. - base_center.y) * cos(prev_yaw + yaw) + base_center.y;
+
+            // ROS_INFO("\n\tbase_center = %.2f, %.2f\n\tpose_x = %.2f, pose_y = %.2f, yaw = %.2f",base_center.x, base_center.y, pose_x, pose_y, yaw*180./M_PI);
+
+            calculation_odom.pose.pose.position.x = prev_odom.pose.pose.position.x + pose_x;
+            calculation_odom.pose.pose.position.y = prev_odom.pose.pose.position.y + pose_y;
+            calculation_odom.pose.pose.position.z = 0.;
+            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., prev_yaw + yaw);
+            quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
+
+            *result_odom = calculation_odom;
+
+
+            ROS_INFO("\n=========================================\n\tbase_center = %.2f, %.2f\n\tpose_x = %.2f, pose_y = %.2f, yaw = %.2f\n\n\tresult_odom.pose = %.1f, %.1f ,%.1f. result_odom.ori = %.1f, %.1f, %.1f, %.1f\n\tresult_yaw = %.2f\n\n============================================\n",base_center.x, base_center.y, pose_x, pose_y, yaw*180./M_PI,result_odom->pose.pose.position.x,result_odom->pose.pose.position.y,result_odom->pose.pose.position.z,result_odom->pose.pose.orientation.w,result_odom->pose.pose.orientation.x,result_odom->pose.pose.orientation.y,result_odom->pose.pose.orientation.z, prev_yaw + yaw);
+
+
             // float svl_orientation_rad;
             // float svl_r, svl_r_in, svl_r_out, svl_deg, svl_dis;
             // float pose_x = 0., pose_y = 0., ori_z =0.;
@@ -379,7 +415,7 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             //     *result_odom = prev_odom;
             //     return true;
             // }
-            *result_odom = calculation_odom;
+            // *result_odom = calculation_odom;
             return true;
         }
 

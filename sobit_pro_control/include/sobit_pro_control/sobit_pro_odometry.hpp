@@ -15,6 +15,8 @@
 #define WHEEL_LENGTH         0.452389 // Wheel Circumference
 #define BODY_DIAMETER        0.448051 // Robot Diameter
 
+#define TRACK                0.32060706 // Distance between left and right wheels
+
 class SobitProOdometry{
     private:
         enum MODE{
