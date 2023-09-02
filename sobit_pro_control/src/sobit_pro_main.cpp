@@ -13,7 +13,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     // Translational
     if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) <= 0.001))
     {
-        // ROS_INFO("Translational motion.\n");
+        // ROS_INFO("Translational motion.");
         motion = TRANSLATIONAL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
@@ -21,7 +21,7 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     // Rotational
     else if (((std::abs(vel_twist.linear.x) <= 0.001) && (std::abs(vel_twist.linear.y) <= 0.001)) && (std::abs(vel_twist.angular.z) > 0.000))
     {
-        // ROS_INFO("Rotational motion.\n");
+        // ROS_INFO("Rotational motion.");
         motion = ROTATIONAL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
@@ -30,12 +30,12 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     else if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) > 0.000))
     {
         if(fabs(2.0*(sqrtf(powf(vel_twist.linear.x,2.) + powf(vel_twist.linear.y,2.)))) > fabs(vel_twist.angular.z*TRACK)){
-            // ROS_INFO("Swivel motion.\n");
+            // ROS_INFO("Swivel motion.");
             motion = SWIVEL_MOTION;
 
         }
         else{
-            ROS_INFO("Swivel motion to Rotational motion.\n");
+            // ROS_INFO("Swivel motion to Rotational motion.");
             motion = ROTATIONAL_MOTION;
         }
         wheels_error.data = false;
@@ -43,63 +43,11 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     }
     // Stop motion
     else{
-        // ROS_INFO("Stop motion.\n");
+        // ROS_INFO("Stop motion.");
         motion = STOP_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
     }
-    // if((std::abs(vel_twist.linear.x > 0.001) || std::abs(vel_twist.linear.y > 0.001)) && std::abs(vel_twist.linear.z <= 0.001) && std::abs(vel_twist.angular.x <= 0.001) && std::abs(vel_twist.angular.y <= 0.001) && std::abs(vel_twist.angular.z <= 0.001)){
-    //     ROS_INFO("Translational motion.\n");
-    //     motion = TRANSLATIONAL_MOTION;
-    //     wheels_error.data = false;
-    //     pub_wheels_error.publish(wheels_error);
-    // }
-    // else if(std::abs(vel_twist.linear.x <= 0.001) && std::abs(vel_twist.linear.y <= 0.001) && std::abs(vel_twist.linear.z <= 0.001) && std::abs(vel_twist.angular.x <= 0.001) && std::abs(vel_twist.angular.y <= 0.001) && std::abs(vel_twist.angular.z > 0.001)){
-    //     ROS_INFO("Rotational motion.\n");
-    //     motion = ROTATIONAL_MOTION;
-    //     wheels_error.data = false;
-    //     pub_wheels_error.publish(wheels_error);
-    // }
-    // else if((std::abs(vel_twist.linear.x > 0.001) || std::abs(vel_twist.linear.y > 0.001)) && std::abs(vel_twist.angular.z > 0.001)){
-    //     if(std::abs(vel_twist.linear.y) > 0.001){
-    //         ROS_ERROR("Motion (rotation in y axis) is not supported yet!\n");
-    //         wheels_error.data = true;
-    //         pub_wheels_error.publish(wheels_error);
-    //         return;
-    //     }
-    //     // Motion can be added
-
-    //     const double steering_track = 0.32060706;
-    //     if(fabs(2.0*vel_twist.linear.x) > fabs(vel_twist.angular.z*steering_track) && fabs(vel_twist.linear.y) < 0.001){
-    //         ROS_INFO("Swivel motion.\n");
-    //         motion = SWIVEL_MOTION;
-
-    //     }
-    //     else{
-    //         ROS_INFO("Swivel motion to Rotational motion");
-    //         motion = ROTATIONAL_MOTION;
-    //     }
-        
-    //     // motion = SWIVEL_MOTION;
-        
-    //     wheels_error.data = false;
-    //     pub_wheels_error.publish(wheels_error);
-    // }
-    // // Not yet supported motion
-    // else if(vel_twist.linear.z != 0 || vel_twist.angular.x != 0 || vel_twist.angular.y != 0){
-    //     ROS_ERROR("Failed to change the motion!\n");
-    //     ROS_ERROR("This motion is not supported.\n");
-    //     wheels_error.data = true;
-    //     pub_wheels_error.publish(wheels_error);
-    //     return;
-    // }
-    // // Stop motion
-    // else{
-    //     ROS_INFO("Stop motion.\n");
-    //     motion = 0;
-    //     wheels_error.data = false;
-    //     pub_wheels_error.publish(wheels_error);
-    // }
 
     sobit_pro_control.getMotion(motion);
     sobit_pro_odometry.getMotion(motion);
@@ -182,16 +130,6 @@ void SobitProMain::control_wheel(){
             sobit_pro_motor_driver.controlWheels(set_wheel_vel);
             ros::Duration(0.5).sleep();
         }
-
-        // while ( (1024 <= std::abs(set_steer_angle[0] - steer_fr_curt_position)) || (1024 <= std::abs(set_steer_angle[1] - steer_fl_curt_position)) ) {
-        //   ROS_INFO("Change the direction of the wheel");
-        //   sobit_pro_motor_driver.controlWheels(set_wheel_vel);
-        //   ros::Duration(0.1).sleep();
-        //   // Write goal position value
-        //   set_steer_angle = sobit_pro_control.setSteerAngle();
-        //   steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-        //   steer_fl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_L);
-        // }
 
         sobit_pro_motor_driver.controlSteers(set_steer_angle);
 

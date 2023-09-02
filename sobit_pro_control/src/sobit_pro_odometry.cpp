@@ -106,57 +106,28 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE orientation------");
 
             *result_odom = calculation_odom;
-
             return true;
         }
 
         // Rotational motion
         case ROTATIONAL_MOTION_MODE:{
-            float rotational_position_deg;
-            float rotational_position_rad;
-
-            // Check the calculation
-            // if(0. <= std::abs(std::abs(fr_direction_deg) - std::abs(fl_direction_deg)) <= 1.){
-            if(0 <= std::abs(std::abs(fr_direction_deg) - std::abs(fl_direction_deg)) && std::abs(std::abs(fr_direction_deg) - std::abs(fl_direction_deg)) <= 1){
-
-                // Positive distance or Negative distance
-                if(0 <= fr_distance_m){
-                    distance_m = (std::abs(fr_distance_m) + std::abs(fl_distance_m)) / 2.;
-                }
-                else{
-                    distance_m = -(std::abs(fr_distance_m) + std::abs(fl_distance_m)) / 2.;
-                }
-            }
-            else ROS_ERROR("Odometry ERROR : Rotational motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
-
             // Change euler (prev_odom)
             quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
             tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
-
-            // Add the amount of movement to the odometry
-            rotational_position_deg = (distance_m * 360.) / (BODY_DIAMETER * M_PI);
-            rotational_position_rad = prev_yaw + (rotational_position_deg * (M_PI / 180.)); // rad = deg * (M_PI / 180.)
+            float yaw = 0.;
+            yaw = ((fr_distance_m + fl_distance_m + br_distance_m + bl_distance_m) / 4.) / (TRACK / sqrtf(2.));
 
             // Change quaternion (calculation_odom)
-            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., rotational_position_rad);
+            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., (prev_yaw + yaw));
             quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
-            if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) {
-                ROS_ERROR("------ Odom calculation : Nan error !! : Rotational motion(orientation) ------\nx = %.3f,\ty = %.3f,\tz = %.3f,\tw = %.3f", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, calculation_odom.pose.pose.orientation.z, calculation_odom.pose.pose.orientation.w );
-                *result_odom = prev_odom;
-                return true;
-            }
-            if (std::isinf(calculation_odom.pose.pose.orientation.x) || std::isinf(calculation_odom.pose.pose.orientation.y) || std::isinf(calculation_odom.pose.pose.orientation.z) || std::isinf(calculation_odom.pose.pose.orientation.w)) {
-                ROS_ERROR("------ Odom calculation : Inf error !! : Rotational motion(orientation) ------\nx = %.3f,\ty = %.3f,\tz = %.3f,\tw = %.3f", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, calculation_odom.pose.pose.orientation.z, calculation_odom.pose.pose.orientation.w );
-                *result_odom = prev_odom;
-                return true;
-            }
-            *result_odom = calculation_odom;
 
+            *result_odom = calculation_odom;
             return true;
         }
 
         // Swivel motion
         case SWIVEL_MOTION_MODE:{
+            // Change euler (prev_odom)
             quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
             tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
             float pose_x = 0., pose_y = 0., yaw = 0.;
@@ -183,7 +154,6 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
                 // fr and bl
                 base_center.x = (a_fr * wheel_point_fr.x - a_bl * wheel_point_bl.x + wheel_point_bl.y - wheel_point_fr.y) / (a_fr - a_bl);
                 base_center.y = a_fr * (base_center.x - wheel_point_fr.x) + wheel_point_fr.y;
-                // base_center.y = a_fr * a_bl * (wheel_point_fr.x - wheel_point_bl.x) + wheel_point_fr.y;
                 if (sqrtf(powf((wheel_point_fr.x - base_center.x), 2.) + powf((wheel_point_fr.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_bl.x - base_center.x), 2.) + powf((wheel_point_bl.y - base_center.y), 2.)))
                 {
                     yaw = fr_distance_m / (sqrtf(powf((wheel_point_fr.x - base_center.x), 2.) + powf((wheel_point_fr.y - base_center.y), 2.)));
@@ -198,7 +168,6 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
                 // fl and br
                 base_center.x = (a_fl * wheel_point_fl.x - a_br * wheel_point_br.x + wheel_point_br.y - wheel_point_fl.y) / (a_fl - a_br);
                 base_center.y = a_fl * (base_center.x - wheel_point_fl.x) + wheel_point_fl.y;
-                // base_center.y = a_fl * a_br * (wheel_point_fl.x - wheel_point_br.x) + wheel_point_fl.y;
                 if (sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.)))
                 {
                     yaw = fl_distance_m / (sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)));
@@ -208,8 +177,6 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
                     yaw = br_distance_m / (sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.)));
                 }
             }
-            // pose_x = (0. - base_center.x) * cos(prev_yaw + yaw) - (0. - base_center.y) * sin(prev_yaw + yaw) + base_center.x;
-            // pose_y = (0. - base_center.y) * sin(prev_yaw + yaw) + (0. - base_center.y) * cos(prev_yaw + yaw) + base_center.y;
             pose_x = (0. - base_center.x) * cos(yaw) - (0. - base_center.y) * sin(yaw) + base_center.x;
             pose_y = (0. - base_center.x) * sin(yaw) + (0. - base_center.y) * cos(yaw) + base_center.y;
             if (std::isnan(pose_x))
@@ -228,217 +195,16 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             calculation_odom.pose.pose.position.x = pose_x * cos(prev_yaw) - pose_y * sin(prev_yaw) + prev_odom.pose.pose.position.x;
             calculation_odom.pose.pose.position.y = pose_x * sin(prev_yaw) + pose_y * cos(prev_yaw) + prev_odom.pose.pose.position.y;
             calculation_odom.pose.pose.position.z = 0.;
-            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., prev_yaw + yaw);
+
+            // Change quaternion (calculation_odom)
+            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., (prev_yaw + yaw));
             quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
 
 
+            ROS_INFO("base_center = %.4f, %.4f,  yaw = %.4f", base_center.x, base_center.y, yaw);
             ROS_INFO("odom = %.4f, %.4f, %.4f\n",calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, (prev_yaw + yaw));
 
             *result_odom = calculation_odom;
-
-
-            // (twist)base_center = 0.00, 0.25
-            // ROS_INFO("\n\t(odom)base_center = %.2f, %.2f\n",base_center.x, base_center.y);
-            // ROS_INFO("\n=========================================\n\tbase_center = %.2f, %.2f\n\tpose_x = %.2f, pose_y = %.2f, yaw = %.2f\n\n\tresult_odom.pose = %.1f, %.1f ,%.1f. result_odom.ori = %.1f, %.1f, %.1f, %.1f\n\tresult_yaw = %.2f\n\n============================================\n",base_center.x, base_center.y, pose_x, pose_y, yaw*180./M_PI,result_odom->pose.pose.position.x,result_odom->pose.pose.position.y,result_odom->pose.pose.position.z,result_odom->pose.pose.orientation.w,result_odom->pose.pose.orientation.x,result_odom->pose.pose.orientation.y,result_odom->pose.pose.orientation.z, prev_yaw + yaw);
-
-
-            // float svl_orientation_rad;
-            // float svl_r, svl_r_in, svl_r_out, svl_deg, svl_dis;
-            // float pose_x = 0., pose_y = 0., ori_z =0.;
-            // float d = BODY_DIAMETER / 2. * cos(M_PI / 4.); // Manhattan distance (cos value shud be change)
-
-            // // Change euler (prev_odom)
-            // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
-            // tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
-            // // ROS_INFO("prev_roll,prev_pitch,prev_yaw = \t    %.2f, %.2f, %.2f",prev_roll, prev_pitch, prev_yaw);
-            // // ROS_INFO("prev_odom.pose.pose.orientation.w,x,y,z = %.2f, %.2f, %.2f, %.2f\n",prev_odom.pose.pose.orientation.w,prev_odom.pose.pose.orientation.x, prev_odom.pose.pose.orientation.y, prev_odom.pose.pose.orientation.z);
-            // ROS_INFO("steer_fr_curt_position = %d, %.2f\n", steer_fr_curt_position, fr_direction_deg);
-
-            // if( ( fl_direction_deg >= -45 && fl_direction_deg < 0 ) && ( fr_direction_deg >= -22.5 && fr_direction_deg < 0 )){
-            //     svl_r_in  = d / cos((45. + fl_direction_deg) * M_PI / 180.);
-            //     svl_r_out = d / cos((45. - fr_direction_deg) * M_PI / 180.);
-            //     svl_r     = (svl_r_out * sin((45. - fr_direction_deg) * M_PI / 180.) - svl_r_in * sin((45. + fl_direction_deg) * M_PI / 180.)) / 2.;
-            //     // ROS_ERROR("fl_deg    : %f\n", fl_direction_deg);
-            //     // ROS_ERROR("fr_deg    : %f\n", fr_direction_deg);
-            //     // ROS_ERROR("svl_r_in  : %f\n", svl_r_in);
-            //     // ROS_ERROR("svl_r_out : %f\n", svl_r_out);
-            //     // ROS_ERROR("svl_r     : %f\n", svl_r);
-            //     svl_deg = (std::abs(fl_distance_m) / (2. * svl_r_in * M_PI) * 360. + std::abs(fr_distance_m) / (2. * svl_r_out * M_PI) * 360.) / 2.;
-            //     svl_dis = sqrt(2. * powf(svl_r, 2.) * (1 - cos(svl_deg * M_PI / 180.)));
-            //     if(fr_distance_m >= 0){
-            //         pose_x = svl_dis * sin((180. - svl_deg) / 2 * M_PI / 180. - prev_yaw);
-            //         pose_y = svl_dis * cos((180. - svl_deg) / 2 * M_PI / 180. - prev_yaw);
-            //         ori_z  = svl_deg;
-            //     }
-            //     else{
-            //         pose_x = -svl_dis * sin((180. - svl_deg) / 2 * M_PI / 180. - prev_yaw);
-            //         pose_y = -svl_dis * cos((180. - svl_deg) / 2 * M_PI / 180. - prev_yaw);
-            //         ori_z  = -svl_deg;
-            //     }
-            // }
-            // else if(fl_direction_deg >= 0 && fl_direction_deg < 22.5 && fr_direction_deg >= 0 && fr_direction_deg < 45){
-            //     svl_r_in  = d / cos((45. - fr_direction_deg) * M_PI / 180.);
-            //     svl_r_out = d / cos((45. + fl_direction_deg) * M_PI / 180.);
-            //     svl_r     = (svl_r_out * sin((45. + fl_direction_deg) * M_PI / 180.) - svl_r_in * sin((45. - fr_direction_deg) * M_PI / 180.)) / 2.;
-            //     // ROS_ERROR("fl_deg    : %f\n", fl_direction_deg);
-            //     // ROS_ERROR("fr_deg    : %f\n", fr_direction_deg);
-            //     // ROS_ERROR("svl_r_in  : %f\n", svl_r_in);
-            //     // ROS_ERROR("svl_r_out : %f\n", svl_r_out);
-            //     // ROS_ERROR("svl_r     : %f\n", svl_r);
-            //     svl_deg = (std::abs(fr_distance_m) / (2. * svl_r_in * M_PI) * 360. + std::abs(fl_distance_m) / (2. * svl_r_out * M_PI) * 360.) / 2.;
-            //     svl_dis = sqrt(2. * powf(svl_r, 2.) * (1 - cos(svl_deg * M_PI / 180.)));
-            //     // ROS_ERROR("svl_deg : %f\n", svl_deg);
-            //     // ROS_ERROR("svl_dis : %f\n", svl_dis);
-            //     if(fr_distance_m >= 0){
-            //         pose_x = -svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //         pose_y = -svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //         ori_z  = svl_deg;
-            //     }
-            //     else{
-            //         pose_x = svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //         pose_y = svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //         ori_z  = -svl_deg;
-            //     }
-            // }
-
-            // else if(abs(fr_direction_deg) <= 45 && abs(fl_direction_deg) >= 45){
-            //     if(fl_direction_deg > -45){
-            //         fl_direction_deg += 45.;
-            //         fr_direction_deg += 135.;
-            //     }
-            //     else{
-
-            // ROS_INFO("distance_m = %.4f, %.4f, %.4f, %.4f",fr_distance_m, fl_distance_m, br_distance_m, bl_distance_m);
-            // ROS_INFO("\n\t(odom)pose_x = %.4f, pose_y = %.4f, yaw = %.4f\n",pose_x, pose_y, yaw*180./M_PI);
-            // ROS_INFO("\n\tbase_center = %.2f, %.2f\n\tpose_x = %.2f, pose_y = %.2f, yaw = %.2f",base_center.x, base_center.y, pose_x, pose_y, yaw*180./M_PI);
-            //         fl_direction_deg += 225.;
-            //         fr_direction_deg += 135.;
-            //     }
-
-            //     svl_r_in  = d / sin((fl_direction_deg - 90.) * M_PI / 180.);
-            //     svl_r_out = d / sin((fr_direction_deg - 90.) * M_PI / 180.);
-            //     svl_r     = (svl_r_in + svl_r_out) / 2.;
-            //     svl_deg   = (std::abs(fl_distance_m) / (2. * svl_r_in * M_PI) * 360. + std::abs(fr_distance_m) / (2. * svl_r_out * M_PI) * 360.) / 2.;
-            //     svl_dis   = sqrt(2. * powf(svl_r, 2.) * (1. - cos(svl_deg * M_PI / 180.)));
-
-            //     if(90 <= fl_direction_deg && fl_direction_deg < 135){
-            //         if(fl_distance_m <= 0){
-            //             pose_x = svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = svl_deg;
-            //         }
-            //         else{
-            //             pose_x = -svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = -svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = -svl_deg;
-            //         }
-            //     }
-            //     else if(135 <= fl_direction_deg && fl_direction_deg <= 180){
-            //         if(fl_distance_m >= 0){
-            //             pose_x = svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = svl_deg;
-            //         }
-            //         else{
-            //             pose_x = -svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = -svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = -svl_deg;
-            //         }
-            //     }
-            //     else ROS_ERROR("Calculation ERROR : Swivel motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
-            // }
-            // else if(abs(fr_direction_deg) >= 45 && abs(fl_direction_deg) <= 45){
-            //     if(fr_direction_deg < 45){
-            //         fr_direction_deg = 45.  - fr_direction_deg;
-            //         fl_direction_deg = 135. - fl_direction_deg;
-            //     }
-            //     else{
-            //         fr_direction_deg = 225. - fr_direction_deg;
-            //         fl_direction_deg = 135. - fl_direction_deg;
-            //     }
-
-            //     svl_r_in  = d / sin((fr_direction_deg - 90.) * M_PI / 180.);
-            //     svl_r_out = d / sin((fl_direction_deg - 90.) * M_PI / 180.);
-            //     svl_r     = (svl_r_in + svl_r_out) / 2.;
-            //     svl_deg   = (std::abs(fr_distance_m) / (2. * svl_r_in * M_PI) * 360. + std::abs(fl_distance_m) / (2. * svl_r_out * M_PI) * 360.) / 2.;
-            //     svl_dis   = sqrt(2. * powf(svl_r, 2.) * (1. - cos(svl_deg * M_PI / 180.)));
-            //     if(90 <= fr_direction_deg && fr_direction_deg < 135){
-            //         if(fr_distance_m >= 0){
-            //             pose_x = svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = -svl_deg;
-            //         }
-            //         else{
-            //             pose_x = -svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = -svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = svl_deg;
-            //         }
-            //     }
-            //     else if(135 <= fr_direction_deg && fr_direction_deg <= 180){
-            //         if(fr_distance_m >= 0){
-            //             pose_x = -svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = -svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = svl_deg;
-            //         }
-            //         else{
-            //             pose_x = svl_dis * sin((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             pose_y = svl_dis * cos((180. - svl_deg) / 2. * M_PI / 180. - prev_yaw);
-            //             ori_z  = -svl_deg;
-            //         }
-            //     }
-            //     else ROS_ERROR("Calculation ERROR : Swivel motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
-            // }
-            // else{
-            //         ROS_ERROR("Odometry ERROR : Swivel motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
-            //         pose_x = 0.; pose_y = 0.; ori_z = 0.;
-            //         *result_odom = prev_odom;
-            //         return true;
-            // }
-            // // debug
-            // if (std::isnan(pose_x) || std::isnan(pose_y) || std::isnan(ori_z)) {
-            //     ROS_ERROR("------ Odom calculation : Nan error !! : Swivel motion ------\nx = %.3f,\ty = %.3f,\tyaw = %.3f,\t", pose_x, pose_y, ori_z );
-            //     *result_odom = prev_odom;
-            //     return true;
-            // }
-            // if (std::isinf(pose_x) || std::isinf(pose_y) || std::isinf(ori_z)) {
-            //     ROS_ERROR("------ Odom calculation : Inf error !! : Swivel motion ------\nx = %.3f,\ty = %.3f,\tyaw = %.3f,\t", pose_x, pose_y, ori_z );
-            //     *result_odom = prev_odom;
-            //     return true;
-            // }
-
-            // // Add the amount of movement to the odometry
-            // calculation_odom.pose.pose.position.x = prev_odom.pose.pose.position.x + pose_x;
-            // calculation_odom.pose.pose.position.y = prev_odom.pose.pose.position.y + pose_y;
-            // calculation_odom.pose.pose.position.z = 0.;
-            // svl_orientation_rad = prev_yaw + (ori_z * (M_PI / 180.)); // rad = deg * (M_PI / 180.)
-
-            // // debug
-            // if (std::isnan(calculation_odom.pose.pose.position.x) || std::isnan(calculation_odom.pose.pose.position.y) || std::isnan(svl_orientation_rad)) {
-            //     ROS_ERROR("------ Odom calculation : Nan error !! : Swivel motion(calculation_odom) ------\nx = %.3f,\ty = %.3f,\tyaw = %.3f,\t", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, svl_orientation_rad );
-            //     *result_odom = prev_odom;
-            //     return true;
-            // }
-            // if (std::isinf(calculation_odom.pose.pose.position.x) || std::isinf(calculation_odom.pose.pose.position.y) || std::isinf(svl_orientation_rad)) {
-            //     ROS_ERROR("------ Odom calculation : Inf error !! : Swivel motion(calculation_odom) ------\nx = %.3f,\ty = %.3f,\tyaw = %.3f,\t", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, svl_orientation_rad );
-            //     *result_odom = prev_odom;
-            //     return true;
-            // }
-            // // Change quaternion (calculation_odom)
-            // tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., svl_orientation_rad);
-            // quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
-
-            // // debug
-            // if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) {
-            //     ROS_ERROR("------ Odom calculation : Nan error !! : Swivel motion(orientation) ------\nx = %.3f,\ty = %.3f,\tz = %.3f,\tw = %.3f", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, calculation_odom.pose.pose.orientation.z, calculation_odom.pose.pose.orientation.w );
-            //     *result_odom = prev_odom;
-            //     return true;
-            // }
-            // if (std::isinf(calculation_odom.pose.pose.orientation.x) || std::isinf(calculation_odom.pose.pose.orientation.y) || std::isinf(calculation_odom.pose.pose.orientation.z) || std::isinf(calculation_odom.pose.pose.orientation.w)) {
-            //     ROS_ERROR("------ Odom calculation : Inf error !! : Swivel motion(orientation) ------\nx = %.3f,\ty = %.3f,\tz = %.3f,\tw = %.3f", calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, calculation_odom.pose.pose.orientation.z, calculation_odom.pose.pose.orientation.w );
-            //     *result_odom = prev_odom;
-            //     return true;
-            // }
-            // *result_odom = calculation_odom;
             return true;
         }
 
