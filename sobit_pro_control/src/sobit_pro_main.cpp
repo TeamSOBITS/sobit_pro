@@ -101,10 +101,10 @@ void SobitProMain::shut_down_sound(){
 // Control wheel
 void SobitProMain::control_wheel(){
     // Set the initial position of the wheel
-    wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_R);
-    wheel_fl_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_L);
-    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_L);
-    wheel_bl_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_L);
+    wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
+    wheel_fl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
+    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
+    wheel_bl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
 
     // Set the initial Odometry
     prev_odom.pose.pose.orientation.w = 1;
@@ -173,16 +173,16 @@ void SobitProMain::control_wheel(){
         //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;
 
         // Set the present position of the wheel
-        wheel_fr_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_R);
-        wheel_fl_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_L);
-        wheel_br_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_R);
-        wheel_bl_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_L);
+        wheel_fr_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
+        wheel_fl_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
+        wheel_br_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_R);
+        wheel_bl_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
 
         // Odometry calculation
         sobit_pro_odometry.odom(sobit_pro_motor_driver.feedbackSteer(STEER_F_R), sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
                                 sobit_pro_motor_driver.feedbackSteer(STEER_B_R), sobit_pro_motor_driver.feedbackSteer(STEER_B_L),
-                                sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_F_L),
-                                sobit_pro_motor_driver.feedbackWheelVel(STEER_B_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_B_L),
+                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_F_L),
+                                // sobit_pro_motor_driver.feedbackWheelVel(STEER_B_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_B_L),
                                 wheel_fr_curt_position, wheel_fl_curt_position,
                                 wheel_br_curt_position, wheel_bl_curt_position,
                                 wheel_fr_init_position, wheel_fl_init_position,
