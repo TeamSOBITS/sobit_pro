@@ -20,7 +20,7 @@ for ((i = 0; i < ${#ros_packages[@]}; i++)) {
 }
 
 # オープンソースのROSパッケージのgit clone
-git clone https://github.com/ros/executive_smach.git
+git clone -b noetic-devel https://github.com/ros/executive_smach.git
 
 cd 
 
