@@ -108,6 +108,12 @@ void SobitProMain::control_wheel(){
 
     // Set the initial Odometry
     prev_odom.pose.pose.orientation.w = 1;
+    prev_odom.header.stamp = ros::Time::now();
+    prev_odom.header.frame_id = "odom";
+    prev_odom.child_frame_id = "base_footprint";
+    result_odom.header.stamp = ros::Time::now();
+    result_odom.header.frame_id = "odom";
+    result_odom.child_frame_id = "base_footprint";
 
     ros::Rate rate(50);
     ros::AsyncSpinner spinner(1);
