@@ -206,6 +206,7 @@ void SobitProMain::control_wheel(){
         // Update
         prev_odom = result_odom;
         prev_time = ros::Time::now();
+        result_odom.header.stamp = ros::Time::now();
 
         // Publish Odometry
         sobit_pro_odometry.pose_broadcaster(result_odom);
