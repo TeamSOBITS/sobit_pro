@@ -2,8 +2,7 @@
 
 cd $(pwd)/..
 
-# git cloneしたいTeamSOBITSのROSパッケージを記述
-# "azure_kinect_ros", "sobit_navigation_stack", "pytorch_yolo", "placeable_position_estimator"
+# git cloneしたいTeamSOBITSのROSパッケージを以下に記述
 ros_packages=(
     "sobit_common" \
     "text_to_speech" \
