@@ -1,9 +1,0 @@
-<launch>
-
-  <!-- SOBIT PRO Wheel Control -->
-  <node name="sobit_pro_control" pkg="sobit_pro_control" type="sobit_pro_control" output="screen"/>
-  
-    <!-- Probability of main sound -->
-    <param name="sound_param" value="95"/>
-
-</launch>
