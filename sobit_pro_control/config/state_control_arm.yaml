@@ -1,0 +1,23 @@
+hardware:
+  publish_rate: 10
+
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 10
+
+arm_trajectory_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+    - arm_shoulder_1_tilt_joint
+    - arm_shoulder_2_tilt_joint
+    - arm_elbow_upper_1_tilt_joint
+    - arm_elbow_upper_2_tilt_joint
+    - arm_elbow_lower_tilt_joint
+    - arm_elbow_lower_pan_joint
+    - arm_wrist_tilt_joint
+    - hand_joint
+  constraints:
+    stopped_velocity_tolerance: 0.5
+    goal_time: 0.05
+  allow_partial_joints_goal: true
+  
