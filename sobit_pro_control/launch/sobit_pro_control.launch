@@ -1,15 +1,97 @@
 <launch>
+    <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
+    <arg name="enable_mb"           default="true"/>
+    <arg name="enable_arm"          default="true"/>
+    <arg name="enable_head"         default="true"/>
 
-  <!--arm and head control-->
-  <include file="$(find sobit_pro_control)/launch/arm_head_control.launch"/>
+    <arg name="urdf_file"           default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro.urdf.xacro'" />
+    <arg name="urdf_file_arm_head"  default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro_arm_head.urdf.xacro'" />
+    <arg name="urdf_file_arm_mb"    default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro_arm_mb.urdf.xacro'" />
+    <arg name="urdf_file_head_mb"   default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro_head_mb.urdf.xacro'" />
+    <arg name="urdf_file_mb"        default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro_mb.urdf.xacro'" />
+    <arg name="urdf_file_arm"       default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro_arm.urdf.xacro'" />
+    <arg name="urdf_file_head"      default="$(find xacro)/xacro '$(find sobit_pro_description)/robots/sobit_pro_head.urdf.xacro'" />
 
-  <!--wheel control-->
-  <include file="$(find sobit_pro_control)/launch/wheel_control.launch"/>
+
+    <!-- Load Poses -->
+    <rosparam command="load" file="$(find sobit_pro_library)/config/sobit_pro_pose.yaml"/>
+
+
+    <!-- Load URDF based on configuration -->
+    <!-- Normal -->
+    <group if="$(eval arg('enable_mb') and arg('enable_arm') and arg('enable_head') )">
+        <param name="robot_description" command="$(arg urdf_file)"/>
+    </group>
+    <!-- Only MB -->
+    <group if="$(eval arg('enable_mb') and not(arg('enable_arm')) and not(arg('enable_head')))">
+        <param name="robot_description" command="$(arg urdf_file_mb)"/>
+    </group>
+    <!-- Only ARM -->
+    <group if="$(eval not(arg('enable_mb')) and arg('enable_arm') and not(arg('enable_head')))">
+        <param name="robot_description" command="$(arg urdf_file_arm)"/>
+    </group>
+    <!-- Only HEAD -->
+    <group if="$(eval not(arg('enable_mb')) and not(arg('enable_arm')) and arg('enable_head'))">
+        <param name="robot_description" command="$(arg urdf_file_head)"/>
+    </group>
+    
+    <!-- ARM+HEAD -->
+    <group if="$(eval not(arg('enable_mb')) and arg('enable_arm') and arg('enable_head'))">
+        <param name="robot_description" command="$(arg urdf_file_arm_head)"/>
+    </group>
+    <!-- ARM+MB -->
+    <group if="$(eval arg('enable_mb') and arg('enable_arm') and not(arg('enable_head')))">
+        <param name="robot_description" command="$(arg urdf_file_arm_mb)"/>
+    </group>
+    <!-- HEAD+MB -->
+    <group if="$(eval arg('enable_mb') and not(arg('enable_arm')) and arg('enable_head'))">
+        <param name="robot_description" command="$(arg urdf_file_head_mb)"/>
+    </group>
+
+
+    <!-- Load joint controller configurations from YAML file to parameter server -->
+    <!-- <rosparam file="$(find sobit_pro_control)/config/position_control.yaml"           command="load"/> -->
+    <!-- <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel.yaml"    command="load"/> -->
+    <rosparam file="$(find sobit_pro_control)/config/joint_limit.yaml"                command="load"/>
+
+    <!-- Load the controllers -->
+    <!-- <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="arm_trajectory_controller head_trajectory_controller joint_state_controller"/> -->
+    <node name="controller_spawner"       pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller"/>
+
+    <group if="$(eval arg('enable_arm') and arg('enable_head'))">
+        <node name="sobit_pro_arm_head_control" pkg="sobit_common_library" type="dynamixel_servo_control" output="screen"/>
+        <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_arm_head.yaml"    command="load"/>
+    </group>
+
+    <group if="$(eval arg('enable_arm'))">
+        <group if="$(eval not(arg('enable_head')))">
+            <node name="sobit_pro_arm_head_control" pkg="sobit_common_library" type="dynamixel_servo_control" output="screen"/>
+            <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_arm.yaml"    command="load"/>
+        </group>
+
+        <rosparam file="$(find sobit_pro_control)/config/state_control_arm.yaml"          command="load"/>
+        <node name="controller_arm"         pkg="controller_manager" type="spawner" respawn="false" output="screen" args="arm_trajectory_controller"/>
+    </group>
+    
+    <group if="$(eval arg('enable_head'))">
+        <group if="$(eval not(arg('enable_arm')))">
+            <node name="sobit_pro_arm_head_control" pkg="sobit_common_library" type="dynamixel_servo_control" output="screen"/>
+            <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_head.yaml"    command="load"/>
+        </group>
+
+        <rosparam file="$(find sobit_pro_control)/config/state_control_head.yaml"         command="load"/>
+        <node name="controller_head"        pkg="controller_manager" type="spawner" respawn="false" output="screen" args="head_trajectory_controller"/>
+    </group>
+
+    <group if="$(eval arg('enable_mb'))">
+        <node name="controller_wheel"        pkg="sobit_pro_control" type="sobit_pro_control" output="screen"/>
+    </group>
+
+
+    <!-- Convert joint states to TF transforms -->
+    <node name="robot_state_publisher"    pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
 
     <!-- Probability of main sound -->
-    <param name="sound_param" value="95"/>
-
-  <!--use library-->
-  <rosparam command="load" file="$(find sobit_pro_library)/config/sobit_pro_pose.yaml"/>
+    <!-- <param name="sound_param" value="95"/> -->
 
 </launch>
