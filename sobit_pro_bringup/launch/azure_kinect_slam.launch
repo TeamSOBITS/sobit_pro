@@ -4,7 +4,7 @@ Licensed under the MIT License.
 -->
 
 <launch>
-  <arg name="tf_prefix"          default="head_" />                <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
+  <arg name="tf_prefix"          default="head_camera_" />                <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
 
   <param name="robot_description"
       command="xacro $(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro tf_prefix:=$(arg tf_prefix)" />
