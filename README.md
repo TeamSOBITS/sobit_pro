@@ -86,7 +86,7 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
 | ROS | Noetic Ninjemys |
 | Python | 3.0~ |
 
-> [!INFO]
+> [!NOTE]
 > `Ubuntu`や`ROS`のインストール方法に関しては，[SOBIT Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)に参照してください．
 
 ### インストール方法
@@ -500,7 +500,7 @@ Don't forget to give the project a star! Thanks again!
 <!-- LICENSE -->
 <!-- ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License. See `LICENSE.txt` for more NOTErmation.
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p> -->
 
