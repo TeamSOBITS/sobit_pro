@@ -19,10 +19,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   
-  <depend>sobit_pro_bringup</depend>
-  <depend>sobit_pro_control</depend>
-  <depend>sobit_pro_description</depend>
-  <depend>sobit_pro_library</depend>
+  <exec_depend>sobit_pro_bringup</exec_depend>
+  <exec_depend>sobit_pro_control</exec_depend>
+  <exec_depend>sobit_pro_description</exec_depend>
+  <exec_depend>sobit_pro_library</exec_depend>
   
   <export><metapackage/></export>
 
