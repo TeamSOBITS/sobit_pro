@@ -405,7 +405,7 @@ bool SobitProJointController::graspDecision() {
     }
 }
 
-void SobitProJointController::callbackCurrentStateArray( const sobit_common_msg::current_state_array msg ) {
+void SobitProJointController::callbackCurrentStateArray( const sobits_msgs::current_state_array msg ) {
     ros::spinOnce();
 
     for ( const auto current_state : msg.current_state_array ) {
