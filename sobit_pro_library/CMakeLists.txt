@@ -10,7 +10,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  sobit_common_msg
+  sobits_msgs
   trajectory_msgs
   geometry_msgs
   nav_msgs
@@ -28,7 +28,7 @@ catkin_package(
   roscpp
   rospy
   std_msgs
-  sobit_common_msg
+  sobits_msgs
   trajectory_msgs
   geometry_msgs
   nav_msgs
