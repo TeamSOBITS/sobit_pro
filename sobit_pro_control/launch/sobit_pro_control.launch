@@ -59,13 +59,13 @@
     <node name="controller_spawner"       pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller"/>
 
     <group if="$(eval arg('enable_arm') and arg('enable_head'))">
-        <node name="sobit_pro_arm_head_control" pkg="sobit_common_library" type="dynamixel_servo_control" output="screen"/>
+        <node name="sobit_pro_arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
         <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_arm_head.yaml"    command="load"/>
     </group>
 
     <group if="$(eval arg('enable_arm'))">
         <group if="$(eval not(arg('enable_head')))">
-            <node name="sobit_pro_arm_head_control" pkg="sobit_common_library" type="dynamixel_servo_control" output="screen"/>
+            <node name="sobit_pro_arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
             <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_arm.yaml"    command="load"/>
         </group>
 
@@ -75,7 +75,7 @@
     
     <group if="$(eval arg('enable_head'))">
         <group if="$(eval not(arg('enable_arm')))">
-            <node name="sobit_pro_arm_head_control" pkg="sobit_common_library" type="dynamixel_servo_control" output="screen"/>
+            <node name="sobit_pro_arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
             <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_head.yaml"    command="load"/>
         </group>
 
