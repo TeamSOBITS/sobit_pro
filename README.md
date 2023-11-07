@@ -216,7 +216,7 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
         const double sec = 5.0          # 動作時間 (s)
     );
     ```
->[!NOTE]
+> [!NOTE]
 > 既存のポーズは[sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml)に確認でいます．ポーズの作成方法については[ポーズの設定方法](#ポーズの設定方法)をご参照ください．
 
 1.  `moveJoint()` : 指定されたジョイントを任意の角度も動かします．
@@ -228,7 +228,7 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
         bool is_sleep = true            # 回転後に待機するかどうか
     );
     ```
->[!NOTE]
+> [!NOTE]
 > `ジョイント名`は[ジョイント名](#ジョイント名)をご確認ください．
  
 1.  `moveArm()` : アームの関節を任意の角度に動かします．
