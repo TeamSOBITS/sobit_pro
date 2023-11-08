@@ -1,12 +1,18 @@
 #ifndef SOBIT_PRO_MAIN_H_
 #define SOBIT_PRO_MAIN_H_
 
+// #include <math.h>
+// #include <cmath>
+// #include <stdlib.h>
+#include <cstdlib>
+#include <iostream>
+#include <random>
+// #include <bits/stdc++.h>
+
 #include <ros/ros.h>
-#include <math.h>
-#include <stdlib.h>
-#include <bits/stdc++.h>
-#include <sensor_msgs/JointState.h>
+#include <ros/package.h>
 #include <nav_msgs/Odometry.h>
+#include <sensor_msgs/JointState.h>
 #include <std_msgs/Bool.h>
 
 #define VEL_UNIT             0.229
@@ -15,7 +21,7 @@ class SobitProMain{
     private:
         int motion;
         
-        void callback(const geometry_msgs::Twist);
+        void callback(const geometry_msgs::Twist vel_twist);
         ros::NodeHandle nh;
         ros::NodeHandle pnh;
         ros::Subscriber sub_velocity     = nh.subscribe("/mobile_base/commands/velocity", 1, &SobitProMain::callback, this);
@@ -54,8 +60,8 @@ class SobitProMain{
         std_msgs::Bool wheels_error;
 
     public:
-        void start_up_sound();
-        void shut_down_sound();
+        bool start_up_sound();
+        bool shut_down_sound();
         void control_wheel();
 
 };
