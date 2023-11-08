@@ -67,6 +67,8 @@
   <exec_depend>dynamixel_sdk</exec_depend>
   <exec_depend>tf</exec_depend>
 
+  <depend>roslib</depend>
+
 
   <!-- The export tag contains other, unspecified, tags -->
   <export>

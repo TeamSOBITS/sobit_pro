@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0.2)
+cmake_minimum_required(VERSION 3.10.2)
 project(sobit_pro_control)
 
 ## Compile as C++14, supported in ROS Noetic and newer
@@ -13,9 +13,10 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
   dynamixel_sdk
   tf
+  roslib
 )
 
-catkin_package()
+catkin_package(INCLUDE_DIRS include CATKIN_DEPENDS roscpp std_msgs roslib)
 
 include_directories(
   include
