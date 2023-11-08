@@ -57,45 +57,51 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
 }
 
 // Start up sound
-void SobitProMain::start_up_sound(){
+bool SobitProMain::start_up_sound(){
+    // Generate a random number
     std::random_device rnd;
-    std::mt19937 mt(rnd()); 
-    std::uniform_real_distribution<> rand10(1, 100);
-    int rand_sound  = rand10(mt);
-    int sound_param = 95;
-    int system_ret  = -1;
+    std::mt19937 gen(rnd());
+    std::uniform_int_distribution<int> distribution(1, 100);
+    int rand_sound = distribution(gen);
+    
+    int sound_param = ros::param::param<int>("sound_param", sound_param, 95);
+    // pnh.getParam("sound_param", sound_param);
+    std::string sound = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
+    std::string pack_path = ros::package::getPath("sobit_pro_control");
+    std::string sound_path = pack_path + "/mp3/" + sound + ".mp3";
 
-    pnh.getParam("sound_param", sound_param);
+    bool is_sound  = false;
 
-    std::cout << "\nsound_param :" << sound_param << std::endl;
+    std::cout << std::endl;
+    std::cout << "sound_param: " << sound_param << std::endl;
+    std::cout << "Start Up: " << sound << ".mp3" << std::endl;
 
-    if(rand_sound <= sound_param){
-        std::cout << "\nStart Up: Regular Sound" << std::endl;
-        system_ret = system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/start_up.mp3");
-        ros::Duration(2.).sleep();
-    }
-    else{
-        std::cout << "\nStart Up: Soka Univ. Song" << std::endl;
-        system_ret = system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/soka_univ_gakuseika.mp3");
-        ros::Duration(2.).sleep();
-    }
+    is_sound = std::system(("mpg321 "+ sound_path).c_str());
+    ros::Duration(2.).sleep();
 
-    if(system_ret == -1) ROS_ERROR("There was an error reproducing the start up sound.");
+    if(!is_sound) ROS_ERROR("There was an error reproducing the start up sound.");
 
-    return;
+
+    return is_sound;
 }
 
 // Shut down sound
-void SobitProMain::shut_down_sound(){
-    int system_ret = -1;
+bool SobitProMain::shut_down_sound(){
+    bool is_sound  = false;
+    std::string pack_path = ros::package::getPath("sobit_pro_control");
+    std::string sound_path = pack_path + "/mp3/" + "shut_down.mp3";
+    // int system_ret = -1;
 
-    std::cout << "\nShut Down" << std::endl;
-    system_ret = system("mpg321 ~/catkin_ws/src/sobit_pro/sobit_pro_control/mp3/shut_down.mp3");
+    std::cout << std::endl;
+    std::cout << "Shutdown Sound" << std::endl;
+
+    is_sound = std::system(("mpg321 "+ sound_path).c_str());
     ros::Duration(2.).sleep();
 
-    if(system_ret == -1) ROS_ERROR("There was an error reproducing the start up sound.");
+    if(!is_sound) ROS_ERROR("There was an error reproducing the shutdown sound.");
     
-    return;
+
+    return is_sound;
 }
 
 // Control wheel
@@ -224,11 +230,14 @@ void SobitProMain::control_wheel(){
     spinner.stop();
 }
 
-// main
+// Bring Up SOBIT PRO main function
 int main(int argc, char **argv){
     ros::init(argc, argv, "sobit_pro_control");
+    ros::NodeHandle nh;
+    ros::NodeHandle pnh("~");
 
-    // Create SobitProMain instance
+
+    // Initialize SobitProMain class
     SobitProMain sobit_pro_main;
 
     // Start up motor
