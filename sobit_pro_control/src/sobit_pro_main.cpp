@@ -109,7 +109,7 @@ void SobitProMain::control_wheel(){
     // Set the initial position of the wheel
     wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
     wheel_fl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
-    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
+    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_R);
     wheel_bl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
 
     // Set the initial Odometry
