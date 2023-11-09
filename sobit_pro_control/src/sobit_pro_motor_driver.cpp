@@ -11,33 +11,29 @@ SobitProMotorDriver::~SobitProMotorDriver(){
     closeDynamixel();
 }
 
-bool SobitProMotorDriver::init(void){
+bool SobitProMotorDriver::init(){
     portHandler_   = dynamixel::PortHandler::getPortHandler(DEVICENAME);
     packetHandler_ = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
 
     // Open port
-    if (portHandler_->openPort()){
-        std::cout << "Succeeded to open the port!" << std::endl;
-    }
+    if( portHandler_->openPort() ) std::cout << "Succeeded to open the port!" << std::endl;
     else{
         std::cout << "Failed to open the port!" << std::endl;
         return false;
     }
 
     // Set port baudrate
-    if (portHandler_->setBaudRate(baudrate_)){
-        std::cout << "Succeeded to change the baudrate!" << std::endl;
-    }
+    if( portHandler_->setBaudRate(baudrate_) ) std::cout << "Succeeded to change the baudrate!" << std::endl;
     else{
         std::cout << "Failed to change the baudrate!" << std::endl;
         return false;
     }
 
     // Enable Dynamixel Torque
-    setTorque(STEER_F_R, true); setTorque(STEER_F_L, true); setTorque(STEER_B_R, true); setTorque(STEER_B_L, true);
+    setTorque(STEER_F_L, TORQUE_ENABLE); setTorque(STEER_F_R, TORQUE_ENABLE); setTorque(STEER_B_L, TORQUE_ENABLE); setTorque(STEER_B_R, TORQUE_ENABLE);
+    setTorque(WHEEL_F_L, TORQUE_ENABLE); setTorque(WHEEL_F_R, TORQUE_ENABLE); setTorque(WHEEL_B_L, TORQUE_ENABLE); setTorque(WHEEL_B_R, TORQUE_ENABLE);
 
-    setTorque(WHEEL_F_R, true); setTorque(WHEEL_F_L, true); setTorque(WHEEL_B_R, true); setTorque(WHEEL_B_L, true);
-
+    // Initialize GroupSyncWrite and GroupSyncRead instance
     groupSyncWritePosition_ = new dynamixel::GroupSyncWrite(portHandler_, packetHandler_, ADDR_X_GOAL_POSITION, LEN_X_GOAL_POSITION);
     groupSyncWriteVelocity_ = new dynamixel::GroupSyncWrite(portHandler_, packetHandler_, ADDR_X_GOAL_VELOCITY, LEN_X_GOAL_VELOCITY);
     groupSyncReadPosition_ = new dynamixel::GroupSyncRead(portHandler_, packetHandler_, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
@@ -46,30 +42,29 @@ bool SobitProMotorDriver::init(void){
     return true;
 }
 
-bool SobitProMotorDriver::setTorque(uint8_t id, bool onoff){
+bool SobitProMotorDriver::setTorque(uint8_t id, uint8_t is_enable){
     uint8_t dxl_error = 0;
     int dxl_comm_result = COMM_TX_FAIL;
 
-    dxl_comm_result = packetHandler_->write1ByteTxRx(portHandler_, id, ADDR_X_TORQUE_ENABLE, onoff, &dxl_error);
-    if(dxl_comm_result != COMM_SUCCESS){
-        packetHandler_->getTxRxResult(dxl_comm_result);
-    }
-    else if(dxl_error != 0){
-        packetHandler_->getRxPacketError(dxl_error);
-    }
+    dxl_comm_result = packetHandler_->write1ByteTxRx(portHandler_, id, uint16_t(ADDR_X_TORQUE_ENABLE), is_enable, &dxl_error);
+
+    // Get the description of communication result
+    if( dxl_comm_result != COMM_SUCCESS ) packetHandler_->getTxRxResult(dxl_comm_result);
+    // Get the description of hardware error
+    else if( dxl_error ) packetHandler_->getRxPacketError(dxl_error);
+    // Torque enabled/disabled
     else{
-        if(onoff == true) std::cout << "Dynamixel ID:" << id << "has been successfully connected!" << std::endl;
-        if(onoff == false) std::cout << "Dynamixel ID:" << id << "has been successfully disconnected!" << std::endl;
+        if(is_enable) std::cout << "Dynamixel ID:" << id << "has been successfully connected!" << std::endl;
+        else          std::cout << "Dynamixel ID:" << id << "has been successfully disconnected!" << std::endl;
     }
-  
+
     return dxl_comm_result;
 }
 
 void SobitProMotorDriver::closeDynamixel(void){
     // Disable Dynamixel Torque
-    setTorque(WHEEL_F_R, false); setTorque(WHEEL_F_L, false); setTorque(WHEEL_B_R, false); setTorque(WHEEL_B_L, false);
-
-    setTorque(STEER_F_R, false); setTorque(STEER_F_L, false); setTorque(STEER_B_R, false); setTorque(STEER_B_L, false);
+    setTorque(WHEEL_F_L, TORQUE_DISABLE); setTorque(WHEEL_F_R, TORQUE_DISABLE); setTorque(WHEEL_B_L, TORQUE_DISABLE); setTorque(WHEEL_B_R, TORQUE_DISABLE);
+    setTorque(STEER_F_L, TORQUE_DISABLE); setTorque(STEER_F_R, TORQUE_DISABLE); setTorque(STEER_B_L, TORQUE_DISABLE); setTorque(STEER_B_R, TORQUE_DISABLE);
 
     // Close port
     portHandler_->closePort();
