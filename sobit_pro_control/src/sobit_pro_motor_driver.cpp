@@ -22,7 +22,7 @@ bool SobitProMotorDriver::init(){
         return false;
     }
 
-    // Set port baudrate
+    // Set baudrate
     if( portHandler_->setBaudRate(baudrate_) ) std::cout << "Succeeded to change the baudrate!" << std::endl;
     else{
         std::cout << "Failed to change the baudrate!" << std::endl;
@@ -36,8 +36,9 @@ bool SobitProMotorDriver::init(){
     // Initialize GroupSyncWrite and GroupSyncRead instance
     groupSyncWritePosition_ = new dynamixel::GroupSyncWrite(portHandler_, packetHandler_, ADDR_X_GOAL_POSITION, LEN_X_GOAL_POSITION);
     groupSyncWriteVelocity_ = new dynamixel::GroupSyncWrite(portHandler_, packetHandler_, ADDR_X_GOAL_VELOCITY, LEN_X_GOAL_VELOCITY);
-    groupSyncReadPosition_ = new dynamixel::GroupSyncRead(portHandler_, packetHandler_, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
-    groupSyncReadVelocity_ = new dynamixel::GroupSyncRead(portHandler_, packetHandler_, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
+    groupSyncReadPosition_  = new dynamixel::GroupSyncRead(portHandler_, packetHandler_, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
+    groupSyncReadVelocity_  = new dynamixel::GroupSyncRead(portHandler_, packetHandler_, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
+
 
     return true;
 }
@@ -46,17 +47,14 @@ bool SobitProMotorDriver::setTorque(uint8_t id, uint8_t is_enable){
     uint8_t dxl_error = 0;
     int dxl_comm_result = COMM_TX_FAIL;
 
-    dxl_comm_result = packetHandler_->write1ByteTxRx(portHandler_, id, uint16_t(ADDR_X_TORQUE_ENABLE), is_enable, &dxl_error);
-
-    // Get the description of communication result
+    dxl_comm_result = packetHandler_->write1ByteTxRx(portHandler_, id, ADDR_X_TORQUE_ENABLE, is_enable, &dxl_error);
     if( dxl_comm_result != COMM_SUCCESS ) packetHandler_->getTxRxResult(dxl_comm_result);
-    // Get the description of hardware error
     else if( dxl_error ) packetHandler_->getRxPacketError(dxl_error);
-    // Torque enabled/disabled
     else{
-        if(is_enable) std::cout << "Dynamixel ID:" << id << "has been successfully connected!" << std::endl;
-        else          std::cout << "Dynamixel ID:" << id << "has been successfully disconnected!" << std::endl;
+        if( is_enable ) std::cout << "Dynamixel ID:" << id << "has been successfully connected!" << std::endl;
+        else            std::cout << "Dynamixel ID:" << id << "has been successfully disconnected!" << std::endl;
     }
+
 
     return dxl_comm_result;
 }
@@ -74,32 +72,32 @@ bool SobitProMotorDriver::controlSteers(int32_t *value){
     bool dxl_addparam_result_;
     int8_t dxl_comm_result_;
 
+
     // Add parameter storage for Dynamixel goal position
-    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_R, (uint8_t*)&value[0]);
-    if (dxl_addparam_result_ != true)
-        return false;
-
     dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_L, (uint8_t*)&value[1]);
-    if (dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_R, (uint8_t*)&value[2]);
-    if (dxl_addparam_result_ != true)
-        return false;
+    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_R, (uint8_t*)&value[0]);
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_L, (uint8_t*)&value[3]);
-    if (dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
-    // Syncwrite goal position value
+    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_R, (uint8_t*)&value[2]);
+    if( !dxl_addparam_result_ ) return false;
+
+
+    // SyncWrite goal position value
     dxl_comm_result_ = groupSyncWritePosition_->txPacket();
-    if (dxl_comm_result_ != COMM_SUCCESS){
+    if( dxl_comm_result_ != COMM_SUCCESS ){
         packetHandler_->getTxRxResult(dxl_comm_result_);
         return false;
     }
 
     // Clear syncwrite parameter storage
     groupSyncWritePosition_->clearParam();
+
+
     return true;
 }
 
@@ -108,187 +106,158 @@ bool SobitProMotorDriver::controlWheels(int32_t *value){
     int8_t dxl_comm_result_;
 
     // Add parameter storage for Dynamixel goal velocity
-    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_R, (uint8_t*)&value[0]);
-    if (dxl_addparam_result_ != true)
-        return false;
-
     dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_L, (uint8_t*)&value[1]);
-    if (dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_R, (uint8_t*)&value[2]);
-    if (dxl_addparam_result_ != true)
-        return false;
+    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_R, (uint8_t*)&value[0]);
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_L, (uint8_t*)&value[3]);
-    if (dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
+
+    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_R, (uint8_t*)&value[2]);
+    if( !dxl_addparam_result_ ) return false;
 
     // Syncwrite goal velocity value
     dxl_comm_result_ = groupSyncWriteVelocity_->txPacket();
-    if (dxl_comm_result_ != COMM_SUCCESS){
+    if( dxl_comm_result_ != COMM_SUCCESS ){
         packetHandler_->getTxRxResult(dxl_comm_result_);
         return false;
     }
 
     // Clear syncwrite parameter storage
     groupSyncWriteVelocity_->clearParam();
+
+
     return true;
 }
 
-bool SobitProMotorDriver::addPresentParam(void){
+bool SobitProMotorDriver::addPresentParam(){
     // Add parameter storage for Dynamixel present position
     bool dxl_addparam_result_ = false;
 
-    dxl_addparam_result_ = groupSyncReadPosition_->addParam(STEER_F_R);
-    if(dxl_addparam_result_ != true)
-        return false;
-
     dxl_addparam_result_ = groupSyncReadPosition_->addParam(STEER_F_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncReadPosition_->addParam(STEER_B_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    dxl_addparam_result_ = groupSyncReadPosition_->addParam(STEER_F_R);
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadPosition_->addParam(STEER_B_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncReadPosition_->addParam(WHEEL_F_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    dxl_addparam_result_ = groupSyncReadPosition_->addParam(STEER_B_R);
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadPosition_->addParam(WHEEL_F_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncReadPosition_->addParam(WHEEL_B_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    dxl_addparam_result_ = groupSyncReadPosition_->addParam(WHEEL_F_R);
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadPosition_->addParam(WHEEL_B_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
+
+    dxl_addparam_result_ = groupSyncReadPosition_->addParam(WHEEL_B_R);
+    if( !dxl_addparam_result_ ) return false;
 
 /*
     // Add parameter storage for Dynamixel present velocity
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(STEER_F_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(STEER_F_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(STEER_B_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(STEER_B_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(WHEEL_F_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(WHEEL_F_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(WHEEL_B_R);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 
     dxl_addparam_result_ = groupSyncReadVelocity_->addParam(WHEEL_B_L);
-    if(dxl_addparam_result_ != true)
-        return false;
+    if( !dxl_addparam_result_ ) return false;
 */
 
     return true;
 }
 
-int32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
-    uint8_t dxl_error_ = 0;
     bool dxl_getdata_result_ = false;
-    int32_t steer_present_angle_;
+    uint8_t dxl_error_ = 0;
+    uint32_t steer_present_angle_;
 
-    // Syncread present position
+    // SyncRead current position
     dxl_comm_result_ = groupSyncReadPosition_->txRxPacket();
-    if (dxl_comm_result_ != COMM_SUCCESS){
-        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
-    }
-    else if (groupSyncReadPosition_->getError(id, &dxl_error_)){
-        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
-    }
+    if( dxl_comm_result_ != COMM_SUCCESS ) std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
+    else if( groupSyncReadPosition_->getError(id, &dxl_error_) ) std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
 
-    // Check if groupsyncread data of Dynamixel is available
+    // Check if GroupSyncRead data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadPosition_->isAvailable(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
-    if (dxl_getdata_result_ != true){
-        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
-
+    if( !dxl_getdata_result_ ){
+        std::cout << "[ID:" << id << "] groupSyncRead getData() failed" << std::endl;
         return 0;
     }
 
-    // Get Dynamixel present position value
+    // Get Dynamixel current position value
     steer_present_angle_ = groupSyncReadPosition_->getData(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
+
 
     return steer_present_angle_;
 }
 
-int32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
-    uint8_t dxl_error_ = 0;
     bool dxl_getdata_result_ = false;
-    int32_t wheel_present_angle_;
+    uint8_t dxl_error_ = 0;
+    uint32_t wheel_present_angle_;
 
-    // Syncread present position
+    // SyncRead current position
     dxl_comm_result_ = groupSyncReadPosition_->txRxPacket();
-    if (dxl_comm_result_ != COMM_SUCCESS){
-        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
-    }
-    else if (groupSyncReadPosition_->getError(id, &dxl_error_)){
-        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
-    }
+    if( dxl_comm_result_ != COMM_SUCCESS ) std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
+    else if( groupSyncReadPosition_->getError(id, &dxl_error_) ) std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
 
-    // Check if groupsyncread data of Dynamixel is available
+    // Check if GroupSyncRead data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadPosition_->isAvailable(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
-    if (dxl_getdata_result_ != true){
-        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
-
+    if( !dxl_getdata_result_ ){
+        std::cout << "[ID:" << id << "] groupSyncRead getData() failed" << std::endl;
         return 0;
     }
 
     // Get Dynamixel present position value
     wheel_present_angle_ = groupSyncReadPosition_->getData(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
 
+
     return wheel_present_angle_;
 }
 
 /*
-int32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
-    uint8_t dxl_error_ = 0;
     bool dxl_getdata_result_ = false;
-    int32_t steer_present_vel_;
+    uint8_t dxl_error_ = 0;
+    uint32_t steer_present_vel_;
 
     // Syncread present velocity
     dxl_comm_result_ = groupSyncReadVelocity_->txRxPacket();
-    if (dxl_comm_result_ != COMM_SUCCESS){
-        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
-    }
-    else if (groupSyncReadVelocity_->getError(id, &dxl_error_)){
-        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
-    }
+
+    if( dxl_comm_result_ != COMM_SUCCESS ) std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
+    else if( groupSyncReadVelocity_->getError(id, &dxl_error_) ) std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
 
     // Check if groupsyncread data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadVelocity_->isAvailable(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
-    if (dxl_getdata_result_ != true){
-        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
 
+    if( !dxl_getdata_result_ ){
+        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
         return 0;
     }
 
@@ -300,26 +269,23 @@ int32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
 */
 
 /*
-int32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
-    uint8_t dxl_error_ = 0;
     bool dxl_getdata_result_ = false;
-    int32_t wheel_present_vel_;
+    uint8_t dxl_error_ = 0;
+    uint32_t wheel_present_vel_;
 
     // Syncread present velocity
     dxl_comm_result_ = groupSyncReadVelocity_->txRxPacket();
-    if (dxl_comm_result_ != COMM_SUCCESS){
-        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
-    }
-    else if (groupSyncReadVelocity_->getError(id, &dxl_error_)){
-        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
-    }
+
+    if( dxl_comm_result_ != COMM_SUCCESS ) std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
+    else if( groupSyncReadVelocity_->getError(id, &dxl_error_) ) std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
 
     // Check if groupsyncread data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadVelocity_->isAvailable(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
-    if (dxl_getdata_result_ != true){
-        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
 
+    if( !dxl_getdata_result_ ){
+        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
         return 0;
     }
 
