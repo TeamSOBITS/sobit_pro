@@ -15,7 +15,7 @@
 
 #define WHEEL_DIAMETER       0.144                  // Wheel Circumference
 #define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER    // Wheel Length
-#define BODY_DIAMETER        0.448051               // Robot Diameter
+#define BODY_DIAMETER        0.44775010             // Robot Diameter
 #define TRACK                0.31660713             // Distance between left and right wheels
 
 class SobitProOdometry{
