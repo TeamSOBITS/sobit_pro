@@ -46,15 +46,15 @@ class SobitProMotorDriver{
         SobitProMotorDriver();
         ~SobitProMotorDriver();
         bool init();
-        void closeDynamixel();
         bool setTorque(uint8_t id, uint8_t is_enable);
-        bool setProfileAcceleration(uint8_t id, uint32_t value);
-        bool setProfileVelocity(uint8_t id, uint32_t value);
+        void closeDynamixel();
+        // bool setProfileAcceleration(uint8_t id, uint32_t value);
+        // bool setProfileVelocity(uint8_t id, uint32_t value);
         bool controlSteers(int32_t *value);
         bool controlWheels(int32_t *value);
         bool addPresentParam();
-        int32_t feedbackSteer(uint8_t);
-        int32_t feedbackWheel(uint8_t);
+        uint32_t feedbackSteer(uint8_t);
+        uint32_t feedbackWheel(uint8_t);
 
     private:
         uint32_t baudrate_;
