@@ -107,19 +107,45 @@ bool SobitProMain::shut_down_sound(){
 // Control wheel
 void SobitProMain::control_wheel(){
     // Set the initial position of the wheel
-    wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
     wheel_fl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
-    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_R);
+    wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
     wheel_bl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
+    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_R);
 
-    // Set the initial Odometry
-    prev_odom.pose.pose.orientation.w = 1;
-    prev_odom.header.stamp = ros::Time::now();
+    // Initilize Odometry
+    prev_odom.header.stamp    = ros::Time::now();
     prev_odom.header.frame_id = "odom";
-    prev_odom.child_frame_id = "base_footprint";
-    result_odom.header.stamp = ros::Time::now();
+    prev_odom.child_frame_id  = "base_footprint";
+    prev_odom.pose.pose.position.x = 0.0;
+    prev_odom.pose.pose.position.y = 0.0;
+    prev_odom.pose.pose.position.z = 0.0;
+    prev_odom.pose.pose.orientation.x = 0.0;
+    prev_odom.pose.pose.orientation.y = 0.0;
+    prev_odom.pose.pose.orientation.z = 0.0;
+    prev_odom.pose.pose.orientation.w = 1.0;
+    prev_odom.twist.twist.linear.x = 0.0;
+    prev_odom.twist.twist.linear.y = 0.0;
+    prev_odom.twist.twist.linear.z = 0.0;
+    prev_odom.twist.twist.angular.x = 0.0;
+    prev_odom.twist.twist.angular.y = 0.0;
+    prev_odom.twist.twist.angular.z = 0.0;
+
+    result_odom.header.stamp    = ros::Time::now();
     result_odom.header.frame_id = "odom";
-    result_odom.child_frame_id = "base_footprint";
+    result_odom.child_frame_id  = "base_footprint";
+    result_odom.pose.pose.position.x = 0.0;
+    result_odom.pose.pose.position.y = 0.0;
+    result_odom.pose.pose.position.z = 0.0;
+    result_odom.pose.pose.orientation.x = 0.0;
+    result_odom.pose.pose.orientation.y = 0.0;
+    result_odom.pose.pose.orientation.z = 0.0;
+    result_odom.pose.pose.orientation.w = 1.0;
+    result_odom.twist.twist.linear.x = 0.0;
+    result_odom.twist.twist.linear.y = 0.0;
+    result_odom.twist.twist.linear.z = 0.0;
+    result_odom.twist.twist.angular.x = 0.0;
+    result_odom.twist.twist.angular.y = 0.0;
+    result_odom.twist.twist.angular.z = 0.0;
 
     ros::Rate rate(50);
     ros::AsyncSpinner spinner(1);
