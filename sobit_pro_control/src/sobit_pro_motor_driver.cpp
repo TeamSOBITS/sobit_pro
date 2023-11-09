@@ -215,7 +215,7 @@ uint32_t SobitProMotorDriver::feedbackSteerPos(uint8_t id){
     return steer_curr_pos_;
 }
 
-uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackWheelPos(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
     bool dxl_getdata_result_ = false;
     uint8_t dxl_error_ = 0;
