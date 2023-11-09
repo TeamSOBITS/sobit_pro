@@ -59,7 +59,7 @@ bool SobitProMotorDriver::setTorque(uint8_t id, uint8_t is_enable){
     return dxl_comm_result;
 }
 
-void SobitProMotorDriver::closeDynamixel(void){
+void SobitProMotorDriver::closeDynamixel(){
     // Disable Dynamixel Torque
     setTorque(WHEEL_F_L, TORQUE_DISABLE); setTorque(WHEEL_F_R, TORQUE_DISABLE); setTorque(WHEEL_B_L, TORQUE_DISABLE); setTorque(WHEEL_B_R, TORQUE_DISABLE);
     setTorque(STEER_F_L, TORQUE_DISABLE); setTorque(STEER_F_R, TORQUE_DISABLE); setTorque(STEER_B_L, TORQUE_DISABLE); setTorque(STEER_B_R, TORQUE_DISABLE);

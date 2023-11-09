@@ -42,45 +42,30 @@
 #define DXL_MOVING_STATUS_THRESHOLD     20             // Dynamixel moving status threshold  // old param : 10
 
 class SobitProMotorDriver{
+    private:
+        uint32_t baudrate_;
+        float  protocol_version_;
+
+        dynamixel::PortHandler *portHandler_;
+        dynamixel::PacketHandler *packetHandler_;
+
+        dynamixel::GroupSyncWrite *groupSyncWritePosition_;
+        dynamixel::GroupSyncWrite *groupSyncWriteVelocity_;
+        
+        dynamixel::GroupSyncRead *groupSyncReadPosition_;
+        dynamixel::GroupSyncRead *groupSyncReadVelocity_;
+
     public:
         SobitProMotorDriver();
         ~SobitProMotorDriver();
         bool init();
         bool setTorque(uint8_t id, uint8_t is_enable);
         void closeDynamixel();
-        // bool setProfileAcceleration(uint8_t id, uint32_t value);
-        // bool setProfileVelocity(uint8_t id, uint32_t value);
         bool controlSteers(int32_t *value);
         bool controlWheels(int32_t *value);
         bool addPresentParam();
         uint32_t feedbackSteerPos(uint8_t);
         uint32_t feedbackWheelPos(uint8_t);
-
-    private:
-        uint32_t baudrate_;
-        float  protocol_version_;
-
-        // Initialize PortHandler instance
-        // Set the port path
-        // Get methods and members of PortHandlerLinux
-        dynamixel::PortHandler *portHandler_;
-
-        // Initialize PacketHandler instance
-        // Set the protocol version
-        // Get methods and members of Protocol2PacketHandler
-        dynamixel::PacketHandler *packetHandler_;
-
-        // Initialize GroupSyncWrite instance
-        dynamixel::GroupSyncWrite *groupSyncWritePosition_;
-
-        // Initialize GroupSyncWrite instance
-        dynamixel::GroupSyncWrite *groupSyncWriteVelocity_;
-
-        // Initialize GroupSyncRead instance
-        dynamixel::GroupSyncRead *groupSyncReadPosition_;
-
-        // Initialize GroupSyncRead instance
-        dynamixel::GroupSyncRead *groupSyncReadVelocity_;
 };
 
 #endif // SOBIT_PRO_MOTOR_DRIVER_H_
