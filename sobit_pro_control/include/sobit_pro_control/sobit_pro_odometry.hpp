@@ -1,7 +1,8 @@
 #ifndef SOBIT_PRO_ODOMETRY_H_
 #define SOBIT_PRO_ODOMETRY_H_
 
-#include <math.h>
+#include <cmath>
+
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
 #include <tf/transform_broadcaster.h>
@@ -12,15 +13,15 @@
 #define ROTATIONAL_MOTION    2
 #define SWIVEL_MOTION        3 // Motion can be added
 
-#define WHEEL_LENGTH         0.452389 // Wheel Circumference
-#define BODY_DIAMETER        0.448051 // Robot Diameter
-
-#define TRACK                0.32060706 // Distance between left and right wheels
+#define WHEEL_DIAMETER       0.144                  // Wheel Circumference
+#define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER    // Wheel Length
+#define BODY_DIAMETER        0.448051               // Robot Diameter
+#define TRACK                0.31660713             // Distance between left and right wheels
 
 class SobitProOdometry{
     private:
         enum MODE{
-        NONE = 0,
+        NONE = -1,
         STOP_MOTION_MODE, TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE, SWIVEL_MOTION_MODE // Motion can be added
         } motion_mode;
 
