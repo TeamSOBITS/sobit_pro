@@ -190,11 +190,11 @@ bool SobitProMotorDriver::addPresentParam(){
     return true;
 }
 
-uint32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackSteerPos(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
     bool dxl_getdata_result_ = false;
     uint8_t dxl_error_ = 0;
-    uint32_t steer_present_angle_;
+    uint32_t steer_curr_pos_;
 
     // SyncRead current position
     dxl_comm_result_ = groupSyncReadPosition_->txRxPacket();
@@ -209,17 +209,17 @@ uint32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
     }
 
     // Get Dynamixel current position value
-    steer_present_angle_ = groupSyncReadPosition_->getData(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
+    steer_curr_pos_ = groupSyncReadPosition_->getData(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
 
 
-    return steer_present_angle_;
+    return steer_curr_pos_;
 }
 
 uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
     bool dxl_getdata_result_ = false;
     uint8_t dxl_error_ = 0;
-    uint32_t wheel_present_angle_;
+    uint32_t wheel_curr_pos;
 
     // SyncRead current position
     dxl_comm_result_ = groupSyncReadPosition_->txRxPacket();
@@ -234,18 +234,18 @@ uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     }
 
     // Get Dynamixel present position value
-    wheel_present_angle_ = groupSyncReadPosition_->getData(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
+    wheel_curr_pos = groupSyncReadPosition_->getData(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
 
 
-    return wheel_present_angle_;
+    return wheel_curr_pos;
 }
 
 /*
-uint32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackSteerVel(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
     bool dxl_getdata_result_ = false;
     uint8_t dxl_error_ = 0;
-    uint32_t steer_present_vel_;
+    uint32_t steer_curr_vel_;
 
     // Syncread present velocity
     dxl_comm_result_ = groupSyncReadVelocity_->txRxPacket();
@@ -262,18 +262,18 @@ uint32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
     }
 
     // Get Dynamixel present velocity value
-    steer_present_vel_ = groupSyncReadVelocity_->getData(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
+    steer_curr_vel_ = groupSyncReadVelocity_->getData(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
 
-    return steer_present_vel_;
+    return steer_curr_vel_;
 }
 */
 
 /*
-uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
+uint32_t SobitProMotorDriver::feedbackWheelVel(uint8_t id){
     int dxl_comm_result_ = COMM_TX_FAIL;
     bool dxl_getdata_result_ = false;
     uint8_t dxl_error_ = 0;
-    uint32_t wheel_present_vel_;
+    uint32_t wheel_curr_vel_;
 
     // Syncread present velocity
     dxl_comm_result_ = groupSyncReadVelocity_->txRxPacket();
@@ -290,8 +290,8 @@ uint32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     }
 
     // Get Dynamixel present velocity value
-    wheel_present_vel_ = groupSyncReadVelocity_->getData(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
+    wheel_curr_vel_ = groupSyncReadVelocity_->getData(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
 
-    return wheel_present_vel_;
+    return wheel_curr_vel_;
 }
 */

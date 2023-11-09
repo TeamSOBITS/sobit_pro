@@ -107,10 +107,10 @@ bool SobitProMain::shut_down_sound(){
 // Control wheel
 void SobitProMain::control_wheel(){
     // Set the initial position of the wheel
-    wheel_fl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
-    wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
-    wheel_bl_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
-    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_R);
+    wheel_fl_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_L);
+    wheel_fr_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_R);
+    wheel_bl_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_L);
+    wheel_br_init_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_R);
 
     // Initilize Odometry
     prev_odom.header.stamp    = ros::Time::now();
@@ -158,10 +158,10 @@ void SobitProMain::control_wheel(){
         set_steer_position = sobit_pro_control.setSteerPos();
 
         // Get current steer position value
-        steer_fl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_L);
-        steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-        steer_bl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_L);
-        steer_br_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_R);
+        steer_fl_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_F_L);
+        steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R);
+        steer_bl_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L);
+        steer_br_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R);
 
         // When steer changing angle is large(>90[deg]), stop the wheels to avoid hardware damage
         if( (1024 <= std::abs(set_steer_position[0] - steer_fr_curt_position)) || (1024 <= std::abs(set_steer_position[1] - steer_fl_curt_position)) || (1024 <= std::abs(set_steer_position[2] - steer_br_curt_position)) || (1024 <= std::abs(set_steer_position[3] - steer_bl_curt_position)) ){
@@ -176,10 +176,10 @@ void SobitProMain::control_wheel(){
 
         // Update current steer position and wait until steer goal is reached
         do{
-            steer_fl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_L);
-            steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
-            steer_bl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_L);
-            steer_br_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_R);
+            steer_fl_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_F_L);
+            steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R);
+            steer_bl_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L);
+            steer_br_curt_position = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R);
         }while( (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_position[0] - steer_fr_curt_position)) && (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_position[1] - steer_fl_curt_position)) && (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_position[2] - steer_fl_curt_position)) && (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_position[3] - steer_fl_curt_position)) );
 
         // Set goal wheel velocity value
@@ -220,18 +220,18 @@ void SobitProMain::control_wheel(){
         // pub_joint_states.publish(sensor_msgs::JointState(joint_state));
 
         // Update the current wheel position
-        wheel_fl_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_L);
-        wheel_fr_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_F_R);
-        wheel_bl_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_L);
-        wheel_br_curt_position = sobit_pro_motor_driver.feedbackWheel(WHEEL_B_R);
+        wheel_fl_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_L);
+        wheel_fr_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_F_R);
+        wheel_bl_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_L);
+        wheel_br_curt_position = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_R);
 
         // Calculate Odometry based on motion mode (check!)
         sobit_pro_odometry.odom(steer_fr_curt_position, steer_fl_curt_position,
                                 steer_br_curt_position, steer_bl_curt_position,
-                                // sobit_pro_motor_driver.feedbackSteer(STEER_F_R), sobit_pro_motor_driver.feedbackSteer(STEER_F_L),
-                                // sobit_pro_motor_driver.feedbackSteer(STEER_B_R), sobit_pro_motor_driver.feedbackSteer(STEER_B_L),
-                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_F_L),
-                                // sobit_pro_motor_driver.feedbackWheelVel(STEER_B_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_B_L),
+                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R), sobit_pro_motor_driver.feedbackSteerPos(STEER_F_L),
+                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R), sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L),
+                                // sobit_pro_motor_driver.feedbackWheelPosVel(WHEEL_F_R), sobit_pro_motor_driver.feedbackWheelPosVel(STEER_F_L),
+                                // sobit_pro_motor_driver.feedbackWheelPosVel(STEER_B_R), sobit_pro_motor_driver.feedbackWheelPosVel(STEER_B_L),
                                 wheel_fr_curt_position, wheel_fl_curt_position,
                                 wheel_br_curt_position, wheel_bl_curt_position,
                                 wheel_fr_init_position, wheel_fl_init_position,
