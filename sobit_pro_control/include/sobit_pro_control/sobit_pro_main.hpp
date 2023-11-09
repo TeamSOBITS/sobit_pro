@@ -2,11 +2,11 @@
 #define SOBIT_PRO_MAIN_H_
 
 // #include <math.h>
-// #include <cmath>
 // #include <stdlib.h>
 #include <cstdlib>
 #include <iostream>
 #include <random>
+#include <cmath>
 // #include <bits/stdc++.h>
 
 #include <ros/ros.h>
@@ -45,7 +45,7 @@ class SobitProMain{
         int32_t steer_br_curt_position;
         int32_t steer_bl_curt_position;
 
-        int32_t *set_steer_angle;
+        int32_t *set_steer_position;
         int32_t *set_wheel_vel;
 
         int32_t prev_motion = -1; // Non 0, 1, 2 3 motion
