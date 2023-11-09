@@ -51,8 +51,8 @@ bool SobitProMotorDriver::setTorque(uint8_t id, uint8_t is_enable){
     if( dxl_comm_result != COMM_SUCCESS ) packetHandler_->getTxRxResult(dxl_comm_result);
     else if( dxl_error ) packetHandler_->getRxPacketError(dxl_error);
     else{
-        if( is_enable ) std::cout << "Dynamixel ID:" << id << "has been successfully connected!" << std::endl;
-        else            std::cout << "Dynamixel ID:" << id << "has been successfully disconnected!" << std::endl;
+        if( is_enable ) std::cout << "Dynamixel ID:" << id << " has been successfully connected!" << std::endl;
+        else            std::cout << "Dynamixel ID:" << id << " has been successfully disconnected!" << std::endl;
     }
 
 
@@ -68,22 +68,43 @@ void SobitProMotorDriver::closeDynamixel(){
     portHandler_->closePort();
 }
 
-bool SobitProMotorDriver::controlSteers(int32_t *value){
+bool SobitProMotorDriver::controlSteers(int64_t *value){
     bool dxl_addparam_result_;
     int8_t dxl_comm_result_;
+    uint8_t value_data_byte[4] = {0, };
 
 
     // Add parameter storage for Dynamixel goal position
-    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_L, (uint8_t*)&value[1]);
+    // dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_L, (uint8_t*)&value[1]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[1]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[1]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[1]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[1]));
+    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_L, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_R, (uint8_t*)&value[0]);
+    // dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_R, (uint8_t*)&value[0]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[0]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[0]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[0]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[0]));
+    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_F_R, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_L, (uint8_t*)&value[3]);
+    // dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_L, (uint8_t*)&value[3]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[3]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[3]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[3]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[3]));
+    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_L, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_R, (uint8_t*)&value[2]);
+    // dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_R, (uint8_t*)&value[2]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[2]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[2]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[2]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[2]));
+    dxl_addparam_result_ = groupSyncWritePosition_->addParam(STEER_B_R, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
 
@@ -101,21 +122,42 @@ bool SobitProMotorDriver::controlSteers(int32_t *value){
     return true;
 }
 
-bool SobitProMotorDriver::controlWheels(int32_t *value){
+bool SobitProMotorDriver::controlWheels(int64_t *value){
     bool dxl_addparam_result_;
     int8_t dxl_comm_result_;
+    uint8_t value_data_byte[4] = {0, };
 
     // Add parameter storage for Dynamixel goal velocity
-    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_L, (uint8_t*)&value[1]);
+    // dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_L, (uint8_t*)&value[1]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[1]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[1]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[1]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[1]));
+    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_L, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_R, (uint8_t*)&value[0]);
+    // dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_R, (uint8_t*)&value[0]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[0]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[0]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[0]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[0]));
+    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_F_R, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_L, (uint8_t*)&value[3]);
+    // dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_L, (uint8_t*)&value[3]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[3]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[3]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[3]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[3]));
+    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_L, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
-    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_R, (uint8_t*)&value[2]);
+    // dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_R, (uint8_t*)&value[2]);
+    value_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(value[2]));
+    value_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(value[2]));
+    value_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(value[2]));
+    value_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(value[2]));
+    dxl_addparam_result_ = groupSyncWriteVelocity_->addParam(WHEEL_B_R, (uint8_t*)&value_data_byte);
     if( !dxl_addparam_result_ ) return false;
 
     // Syncwrite goal velocity value
