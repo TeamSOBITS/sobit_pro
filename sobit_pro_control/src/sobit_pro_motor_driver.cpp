@@ -17,19 +17,19 @@ bool SobitProMotorDriver::init(void){
 
     // Open port
     if (portHandler_->openPort()){
-        printf("Succeeded to open the port!\n");
+        std::cout << "Succeeded to open the port!" << std::endl;
     }
     else{
-        printf("Failed to open the port!\n");
+        std::cout << "Failed to open the port!" << std::endl;
         return false;
     }
 
     // Set port baudrate
     if (portHandler_->setBaudRate(baudrate_)){
-        printf("Succeeded to change the baudrate!\n");
+        std::cout << "Succeeded to change the baudrate!" << std::endl;
     }
     else{
-        printf("Failed to change the baudrate!\n");
+        std::cout << "Failed to change the baudrate!" << std::endl;
         return false;
     }
 
@@ -58,8 +58,8 @@ bool SobitProMotorDriver::setTorque(uint8_t id, bool onoff){
         packetHandler_->getRxPacketError(dxl_error);
     }
     else{
-        if(onoff == true) printf("Dynamixel ID:%03d has been successfully connected!\n", id);
-        if(onoff == false) printf("Dynamixel ID:%03d has been successfully disconnected!\n", id);
+        if(onoff == true) std::cout << "Dynamixel ID:" << id << "has been successfully connected!" << std::endl;
+        if(onoff == false) std::cout << "Dynamixel ID:" << id << "has been successfully disconnected!" << std::endl;
     }
   
     return dxl_comm_result;
@@ -224,16 +224,17 @@ int32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
     // Syncread present position
     dxl_comm_result_ = groupSyncReadPosition_->txRxPacket();
     if (dxl_comm_result_ != COMM_SUCCESS){
-        printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result_));
+        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
     }
     else if (groupSyncReadPosition_->getError(id, &dxl_error_)){
-        printf("[ID:%03d] %s\n", id, packetHandler_->getRxPacketError(dxl_error_));
+        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
     }
 
     // Check if groupsyncread data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadPosition_->isAvailable(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
     if (dxl_getdata_result_ != true){
-        printf("[ID:%03d] groupSyncRead getdata failed\n", id);
+        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
+
         return 0;
     }
 
@@ -252,16 +253,17 @@ int32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     // Syncread present position
     dxl_comm_result_ = groupSyncReadPosition_->txRxPacket();
     if (dxl_comm_result_ != COMM_SUCCESS){
-        printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result_));
+        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
     }
     else if (groupSyncReadPosition_->getError(id, &dxl_error_)){
-        printf("[ID:%03d] %s\n", id, packetHandler_->getRxPacketError(dxl_error_));
+        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
     }
 
     // Check if groupsyncread data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadPosition_->isAvailable(id, ADDR_X_PRESENT_POSITION, LEN_X_PRESENT_POSITION);
     if (dxl_getdata_result_ != true){
-        printf("[ID:%03d] groupSyncRead getdata failed\n", id);
+        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
+
         return 0;
     }
 
@@ -281,16 +283,17 @@ int32_t SobitProMotorDriver::feedbackSteer(uint8_t id){
     // Syncread present velocity
     dxl_comm_result_ = groupSyncReadVelocity_->txRxPacket();
     if (dxl_comm_result_ != COMM_SUCCESS){
-        printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result_));
+        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
     }
     else if (groupSyncReadVelocity_->getError(id, &dxl_error_)){
-        printf("[ID:%03d] %s\n", id, packetHandler_->getRxPacketError(dxl_error_));
+        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
     }
 
     // Check if groupsyncread data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadVelocity_->isAvailable(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
     if (dxl_getdata_result_ != true){
-        printf("[ID:%03d] groupSyncRead getdata failed\n", id);
+        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
+
         return 0;
     }
 
@@ -311,16 +314,17 @@ int32_t SobitProMotorDriver::feedbackWheel(uint8_t id){
     // Syncread present velocity
     dxl_comm_result_ = groupSyncReadVelocity_->txRxPacket();
     if (dxl_comm_result_ != COMM_SUCCESS){
-        printf("%s\n", packetHandler_->getTxRxResult(dxl_comm_result_));
+        std::cout << packetHandler_->getTxRxResult(dxl_comm_result_) << std::endl;
     }
     else if (groupSyncReadVelocity_->getError(id, &dxl_error_)){
-        printf("[ID:%03d] %s\n", id, packetHandler_->getRxPacketError(dxl_error_));
+        std::cout << "[ID:" << id << "] " << packetHandler_->getRxPacketError(dxl_error_) << std::endl;
     }
 
     // Check if groupsyncread data of Dynamixel is available
     dxl_getdata_result_ = groupSyncReadVelocity_->isAvailable(id, ADDR_X_PRESENT_VELOCITY, LEN_X_PRESENT_VELOCITY);
     if (dxl_getdata_result_ != true){
-        printf("[ID:%03d] groupSyncRead getdata failed\n", id);
+        std::cout << "[ID:" << id << "] groupSyncRead getdata failed" << std::endl;
+
         return 0;
     }
 
