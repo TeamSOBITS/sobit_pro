@@ -61,8 +61,8 @@ class SobitProMotorDriver{
         bool init();
         bool setTorque(uint8_t id, uint8_t is_enable);
         void closeDynamixel();
-        bool controlSteers(int32_t *value);
-        bool controlWheels(int32_t *value);
+        bool controlSteers(int64_t *value);
+        bool controlWheels(int64_t *value);
         bool addPresentParam();
         uint32_t feedbackSteerPos(uint8_t);
         uint32_t feedbackWheelPos(uint8_t);
