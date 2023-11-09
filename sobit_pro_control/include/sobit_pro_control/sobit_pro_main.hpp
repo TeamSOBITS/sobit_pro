@@ -1,13 +1,8 @@
 #ifndef SOBIT_PRO_MAIN_H_
 #define SOBIT_PRO_MAIN_H_
 
-// #include <math.h>
-// #include <stdlib.h>
-#include <cstdlib>
 #include <iostream>
 #include <random>
-#include <cmath>
-// #include <bits/stdc++.h>
 
 #include <ros/ros.h>
 #include <ros/package.h>

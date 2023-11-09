@@ -1,9 +1,8 @@
 #ifndef SOBIT_PRO_MOTOR_DRIVER_H_
 #define SOBIT_PRO_MOTOR_DRIVER_H_
 
-#include <stdio.h> // printf etc.
 #include <iostream>
-#include <dynamixel_sdk/dynamixel_sdk.h> // Uses Dynamixel SDK library
+#include <dynamixel_sdk/dynamixel_sdk.h>
 
 // Control table address (Dynamixel X-series)
 #define ADDR_X_TORQUE_ENABLE            64
