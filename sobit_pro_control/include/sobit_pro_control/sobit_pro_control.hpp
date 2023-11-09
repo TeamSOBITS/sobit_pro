@@ -12,25 +12,21 @@
 #define TRANSLATIONAL_MOTION 1
 #define ROTATIONAL_MOTION    2
 #define SWIVEL_MOTION        3 // Motion can be added
-
-// #define LIMIT_VEL_VALUE      200.
-#define LIMIT_VEL_VALUE      1023.    // DXL Velocity Limit Value
+    
+#define LIMIT_VEL_VALUE      1023.    // DXL Velocity Limit Value (previous 200.)
 #define VEL_UNIT             0.229    // DXL Velocity Unit [rmp]
 #define WHEEL_DIAMETER       0.144    // Wheel Circumference
 #define WHEEL_RADIUS         WHEEL_DIAMETER/2.0
 #define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER // Wheel Length
 
-// #define WHEEL_BASE           0.31660713 // Distance between front and rear wheel
-#define BODY_DIAMETER        0.448051   // Robot Diameter
+#define BODY_DIAMETER        0.44775010 // Robot Diameter (respect to the center of wheels)
 #define TRACK                0.31660713 // Distance between left and right wheels
-// #define WHEEL_STEER_Y_OFFSET 0.0 // Distance between a wheel joint and the associated steering joint
-
 
 
 class SobitProControl{
     private:
-        int32_t steer_angle[4] = {0, };
-        int32_t wheel_vel[4]   = {0, };
+        int64_t steer_angle[4] = {0, };
+        int64_t wheel_vel[4]   = {0, };
 
         enum MODE{
             NONE = -1,
@@ -60,9 +56,9 @@ class SobitProControl{
         }
 
         void setParams(geometry_msgs::Twist vel_twist);
-        int showMode();
-        int32_t *setSteerPos();
-        int32_t *setWheelVel();
+        int getMotionMode();
+        int64_t *setSteerPos();
+        int64_t *setWheelVel();
 };
 
 #endif // SOBIT_PRO_CONTROL_H_
