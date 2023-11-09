@@ -39,8 +39,8 @@ class SobitProMain{
         int32_t steer_br_curt_position;
         int32_t steer_bl_curt_position;
 
-        int32_t *set_steer_position;
-        int32_t *set_wheel_vel;
+        int64_t *set_steer_position;
+        int64_t *set_wheel_vel;
 
         int32_t prev_motion = -1; // Non 0, 1, 2 3 motion
 
