@@ -79,7 +79,7 @@ bool SobitProMain::start_up_sound(){
     is_sound = std::system(("mpg321 "+ sound_path).c_str());
     ros::Duration(2.).sleep();
 
-    if(!is_sound) ROS_ERROR("There was an error reproducing the start up sound.");
+    if(is_sound) ROS_ERROR("There was an error reproducing the start up sound.");
 
 
     return is_sound;
