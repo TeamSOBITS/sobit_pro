@@ -154,14 +154,16 @@ void SobitProMain::control_wheel(){
     prev_time = ros::Time::now();
 
     while(ros::ok()){
-        // Write goal position value
-        set_steer_angle = sobit_pro_control.setSteerAngle();
+        // Update goal steer position value (initial position is 2048) 
+        set_steer_angle = sobit_pro_control.setSteerPos();
 
-        steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
+        // Get current steer position value
         steer_fl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_L);
-        steer_br_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_R);
+        steer_fr_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_F_R);
         steer_bl_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_L);
+        steer_br_curt_position = sobit_pro_motor_driver.feedbackSteer(STEER_B_R);
 
+        // When steer changing angle is large(>90[deg]), stop the wheels to avoid hardware damage
         if( (1024 <= std::abs(set_steer_angle[0] - steer_fr_curt_position)) || (1024 <= std::abs(set_steer_angle[1] - steer_fl_curt_position)) || (1024 <= std::abs(set_steer_angle[2] - steer_br_curt_position)) || (1024 <= std::abs(set_steer_angle[3] - steer_bl_curt_position)) ){
             ROS_INFO("Changing the direction of the wheel");
             set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
@@ -187,15 +189,15 @@ void SobitProMain::control_wheel(){
         joint_state.header.stamp = ros::Time::now();
 
         joint_state.name.resize(8);
-        joint_state.name[0] = "wheel_f_r_steer_joint";
         joint_state.name[1] = "wheel_f_l_steer_joint";
-        joint_state.name[2] = "wheel_b_r_steer_joint";
+        joint_state.name[0] = "wheel_f_r_steer_joint";
         joint_state.name[3] = "wheel_b_l_steer_joint";
+        joint_state.name[2] = "wheel_b_r_steer_joint";
 
-        joint_state.name[4] = "wheel_f_r_drive_joint";
         joint_state.name[5] = "wheel_f_l_drive_joint";
-        joint_state.name[6] = "wheel_b_r_drive_joint";
+        joint_state.name[4] = "wheel_f_r_drive_joint";
         joint_state.name[7] = "wheel_b_l_drive_joint";
+        joint_state.name[6] = "wheel_b_r_drive_joint";
 
         joint_state.position.resize(8);
         joint_state.position[0] = (set_steer_angle[0] - 2048.) * (1.57 / 1024.); // Convert 2048. to 1.57

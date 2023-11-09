@@ -62,7 +62,7 @@ class SobitProControl{
 
         void setParams(geometry_msgs::Twist vel_twist);
         int showMode();
-        int32_t *setSteerAngle();
+        int32_t *setSteerPos();
         int32_t *setWheelVel();
 };
 

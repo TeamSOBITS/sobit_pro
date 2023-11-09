@@ -334,11 +334,11 @@ int SobitProControl::showMode(){
     return int(motion_mode);
 }
 
-int32_t *SobitProControl::setSteerAngle(){
-    steer_angle[0] = int32_t(steer_fr_goal_angle + 2048);
+int32_t *SobitProControl::setSteerPos(){
     steer_angle[1] = int32_t(steer_fl_goal_angle + 2048);
-    steer_angle[2] = int32_t(steer_br_goal_angle + 2048);
+    steer_angle[0] = int32_t(steer_fr_goal_angle + 2048);
     steer_angle[3] = int32_t(steer_bl_goal_angle + 2048);
+    steer_angle[2] = int32_t(steer_br_goal_angle + 2048);
 
     return steer_angle;
 }
