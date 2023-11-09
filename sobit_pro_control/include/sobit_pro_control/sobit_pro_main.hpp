@@ -10,7 +10,6 @@
 #include <sensor_msgs/JointState.h>
 #include <std_msgs/Bool.h>
 
-#define VEL_UNIT             0.229
 
 class SobitProMain{
     private:
