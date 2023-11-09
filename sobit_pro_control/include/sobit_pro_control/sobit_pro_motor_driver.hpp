@@ -53,8 +53,8 @@ class SobitProMotorDriver{
         bool controlSteers(int32_t *value);
         bool controlWheels(int32_t *value);
         bool addPresentParam();
-        uint32_t feedbackSteer(uint8_t);
-        uint32_t feedbackWheel(uint8_t);
+        uint32_t feedbackSteerPos(uint8_t);
+        uint32_t feedbackWheelPos(uint8_t);
 
     private:
         uint32_t baudrate_;
