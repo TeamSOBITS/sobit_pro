@@ -168,12 +168,12 @@ void SobitProMain::control_wheel(){
         if( (1024 <= std::abs(set_steer_pos[0] - steer_fr_curt_pos)) || (1024 <= std::abs(set_steer_pos[1] - steer_fl_curt_pos)) || (1024 <= std::abs(set_steer_pos[2] - steer_br_curt_pos)) || (1024 <= std::abs(set_steer_pos[3] - steer_bl_curt_pos)) ){
             ROS_INFO("Changing the direction of the wheel");
             set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
-            sobit_pro_motor_driver.controlWheels(set_wheel_vel);
+            sobit_pro_motor_driver.controlWheelsVel(set_wheel_vel);
             ros::Duration(0.5).sleep();
         }
 
         // Write goal steer position value
-        sobit_pro_motor_driver.controlSteers(set_steer_pos);
+        sobit_pro_motor_driver.controlSteersPos(set_steer_pos);
 
         // Update current steer position and wait until steer goal is reached
         do{
@@ -187,7 +187,7 @@ void SobitProMain::control_wheel(){
         set_wheel_vel = sobit_pro_control.setWheelVel();
 
         // Write goal wheel velocity value
-        sobit_pro_motor_driver.controlWheels(set_wheel_vel);
+        sobit_pro_motor_driver.controlWheelsVel(set_wheel_vel);
 
 
         // Publish JointState
