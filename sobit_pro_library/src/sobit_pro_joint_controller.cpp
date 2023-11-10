@@ -44,21 +44,21 @@ void SobitProJointController::loadPose() {
 
         pose_list_.push_back( pose );
     }
-    
+
     return;
 }
 
-bool SobitProJointController::moveToPose( const std::string& pose_name, const double sec ) {
+bool SobitProJointController::moveToPose(const std::string& pose_name, const double sec, bool is_sleep) {
     bool                is_find = false;
     std::vector<double> joint_val;
-    for ( auto& pose : pose_list_ ) {
+    for( auto& pose : pose_list_ ){
         if ( pose_name != pose.pose_name ) continue;
         is_find   = true;
         joint_val = pose.joint_val;
         break;
     }
-    if ( is_find ) {
-        ROS_INFO( "I found a '%s'", pose_name.c_str() );
+    if( is_find ){
+        ROS_INFO("Pose '%s' was found successfully", pose_name.c_str());
         return moveAllJoint( joint_val[Joint::ARM_SHOULDER_1_TILT_JOINT],
                              joint_val[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],
                              joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT],
@@ -67,9 +67,9 @@ bool SobitProJointController::moveToPose( const std::string& pose_name, const do
                              joint_val[Joint::HAND_JOINT],
                              joint_val[Joint::HEAD_CAMERA_PAN_JOINT],
                              joint_val[Joint::HEAD_CAMERA_TILT_JOINT],
-                             sec );
-    } else {
-        ROS_ERROR( "'%s' doesn't exist.", pose_name.c_str() );
+                             sec, is_sleep);
+    } else{
+        ROS_ERROR("Pose '%s' does not exist.", pose_name.c_str());
         return false;
     }
 }
