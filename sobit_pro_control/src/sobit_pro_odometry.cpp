@@ -1,27 +1,27 @@
 #include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 // Calculate Odometry
-bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_curt_position,
-                            int32_t steer_br_curt_position, int32_t steer_bl_curt_position,
-                            // int32_t wheel_fr_curt_velocity, int32_t wheel_fl_curt_velocity,
-                            // int32_t wheel_br_curt_velocity, int32_t wheel_bl_curt_velocity,
-                            int32_t wheel_fr_curt_position, int32_t wheel_fl_curt_position,
-                            int32_t wheel_br_curt_position, int32_t wheel_bl_curt_position,
-                            int32_t wheel_fr_init_position, int32_t wheel_fl_init_position,
-                            int32_t wheel_br_init_position, int32_t wheel_bl_init_position,
+bool SobitProOdometry::odom(int32_t steer_fr_curt_pos, int32_t steer_fl_curt_pos,
+                            int32_t steer_br_curt_pos, int32_t steer_bl_curt_pos,
+                            // int32_t wheel_fr_curt_vel, int32_t wheel_fl_curt_vel,
+                            // int32_t wheel_br_curt_vel, int32_t wheel_bl_curt_vel,
+                            int32_t wheel_fr_curt_pos, int32_t wheel_fl_curt_pos,
+                            int32_t wheel_br_curt_pos, int32_t wheel_bl_curt_pos,
+                            int32_t wheel_fr_init_pos, int32_t wheel_fl_init_pos,
+                            int32_t wheel_br_init_pos, int32_t wheel_bl_init_pos,
                             int32_t prev_motion,
                             nav_msgs::Odometry prev_odom, nav_msgs::Odometry* result_odom,
                             ros::Time prev_time){
 
-    float fr_distance_m    = distance_calculation(wheel_fr_curt_position - wheel_fr_init_position); // Calculation distance[m]
-    float fl_distance_m    = distance_calculation(wheel_fl_curt_position - wheel_fl_init_position); // Calculation distance[m]
-    float br_distance_m    = distance_calculation(wheel_br_curt_position - wheel_br_init_position); // Calculation distance[m]
-    float bl_distance_m    = distance_calculation(wheel_bl_curt_position - wheel_bl_init_position); // Calculation distance[m]
+    float fr_distance_m    = distance_calculation(wheel_fr_curt_pos - wheel_fr_init_pos); // Calculation distance[m]
+    float fl_distance_m    = distance_calculation(wheel_fl_curt_pos - wheel_fl_init_pos); // Calculation distance[m]
+    float br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
+    float bl_distance_m    = distance_calculation(wheel_bl_curt_pos - wheel_bl_init_pos); // Calculation distance[m]
 
-    float fr_direction_deg = position_calculation(steer_fr_curt_position); // Record present position
-    float fl_direction_deg = position_calculation(steer_fl_curt_position); // Record present position
-    float br_direction_deg = position_calculation(steer_br_curt_position); // Record present position
-    float bl_direction_deg = position_calculation(steer_bl_curt_position); // Record present position
+    float fr_direction_deg = position_calculation(steer_fr_curt_pos); // Record present position
+    float fl_direction_deg = position_calculation(steer_fl_curt_pos); // Record present position
+    float br_direction_deg = position_calculation(steer_br_curt_pos); // Record present position
+    float bl_direction_deg = position_calculation(steer_bl_curt_pos); // Record present position
 
     double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
     float distance_m;
@@ -214,20 +214,20 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
 }
 
 // Distance calculation
-float SobitProOdometry::distance_calculation(float wheel_curt_position){
+float SobitProOdometry::distance_calculation(float wheel_curt_pos){
     float distance_m;
 
-    distance_m = WHEEL_LENGTH * wheel_curt_position / 4096.;
+    distance_m = WHEEL_LENGTH * wheel_curt_pos / 4096.;
 
 
     return distance_m;
 }
 
 // Position calculation
-float SobitProOdometry::position_calculation(float steer_curt_position){
+float SobitProOdometry::position_calculation(float steer_curt_pos){
     float direction_deg;
 
-    direction_deg = (steer_curt_position - 2048.) * 360. / 4096.;
+    direction_deg = (steer_curt_pos - 2048.) * 360. / 4096.;
 
 
     return direction_deg;

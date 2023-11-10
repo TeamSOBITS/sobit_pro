@@ -49,11 +49,11 @@ class SobitProMotorDriver{
         dynamixel::PortHandler *portHandler_;
         dynamixel::PacketHandler *packetHandler_;
 
-        dynamixel::GroupSyncWrite *groupSyncWritePosition_;
-        dynamixel::GroupSyncWrite *groupSyncWriteVelocity_;
+        dynamixel::GroupSyncWrite *groupSyncWritePos_;
+        dynamixel::GroupSyncWrite *groupSyncWriteVel_;
         
-        dynamixel::GroupSyncRead *groupSyncReadPosition_;
-        dynamixel::GroupSyncRead *groupSyncReadVelocity_;
+        dynamixel::GroupSyncRead *groupSyncReadPos_;
+        dynamixel::GroupSyncRead *groupSyncReadVel_;
 
     public:
         SobitProMotorDriver();
