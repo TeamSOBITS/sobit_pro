@@ -1,17 +1,9 @@
 #include <sobit_pro_library/sobit_pro_joint_controller.h>
 #include <sobit_pro_library/sobit_pro_wheel_controller.hpp>
 
-#include <cmath>
+namespace sobit_pro{
 
-using namespace sobit_pro;
-
-const double sobit_pro::SobitProJointController::arm1_link_length = 0.15;
-const double sobit_pro::SobitProJointController::arm2_link_length = 0.15;
-const double sobit_pro::SobitProJointController::arm_elbow_lower_tilt_joint_length = 0.15;
-const double sobit_pro::SobitProJointController::hand_length = 25.0;
-const double sobit_pro::SobitProJointController::sum_arm123_link_length = arm1_link_length + arm2_link_length + arm_elbow_lower_tilt_joint_length;
-
-
+// why both required?
 SobitProJointController::SobitProJointController(const std::string& name) : ROSCommonNode(name), nh_(), pnh_("~") {
     pub_arm_joint_         = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
     pub_head_camera_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
@@ -25,28 +17,34 @@ SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh
 }
 
 void SobitProJointController::loadPose() {
-    XmlRpc::XmlRpcValue pose_val;
-    if ( !nh_.hasParam( "/sobit_pro_pose" ) ) return;
-    nh_.getParam( "/sobit_pro_pose", pose_val );
-    int pose_num = pose_val.size();
+    XmlRpc::XmlRpcValue pose_param;
+
+    if ( !nh_.hasParam("/sobit_pro_pose") ) return;
+    nh_.getParam( "/sobit_pro_pose", pose_param );
+
+    int pose_num = pose_param.size();
     pose_list_.clear();
-    for ( int i = 0; i < pose_num; i++ ) {
+
+    for( int i = 0; i < pose_num; i++ ){
         Pose                pose;
-        std::vector<double> joint_val(10, 0.0);
-        pose.pose_name                           = static_cast<std::string>(pose_val[i]["pose_name"]);
-        joint_val[Joint::ARM_SHOULDER_1_TILT_JOINT]    = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]]);
-        joint_val[Joint::ARM_SHOULDER_2_TILT_JOINT]    = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT] = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT] = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT]   = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]]);
-        joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT]    = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]]);
-        joint_val[Joint::ARM_WRIST_TILT_JOINT]         = static_cast<double>(pose_val[i][joint_names_[Joint::ARM_WRIST_TILT_JOINT]]);
-        joint_val[Joint::HAND_JOINT]                   = static_cast<double>(pose_val[i][joint_names_[Joint::HAND_JOINT]]);
-        joint_val[Joint::HEAD_CAMERA_PAN_JOINT]        = static_cast<double>(pose_val[i][joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]]);
-        joint_val[Joint::HEAD_CAMERA_TILT_JOINT]       = static_cast<double>(pose_val[i][joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]]);
-        pose.joint_val                                 = joint_val;
+        std::vector<double> joint_val(Joint::JOINT_NUM, 0.0);
+
+        pose.pose_name                                 =  static_cast<std::string>(pose_param[i]["pose_name"]);
+        joint_val[Joint::ARM_SHOULDER_1_TILT_JOINT]    =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]]);
+        joint_val[Joint::ARM_SHOULDER_2_TILT_JOINT]    = -static_cast<double>(pose_param[i][joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT] =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT] = -static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT]   =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]]);
+        joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT]    =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]]);
+        joint_val[Joint::ARM_WRIST_TILT_JOINT]         =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_WRIST_TILT_JOINT]]);
+        joint_val[Joint::HAND_JOINT]                   =  static_cast<double>(pose_param[i][joint_names_[Joint::HAND_JOINT]]);
+        joint_val[Joint::HEAD_CAMERA_PAN_JOINT]        =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]]);
+        joint_val[Joint::HEAD_CAMERA_TILT_JOINT]       =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]]);
+        pose.joint_val                                 =  joint_val;
+
         pose_list_.push_back( pose );
     }
+    
     return;
 }
 
@@ -182,10 +180,10 @@ bool SobitProJointController::moveArm( const double arm1, const double arm2, con
 geometry_msgs::Point SobitProJointController::forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm_elbow_lower_tilt_joint_angle ) {
     geometry_msgs::Point res_point;
 
-    res_point.x = arm1_link_length * std::cos(arm1_joint_angle) + arm2_link_length * std::cos(arm1_joint_angle + arm2_joint_angle)
-                  + arm_elbow_lower_tilt_joint_length * std::cos(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
-    res_point.z = arm1_link_length * std::sin(arm1_joint_angle) + arm2_link_length * std::sin(arm1_joint_angle + arm2_joint_angle)
-                  + arm_elbow_lower_tilt_joint_length * std::sin(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.x = ARM_UPPER * std::cos(arm1_joint_angle) + ARM_INNER * std::cos(arm1_joint_angle + arm2_joint_angle)
+                  + ARM_LOWER * std::cos(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.z = ARM_UPPER * std::sin(arm1_joint_angle) + ARM_INNER * std::sin(arm1_joint_angle + arm2_joint_angle)
+                  + ARM_LOWER * std::sin(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
 
     std::cout << "\n=====================================================" << std::endl;
     std::cout << __func__ << std::endl;
@@ -199,7 +197,7 @@ std::vector<std::vector<double>> SobitProJointController::inverseKinematics( dou
                                                                              double arm1_joint_angle ) {
     double diagonal_length = std::sqrt(std::pow(arm2_joint_to_object_x, 2) + std::pow(arm2_joint_to_object_z, 2));
     double cos_arm2_joint
-        = (std::pow(diagonal_length, 2) + std::pow(arm2_link_length, 2) - std::pow(arm_elbow_lower_tilt_joint_length, 2)) / (2.0 * diagonal_length * arm2_link_length);
+        = (std::pow(diagonal_length, 2) + std::pow(ARM_INNER, 2) - std::pow(ARM_LOWER, 2)) / (2.0 * diagonal_length * ARM_INNER);
     double diagonal_angle    = std::atan(arm2_joint_to_object_z / arm2_joint_to_object_x);
 
     if ( cos_arm2_joint > 1.0 ) {
@@ -233,18 +231,18 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     double arm_to_object_y = goal_position_y + shift.y + diff_goal_position_y;
     double arm_to_object_z = goal_position_z + shift.z + diff_goal_position_z;
 
-    if ( (arm_to_object_z < -(sum_arm123_link_length+hand_length)) || (sum_arm123_link_length < arm_to_object_z) ) {
+    if ( (arm_to_object_z < -(ARM_LENTGH+ARM_HAND)) || (ARM_LENTGH < arm_to_object_z) ) {
         std::cout << "Armが届きません。" << std::endl;
         return false;
     }
 
     // 先に、arm1_jointで目標値の3分の1の高さに調整
-    double arm_to_arm2_joint_x = std::sqrt(std::pow(arm1_link_length, 2) - std::pow(arm_to_object_z / 3.0, 2));
+    double arm_to_arm2_joint_x = std::sqrt(std::pow(ARM_UPPER, 2) - std::pow(arm_to_object_z / 3.0, 2));
     double arm1_joint_angle;
     if ( arm_to_object_z < 0 ) {
-        arm1_joint_angle = -std::acos(arm_to_arm2_joint_x / arm1_link_length);
+        arm1_joint_angle = -std::acos(arm_to_arm2_joint_x / ARM_UPPER);
     } else {
-        arm1_joint_angle = std::acos(arm_to_arm2_joint_x / arm1_link_length);
+        arm1_joint_angle = std::acos(arm_to_arm2_joint_x / ARM_UPPER);
     }
 
     double arm2_joint_to_object_x = arm_to_object_x - arm_to_arm2_joint_x;
@@ -263,20 +261,20 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     // arm2_joint_to_object_z を基準に移動量を算出
     // diagonal_lengthを30に固定して計算
     //std::cout << "diagonal_length: " << diagonal_length << std::endl;
-    if ( (arm2_link_length + arm_elbow_lower_tilt_joint_length) < diagonal_length || diagonal_length < arm2_link_length * std::sqrt(2) || arm2_joint_to_object_x <= 0 ) {
+    if ( (ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * std::sqrt(2) || arm2_joint_to_object_x <= 0 ) {
         double x               = std::sqrt(std::pow(0.30, 2) - std::pow(arm2_joint_to_object_z, 2));
         move_wheel_x           = arm2_joint_to_object_x - x;
         arm2_joint_to_object_x = x;
     }
     /*
-    while ((arm2_link_length + arm_elbow_lower_tilt_joint_length) < diagonal_length || diagonal_length < arm2_link_length * std::sqrt(2)) {  // armが届かない場合
+    while ((ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * std::sqrt(2)) {  // armが届かない場合
       if (arm2_joint_to_object_x < 0) { // -の場合は無条件でバック
         arm2_joint_to_object_x += step;
         move_wheel_x -= step;
-      } else if (diagonal_length < arm2_link_length  * std::sqrt(2)) { // +の場合で、目標値が内側で届かない場合は、バック
+      } else if (diagonal_length < ARM_INNER  * std::sqrt(2)) { // +の場合で、目標値が内側で届かない場合は、バック
         arm2_joint_to_object_x += step;
         move_wheel_x -= step;
-      } else if ((arm2_link_length + arm_elbow_lower_tilt_joint_length) < diagonal_length) { // +の場合で、目標値が遠い場合は、直進
+      } else if ((ARM_INNER + ARM_LOWER) < diagonal_length) { // +の場合で、目標値が遠い場合は、直進
         arm2_joint_to_object_x -= step;
         move_wheel_x += step;
       } else {
@@ -312,7 +310,7 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     
     /** 床の物体を把持するための判定 **/
     bool is_reached;
-    if ( arm_to_object_z < -sum_arm123_link_length ) {
+    if ( arm_to_object_z < -ARM_LENTGH ) {
         is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3)-1.57); 
     }
     else {
@@ -422,3 +420,5 @@ void SobitProJointController::callbackCurrentStateArray( const sobits_msgs::curr
         }
     }
 }
+
+}  // namespace sobit_pro
