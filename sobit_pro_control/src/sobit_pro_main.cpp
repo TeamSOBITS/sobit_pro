@@ -11,30 +11,26 @@ SobitProOdometry    sobit_pro_odometry;
 // Twist callback
 void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
     // Translational
-    if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) <= 0.001))
-    {
+    if( ((fabsf(vel_twist.linear.x) > 0.000) || (fabsf(vel_twist.linear.y) > 0.000)) && (fabsf(vel_twist.angular.z) <= 0.001) ){
         // ROS_INFO("Translational motion.");
         motion = TRANSLATIONAL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
     }
     // Rotational
-    else if (((std::abs(vel_twist.linear.x) <= 0.001) && (std::abs(vel_twist.linear.y) <= 0.001)) && (std::abs(vel_twist.angular.z) > 0.000))
-    {
+    else if( ((fabsf(vel_twist.linear.x) <= 0.001) && (fabsf(vel_twist.linear.y) <= 0.001)) && (fabsf(vel_twist.angular.z) > 0.000) ){
         // ROS_INFO("Rotational motion.");
         motion = ROTATIONAL_MOTION;
         wheels_error.data = false;
         pub_wheels_error.publish(wheels_error);
     }
     // Swivel
-    else if (((std::abs(vel_twist.linear.x) > 0.000) || (std::abs(vel_twist.linear.y) > 0.000)) && (std::abs(vel_twist.angular.z) > 0.000))
-    {
-        if(fabs(2.0*(sqrtf(powf(vel_twist.linear.x,2.) + powf(vel_twist.linear.y,2.)))) > fabs(vel_twist.angular.z*TRACK)){
+    else if( ((fabsf(vel_twist.linear.x) > 0.000) || (fabsf(vel_twist.linear.y) > 0.000)) && (fabsf(vel_twist.angular.z) > 0.000) ){
+        if( fabsf(2.0*(sqrtf(powf(vel_twist.linear.x,2.) + powf(vel_twist.linear.y,2.)))) > fabsf(vel_twist.angular.z*TRACK) ){
             // ROS_INFO("Swivel motion.");
             motion = SWIVEL_MOTION;
 
-        }
-        else{
+        }else{
             // ROS_INFO("Swivel motion to Rotational motion.");
             motion = ROTATIONAL_MOTION;
         }
@@ -58,6 +54,8 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
 
 // Start up sound
 bool SobitProMain::start_up_sound(){
+    bool is_sound  = false;
+
     // Generate a random number
     std::random_device rnd;
     std::mt19937 gen(rnd());
@@ -66,21 +64,20 @@ bool SobitProMain::start_up_sound(){
     int sound_param;
     nh.param("sound_param", sound_param, 75);
     
-    std::string sound = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
-    std::string pack_path = ros::package::getPath("sobit_pro_control");
+    std::string sound      = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
+    std::string pack_path  = ros::package::getPath("sobit_pro_control");
     std::string sound_path = pack_path + "/mp3/" + sound + ".mp3";
-
-    bool is_sound  = false;
 
     std::cout << std::endl;
     std::cout << "rand_sound: " << rand_sound << std::endl;
     std::cout << "sound_param: " << sound_param << std::endl;
     std::cout << "Start Up: " << sound << ".mp3" << std::endl;
+    std::cout << std::endl;
 
-    is_sound = std::system(("mpg321 "+ sound_path).c_str());
+    is_sound = std::system(("mpg321 --quiet "+ sound_path).c_str());
     ros::Duration(2.).sleep();
 
-    if(is_sound) ROS_ERROR("There was an error reproducing the start up sound.");
+    if( is_sound ) ROS_ERROR("There was an error reproducing the start up sound.");
 
 
     return is_sound;
@@ -89,17 +86,16 @@ bool SobitProMain::start_up_sound(){
 // Shut down sound
 bool SobitProMain::shut_down_sound(){
     bool is_sound  = false;
-    std::string pack_path = ros::package::getPath("sobit_pro_control");
-    std::string sound_path = pack_path + "/mp3/" + "shut_down.mp3";
-    // int system_ret = -1;
+    std::string package_path = ros::package::getPath("sobit_pro_control");
+    std::string sound_path   = package_path + "/mp3/" + "shut_down.mp3";
 
     std::cout << std::endl;
     std::cout << "Shutdown Sound" << std::endl;
 
-    is_sound = std::system(("mpg321 "+ sound_path).c_str());
+    is_sound = std::system(("mpg321 --quiet "+ sound_path).c_str());
     ros::Duration(2.).sleep();
 
-    if(!is_sound) ROS_ERROR("There was an error reproducing the shutdown sound.");
+    if( is_sound ) ROS_ERROR("There was an error reproducing the shutdown sound.");
     
 
     return is_sound;
@@ -114,45 +110,45 @@ void SobitProMain::control_wheel(){
     wheel_br_init_pos = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_R);
 
     // Initilize Odometry
-    prev_odom.header.stamp    = ros::Time::now();
-    prev_odom.header.frame_id = "odom";
-    prev_odom.child_frame_id  = "base_footprint";
-    prev_odom.pose.pose.position.x = 0.0;
-    prev_odom.pose.pose.position.y = 0.0;
-    prev_odom.pose.pose.position.z = 0.0;
+    prev_odom.header.stamp            = ros::Time::now();
+    prev_odom.header.frame_id         = "odom";
+    prev_odom.child_frame_id          = "base_footprint";
+    prev_odom.pose.pose.position.x    = 0.0;
+    prev_odom.pose.pose.position.y    = 0.0;
+    prev_odom.pose.pose.position.z    = 0.0;
     prev_odom.pose.pose.orientation.x = 0.0;
     prev_odom.pose.pose.orientation.y = 0.0;
     prev_odom.pose.pose.orientation.z = 0.0;
     prev_odom.pose.pose.orientation.w = 1.0;
-    prev_odom.twist.twist.linear.x = 0.0;
-    prev_odom.twist.twist.linear.y = 0.0;
-    prev_odom.twist.twist.linear.z = 0.0;
-    prev_odom.twist.twist.angular.x = 0.0;
-    prev_odom.twist.twist.angular.y = 0.0;
-    prev_odom.twist.twist.angular.z = 0.0;
+    prev_odom.twist.twist.linear.x    = 0.0;
+    prev_odom.twist.twist.linear.y    = 0.0;
+    prev_odom.twist.twist.linear.z    = 0.0;
+    prev_odom.twist.twist.angular.x   = 0.0;
+    prev_odom.twist.twist.angular.y   = 0.0;
+    prev_odom.twist.twist.angular.z   = 0.0;
 
-    result_odom.header.stamp    = ros::Time::now();
-    result_odom.header.frame_id = "odom";
-    result_odom.child_frame_id  = "base_footprint";
-    result_odom.pose.pose.position.x = 0.0;
-    result_odom.pose.pose.position.y = 0.0;
-    result_odom.pose.pose.position.z = 0.0;
+    result_odom.header.stamp            = ros::Time::now();
+    result_odom.header.frame_id         = "odom";
+    result_odom.child_frame_id          = "base_footprint";
+    result_odom.pose.pose.position.x    = 0.0;
+    result_odom.pose.pose.position.y    = 0.0;
+    result_odom.pose.pose.position.z    = 0.0;
     result_odom.pose.pose.orientation.x = 0.0;
     result_odom.pose.pose.orientation.y = 0.0;
     result_odom.pose.pose.orientation.z = 0.0;
     result_odom.pose.pose.orientation.w = 1.0;
-    result_odom.twist.twist.linear.x = 0.0;
-    result_odom.twist.twist.linear.y = 0.0;
-    result_odom.twist.twist.linear.z = 0.0;
-    result_odom.twist.twist.angular.x = 0.0;
-    result_odom.twist.twist.angular.y = 0.0;
-    result_odom.twist.twist.angular.z = 0.0;
+    result_odom.twist.twist.linear.x    = 0.0;
+    result_odom.twist.twist.linear.y    = 0.0;
+    result_odom.twist.twist.linear.z    = 0.0;
+    result_odom.twist.twist.angular.x   = 0.0;
+    result_odom.twist.twist.angular.y   = 0.0;
+    result_odom.twist.twist.angular.z   = 0.0;
 
     ros::Rate rate(50);
     ros::AsyncSpinner spinner(1);
     spinner.start();
 
-    prev_time = ros::Time::now();
+    // prev_time = ros::Time::now();
 
     while( ros::ok() ){
         // Set goal steer position value based on initial position (2048) 
@@ -165,7 +161,7 @@ void SobitProMain::control_wheel(){
         steer_br_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R);
 
         // When steer changing angle is large(>90[deg]), stop the wheels to avoid hardware damage
-        if( (1024 <= std::abs(set_steer_pos[0] - steer_fr_curt_pos)) || (1024 <= std::abs(set_steer_pos[1] - steer_fl_curt_pos)) || (1024 <= std::abs(set_steer_pos[2] - steer_br_curt_pos)) || (1024 <= std::abs(set_steer_pos[3] - steer_bl_curt_pos)) ){
+        if( (1024 <= fabsf(set_steer_pos[0] - steer_fr_curt_pos)) || (1024 <= fabsf(set_steer_pos[1] - steer_fl_curt_pos)) || (1024 <= fabsf(set_steer_pos[2] - steer_br_curt_pos)) || (1024 <= fabsf(set_steer_pos[3] - steer_bl_curt_pos)) ){
             ROS_INFO("Changing the direction of the wheel");
             set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
             sobit_pro_motor_driver.controlWheelsVel(set_wheel_vel);
@@ -181,7 +177,7 @@ void SobitProMain::control_wheel(){
             steer_fr_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R);
             steer_bl_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L);
             steer_br_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R);
-        }while( (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_pos[0] - steer_fr_curt_pos)) && (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_pos[1] - steer_fl_curt_pos)) && (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_pos[2] - steer_fl_curt_pos)) && (DXL_MOVING_STATUS_THRESHOLD < std::abs(set_steer_pos[3] - steer_fl_curt_pos)) );
+        }while( (DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[0] - steer_fr_curt_pos)) && (DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[1] - steer_fl_curt_pos)) && (DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[2] - steer_fl_curt_pos)) && (DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[3] - steer_fl_curt_pos)) );
 
         // Set goal wheel velocity value
         set_wheel_vel = sobit_pro_control.setWheelVel();
@@ -227,19 +223,19 @@ void SobitProMain::control_wheel(){
         wheel_br_curt_pos = sobit_pro_motor_driver.feedbackWheelPos(WHEEL_B_R);
 
         // Calculate Odometry based on motion mode (check!)
-        sobit_pro_odometry.odom(steer_fr_curt_pos, steer_fl_curt_pos,
-                                steer_br_curt_pos, steer_bl_curt_pos,
-                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R), sobit_pro_motor_driver.feedbackSteerPos(STEER_F_L),
-                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R), sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L),
-                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_F_L),
-                                // sobit_pro_motor_driver.feedbackWheelVel(STEER_B_R), sobit_pro_motor_driver.feedbackWheelVel(STEER_B_L),
-                                wheel_fr_curt_pos, wheel_fl_curt_pos,
-                                wheel_br_curt_pos, wheel_bl_curt_pos,
-                                wheel_fr_init_pos, wheel_fl_init_pos,
-                                wheel_br_init_pos, wheel_bl_init_pos,
+        sobit_pro_odometry.odom(steer_fl_curt_pos, steer_fr_curt_pos,
+                                steer_bl_curt_pos, steer_br_curt_pos,
+                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_F_L), sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R),
+                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L), sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R),
+                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_L), sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_R),
+                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_B_L), sobit_pro_motor_driver.feedbackWheelVel(WHEEL_B_R),
+                                wheel_fl_curt_pos, wheel_fr_curt_pos,
+                                wheel_bl_curt_pos, wheel_br_curt_pos,
+                                wheel_fl_init_pos, wheel_fr_init_pos,
+                                wheel_bl_init_pos, wheel_br_init_pos,
                                 prev_motion,
                                 prev_odom, &result_odom,
-                                prev_time);
+                                prev_odom.header.stamp);
 
         // Update the initial wheel position value for next loop calculation
         wheel_fl_init_pos = wheel_fl_curt_pos;
@@ -248,8 +244,23 @@ void SobitProMain::control_wheel(){
         wheel_br_init_pos = wheel_br_curt_pos;
 
         // Update odom for next loop calculation
-        prev_odom = result_odom;
-        prev_time = ros::Time::now();
+        // prev_odom = result_odom;
+        // prev_time = ros::Time::now();
+        prev_odom.header.stamp            = result_odom.header.stamp;
+        prev_odom.pose.pose.position.x    = result_odom.pose.pose.position.x;
+        prev_odom.pose.pose.position.y    = result_odom.pose.pose.position.y;
+        prev_odom.pose.pose.position.z    = result_odom.pose.pose.position.z;
+        prev_odom.pose.pose.orientation.x = result_odom.pose.pose.orientation.x;
+        prev_odom.pose.pose.orientation.y = result_odom.pose.pose.orientation.y;
+        prev_odom.pose.pose.orientation.z = result_odom.pose.pose.orientation.z;
+        prev_odom.pose.pose.orientation.w = result_odom.pose.pose.orientation.w;
+        prev_odom.twist.twist.linear.x    = result_odom.twist.twist.linear.x;
+        prev_odom.twist.twist.linear.y    = result_odom.twist.twist.linear.y;
+        prev_odom.twist.twist.linear.z    = result_odom.twist.twist.linear.z;
+        prev_odom.twist.twist.angular.x   = result_odom.twist.twist.angular.x;
+        prev_odom.twist.twist.angular.y   = result_odom.twist.twist.angular.y;
+        prev_odom.twist.twist.angular.z   = result_odom.twist.twist.angular.z;
+
         result_odom.header.stamp = ros::Time::now();
 
         // Publish Odometry
@@ -259,8 +270,6 @@ void SobitProMain::control_wheel(){
         sobit_pro_odometry.pose_broadcaster(result_odom);
         pub_odometry.publish(result_odom);
         // pub_odometry.publish(nav_msgs::Odometry(result_odom));
-
-        // pub_hz.publish(std_msgs::Empty());
 
         rate.sleep();
     }

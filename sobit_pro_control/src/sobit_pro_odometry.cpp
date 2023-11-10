@@ -1,37 +1,37 @@
 #include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 // Calculate Odometry
-bool SobitProOdometry::odom(int32_t steer_fr_curt_pos, int32_t steer_fl_curt_pos,
-                            int32_t steer_br_curt_pos, int32_t steer_bl_curt_pos,
-                            // int32_t wheel_fr_curt_vel, int32_t wheel_fl_curt_vel,
-                            // int32_t wheel_br_curt_vel, int32_t wheel_bl_curt_vel,
-                            int32_t wheel_fr_curt_pos, int32_t wheel_fl_curt_pos,
-                            int32_t wheel_br_curt_pos, int32_t wheel_bl_curt_pos,
-                            int32_t wheel_fr_init_pos, int32_t wheel_fl_init_pos,
-                            int32_t wheel_br_init_pos, int32_t wheel_bl_init_pos,
+bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
+                            int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
+                            // int32_t wheel_fl_curt_vel, int32_t wheel_fr_curt_vel,
+                            // int32_t wheel_bl_curt_vel, int32_t wheel_br_curt_vel,
+                            int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
+                            int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
+                            int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
+                            int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
                             int32_t prev_motion,
                             nav_msgs::Odometry prev_odom, nav_msgs::Odometry* result_odom,
                             ros::Time prev_time){
 
-    float fr_distance_m    = distance_calculation(wheel_fr_curt_pos - wheel_fr_init_pos); // Calculation distance[m]
     float fl_distance_m    = distance_calculation(wheel_fl_curt_pos - wheel_fl_init_pos); // Calculation distance[m]
-    float br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
+    float fr_distance_m    = distance_calculation(wheel_fr_curt_pos - wheel_fr_init_pos); // Calculation distance[m]
     float bl_distance_m    = distance_calculation(wheel_bl_curt_pos - wheel_bl_init_pos); // Calculation distance[m]
+    float br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
 
-    float fr_direction_deg = position_calculation(steer_fr_curt_pos); // Record present position
     float fl_direction_deg = position_calculation(steer_fl_curt_pos); // Record present position
-    float br_direction_deg = position_calculation(steer_br_curt_pos); // Record present position
+    float fr_direction_deg = position_calculation(steer_fr_curt_pos); // Record present position
     float bl_direction_deg = position_calculation(steer_bl_curt_pos); // Record present position
+    float br_direction_deg = position_calculation(steer_br_curt_pos); // Record present position
 
     double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
     float distance_m;
     nav_msgs::Odometry calculation_odom = *result_odom;
     tf2::Quaternion quat_tf;
 
-    if     ( prev_motion == STOP_MOTION )           motion_mode = STOP_MOTION_MODE;
-    else if( prev_motion == TRANSLATIONAL_MOTION )  motion_mode = TRANSLATIONAL_MOTION_MODE;
-    else if( prev_motion == ROTATIONAL_MOTION )     motion_mode = ROTATIONAL_MOTION_MODE;
-    else if( prev_motion == SWIVEL_MOTION )         motion_mode = SWIVEL_MOTION_MODE;
+    if     ( prev_motion == STOP_MOTION )          motion_mode = STOP_MOTION_MODE;
+    else if( prev_motion == TRANSLATIONAL_MOTION ) motion_mode = TRANSLATIONAL_MOTION_MODE;
+    else if( prev_motion == ROTATIONAL_MOTION )    motion_mode = ROTATIONAL_MOTION_MODE;
+    else if( prev_motion == SWIVEL_MOTION )        motion_mode = SWIVEL_MOTION_MODE;
 
     switch( motion_mode ){
         // Translational motion
@@ -46,7 +46,6 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_pos, int32_t steer_fl_curt_pos
             // Check the calculation
             // if( (0 <= fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) && (fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) <= 1) ){
             if( 0 <= fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg)) <= 1 ){
-
                 // Positive distance or Negative distance
                 if( (-45 <= fr_direction_deg) && (fr_direction_deg <= 90) ){
                     if( 0. <= fr_distance_m ) distance_m =  (fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
@@ -60,7 +59,7 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_pos, int32_t steer_fl_curt_pos
             }
             else ROS_ERROR("Odometry ERROR : Translational motion\nfr_distance_m = %.3f\tfl_distance_m = %.3f\tfr_direction_deg = %.3f\tfl_direction_deg = %.3f", fr_distance_m, fl_distance_m, fr_direction_deg, fl_direction_deg);
 
-            // Transform euler->RPY (prev_odom)
+            // Transform euler to RPY (prev_odom)
             tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
             tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
             // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
@@ -92,8 +91,8 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_pos, int32_t steer_fl_curt_pos
             // ROS_INFO("calculation_odom.pose.pose.orientation.w = %.3f", calculation_odom.pose.pose.orientation.w);
 
             // Debug
-            if (std::isnan(calculation_odom.pose.pose.position.x)    || std::isnan(calculation_odom.pose.pose.position.y)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE pose ------");
-            if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE orientation------");
+            if (std::isnan(calculation_odom.pose.pose.position.x)    || std::isnan(calculation_odom.pose.pose.position.y)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (pose) ------");
+            if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (orientation) ------");
 
             *result_odom = calculation_odom;
 
@@ -166,14 +165,14 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_pos, int32_t steer_fl_curt_pos
                 }else{
                     yaw = bl_distance_m / (sqrtf(powf((wheel_point_bl.x - base_center.x), 2.) + powf((wheel_point_bl.y - base_center.y), 2.)));
                 }
-            }else{
+            } else{
                 // fl and br
                 base_center.x = (a_fl * wheel_point_fl.x - a_br * wheel_point_br.x + wheel_point_br.y - wheel_point_fl.y) / (a_fl - a_br);
                 base_center.y = a_fl * (base_center.x - wheel_point_fl.x) + wheel_point_fl.y;
 
                 if( sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.)) ){
                     yaw = fl_distance_m / (sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)));
-                }else{
+                } else{
                     yaw = br_distance_m / (sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.)));
                 }
             }
@@ -238,9 +237,9 @@ void SobitProOdometry::pose_broadcaster(nav_msgs::Odometry tf_odom){
     static tf2_ros::TransformBroadcaster br;
     geometry_msgs::TransformStamped transformStamped;
 
-    transformStamped.header.stamp    = ros::Time::now();
-    transformStamped.header.frame_id = "odom";
-    transformStamped.child_frame_id  = "base_footprint";
+    transformStamped.header.stamp            = ros::Time::now();
+    transformStamped.header.frame_id         = "odom";
+    transformStamped.child_frame_id          = "base_footprint";
     transformStamped.transform.translation.x = tf_odom.pose.pose.position.x;
     transformStamped.transform.translation.y = tf_odom.pose.pose.position.y;
     transformStamped.transform.translation.z = tf_odom.pose.pose.position.z;

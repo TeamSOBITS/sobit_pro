@@ -25,7 +25,7 @@
 class SobitProControl{
     private:
         int64_t steer_pos[4] = {0, };
-        int64_t wheel_vel[4]   = {0, };
+        int64_t wheel_vel[4] = {0, };
 
         enum MODE{
             NONE = -1,
@@ -34,7 +34,7 @@ class SobitProControl{
 
   public:
         float steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
-        float wheel_fl_goal_vel,   wheel_fr_goal_vel,   wheel_bl_goal_vel,   wheel_br_goal_vel;
+        float wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
 
         // Constructor
         SobitProControl():
@@ -55,7 +55,7 @@ class SobitProControl{
         }
 
         void setParams(geometry_msgs::Twist vel_twist);
-        int getMotionMode();
+        inline int getMotionMode(){ return int(motion_mode); };
         int64_t *setSteerPos();
         int64_t *setWheelVel();
 };

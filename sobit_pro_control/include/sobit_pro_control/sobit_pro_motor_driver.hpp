@@ -46,14 +46,14 @@ class SobitProMotorDriver{
         uint32_t baudrate_;
         float  protocol_version_;
 
-        dynamixel::PortHandler *portHandler_;
-        dynamixel::PacketHandler *packetHandler_;
+        dynamixel::PortHandler    *portHandler_;
+        dynamixel::PacketHandler  *packetHandler_;
 
         dynamixel::GroupSyncWrite *groupSyncWritePos_;
         dynamixel::GroupSyncWrite *groupSyncWriteVel_;
         
-        dynamixel::GroupSyncRead *groupSyncReadPos_;
-        dynamixel::GroupSyncRead *groupSyncReadVel_;
+        dynamixel::GroupSyncRead  *groupSyncReadPos_;
+        dynamixel::GroupSyncRead  *groupSyncReadVel_;
 
     public:
         SobitProMotorDriver();

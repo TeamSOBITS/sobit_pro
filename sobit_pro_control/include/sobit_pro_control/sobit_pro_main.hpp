@@ -18,11 +18,10 @@ class SobitProMain{
         void callback(const geometry_msgs::Twist vel_twist);
         ros::NodeHandle nh;
         ros::NodeHandle pnh;
-        ros::Subscriber sub_vel     = nh.subscribe("/mobile_base/commands/velocity", 1, &SobitProMain::callback, this);
+        ros::Subscriber sub_vel          = nh.subscribe("/mobile_base/commands/velocity", 1, &SobitProMain::callback, this);
         ros::Publisher  pub_odometry     = nh.advertise<nav_msgs::Odometry>("/odom", 1);
         ros::Publisher  pub_joint_states = nh.advertise<sensor_msgs::JointState>("/joint_states", 1);
         ros::Publisher  pub_wheels_error = nh.advertise<std_msgs::Bool>("/wheels_error", 1);
-        // ros::Publisher pub_hz = nh.advertise<std_msgs::Empty>("/hz", 1);
 
         int32_t wheel_fr_init_pos;
         int32_t wheel_fl_init_pos;
@@ -42,14 +41,14 @@ class SobitProMain{
         int64_t *set_steer_pos;
         int64_t *set_wheel_vel;
 
-        int32_t prev_motion = -1; // Non 0, 1, 2 3 motion
+        int32_t prev_motion = -1; // When init avoid 0~3 motions
 
         sensor_msgs::JointState joint_state;
 
         nav_msgs::Odometry result_odom;
         nav_msgs::Odometry prev_odom;
-        
-        ros::Time prev_time;
+
+        // ros::Time prev_time;
 
         std_msgs::Bool wheels_error;
 
