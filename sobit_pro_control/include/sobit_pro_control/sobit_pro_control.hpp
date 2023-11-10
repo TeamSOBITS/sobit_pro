@@ -16,7 +16,6 @@
 #define LIMIT_VEL_VALUE      1023.    // DXL Velocity Limit Value (previous 200.)
 #define VEL_UNIT             0.229    // DXL Velocity Unit [rmp]
 #define WHEEL_DIAMETER       0.144    // Wheel Circumference
-#define WHEEL_RADIUS         WHEEL_DIAMETER/2.0
 #define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER // Wheel Length
 
 #define BODY_DIAMETER        0.44775010 // Robot Diameter (respect to the center of wheels)
@@ -34,13 +33,13 @@ class SobitProControl{
         } motion_mode;
 
   public:
-        float steer_fr_goal_angle, steer_fl_goal_angle, steer_br_goal_angle, steer_bl_goal_angle;
-        float wheel_fr_goal_vel,   wheel_fl_goal_vel,   wheel_br_goal_vel,   wheel_bl_goal_vel;
+        float steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
+        float wheel_fl_goal_vel,   wheel_fr_goal_vel,   wheel_bl_goal_vel,   wheel_br_goal_vel;
 
         // Constructor
         SobitProControl():
-        steer_fr_goal_angle(0), steer_fl_goal_angle(0), steer_br_goal_angle(0), steer_bl_goal_angle(0),
-        wheel_fr_goal_vel(0),   wheel_fl_goal_vel(0),   wheel_br_goal_vel(0),   wheel_bl_goal_vel(0){
+        steer_fl_goal_pos(0), steer_fr_goal_pos(0), steer_bl_goal_pos(0), steer_br_goal_pos(0),
+        wheel_fl_goal_vel(0),   wheel_fr_goal_vel(0),   wheel_bl_goal_vel(0),   wheel_br_goal_vel(0){
         }
 
         MODE getMotion(int motion){

@@ -107,10 +107,10 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
                 }
             }
 
-            steer_fl_goal_angle = steer_fl_deg * 4096. / 360.;
-            steer_fr_goal_angle = steer_fr_deg * 4096. / 360.;
-            steer_bl_goal_angle = steer_bl_deg * 4096. / 360.;
-            steer_br_goal_angle = steer_br_deg * 4096. / 360.;
+            steer_fl_goal_pos = steer_fl_deg * 4096. / 360.;
+            steer_fr_goal_pos = steer_fr_deg * 4096. / 360.;
+            steer_bl_goal_pos = steer_bl_deg * 4096. / 360.;
+            steer_br_goal_pos = steer_br_deg * 4096. / 360.;
 
             // ROS_INFO("Wheel INFO(Translational motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_deg, steer_fl_deg, steer_br_deg, steer_bl_deg, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
             break;
@@ -125,8 +125,8 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             float vel_value = vel_rpm / VEL_UNIT;                       // vel_rpm to vel_value
 
             // Goal angle calculation
-            steer_fl_goal_angle = 0.; steer_fr_goal_angle = 0.;
-            steer_bl_goal_angle = 0.; steer_br_goal_angle = 0.;
+            steer_fl_goal_pos = 0.; steer_fr_goal_pos = 0.;
+            steer_bl_goal_pos = 0.; steer_br_goal_pos = 0.;
 
             // Velocity of wheel
             if( vel_twist.angular.z < 0. ){
@@ -278,10 +278,10 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             wheel_bl_goal_vel *= (r_wheel_bl / r);
             wheel_br_goal_vel *= (r_wheel_br / r);
 
-            steer_fl_goal_angle = steer_fl_rad * 180. / M_PI * 4096. / 360.;
-            steer_fr_goal_angle = steer_fr_rad * 180. / M_PI * 4096. / 360.;
-            steer_bl_goal_angle = steer_bl_rad * 180. / M_PI * 4096. / 360.;
-            steer_br_goal_angle = steer_br_rad * 180. / M_PI * 4096. / 360.;
+            steer_fl_goal_pos = steer_fl_rad * 180. / M_PI * 4096. / 360.;
+            steer_fr_goal_pos = steer_fr_rad * 180. / M_PI * 4096. / 360.;
+            steer_bl_goal_pos = steer_bl_rad * 180. / M_PI * 4096. / 360.;
+            steer_br_goal_pos = steer_br_rad * 180. / M_PI * 4096. / 360.;
 
             // ROS_INFO("Wheel INFO(Swivel motion)\n\t steer_fr_deg = %.3f\n\t steer_fl_deg = %.3f\n\t steer_br_deg = %.3f\n\t steer_bl_deg = %.3f\n\t wheel_fr_goal_vel = %.3f\n\t wheel_fl_goal_vel = %.3f\n\t wheel_br_goal_vel = %.3f\n\t wheel_bl_goal_vel = %.3f", steer_fr_rad*180./M_PI, steer_fl_rad*180./M_PI, steer_br_rad*180./M_PI, steer_bl_rad*180./M_PI, wheel_fr_goal_vel, wheel_fl_goal_vel, wheel_br_goal_vel, wheel_bl_goal_vel );
             break;
@@ -299,10 +299,10 @@ int SobitProControl::getMotionMode(){
 }
 
 int64_t *SobitProControl::setSteerPos(){
-    steer_angle[1] = int64_t(steer_fl_goal_angle + 2048);
-    steer_angle[0] = int64_t(steer_fr_goal_angle + 2048);
-    steer_angle[3] = int64_t(steer_bl_goal_angle + 2048);
-    steer_angle[2] = int64_t(steer_br_goal_angle + 2048);
+    steer_angle[1] = int64_t(steer_fl_goal_pos + 2048);
+    steer_angle[0] = int64_t(steer_fr_goal_pos + 2048);
+    steer_angle[3] = int64_t(steer_bl_goal_pos + 2048);
+    steer_angle[2] = int64_t(steer_br_goal_pos + 2048);
 
     return steer_angle;
 }
