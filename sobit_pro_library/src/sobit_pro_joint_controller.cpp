@@ -6,13 +6,13 @@ namespace sobit_pro{
 // why both required?
 SobitProJointController::SobitProJointController(const std::string& name) : ROSCommonNode(name), nh_(), pnh_("~") {
     pub_arm_joint_         = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
-    pub_head_camera_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
+    pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
     loadPose();
 }
 
 SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh_("~") {
     pub_arm_joint_         = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
-    pub_head_camera_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
+    pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
     loadPose();
 }
 
@@ -51,12 +51,15 @@ void SobitProJointController::loadPose() {
 bool SobitProJointController::moveToPose(const std::string& pose_name, const double sec, bool is_sleep) {
     bool                is_find = false;
     std::vector<double> joint_val;
+
+    // Check if selected pose exists
     for( auto& pose : pose_list_ ){
         if ( pose_name != pose.pose_name ) continue;
         is_find   = true;
         joint_val = pose.joint_val;
         break;
     }
+
     if( is_find ){
         ROS_INFO("Pose '%s' was found successfully", pose_name.c_str());
         return moveAllJoint( joint_val[Joint::ARM_SHOULDER_1_TILT_JOINT],
@@ -80,30 +83,38 @@ bool SobitProJointController::moveAllJoint( const double arm1,
                                             const double arm3_pan,
                                             const double arm4,
                                             const double gripper,
-                                            const double head_camera_pan,
-                                            const double head_camera_tilt,
+                                            const double head_pan,
+                                            const double head_tilt,
                                             const double sec,
                                             bool         is_sleep) {
-    try {
+    try{
         trajectory_msgs::JointTrajectory arm_joint_trajectory;
         trajectory_msgs::JointTrajectory head_joint_trajectory;
-        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT], arm1, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT], -arm1, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT], arm2, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm2, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT], arm3, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT], arm3_pan, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT], arm4, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HAND_JOINT], gripper, sec, &arm_joint_trajectory );
-        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT], head_camera_pan, sec, &head_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT], head_camera_tilt, sec, &head_joint_trajectory );
+
+        // Set Joint Trajectory for Arm
+        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm1     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm1     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm2     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm2     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm3     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm3_pan , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm4     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HAND_JOINT]                  ,  gripper  , sec, &arm_joint_trajectory );
+
+        // Set Joint Trajectory for Head
+        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]       ,  head_pan , sec, &head_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]      ,  head_tilt, sec, &head_joint_trajectory );
+
+        // Publish Joint Trajectory
         checkPublishersConnection( pub_arm_joint_ );
-        checkPublishersConnection( pub_head_camera_joint_ );
+        checkPublishersConnection( pub_head_joint_ );
         pub_arm_joint_.publish( arm_joint_trajectory );
-        pub_head_camera_joint_.publish( head_joint_trajectory );
+        pub_head_joint_.publish( head_joint_trajectory );
+
         if ( is_sleep ) ros::Duration( sec ).sleep();
+
         return true;
-    } catch ( const std::exception& ex ) {
+    } catch( const std::exception& ex ){
         ROS_ERROR( "%s", ex.what() );
         return false;
     }
@@ -131,8 +142,8 @@ bool SobitProJointController::moveJoint( const Joint joint_num, const double rad
             checkPublishersConnection( pub_arm_joint_ );
             pub_arm_joint_.publish( joint_trajectory );
         } else {
-            checkPublishersConnection( pub_head_camera_joint_ );
-            pub_head_camera_joint_.publish( joint_trajectory );
+            checkPublishersConnection( pub_head_joint_ );
+            pub_head_joint_.publish( joint_trajectory );
         }
         if ( is_sleep ) ros::Duration( sec ).sleep();
         return true;
@@ -142,13 +153,13 @@ bool SobitProJointController::moveJoint( const Joint joint_num, const double rad
     }
 }
 
-bool SobitProJointController::moveHeadPanTilt( const double head_camera_pan, const double head_camera_tilt, const double sec, bool is_sleep )  {
+bool SobitProJointController::moveHeadPanTilt( const double head_pan, const double head_tilt, const double sec, bool is_sleep )  {
     try {
         trajectory_msgs::JointTrajectory joint_trajectory;
-        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT], head_camera_pan, sec, &joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT], head_camera_tilt, sec, &joint_trajectory );
-        checkPublishersConnection( pub_head_camera_joint_ );
-        pub_head_camera_joint_.publish( joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT], head_pan, sec, &joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT], head_tilt, sec, &joint_trajectory );
+        checkPublishersConnection( pub_head_joint_ );
+        pub_head_joint_.publish( joint_trajectory );
         if ( is_sleep ) ros::Duration( sec ).sleep();
         return true;
     } catch ( const std::exception& ex ) {

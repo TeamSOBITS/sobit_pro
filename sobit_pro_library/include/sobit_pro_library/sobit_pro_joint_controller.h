@@ -44,7 +44,7 @@ class SobitProJointController : private ROSCommonNode {
         ros::NodeHandle       pnh_;
 
         ros::Publisher        pub_arm_joint_;
-        ros::Publisher        pub_head_camera_joint_;
+        ros::Publisher        pub_head_joint_;
         tf::TransformListener listener_;
         std::vector<Pose>     pose_list_;
         const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint", 
@@ -70,8 +70,8 @@ class SobitProJointController : private ROSCommonNode {
                             const double arm3_pan,
                             const double arm4,
                             const double gripper,
-                            const double head_camera_pan,
-                            const double head_camera_tilt,
+                            const double head_pan,
+                            const double head_tilt,
                             const double sec,
                             bool         is_sleep = true );
         geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm_elbow_lower_tilt_joint_angle );
@@ -89,7 +89,7 @@ class SobitProJointController : private ROSCommonNode {
         bool moveToPose( const std::string& pose_name, const double sec = 5.0, bool is_sleep = true );
         bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
         bool moveArm( const double arm1, const double arm2, const double arm3, const double arm3_pan, const double arm4, const double sec = 5.0, bool is_sleep = true );
-        bool moveHeadPanTilt( const double head_camera_pan, const double head_camera_tilt, const double sec = 5.0, bool is_sleep = true );
+        bool moveHeadPanTilt( const double head_pan, const double head_tilt, const double sec = 5.0, bool is_sleep = true );
         bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
         bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
         bool moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
