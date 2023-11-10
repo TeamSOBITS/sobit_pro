@@ -57,12 +57,14 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
 }
 
 // Start up sound
-bool SobitProMain::start_up_sound(const int sound_param){
+bool SobitProMain::start_up_sound(){
     // Generate a random number
     std::random_device rnd;
     std::mt19937 gen(rnd());
     std::uniform_int_distribution<int> distribution(1, 100);
     int rand_sound = distribution(gen);
+    int sound_param;
+    nh.param("sound_param", sound_param, 75);
     
     std::string sound = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
     std::string pack_path = ros::package::getPath("sobit_pro_control");
@@ -270,9 +272,6 @@ void SobitProMain::control_wheel(){
 int main(int argc, char **argv){
     ros::init(argc, argv, "sobit_pro_control");
     ros::NodeHandle nh;
-    int sound_param;
-    
-    nh.param("sound_param", sound_param, 75);
 
     // Initialize SobitProMain class
     SobitProMain sobit_pro_main;
@@ -282,7 +281,7 @@ int main(int argc, char **argv){
     sobit_pro_motor_driver.addPresentParam();
 
     // Start up sound
-    sobit_pro_main.start_up_sound(sound_param);
+    sobit_pro_main.start_up_sound();
 
     // Control wheel (main loop)
     sobit_pro_main.control_wheel();
