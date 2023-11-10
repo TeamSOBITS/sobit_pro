@@ -54,7 +54,7 @@ class SobitProMain{
         std_msgs::Bool wheels_error;
 
     public:
-        bool start_up_sound();
+        bool start_up_sound(const int sound_param);
         bool shut_down_sound();
         void control_wheel();
 

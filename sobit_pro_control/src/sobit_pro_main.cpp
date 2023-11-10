@@ -57,15 +57,13 @@ void SobitProMain::callback(const geometry_msgs::Twist vel_twist){
 }
 
 // Start up sound
-bool SobitProMain::start_up_sound(){
+bool SobitProMain::start_up_sound(const int sound_param){
     // Generate a random number
     std::random_device rnd;
     std::mt19937 gen(rnd());
     std::uniform_int_distribution<int> distribution(1, 100);
     int rand_sound = distribution(gen);
     
-    int sound_param = ros::param::param<int>("sound_param", sound_param, 95);
-    // pnh.getParam("sound_param", sound_param);
     std::string sound = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
     std::string pack_path = ros::package::getPath("sobit_pro_control");
     std::string sound_path = pack_path + "/mp3/" + sound + ".mp3";
@@ -73,6 +71,7 @@ bool SobitProMain::start_up_sound(){
     bool is_sound  = false;
 
     std::cout << std::endl;
+    std::cout << "rand_sound: " << rand_sound << std::endl;
     std::cout << "sound_param: " << sound_param << std::endl;
     std::cout << "Start Up: " << sound << ".mp3" << std::endl;
 
@@ -271,8 +270,9 @@ void SobitProMain::control_wheel(){
 int main(int argc, char **argv){
     ros::init(argc, argv, "sobit_pro_control");
     ros::NodeHandle nh;
-    ros::NodeHandle pnh("~");
-
+    int sound_param;
+    
+    nh.param("sound_param", sound_param, 75);
 
     // Initialize SobitProMain class
     SobitProMain sobit_pro_main;
@@ -282,7 +282,7 @@ int main(int argc, char **argv){
     sobit_pro_motor_driver.addPresentParam();
 
     // Start up sound
-    sobit_pro_main.start_up_sound();
+    sobit_pro_main.start_up_sound(sound_param);
 
     // Control wheel (main loop)
     sobit_pro_main.control_wheel();
