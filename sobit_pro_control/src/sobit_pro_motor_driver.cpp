@@ -51,8 +51,8 @@ bool SobitProMotorDriver::setTorque(uint8_t id, uint8_t is_enable){
     if( dxl_comm_result != COMM_SUCCESS ) packetHandler_->getTxRxResult(dxl_comm_result);
     else if( dxl_error ) packetHandler_->getRxPacketError(dxl_error);
     else{
-        if( is_enable ) std::cout << "Dynamixel ID:" << id << " has been successfully connected!" << std::endl;
-        else            std::cout << "Dynamixel ID:" << id << " has been successfully disconnected!" << std::endl;
+        if( is_enable ) std::cout << "Dynamixel ID:" << int(id) << " has been successfully connected!" << std::endl;
+        else            std::cout << "Dynamixel ID:" << int(id) << " has been successfully disconnected!" << std::endl;
     }
 
 
