@@ -299,12 +299,12 @@ int SobitProControl::getMotionMode(){
 }
 
 int64_t *SobitProControl::setSteerPos(){
-    steer_angle[1] = int64_t(steer_fl_goal_pos + 2048);
-    steer_angle[0] = int64_t(steer_fr_goal_pos + 2048);
-    steer_angle[3] = int64_t(steer_bl_goal_pos + 2048);
-    steer_angle[2] = int64_t(steer_br_goal_pos + 2048);
+    steer_pos[1] = int64_t(steer_fl_goal_pos + 2048);
+    steer_pos[0] = int64_t(steer_fr_goal_pos + 2048);
+    steer_pos[3] = int64_t(steer_bl_goal_pos + 2048);
+    steer_pos[2] = int64_t(steer_br_goal_pos + 2048);
 
-    return steer_angle;
+    return steer_pos;
 }
 
 int64_t *SobitProControl::setWheelVel(){

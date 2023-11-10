@@ -24,7 +24,7 @@
 
 class SobitProControl{
     private:
-        int64_t steer_angle[4] = {0, };
+        int64_t steer_pos[4] = {0, };
         int64_t wheel_vel[4]   = {0, };
 
         enum MODE{
