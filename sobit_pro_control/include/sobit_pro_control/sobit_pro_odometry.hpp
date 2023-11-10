@@ -56,7 +56,7 @@ class SobitProOdometry{
                 default: motion_mode = NONE; break;
             }
         
-        return motion_mode;
+            return motion_mode;
         }
 
 };
