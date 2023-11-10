@@ -26,7 +26,7 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
     double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
     float distance_m;
     nav_msgs::Odometry calculation_odom = *result_odom;
-    tf::Quaternion quat_tf; 
+    tf2::Quaternion quat_tf;
 
     if     ( prev_motion == 0 ){
         motion_mode = STOP_MOTION_MODE;
@@ -78,8 +78,10 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             }
 
             // Change euler (prev_odom)
-            quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
-            tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
+            tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
+            // tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
             // Add the amount of movement to the odometry
             calculation_odom.pose.pose.position.x = prev_odom.pose.pose.position.x
@@ -112,14 +114,18 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
         // Rotational motion
         case ROTATIONAL_MOTION_MODE:{
             // Change euler (prev_odom)
-            quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
-            tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
+            tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
+            // tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
             float yaw = 0.;
             yaw = ((fr_distance_m + fl_distance_m + br_distance_m + bl_distance_m) / 4.) / (TRACK / sqrtf(2.));
 
             // Change quaternion (calculation_odom)
-            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., (prev_yaw + yaw));
-            quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
+            quat_tf.setRPY(0., 0., (prev_yaw + yaw));
+            tf2::convert(quat_tf, calculation_odom.pose.pose.orientation);
+            // tf2::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., (prev_yaw + yaw));
+            // quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
 
             *result_odom = calculation_odom;
             return true;
@@ -128,8 +134,11 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
         // Swivel motion
         case SWIVEL_MOTION_MODE:{
             // Change euler (prev_odom)
-            quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
-            tf::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
+            tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
+            // tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+            
             float pose_x = 0., pose_y = 0., yaw = 0.;
             geometry_msgs::Point wheel_point_fr, wheel_point_fl, wheel_point_br, wheel_point_bl;
             wheel_point_fr.x = TRACK / 2.;
@@ -197,8 +206,10 @@ bool SobitProOdometry::odom(int32_t steer_fr_curt_position, int32_t steer_fl_cur
             calculation_odom.pose.pose.position.z = 0.;
 
             // Change quaternion (calculation_odom)
-            tf::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., (prev_yaw + yaw));
-            quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
+            quat_tf.setRPY(0., 0., (prev_yaw + yaw));
+            tf2::convert(quat_tf, calculation_odom.pose.pose.orientation);
+            // tf2::Quaternion quat_msg = tf::createQuaternionFromRPY(0., 0., (prev_yaw + yaw));
+            // quaternionTFToMsg(quat_msg, calculation_odom.pose.pose.orientation);
 
 
             ROS_INFO("base_center = %.4f, %.4f,  yaw = %.4f", base_center.x, base_center.y, yaw);
@@ -234,15 +245,21 @@ float SobitProOdometry::position_calculation(float steer_curt_position){
     return direction_deg;
 }
 
-// Pose broadcaster(Generate a pose from Odometry)
+// Pose broadcaster (Generate a pose from Odometry)
 void SobitProOdometry::pose_broadcaster(nav_msgs::Odometry tf_odom){
-    static tf::TransformBroadcaster br;
-    tf::Transform transform;
-    tf::Quaternion tf_quat;
+    static tf2_ros::TransformBroadcaster br;
+    geometry_msgs::TransformStamped transformStamped;
 
-    transform.setOrigin(tf::Vector3(tf_odom.pose.pose.position.x, tf_odom.pose.pose.position.y, tf_odom.pose.pose.position.z));
-    quaternionMsgToTF(tf_odom.pose.pose.orientation, tf_quat);
-    transform.setRotation(tf_quat);
+    transformStamped.header.stamp    = ros::Time::now();
+    transformStamped.header.frame_id = "odom";
+    transformStamped.child_frame_id  = "base_footprint";
+    transformStamped.transform.translation.x = tf_odom.pose.pose.position.x;
+    transformStamped.transform.translation.y = tf_odom.pose.pose.position.y;
+    transformStamped.transform.translation.z = tf_odom.pose.pose.position.z;
+    transformStamped.transform.rotation.x    = tf_odom.pose.pose.orientation.x;
+    transformStamped.transform.rotation.y    = tf_odom.pose.pose.orientation.y;
+    transformStamped.transform.rotation.z    = tf_odom.pose.pose.orientation.z;
+    transformStamped.transform.rotation.w    = tf_odom.pose.pose.orientation.w;
 
-    br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "odom", "base_footprint"));
+    br.sendTransform(transformStamped);
 }

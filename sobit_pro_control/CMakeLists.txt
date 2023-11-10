@@ -10,10 +10,12 @@ add_compile_options(-std=c++14)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  std_msgs
-  dynamixel_sdk
-  tf
   roslib
+  dynamixel_sdk
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  std_msgs
 )
 
 catkin_package(INCLUDE_DIRS include CATKIN_DEPENDS roscpp std_msgs roslib)
