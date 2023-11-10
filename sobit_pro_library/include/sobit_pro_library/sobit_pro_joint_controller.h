@@ -64,18 +64,18 @@ class SobitProJointController : private ROSCommonNode {
         double distanceToSec( const std::string& joint_name, const double rad, const double sec );
 
         void loadPose( );
-        bool moveAllJoint( const double arm1,
-                            const double arm2,
-                            const double arm3,
-                            const double arm3_pan,
-                            const double arm4,
+        bool moveAllJoint( const double arm_upper,
+                            const double arm_inner,
+                            const double arm_lower,
+                            const double arm_lower_pan,
+                            const double arm_wrist,
                             const double gripper,
                             const double head_pan,
                             const double head_tilt,
                             const double sec,
                             bool         is_sleep = true );
-        geometry_msgs::Point forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm_elbow_lower_tilt_joint_angle );
-        std::vector<std::vector<double>> inverseKinematics( double arm2_joint_to_object_x, double arm2_joint_to_object_z, double arm1_joint_angle );
+        geometry_msgs::Point forwardKinematics( double arm_upper_joint_angle, double arm_inner_joint_angle, double arm_elbow_lower_tilt_joint_angle );
+        std::vector<std::vector<double>> inverseKinematics( double arm_inner_joint_to_object_x, double arm_inner_joint_to_object_z, double arm_upper_joint_angle );
 
         double arm_wrist_tilt_joint_current_ = 0.;
         double hand_joint_current_ = 0.;
@@ -88,7 +88,7 @@ class SobitProJointController : private ROSCommonNode {
 
         bool moveToPose( const std::string& pose_name, const double sec = 5.0, bool is_sleep = true );
         bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
-        bool moveArm( const double arm1, const double arm2, const double arm3, const double arm3_pan, const double arm4, const double sec = 5.0, bool is_sleep = true );
+        bool moveArm( const double arm_upper, const double arm_inner, const double arm_lower, const double arm_lower_pan, const double arm_wrist, const double sec = 5.0, bool is_sleep = true );
         bool moveHeadPanTilt( const double head_pan, const double head_tilt, const double sec = 5.0, bool is_sleep = true );
         bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
         bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );

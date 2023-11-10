@@ -77,11 +77,11 @@ bool SobitProJointController::moveToPose(const std::string& pose_name, const dou
     }
 }
 
-bool SobitProJointController::moveAllJoint( const double arm1,
-                                            const double arm2,
-                                            const double arm3,
-                                            const double arm3_pan,
-                                            const double arm4,
+bool SobitProJointController::moveAllJoint( const double arm_upper,
+                                            const double arm_inner,
+                                            const double arm_lower,
+                                            const double arm_lower_pan,
+                                            const double arm_wrist,
                                             const double gripper,
                                             const double head_pan,
                                             const double head_tilt,
@@ -92,13 +92,13 @@ bool SobitProJointController::moveAllJoint( const double arm1,
         trajectory_msgs::JointTrajectory head_joint_trajectory;
 
         // Set Joint Trajectory for Arm
-        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm1     , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm1     , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm2     , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm2     , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm3     , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm3_pan , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm4     , sec, &arm_joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm_upper     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm_upper     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm_inner     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm_inner     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_lower     , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_lower_pan , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm_wrist     , sec, &arm_joint_trajectory );
         addJointTrajectory( joint_names_[Joint::HAND_JOINT]                  ,  gripper  , sec, &arm_joint_trajectory );
 
         // Set Joint Trajectory for Head
@@ -168,16 +168,16 @@ bool SobitProJointController::moveHeadPanTilt( const double head_pan, const doub
     }
 }
 
-bool SobitProJointController::moveArm( const double arm1, const double arm2, const double arm3, const double arm3_pan, const double arm4, const double sec, bool is_sleep ) {
+bool SobitProJointController::moveArm( const double arm_upper, const double arm_inner, const double arm_lower, const double arm_lower_pan, const double arm_wrist, const double sec, bool is_sleep ) {
     try {
         trajectory_msgs::JointTrajectory arm_joint_trajectory;
-        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT], arm1, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT], -arm1, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT], arm2, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm2, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT], arm3, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT], arm3_pan, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT], arm4, sec, &arm_joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT], arm_upper, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT], -arm_upper, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT], arm_inner, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm_inner, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT], arm_lower, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT], arm_lower_pan, sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT], arm_wrist, sec, &arm_joint_trajectory );
         checkPublishersConnection( pub_arm_joint_ );
         pub_arm_joint_.publish( arm_joint_trajectory );
         if ( is_sleep ) ros::Duration( sec ).sleep();
@@ -188,13 +188,13 @@ bool SobitProJointController::moveArm( const double arm1, const double arm2, con
     }
 }
 
-geometry_msgs::Point SobitProJointController::forwardKinematics( double arm1_joint_angle, double arm2_joint_angle, double arm_elbow_lower_tilt_joint_angle ) {
+geometry_msgs::Point SobitProJointController::forwardKinematics( double arm_upper_joint_angle, double arm_inner_joint_angle, double arm_elbow_lower_tilt_joint_angle ) {
     geometry_msgs::Point res_point;
 
-    res_point.x = ARM_UPPER * std::cos(arm1_joint_angle) + ARM_INNER * std::cos(arm1_joint_angle + arm2_joint_angle)
-                  + ARM_LOWER * std::cos(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
-    res_point.z = ARM_UPPER * std::sin(arm1_joint_angle) + ARM_INNER * std::sin(arm1_joint_angle + arm2_joint_angle)
-                  + ARM_LOWER * std::sin(arm1_joint_angle + arm2_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.x = ARM_UPPER * std::cos(arm_upper_joint_angle) + ARM_INNER * std::cos(arm_upper_joint_angle + arm_inner_joint_angle)
+                  + ARM_LOWER * std::cos(arm_upper_joint_angle + arm_inner_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.z = ARM_UPPER * std::sin(arm_upper_joint_angle) + ARM_INNER * std::sin(arm_upper_joint_angle + arm_inner_joint_angle)
+                  + ARM_LOWER * std::sin(arm_upper_joint_angle + arm_inner_joint_angle + arm_elbow_lower_tilt_joint_angle);
 
     std::cout << "\n=====================================================" << std::endl;
     std::cout << __func__ << std::endl;
@@ -203,32 +203,32 @@ geometry_msgs::Point SobitProJointController::forwardKinematics( double arm1_joi
     return res_point;
 }
 
-std::vector<std::vector<double>> SobitProJointController::inverseKinematics( double arm2_joint_to_object_x,
-                                                                             double arm2_joint_to_object_z,
-                                                                             double arm1_joint_angle ) {
-    double diagonal_length = std::sqrt(std::pow(arm2_joint_to_object_x, 2) + std::pow(arm2_joint_to_object_z, 2));
-    double cos_arm2_joint
+std::vector<std::vector<double>> SobitProJointController::inverseKinematics( double arm_inner_joint_to_object_x,
+                                                                             double arm_inner_joint_to_object_z,
+                                                                             double arm_upper_joint_angle ) {
+    double diagonal_length = std::sqrt(std::pow(arm_inner_joint_to_object_x, 2) + std::pow(arm_inner_joint_to_object_z, 2));
+    double cos_arm_inner_joint
         = (std::pow(diagonal_length, 2) + std::pow(ARM_INNER, 2) - std::pow(ARM_LOWER, 2)) / (2.0 * diagonal_length * ARM_INNER);
-    double diagonal_angle    = std::atan(arm2_joint_to_object_z / arm2_joint_to_object_x);
+    double diagonal_angle    = std::atan(arm_inner_joint_to_object_z / arm_inner_joint_to_object_x);
 
-    if ( cos_arm2_joint > 1.0 ) {
-        cos_arm2_joint = 1.0;
-    } else if ( cos_arm2_joint < -1.0 ) {
-        cos_arm2_joint = -1.0;
+    if ( cos_arm_inner_joint > 1.0 ) {
+        cos_arm_inner_joint = 1.0;
+    } else if ( cos_arm_inner_joint < -1.0 ) {
+        cos_arm_inner_joint = -1.0;
     }
-    double arm2_joint_angle1 = -((arm1_joint_angle - diagonal_angle) + std::acos(cos_arm2_joint));  // XXX: なぜ-を掛けるか分からないが、動く
-    double arm2_joint_angle2 = -((arm1_joint_angle - diagonal_angle) - std::acos(cos_arm2_joint));  // XXX: なぜ-を掛けるか分からないが、動く
-    double external_angle    = std::acos(cos_arm2_joint) + std::acos(cos_arm2_joint);               // NOTE: 辺の長さが同じため、同じ角度にした
+    double arm_inner_joint_angle1 = -((arm_upper_joint_angle - diagonal_angle) + std::acos(cos_arm_inner_joint));  // XXX: なぜ-を掛けるか分からないが、動く
+    double arm_inner_joint_angle2 = -((arm_upper_joint_angle - diagonal_angle) - std::acos(cos_arm_inner_joint));  // XXX: なぜ-を掛けるか分からないが、動く
+    double external_angle    = std::acos(cos_arm_inner_joint) + std::acos(cos_arm_inner_joint);               // NOTE: 辺の長さが同じため、同じ角度にした
     double arm_elbow_lower_tilt_joint_angle1 = external_angle;
     double arm_elbow_lower_tilt_joint_angle2 = -external_angle;
 
-    double arm_wrist_tilt_joint_angle1 = -(arm1_joint_angle + arm2_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
-    double arm_wrist_tilt_joint_angle2 = -(arm1_joint_angle + arm2_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
-    std::cout << "pair1: (" << arm1_joint_angle << ", " << arm2_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
-    std::cout << "pair2: (" << arm1_joint_angle << ", " << arm2_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
+    double arm_wrist_tilt_joint_angle1 = -(arm_upper_joint_angle + arm_inner_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
+    double arm_wrist_tilt_joint_angle2 = -(arm_upper_joint_angle + arm_inner_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
+    std::cout << "pair1: (" << arm_upper_joint_angle << ", " << arm_inner_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
+    std::cout << "pair2: (" << arm_upper_joint_angle << ", " << arm_inner_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
 
-    std::vector<double> result_angles1{arm1_joint_angle, arm2_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
-    std::vector<double> result_angles2{arm1_joint_angle, arm2_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
+    std::vector<double> result_angles1{arm_upper_joint_angle, arm_inner_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
+    std::vector<double> result_angles2{arm_upper_joint_angle, arm_inner_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
 
     std::vector<std::vector<double>> result_angles_pairs{result_angles1, result_angles2};
 
@@ -247,60 +247,60 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
         return false;
     }
 
-    // 先に、arm1_jointで目標値の3分の1の高さに調整
-    double arm_to_arm2_joint_x = std::sqrt(std::pow(ARM_UPPER, 2) - std::pow(arm_to_object_z / 3.0, 2));
-    double arm1_joint_angle;
+    // 先に、arm_upper_jointで目標値の3分の1の高さに調整
+    double arm_to_arm_inner_joint_x = std::sqrt(std::pow(ARM_UPPER, 2) - std::pow(arm_to_object_z / 3.0, 2));
+    double arm_upper_joint_angle;
     if ( arm_to_object_z < 0 ) {
-        arm1_joint_angle = -std::acos(arm_to_arm2_joint_x / ARM_UPPER);
+        arm_upper_joint_angle = -std::acos(arm_to_arm_inner_joint_x / ARM_UPPER);
     } else {
-        arm1_joint_angle = std::acos(arm_to_arm2_joint_x / ARM_UPPER);
+        arm_upper_joint_angle = std::acos(arm_to_arm_inner_joint_x / ARM_UPPER);
     }
 
-    double arm2_joint_to_object_x = arm_to_object_x - arm_to_arm2_joint_x;
-    double arm2_joint_to_object_y = arm_to_object_y;
-    double arm2_joint_to_object_z = arm_to_object_z - (arm_to_object_z / 3.0);
-    //std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << ", arm2_joint_to_object_z: " << arm2_joint_to_object_z << std::endl;
+    double arm_inner_joint_to_object_x = arm_to_object_x - arm_to_arm_inner_joint_x;
+    double arm_inner_joint_to_object_y = arm_to_object_y;
+    double arm_inner_joint_to_object_z = arm_to_object_z - (arm_to_object_z / 3.0);
+    //std::cout << "arm_inner_joint_to_object_x: " << arm_inner_joint_to_object_x << ", arm_inner_joint_to_object_z: " << arm_inner_joint_to_object_z << std::endl;
 
     // 車輪の移動量の計算
-    double move_wheel_y = arm2_joint_to_object_y;
+    double move_wheel_y = arm_inner_joint_to_object_y;
     // xの移動量は、while文で増減して算出
     // HACK: while文がボトルネックになっているため、計算できるなら最適化したほうが良い
     double       move_wheel_x = 0.0;
     const double step         = 0.01;
 
-    double diagonal_length = std::sqrt(std::pow(arm2_joint_to_object_x, 2) + std::pow(arm2_joint_to_object_z, 2));
-    // arm2_joint_to_object_z を基準に移動量を算出
+    double diagonal_length = std::sqrt(std::pow(arm_inner_joint_to_object_x, 2) + std::pow(arm_inner_joint_to_object_z, 2));
+    // arm_inner_joint_to_object_z を基準に移動量を算出
     // diagonal_lengthを30に固定して計算
     //std::cout << "diagonal_length: " << diagonal_length << std::endl;
-    if ( (ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * std::sqrt(2) || arm2_joint_to_object_x <= 0 ) {
-        double x               = std::sqrt(std::pow(0.30, 2) - std::pow(arm2_joint_to_object_z, 2));
-        move_wheel_x           = arm2_joint_to_object_x - x;
-        arm2_joint_to_object_x = x;
+    if ( (ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * std::sqrt(2) || arm_inner_joint_to_object_x <= 0 ) {
+        double x               = std::sqrt(std::pow(0.30, 2) - std::pow(arm_inner_joint_to_object_z, 2));
+        move_wheel_x           = arm_inner_joint_to_object_x - x;
+        arm_inner_joint_to_object_x = x;
     }
     /*
     while ((ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * std::sqrt(2)) {  // armが届かない場合
-      if (arm2_joint_to_object_x < 0) { // -の場合は無条件でバック
-        arm2_joint_to_object_x += step;
+      if (arm_inner_joint_to_object_x < 0) { // -の場合は無条件でバック
+        arm_inner_joint_to_object_x += step;
         move_wheel_x -= step;
       } else if (diagonal_length < ARM_INNER  * std::sqrt(2)) { // +の場合で、目標値が内側で届かない場合は、バック
-        arm2_joint_to_object_x += step;
+        arm_inner_joint_to_object_x += step;
         move_wheel_x -= step;
       } else if ((ARM_INNER + ARM_LOWER) < diagonal_length) { // +の場合で、目標値が遠い場合は、直進
-        arm2_joint_to_object_x -= step;
+        arm_inner_joint_to_object_x -= step;
         move_wheel_x += step;
       } else {
         std::cout << "ERROR" << std::endl;
       }
 
-      // std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << std::endl;
-      diagonal_length = std::sqrt(std::pow(arm2_joint_to_object_x, 2) + std::pow(arm2_joint_to_object_z, 2));
+      // std::cout << "arm_inner_joint_to_object_x: " << arm_inner_joint_to_object_x << std::endl;
+      diagonal_length = std::sqrt(std::pow(arm_inner_joint_to_object_x, 2) + std::pow(arm_inner_joint_to_object_z, 2));
       // std::cout << "diagonal_length: " << diagonal_length << std::endl;
     }
     */
     //std::cout << "move_wheel_x: " << move_wheel_x << ", move_whell_y: " << move_wheel_y << std::endl;
-    //std::cout << "arm2_joint_to_object_x: " << arm2_joint_to_object_x << std::endl;
+    //std::cout << "arm_inner_joint_to_object_x: " << arm_inner_joint_to_object_x << std::endl;
 
-    std::vector<std::vector<double>> result         = inverseKinematics(arm2_joint_to_object_x, arm2_joint_to_object_z, arm1_joint_angle);
+    std::vector<std::vector<double>> result         = inverseKinematics(arm_inner_joint_to_object_x, arm_inner_joint_to_object_z, arm_upper_joint_angle);
     std::vector<double>              result_angles1 = result.at(0);
     std::vector<double>              result_angles2 = result.at(1);
 
