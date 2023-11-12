@@ -71,7 +71,7 @@ class Ps3_Control:
             else:
                 self.tilt_ang += 0.015
             # カメラパンチルトを動かす
-            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_CAMERA_TILT_JOINT, self.tilt_ang, self.time, False )
+            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_TILT_JOINT, self.tilt_ang, self.time, False )
             self.rate.sleep()
             # print(self.tilt_ang)
 
@@ -85,7 +85,7 @@ class Ps3_Control:
             else:
                 self.tilt_ang += -0.015
             # カメラパンチルトを動かす
-            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_CAMERA_TILT_JOINT, self.tilt_ang, self.time, False )
+            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_TILT_JOINT, self.tilt_ang, self.time, False )
             self.rate.sleep()
             # print(self.tilt_ang)
              
@@ -98,7 +98,7 @@ class Ps3_Control:
             else:
                 self.pan_ang += 0.015
             # カメラパンチルトを動かす
-            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_CAMERA_PAN_JOINT, self.pan_ang, self.time, False )
+            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_PAN_JOINT, self.pan_ang, self.time, False )
             self.rate.sleep()
             # print(self.pan_ang)
         
@@ -111,7 +111,7 @@ class Ps3_Control:
             else:
                 self.pan_ang += -0.015
             # カメラパンチルトを動かす
-            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_CAMERA_PAN_JOINT, self.pan_ang, self.time, False )
+            self.pro_pantilt_ctr.moveJoint( Joint.HEAD_PAN_JOINT, self.pan_ang, self.time, False )
             self.rate.sleep()
             # print(self.pan_ang)
 
