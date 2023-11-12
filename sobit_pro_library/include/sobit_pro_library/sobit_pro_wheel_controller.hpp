@@ -1,13 +1,15 @@
 #ifndef _SOBIT_PRO_LIBRARY_WHEEL_CONTROLLER_H_
 #define _SOBIT_PRO_LIBRARY_WHEEL_CONTROLLER_H_
 
-#include <ros/ros.h>
 #include <cmath>
 #include <cstring>
+
+#include <ros/ros.h>
+#include <sobit_pro_library/sobit_pro_library.h>
+#include <tf/transform_broadcaster.h>
+
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
-#include <tf/transform_broadcaster.h>
-#include <sobit_pro_library/sobit_pro_library.h>
 
 namespace sobit_pro {
     class SobitProWheelController  : private ROSCommonNode {
