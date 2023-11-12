@@ -4,13 +4,13 @@
 namespace sobit_pro{
 
 // why both required?
-SobitProJointController::SobitProJointController( const std::string& name ) : ROSCommonNode(name), nh_(), pnh_("~") {
+SobitProJointController::SobitProJointController( const std::string& name ) : ROSCommonNode(name), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
     pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
     pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
     loadPose();
 }
 
-SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh_("~") {
+SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
     pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
     pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
     loadPose();
@@ -342,21 +342,20 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
 
 bool SobitProJointController::moveGripperToTargetTF( const std::string& target_name,
                                                      const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ){
-    geometry_msgs::Point shift;
+    geometry_msgs::TransformStamped transformStamped;
+    bool is_reached = false;
 
-    // [UPD] tf->tf2
-    tf::StampedTransform transform_arm_to_object;
     try{
-        // ros::Time(0) -> ros::Time::now()?
-        listener_.waitForTransform("arm_base_link", target_name, ros::Time(0), ros::Duration(2.0));
-        listener_.lookupTransform ("arm_base_link", target_name, ros::Time(0), transform_arm_to_object);
-    } catch( tf::TransformException ex ){
+        tfBuffer_.canTransform("arm_base_link", target_name, ros::Time(0), ros::Duration(2.0));
+        transformStamped = tfBuffer_.lookupTransform ("arm_base_link", target_name, ros::Time(0));
+    } catch( tf2::TransformException &ex ){
         ROS_ERROR("%s", ex.what());
         return false;
     }
 
-    bool is_reached = moveGripperToTargetCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
-                                                diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+    auto& tf_target_to_arm = transformStamped.transform.translation;
+    is_reached = moveGripperToTargetCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
+                                           diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
     
     return is_reached;
 }
@@ -387,22 +386,20 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double goal_positio
 
 bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name,
                                                     const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ){
-    //[UPD] tf->tf2
-    // point of target respect to arm_base_link
-    tf::StampedTransform transform_arm_to_object;
+    geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
     try{
-        // ros::Time(0) -> ros::Time::now()?
-        listener_.waitForTransform("arm_base_link", target_name, ros::Time(0), ros::Duration(2.0));
-        listener_.lookupTransform ("arm_base_link", target_name, ros::Time(0), transform_arm_to_object);
-    } catch( tf::TransformException ex ){
+        tfBuffer_.canTransform("arm_base_link", target_name, ros::Time(0), ros::Duration(2.0));
+        transformStamped = tfBuffer_.lookupTransform ("arm_base_link", target_name, ros::Time(0));
+    } catch( tf2::TransformException &ex ){
         ROS_ERROR("%s", ex.what());
         return false;
     }
 
-    is_reached = moveGripperToPlaceCoord( transform_arm_to_object.getOrigin().x(), transform_arm_to_object.getOrigin().y(), transform_arm_to_object.getOrigin().z(),
-                                        diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+    auto& tf_target_to_arm = transformStamped.transform.translation;
+    is_reached = moveGripperToPlaceCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
+                                          diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
     
     return is_reached;
 }

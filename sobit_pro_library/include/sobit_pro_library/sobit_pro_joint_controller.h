@@ -6,9 +6,10 @@
 
 #include <ros/ros.h>
 #include <sobit_pro_library/sobit_pro_library.h>
-#include <tf/transform_listener.h>
+#include <tf2_ros/transform_listener.h>
 
 #include <trajectory_msgs/JointTrajectory.h>
+#include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Point.h>
 #include <sobits_msgs/current_state.h>
 #include <sobits_msgs/current_state_array.h>
@@ -40,13 +41,16 @@ typedef struct {
 
 class SobitProJointController : private ROSCommonNode {
     private:
-        ros::NodeHandle       nh_;
-        ros::NodeHandle       pnh_;
+        ros::NodeHandle   nh_;
+        ros::NodeHandle   pnh_;
 
-        ros::Publisher        pub_arm_joint_;
-        ros::Publisher        pub_head_joint_;
-        tf::TransformListener listener_;
-        std::vector<Pose>     pose_list_;
+        ros::Publisher    pub_arm_joint_;
+        ros::Publisher    pub_head_joint_;
+        
+        tf2_ros::Buffer            tfBuffer_;
+        tf2_ros::TransformListener tfListener_;
+
+        std::vector<Pose> pose_list_;
         const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint", 
                                                         "arm_shoulder_2_tilt_joint",
                                                         "arm_elbow_upper_1_tilt_joint",
@@ -110,7 +114,7 @@ class SobitProJointController : private ROSCommonNode {
                                       const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
         bool moveGripperToPlaceTF( const std::string& target_name,
                                    const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-        bool graspDecision( );
+        bool graspDecision();
 };
 } // namespace sobit_pro
 
