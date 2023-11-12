@@ -421,17 +421,17 @@ bool SobitProJointController::graspDecision(){
 void SobitProJointController::callbackCurrentStateArray( const sobits_msgs::current_state_array msg ){
     ros::spinOnce();
 
-    for( const auto current_state : msg.current_state_array ){
-        if( current_state.joint_name == "arm_wrist_tilt_joint" ){
+    for( const auto actuator : msg.current_state_array ){
+        if( actuator.joint_name == "arm_wrist_tilt_joint" ){
             //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
             //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-            arm_wrist_curr_ = current_state.current_ma;
+            arm_wrist_curr_ = actuator.current_ma;
         }
 
-        if( current_state.joint_name == "hand_joint" ){
+        if( actuator.joint_name == "hand_joint" ){
             //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
             //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-            hand_curr_ = current_state.current_ma;
+            hand_curr_ = actuator.current_ma;
         }
     }
 }
