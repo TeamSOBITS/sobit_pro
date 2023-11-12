@@ -14,7 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   trajectory_msgs
   geometry_msgs
   nav_msgs
-  tf
+  tf2
+  tf2_ros
   pybind11_catkin
 )
 
@@ -32,7 +33,8 @@ catkin_package(
   trajectory_msgs
   geometry_msgs
   nav_msgs
-  tf
+  tf2
+  tf2_ros
   pybind11_catkin
 )
 
