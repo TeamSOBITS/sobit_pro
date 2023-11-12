@@ -6,14 +6,72 @@ namespace sobit_pro{
 SobitProJointController::SobitProJointController( const std::string& name ) : ROSCommonNode(name), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
     pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
     pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
+    
+    sub_curr_arm    = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
+
     loadPose();
 }
 
 SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
     pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
     pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
+
+    sub_curr_arm    = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
+
     loadPose();
 }
+
+geometry_msgs::Point SobitProJointController::forwardKinematics( const double arm_shoulder_tilt_joint_angle,
+                                                                 const double arm_elbow_upper_tilt_joint_angle,
+                                                                 const double arm_elbow_lower_tilt_joint_angle ){
+    geometry_msgs::Point res_point;
+
+    res_point.x =   ARM_UPPER * cosf(arm_shoulder_tilt_joint_angle)
+                  + ARM_INNER * cosf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle)
+                  + ARM_LOWER * cosf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.y = 0.0;
+    res_point.z =   ARM_UPPER * sinf(arm_shoulder_tilt_joint_angle) 
+                  + ARM_INNER * sinf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle)
+                  + ARM_LOWER * sinf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle + arm_elbow_lower_tilt_joint_angle);
+
+    std::cout << "\n=====================================================" << std::endl;
+    std::cout << __func__ << std::endl;
+    std::cout << "x: " << res_point.x << ", z: " << res_point.z << std::endl;
+    std::cout << "======================================================\n" << std::endl;
+
+    return res_point;
+}
+
+std::vector<std::vector<double>> SobitProJointController::inverseKinematics( const double arm_elbow_upper_tilt_joint_to_target_x, const double arm_elbow_upper_tilt_joint_to_target_z,
+                                                                             const double arm_shoulder_tilt_joint_angle ){
+    double diagonal_length     = sqrtf(powf(arm_elbow_upper_tilt_joint_to_target_x, 2.) + powf(arm_elbow_upper_tilt_joint_to_target_z, 2.));
+    double diagonal_angle      = atanf(arm_elbow_upper_tilt_joint_to_target_z / arm_elbow_upper_tilt_joint_to_target_x);
+    double cos_arm_elbow_upper_tilt_joint_joint = (powf(diagonal_length, 2) + powf(ARM_INNER, 2.) - powf(ARM_LOWER, 2.)) / (2. * diagonal_length * ARM_INNER);
+
+    if     ( cos_arm_elbow_upper_tilt_joint_joint >  1. ) cos_arm_elbow_upper_tilt_joint_joint =  1.;
+    else if( cos_arm_elbow_upper_tilt_joint_joint < -1. ) cos_arm_elbow_upper_tilt_joint_joint = -1.;
+    
+    double arm_elbow_upper_tilt_joint_angle1 = -((arm_shoulder_tilt_joint_angle - diagonal_angle) + acosf(cos_arm_elbow_upper_tilt_joint_joint));
+    double arm_elbow_upper_tilt_joint_angle2 = -((arm_shoulder_tilt_joint_angle - diagonal_angle) - acosf(cos_arm_elbow_upper_tilt_joint_joint));
+
+    double external_angle = acosf(cos_arm_elbow_upper_tilt_joint_joint) + acosf(cos_arm_elbow_upper_tilt_joint_joint); // NOTE: 辺の長さが同じため、同じ角度にした
+    double arm_elbow_lower_tilt_joint_angle1 =  external_angle;
+    double arm_elbow_lower_tilt_joint_angle2 = -external_angle;
+
+    double arm_wrist_tilt_joint_angle1 = -(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
+    double arm_wrist_tilt_joint_angle2 = -(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
+
+    std::cout << "pair1: (" << arm_shoulder_tilt_joint_angle << ", " << arm_elbow_upper_tilt_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
+    std::cout << "pair2: (" << arm_shoulder_tilt_joint_angle << ", " << arm_elbow_upper_tilt_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
+
+    std::vector<double> result_angles1{arm_shoulder_tilt_joint_angle, arm_elbow_upper_tilt_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
+    std::vector<double> result_angles2{arm_shoulder_tilt_joint_angle, arm_elbow_upper_tilt_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
+
+    std::vector<std::vector<double>> result_angles_pairs{result_angles1, result_angles2};
+
+    return result_angles_pairs;
+}
+
 
 void SobitProJointController::loadPose(){
     XmlRpc::XmlRpcValue pose_param;
@@ -208,57 +266,6 @@ bool SobitProJointController::moveArm( const double arm_shoulder_tilt_joint,
     }
 }
 
-geometry_msgs::Point SobitProJointController::forwardKinematics( const double arm_shoulder_tilt_joint_angle,
-                                                                 const double arm_elbow_upper_tilt_joint_angle,
-                                                                 const double arm_elbow_lower_tilt_joint_angle ){
-    geometry_msgs::Point res_point;
-
-    res_point.x =   ARM_UPPER * cosf(arm_shoulder_tilt_joint_angle)
-                  + ARM_INNER * cosf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle)
-                  + ARM_LOWER * cosf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle + arm_elbow_lower_tilt_joint_angle);
-    res_point.y = 0.0;
-    res_point.z =   ARM_UPPER * sinf(arm_shoulder_tilt_joint_angle) 
-                  + ARM_INNER * sinf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle)
-                  + ARM_LOWER * sinf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle + arm_elbow_lower_tilt_joint_angle);
-
-    std::cout << "\n=====================================================" << std::endl;
-    std::cout << __func__ << std::endl;
-    std::cout << "x: " << res_point.x << ", z: " << res_point.z << std::endl;
-    std::cout << "======================================================\n" << std::endl;
-
-    return res_point;
-}
-
-std::vector<std::vector<double>> SobitProJointController::inverseKinematics( const double arm_elbow_upper_tilt_joint_to_target_x, const double arm_elbow_upper_tilt_joint_to_target_z,
-                                                                             const double arm_shoulder_tilt_joint_angle ){
-    double diagonal_length     = sqrtf(powf(arm_elbow_upper_tilt_joint_to_target_x, 2.) + powf(arm_elbow_upper_tilt_joint_to_target_z, 2.));
-    double diagonal_angle      = atanf(arm_elbow_upper_tilt_joint_to_target_z / arm_elbow_upper_tilt_joint_to_target_x);
-    double cos_arm_elbow_upper_tilt_joint_joint = (powf(diagonal_length, 2) + powf(ARM_INNER, 2.) - powf(ARM_LOWER, 2.)) / (2. * diagonal_length * ARM_INNER);
-
-    if     ( cos_arm_elbow_upper_tilt_joint_joint >  1. ) cos_arm_elbow_upper_tilt_joint_joint =  1.;
-    else if( cos_arm_elbow_upper_tilt_joint_joint < -1. ) cos_arm_elbow_upper_tilt_joint_joint = -1.;
-    
-    double arm_elbow_upper_tilt_joint_angle1 = -((arm_shoulder_tilt_joint_angle - diagonal_angle) + acosf(cos_arm_elbow_upper_tilt_joint_joint));
-    double arm_elbow_upper_tilt_joint_angle2 = -((arm_shoulder_tilt_joint_angle - diagonal_angle) - acosf(cos_arm_elbow_upper_tilt_joint_joint));
-
-    double external_angle = acosf(cos_arm_elbow_upper_tilt_joint_joint) + acosf(cos_arm_elbow_upper_tilt_joint_joint); // NOTE: 辺の長さが同じため、同じ角度にした
-    double arm_elbow_lower_tilt_joint_angle1 =  external_angle;
-    double arm_elbow_lower_tilt_joint_angle2 = -external_angle;
-
-    double arm_wrist_tilt_joint_angle1 = -(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
-    double arm_wrist_tilt_joint_angle2 = -(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
-
-    std::cout << "pair1: (" << arm_shoulder_tilt_joint_angle << ", " << arm_elbow_upper_tilt_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
-    std::cout << "pair2: (" << arm_shoulder_tilt_joint_angle << ", " << arm_elbow_upper_tilt_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
-
-    std::vector<double> result_angles1{arm_shoulder_tilt_joint_angle, arm_elbow_upper_tilt_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
-    std::vector<double> result_angles2{arm_shoulder_tilt_joint_angle, arm_elbow_upper_tilt_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
-
-    std::vector<std::vector<double>> result_angles_pairs{result_angles1, result_angles2};
-
-    return result_angles_pairs;
-}
-
 bool SobitProJointController::moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
                                                         const double shift_x, const double shift_y, const double shift_z ){
     double arm_to_target_x = target_pos_x + shift_x;
@@ -357,28 +364,25 @@ bool SobitProJointController::moveGripperToTargetTF( const std::string& target_n
     return is_reached;
 }
 
+// Check!!
 bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
                                                        const double shift_x, const double shift_y, const double shift_z ){
-    // 作成中
     double target_z         = 0.;
+    bool   is_reached       = false;
 
     /** 目標値から0.1[m]程下げた位置までアームを移動 **/
     /**  ハンドに負荷がかかった場合はそこで停止する  **/
-    while( -target_z < shift_z ) {
-        moveGripperToTargetCoord( target_pos_x, target_pos_y, target_pos_z, 
-                                  shift_x, shift_y, shift_z );
-        
-        // ハンドのジョイントに負荷がかかった場合、そこで停止する
-        // [UPD] new graspDecision() with speficic range
-        if ( 500 < arm_wrist_tilt_joint_curr_ && arm_wrist_tilt_joint_curr_ < 1000 ) {
-            break;
-        }
+    while( !(is_reached && placeDecision(500, 1000)) ) {
+        is_reached = moveGripperToTargetCoord( target_pos_x, target_pos_y, target_pos_z, 
+                                  shift_x, shift_y, shift_z+target_z );
+
+        if( !is_reached ) return is_reached;
 
         // 目標値からの差分を追加
         target_z -= 0.05;
     }
 
-    return true;
+    return is_reached;
 }
 
 bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name,
@@ -401,12 +405,11 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
     return is_reached;
 }
 
-// [UPD] new graspDecision() with speficic range
 bool SobitProJointController::graspDecision( const int min_curr, const int max_curr ){
     bool is_grasped = false;
 
     while ( gripper_joint_curr_ == 0. ) ros::spinOnce();
-    
+
     // ros::spinOnce();
     std::cout << "gripper_joint_curr_ :" << gripper_joint_curr_ << std::endl;
 
@@ -415,13 +418,17 @@ bool SobitProJointController::graspDecision( const int min_curr, const int max_c
     return is_grasped;
 }
 
-void SobitProJointController::callbackCurrArm( const sobits_msgs::current_state_array msg ){
-    ros::spinOnce();
+bool SobitProJointController::placeDecision( const int min_curr, const int max_curr ){
+    bool is_placed = false;
 
-    for( const auto actuator : msg.current_state_array ){
-        if( actuator.joint_name == joint_names_[ARM_WRIST_TILT_JOINT] ) arm_wrist_tilt_joint_curr_ = actuator.current_ma;
-        if( actuator.joint_name == joint_names_[GRIPPER_JOINT] )        gripper_joint_curr_        = actuator.current_ma;
-    }
+    while ( arm_wrist_tilt_joint_curr_ == 0. ) ros::spinOnce();
+
+    // ros::spinOnce();
+    std::cout << "arm_wrist_tilt_joint_curr_ :" << arm_wrist_tilt_joint_curr_ << std::endl;
+
+    is_placed = (min_curr <= arm_wrist_tilt_joint_curr_ && arm_wrist_tilt_joint_curr_ <= max_curr) ? true : false;
+
+    return is_placed;
 }
 
 }  // namespace sobit_pro

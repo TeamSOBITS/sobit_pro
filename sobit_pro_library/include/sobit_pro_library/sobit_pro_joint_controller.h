@@ -47,6 +47,7 @@ class SobitProJointController : private ROSCommonNode{
 
         ros::Publisher    pub_arm_joint_;
         ros::Publisher    pub_head_joint_;
+        ros::Subscriber   sub_curr_arm;
         
         tf2_ros::Buffer            tfBuffer_;
         tf2_ros::TransformListener tfListener_;
@@ -70,11 +71,23 @@ class SobitProJointController : private ROSCommonNode{
         void setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
         void addJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
         void checkPublishersConnection( const ros::Publisher& pub );
+        void callbackCurrArm( const sobits_msgs::current_state_array& msg );
 
-        void callbackCurrArm( const sobits_msgs::current_state_array );
-        ros::Subscriber sub_curr_arm = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
+        
+        geometry_msgs::Point forwardKinematics( const double arm_shoulder_tilt_joint_angle,
+                                                const double arm_elbow_upper_tilt_joint_angle,
+                                                const double arm_elbow_lower_tilt_joint_angle );
+        std::vector<std::vector<double>> inverseKinematics( const double arm_elbow_upper_tilt_joint_to_target_x, const double arm_elbow_upper_tilt_joint_to_target_z,
+                                                            const double arm_shoulder_tilt_joint_angle );
 
         void loadPose();
+
+    public:
+        SobitProJointController( const std::string& name );
+        SobitProJointController();
+
+        bool moveToPose( const std::string& pose_name,
+                         const double sec = 5.0, bool is_sleep = true );
         bool moveAllJoint( const double arm_shoulder_tilt_joint,
                            const double arm_elbow_upper_tilt_joint,
                            const double arm_elbow_lower_tilt_joint,
@@ -84,19 +97,6 @@ class SobitProJointController : private ROSCommonNode{
                            const double head_pan_joint,
                            const double head_tilt_joint,
                            const double sec = 5.0, bool is_sleep = true );
-        geometry_msgs::Point forwardKinematics( const double arm_shoulder_tilt_joint_angle,
-                                                const double arm_elbow_upper_tilt_joint_angle,
-                                                const double arm_elbow_lower_tilt_joint_angle );
-        std::vector<std::vector<double>> inverseKinematics( const double arm_elbow_upper_tilt_joint_to_target_x, const double arm_elbow_upper_tilt_joint_to_target_z,
-                                                            const double arm_shoulder_tilt_joint_angle );
-
-
-    public:
-        SobitProJointController( const std::string& name );
-        SobitProJointController();
-
-        bool moveToPose( const std::string& pose_name,
-                         const double sec = 5.0, bool is_sleep = true );
         bool moveJoint( const Joint joint_num,
                         const double rad,
                         const double sec = 5.0, bool is_sleep = true );
@@ -117,7 +117,9 @@ class SobitProJointController : private ROSCommonNode{
                                       const double shift_x, const double shift_y, const double shift_z );
         bool moveGripperToPlaceTF( const std::string& target_name,
                                    const double shift_x, const double shift_y, const double shift_z );
-        bool graspDecision();
+        bool graspDecision( const int min_curr = 300, const int max_curr = 1000 );
+        bool placeDecision( const int min_curr = 500, const int max_curr = 1000 );
+
 };
 
 } // namespace sobit_pro
@@ -175,5 +177,14 @@ inline void sobit_pro::SobitProJointController::checkPublishersConnection( const
     return;
 }
 
+// Check!
+inline void sobit_pro::SobitProJointController::callbackCurrArm( const sobits_msgs::current_state_array& msg ){
+    // ros::spinOnce();
+
+    for( const auto actuator : msg.current_state_array ){
+        if( actuator.joint_name == joint_names_[ARM_WRIST_TILT_JOINT] ) arm_wrist_tilt_joint_curr_ = actuator.current_ma;
+        if( actuator.joint_name == joint_names_[GRIPPER_JOINT] )        gripper_joint_curr_        = actuator.current_ma;
+    }
+}
 
 #endif /* _SOBIT_PRO_LIBRARY_JOINT_CONTROLLER_H_ */
