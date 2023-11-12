@@ -13,9 +13,9 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
         .value( "ARM_ELBOW_LOWER_TILT_JOINT", Joint::ARM_ELBOW_LOWER_TILT_JOINT )
         .value( "ARM_ELBOW_LOWER_PAN_JOINT", Joint::ARM_ELBOW_LOWER_PAN_JOINT )
         .value( "ARM_WRIST_TILT_JOINT", Joint::ARM_WRIST_TILT_JOINT )
-        .value( "HAND_JOINT", Joint::HAND_JOINT )
-        .value( "HEAD_CAMERA_PAN_JOINT", Joint::HEAD_CAMERA_PAN_JOINT )
-        .value( "HEAD_CAMERA_TILT_JOINT", Joint::HEAD_CAMERA_TILT_JOINT )
+        .value( "GRIPPER_JOINT", Joint::GRIPPER_JOINT )
+        .value( "HEAD_PAN_JOINT", Joint::HEAD_PAN_JOINT )
+        .value( "HEAD_TILT_JOINT", Joint::HEAD_TILT_JOINT )
         .value( "JOINT_NUM", Joint::JOINT_NUM )
         .export_values( );
 
@@ -36,37 +36,37 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             pybind11::arg( "sec" ) = 5.0,
             pybind11::arg( "is_sleep" ) = true )
         .def( "moveArm", &SobitProJointController::moveArm, "move Arm",
-            pybind11::arg( "arm_upper" ),
-            pybind11::arg( "arm_inner" ),
-            pybind11::arg( "arm_lower" ),
-            pybind11::arg( "arm_lower_pan" ),
+            pybind11::arg( "arm_shoulder_tilt_joint" ),
+            pybind11::arg( "arm_elbow_upper_tilt_joint" ),
+            pybind11::arg( "arm_elbow_lower_tilt_joint" ),
+            pybind11::arg( "arm_elbow_lower_pan_joint" ),
             pybind11::arg( "arm_wrist" ),
             pybind11::arg( "sec" ) = 5.0,
             pybind11::arg( "is_sleep" ) = true )
         .def( "moveGripperToTargetCoord", &SobitProJointController::moveGripperToTargetCoord, "move Gripper To Target Coordinate",
-            pybind11::arg( "goal_position_x" ),
-            pybind11::arg( "goal_position_y" ),
-            pybind11::arg( "goal_position_z" ),
-            pybind11::arg( "diff_goal_position_x" ),
-            pybind11::arg( "diff_goal_position_y" ),
-            pybind11::arg( "diff_goal_position_z" ) )
+            pybind11::arg( "target_pos_x" ),
+            pybind11::arg( "target_pos_y" ),
+            pybind11::arg( "target_pos_z" ),
+            pybind11::arg( "shift_x" ),
+            pybind11::arg( "shift_y" ),
+            pybind11::arg( "shift_z" ) )
         .def( "moveGripperToTargetTF", &SobitProJointController::moveGripperToTargetTF, "move Gripper To Target TF",
             pybind11::arg( "target_name" ),
-            pybind11::arg( "diff_goal_position_x" ),
-            pybind11::arg( "diff_goal_position_y" ),
-            pybind11::arg( "diff_goal_position_z" ) )
+            pybind11::arg( "shift_x" ),
+            pybind11::arg( "shift_y" ),
+            pybind11::arg( "shift_z" ) )
         .def( "moveGripperToPlaceCoord", &SobitProJointController::moveGripperToPlaceCoord, "move Gripper To Placeable Position Coordinate",
-            pybind11::arg( "goal_position_x" ),
-            pybind11::arg( "goal_position_y" ),
-            pybind11::arg( "goal_position_z" ),
-            pybind11::arg( "diff_goal_position_x" ),
-            pybind11::arg( "diff_goal_position_y" ),
-            pybind11::arg( "diff_goal_position_z" ) )
+            pybind11::arg( "target_pos_x" ),
+            pybind11::arg( "target_pos_y" ),
+            pybind11::arg( "target_pos_z" ),
+            pybind11::arg( "shift_x" ),
+            pybind11::arg( "shift_y" ),
+            pybind11::arg( "shift_z" ) )
         .def( "moveGripperToPlaceTF", &SobitProJointController::moveGripperToPlaceTF, "move Gripper To Placeable Position TF",
             pybind11::arg( "target_name" ),
-            pybind11::arg( "diff_goal_position_x" ),
-            pybind11::arg( "diff_goal_position_y" ),
-            pybind11::arg( "diff_goal_position_z" ) )
+            pybind11::arg( "shift_x" ),
+            pybind11::arg( "shift_y" ),
+            pybind11::arg( "shift_z" ) )
         .def( "graspDecision", &SobitProJointController::graspDecision, "grasp Decision" );
 
     pybind11::class_<SobitProWheelController>( m, "SobitProWheelController" )

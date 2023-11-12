@@ -16,7 +16,7 @@ def test():
     # pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, -1.0, 1.0)
 
     # ハンドを動かす
-    pro_joint_ctr.moveJoint( Joint.HAND_JOINT, -1.57, 2.0, True )
+    pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
     # 決められたポーズをする
     pro_joint_ctr.moveToPose( "initial_pose", 1 )

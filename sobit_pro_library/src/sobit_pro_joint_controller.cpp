@@ -3,7 +3,6 @@
 
 namespace sobit_pro{
 
-// why both required?
 SobitProJointController::SobitProJointController( const std::string& name ) : ROSCommonNode(name), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
     pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
     pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
@@ -37,9 +36,9 @@ void SobitProJointController::loadPose(){
         joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT]   =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]]);
         joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT]    =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]]);
         joint_val[Joint::ARM_WRIST_TILT_JOINT]         =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_WRIST_TILT_JOINT]]);
-        joint_val[Joint::HAND_JOINT]                   =  static_cast<double>(pose_param[i][joint_names_[Joint::HAND_JOINT]]);
-        joint_val[Joint::HEAD_CAMERA_PAN_JOINT]        =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]]);
-        joint_val[Joint::HEAD_CAMERA_TILT_JOINT]       =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]]);
+        joint_val[Joint::GRIPPER_JOINT]                   =  static_cast<double>(pose_param[i][joint_names_[Joint::GRIPPER_JOINT]]);
+        joint_val[Joint::HEAD_PAN_JOINT]        =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_PAN_JOINT]]);
+        joint_val[Joint::HEAD_TILT_JOINT]       =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_TILT_JOINT]]);
         pose.joint_val                                 =  joint_val;
 
         pose_list_.push_back( pose );
@@ -68,9 +67,9 @@ bool SobitProJointController::moveToPose(const std::string& pose_name,
                              joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT],
                              joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT],
                              joint_val[Joint::ARM_WRIST_TILT_JOINT],
-                             joint_val[Joint::HAND_JOINT],
-                             joint_val[Joint::HEAD_CAMERA_PAN_JOINT],
-                             joint_val[Joint::HEAD_CAMERA_TILT_JOINT],
+                             joint_val[Joint::GRIPPER_JOINT],
+                             joint_val[Joint::HEAD_PAN_JOINT],
+                             joint_val[Joint::HEAD_TILT_JOINT],
                              sec, is_sleep);
     } else{
         ROS_ERROR("Pose '%s' does not exist.", pose_name.c_str());
@@ -78,32 +77,32 @@ bool SobitProJointController::moveToPose(const std::string& pose_name,
     }
 }
 
-bool SobitProJointController::moveAllJoint( const double arm_upper,
-                                            const double arm_inner,
-                                            const double arm_lower,
-                                            const double arm_lower_pan,
-                                            const double arm_wrist,
-                                            const double gripper,
-                                            const double head_pan,
-                                            const double head_tilt,
+bool SobitProJointController::moveAllJoint( const double arm_shoulder_tilt_joint,
+                                            const double arm_elbow_upper_tilt_joint,
+                                            const double arm_elbow_lower_tilt_joint,
+                                            const double arm_elbow_lower_pan_joint,
+                                            const double arm_wrist_tilt_joint,
+                                            const double gripper_joint,
+                                            const double head_pan_joint,
+                                            const double head_tilt_joint,
                                             const double sec, bool is_sleep){
     try{
         trajectory_msgs::JointTrajectory arm_joint_trajectory;
         trajectory_msgs::JointTrajectory head_joint_trajectory;
 
         // Set Joint Trajectory for Arm
-        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm_upper    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm_upper    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm_inner    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm_inner    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_lower    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_lower_pan, sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm_wrist    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HAND_JOINT]                  ,  gripper      , sec, &arm_joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm_shoulder_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm_shoulder_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm_elbow_upper_tilt_joint , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm_elbow_upper_tilt_joint , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_elbow_lower_tilt_joint , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_elbow_lower_pan_joint  , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm_wrist_tilt_joint       , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::GRIPPER_JOINT]               ,  gripper_joint              , sec, &arm_joint_trajectory );
 
         // Set Joint Trajectory for Head
-        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT]       ,  head_pan , sec, &head_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT]      ,  head_tilt, sec, &head_joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::HEAD_PAN_JOINT]              ,  head_pan_joint             , sec, &head_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HEAD_TILT_JOINT]             ,  head_tilt_joint            , sec, &head_joint_trajectory );
 
         // Publish Joint Trajectory
         checkPublishersConnection( pub_arm_joint_ );
@@ -139,7 +138,7 @@ bool SobitProJointController::moveJoint( const Joint joint_num,
         } else setJointTrajectory( joint_names_[joint_num] ,  rad, sec, &joint_trajectory );
 
 
-        if( joint_num < Joint::HEAD_CAMERA_PAN_JOINT)  {
+        if( joint_num < Joint::HEAD_PAN_JOINT)  {
             checkPublishersConnection( pub_arm_joint_ );
             pub_arm_joint_.publish( joint_trajectory );
         } else{
@@ -157,14 +156,14 @@ bool SobitProJointController::moveJoint( const Joint joint_num,
     }
 }
 
-bool SobitProJointController::moveHeadPanTilt( const double head_pan,
-                                               const double head_tilt,
+bool SobitProJointController::moveHeadPanTilt( const double head_pan_joint,
+                                               const double head_tilt_joint,
                                                const double sec, bool is_sleep ){
     try{
         trajectory_msgs::JointTrajectory joint_trajectory;
 
-        setJointTrajectory( joint_names_[Joint::HEAD_CAMERA_PAN_JOINT] , head_pan , sec, &joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HEAD_CAMERA_TILT_JOINT], head_tilt, sec, &joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::HEAD_PAN_JOINT] , head_pan_joint , sec, &joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HEAD_TILT_JOINT], head_tilt_joint, sec, &joint_trajectory );
 
         checkPublishersConnection( pub_head_joint_ );
         pub_head_joint_.publish( joint_trajectory );
@@ -179,21 +178,21 @@ bool SobitProJointController::moveHeadPanTilt( const double head_pan,
     }
 }
 
-bool SobitProJointController::moveArm( const double arm_upper,
-                                       const double arm_inner,
-                                       const double arm_lower,
-                                       const double arm_lower_pan,
+bool SobitProJointController::moveArm( const double arm_shoulder_tilt_joint,
+                                       const double arm_elbow_upper_tilt_joint,
+                                       const double arm_elbow_lower_tilt_joint,
+                                       const double arm_elbow_lower_pan_joint,
                                        const double arm_wrist,
                                        const double sec, bool is_sleep ){
     try{
         trajectory_msgs::JointTrajectory arm_joint_trajectory;
 
-        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm_upper    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm_upper    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm_inner    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm_inner    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_lower    , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_lower_pan, sec, &arm_joint_trajectory );
+        setJointTrajectory( joint_names_[Joint::ARM_SHOULDER_1_TILT_JOINT]   ,  arm_shoulder_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_SHOULDER_2_TILT_JOINT]   , -arm_shoulder_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_1_TILT_JOINT],  arm_elbow_upper_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_UPPER_2_TILT_JOINT], -arm_elbow_upper_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_elbow_lower_tilt_joint    , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_elbow_lower_pan_joint, sec, &arm_joint_trajectory );
         addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm_wrist    , sec, &arm_joint_trajectory );
 
         checkPublishersConnection( pub_arm_joint_ );
@@ -209,18 +208,18 @@ bool SobitProJointController::moveArm( const double arm_upper,
     }
 }
 
-geometry_msgs::Point SobitProJointController::forwardKinematics( const double arm_upper_joint_angle,
-                                                                 const double arm_inner_joint_angle,
+geometry_msgs::Point SobitProJointController::forwardKinematics( const double arm_shoulder_tilt_joint_angle,
+                                                                 const double arm_elbow_upper_tilt_joint_angle,
                                                                  const double arm_elbow_lower_tilt_joint_angle ){
     geometry_msgs::Point res_point;
 
-    res_point.x =   ARM_UPPER * cosf(arm_upper_joint_angle)
-                  + ARM_INNER * cosf(arm_upper_joint_angle + arm_inner_joint_angle)
-                  + ARM_LOWER * cosf(arm_upper_joint_angle + arm_inner_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.x =   ARM_UPPER * cosf(arm_shoulder_tilt_joint_angle)
+                  + ARM_INNER * cosf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle)
+                  + ARM_LOWER * cosf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle + arm_elbow_lower_tilt_joint_angle);
     res_point.y = 0.0;
-    res_point.z =   ARM_UPPER * sinf(arm_upper_joint_angle) 
-                  + ARM_INNER * sinf(arm_upper_joint_angle + arm_inner_joint_angle)
-                  + ARM_LOWER * sinf(arm_upper_joint_angle + arm_inner_joint_angle + arm_elbow_lower_tilt_joint_angle);
+    res_point.z =   ARM_UPPER * sinf(arm_shoulder_tilt_joint_angle) 
+                  + ARM_INNER * sinf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle)
+                  + ARM_LOWER * sinf(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle + arm_elbow_lower_tilt_joint_angle);
 
     std::cout << "\n=====================================================" << std::endl;
     std::cout << __func__ << std::endl;
@@ -230,84 +229,82 @@ geometry_msgs::Point SobitProJointController::forwardKinematics( const double ar
     return res_point;
 }
 
-std::vector<std::vector<double>> SobitProJointController::inverseKinematics( const double arm_inner_joint_to_object_x, const double arm_inner_joint_to_object_z,
-                                                                             const double arm_upper_joint_angle ){
-    double diagonal_length     = sqrtf(powf(arm_inner_joint_to_object_x, 2.) + powf(arm_inner_joint_to_object_z, 2.));
-    double diagonal_angle      = atanf(arm_inner_joint_to_object_z / arm_inner_joint_to_object_x);
-    double cos_arm_inner_joint = (powf(diagonal_length, 2) + powf(ARM_INNER, 2.) - powf(ARM_LOWER, 2.)) / (2. * diagonal_length * ARM_INNER);
+std::vector<std::vector<double>> SobitProJointController::inverseKinematics( const double arm_elbow_upper_tilt_joint_to_target_x, const double arm_elbow_upper_tilt_joint_to_target_z,
+                                                                             const double arm_shoulder_tilt_joint_angle ){
+    double diagonal_length     = sqrtf(powf(arm_elbow_upper_tilt_joint_to_target_x, 2.) + powf(arm_elbow_upper_tilt_joint_to_target_z, 2.));
+    double diagonal_angle      = atanf(arm_elbow_upper_tilt_joint_to_target_z / arm_elbow_upper_tilt_joint_to_target_x);
+    double cos_arm_elbow_upper_tilt_joint_joint = (powf(diagonal_length, 2) + powf(ARM_INNER, 2.) - powf(ARM_LOWER, 2.)) / (2. * diagonal_length * ARM_INNER);
 
-    if     ( cos_arm_inner_joint >  1. ) cos_arm_inner_joint =  1.;
-    else if( cos_arm_inner_joint < -1. ) cos_arm_inner_joint = -1.;
+    if     ( cos_arm_elbow_upper_tilt_joint_joint >  1. ) cos_arm_elbow_upper_tilt_joint_joint =  1.;
+    else if( cos_arm_elbow_upper_tilt_joint_joint < -1. ) cos_arm_elbow_upper_tilt_joint_joint = -1.;
     
-    double arm_inner_joint_angle1 = -((arm_upper_joint_angle - diagonal_angle) + std::acos(cos_arm_inner_joint));  // XXX: なぜ-を掛けるか分からないが、動く
-    double arm_inner_joint_angle2 = -((arm_upper_joint_angle - diagonal_angle) - std::acos(cos_arm_inner_joint));  // XXX: なぜ-を掛けるか分からないが、動く
+    double arm_elbow_upper_tilt_joint_angle1 = -((arm_shoulder_tilt_joint_angle - diagonal_angle) + acosf(cos_arm_elbow_upper_tilt_joint_joint));
+    double arm_elbow_upper_tilt_joint_angle2 = -((arm_shoulder_tilt_joint_angle - diagonal_angle) - acosf(cos_arm_elbow_upper_tilt_joint_joint));
 
-    double external_angle = acosf(cos_arm_inner_joint) + acosf(cos_arm_inner_joint);               // NOTE: 辺の長さが同じため、同じ角度にした
+    double external_angle = acosf(cos_arm_elbow_upper_tilt_joint_joint) + acosf(cos_arm_elbow_upper_tilt_joint_joint); // NOTE: 辺の長さが同じため、同じ角度にした
     double arm_elbow_lower_tilt_joint_angle1 =  external_angle;
     double arm_elbow_lower_tilt_joint_angle2 = -external_angle;
 
-    double arm_wrist_tilt_joint_angle1 = -(arm_upper_joint_angle + arm_inner_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
-    double arm_wrist_tilt_joint_angle2 = -(arm_upper_joint_angle + arm_inner_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
+    double arm_wrist_tilt_joint_angle1 = -(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle1 + arm_elbow_lower_tilt_joint_angle1);
+    double arm_wrist_tilt_joint_angle2 = -(arm_shoulder_tilt_joint_angle + arm_elbow_upper_tilt_joint_angle2 + arm_elbow_lower_tilt_joint_angle2);
 
-    std::cout << "pair1: (" << arm_upper_joint_angle << ", " << arm_inner_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
-    std::cout << "pair2: (" << arm_upper_joint_angle << ", " << arm_inner_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
+    std::cout << "pair1: (" << arm_shoulder_tilt_joint_angle << ", " << arm_elbow_upper_tilt_joint_angle1 << ", " << arm_elbow_lower_tilt_joint_angle1 << ", " << arm_wrist_tilt_joint_angle1 << ")" << std::endl;
+    std::cout << "pair2: (" << arm_shoulder_tilt_joint_angle << ", " << arm_elbow_upper_tilt_joint_angle2 << ", " << arm_elbow_lower_tilt_joint_angle2 << ", " << arm_wrist_tilt_joint_angle2 << ")" << std::endl;
 
-    // Check!!
-    std::vector<double> result_angles1{arm_upper_joint_angle, arm_inner_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
-    std::vector<double> result_angles2{arm_upper_joint_angle, arm_inner_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
+    std::vector<double> result_angles1{arm_shoulder_tilt_joint_angle, arm_elbow_upper_tilt_joint_angle1, arm_elbow_lower_tilt_joint_angle1, arm_wrist_tilt_joint_angle1};
+    std::vector<double> result_angles2{arm_shoulder_tilt_joint_angle, arm_elbow_upper_tilt_joint_angle2, arm_elbow_lower_tilt_joint_angle2, arm_wrist_tilt_joint_angle2};
 
     std::vector<std::vector<double>> result_angles_pairs{result_angles1, result_angles2};
 
     return result_angles_pairs;
 }
 
-bool SobitProJointController::moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z,
-                                                        const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ){
-    double arm_to_target_x = goal_position_x + diff_goal_position_x;
-    double arm_to_target_y = goal_position_y + diff_goal_position_y;
-    double arm_to_target_z = goal_position_z + diff_goal_position_z;
+bool SobitProJointController::moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+                                                        const double shift_x, const double shift_y, const double shift_z ){
+    double arm_to_target_x = target_pos_x + shift_x;
+    double arm_to_target_y = target_pos_y + shift_y;
+    double arm_to_target_z = target_pos_z + shift_z;
 
-    if ( (arm_to_target_z < -(ARM_LENTGH+ARM_HAND)) || (ARM_LENTGH < arm_to_target_z) ) {
+    if ( (arm_to_target_z < -(ARM_LENTGH+ARM_GRIPPER)) || (ARM_LENTGH < arm_to_target_z) ) {
         std::cout << "Arm cannot reach target" << std::endl;
         return false;
     }
 
-    // 先に、arm_upper_jointで目標値の3分の1の高さに調整
-    double arm_to_arm_inner_joint_x = sqrtf(powf(ARM_UPPER, 2.) - powf(arm_to_target_z / 3., 2.));
-    double arm_upper_joint_angle;
+    // 先に、arm_shoulder_tilt_joint_jointで目標値の3分の1の高さに調整
+    double arm_to_arm_elbow_upper_tilt_joint_x = sqrtf(powf(ARM_UPPER, 2.) - powf(arm_to_target_z / 3., 2.));
+    double arm_shoulder_tilt_joint_angle;
 
-    if ( arm_to_target_z < 0 ) arm_upper_joint_angle = -acosf(arm_to_arm_inner_joint_x / ARM_UPPER);
-    else                       arm_upper_joint_angle =  acosf(arm_to_arm_inner_joint_x / ARM_UPPER);
+    if ( arm_to_target_z < 0 ) arm_shoulder_tilt_joint_angle = -acosf(arm_to_arm_elbow_upper_tilt_joint_x / ARM_UPPER);
+    else                       arm_shoulder_tilt_joint_angle =  acosf(arm_to_arm_elbow_upper_tilt_joint_x / ARM_UPPER);
 
-    // replace: object -> target
-    double arm_inner_joint_to_object_x = arm_to_target_x - arm_to_arm_inner_joint_x;
-    double arm_inner_joint_to_object_y = arm_to_target_y;
-    double arm_inner_joint_to_object_z = arm_to_target_z - (arm_to_target_z / 3.0);
-    //std::cout << "arm_inner_joint_to_object_x: " << arm_inner_joint_to_object_x << ", arm_inner_joint_to_object_z: " << arm_inner_joint_to_object_z << std::endl;
+    double arm_elbow_upper_tilt_joint_to_target_x = arm_to_target_x - arm_to_arm_elbow_upper_tilt_joint_x;
+    double arm_elbow_upper_tilt_joint_to_target_y = arm_to_target_y;
+    double arm_elbow_upper_tilt_joint_to_target_z = arm_to_target_z - (arm_to_target_z / 3.0);
+    //std::cout << "arm_elbow_upper_tilt_joint_to_target_x: " << arm_elbow_upper_tilt_joint_to_target_x << ", arm_elbow_upper_tilt_joint_to_target_z: " << arm_elbow_upper_tilt_joint_to_target_z << std::endl;
 
 
     // 車輪の移動量の計算
     double move_wheel_x = 0.0;
-    double move_wheel_y = arm_inner_joint_to_object_y;
+    double move_wheel_y = arm_elbow_upper_tilt_joint_to_target_y;
 
-    double diagonal_length = sqrtf(powf(arm_inner_joint_to_object_x, 2.) + powf(arm_inner_joint_to_object_z, 2));
+    double diagonal_length = sqrtf(powf(arm_elbow_upper_tilt_joint_to_target_x, 2.) + powf(arm_elbow_upper_tilt_joint_to_target_z, 2));
     //std::cout << "diagonal_length: " << diagonal_length << std::endl;
 
-    // arm_inner_joint_to_object_z を基準に移動量を算出
+    // arm_elbow_upper_tilt_joint_to_target_z を基準に移動量を算出
     // diagonal_lengthを30cmに固定して計算
-    if ( (ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * sqrtf(2.) || arm_inner_joint_to_object_x <= 0 ) {
-        double x     = sqrtf(powf(0.30, 2) - powf(arm_inner_joint_to_object_z, 2.));
-        move_wheel_x = arm_inner_joint_to_object_x - x;
-        arm_inner_joint_to_object_x = x;
+    if ( (ARM_INNER + ARM_LOWER) < diagonal_length || diagonal_length < ARM_INNER * sqrtf(2.) || arm_elbow_upper_tilt_joint_to_target_x <= 0 ) {
+        double x     = sqrtf(powf(0.30, 2) - powf(arm_elbow_upper_tilt_joint_to_target_z, 2.));
+        move_wheel_x = arm_elbow_upper_tilt_joint_to_target_x - x;
+        arm_elbow_upper_tilt_joint_to_target_x = x;
     }
 
-    std::vector<std::vector<double>> result         = inverseKinematics(arm_inner_joint_to_object_x, arm_inner_joint_to_object_z, arm_upper_joint_angle);
+    std::vector<std::vector<double>> result         = inverseKinematics(arm_elbow_upper_tilt_joint_to_target_x, arm_elbow_upper_tilt_joint_to_target_z, arm_shoulder_tilt_joint_angle);
     std::vector<double>              result_angles1 = result.at(0);
     std::vector<double>              result_angles2 = result.at(1);
 
     /** 順運動学で確認 **/
-    geometry_msgs::Point result_xz1 = forwardKinematics(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2));
-    geometry_msgs::Point result_xz2 = forwardKinematics(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2));
+    geometry_msgs::Point result_pos1 = forwardKinematics(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2));
+    geometry_msgs::Point result_pos2 = forwardKinematics(result_angles2.at(0), result_angles2.at(1), result_angles2.at(2));
 
     /** 車輪で最適な把持位置まで移動 **/
     std::cout << "(move_x, move_y): (" << move_wheel_x << ", " << move_wheel_y << ")" << std::endl;
@@ -316,16 +313,16 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
 
     /** アームを物体のところまで移動 **/
     std::cout << "Arm position in result_angles1: " << std::endl;
-    std::cout << "arm_upper_joint: " << result_angles1.at(0) << std::endl;
-    std::cout << "arm_inner_joint: " << result_angles1.at(1) << std::endl;
-    std::cout << "arm_lower_joint: " << result_angles1.at(2) << std::endl;
-    std::cout << "arm_wrist_joint: " << result_angles1.at(3) << std::endl;
+    std::cout << "arm_shoulder_tilt_joint: "    << result_angles1.at(0) << std::endl;
+    std::cout << "arm_elbow_upper_tilt_joint: " << result_angles1.at(1) << std::endl;
+    std::cout << "arm_elbow_lower_tilt_joint: " << result_angles1.at(2) << std::endl;
+    std::cout << "arm_wrist_joint: "            << result_angles1.at(3) << std::endl;
 
     // std::cout << "Arm position in result_angles2: " << std::endl;
-    // std::cout << "arm_upper_joint: " << result_angles2.at(0) << std::endl;
-    // std::cout << "arm_inner_joint: " << result_angles2.at(1) << std::endl;
-    // std::cout << "arm_lower_joint: " << result_angles2.at(2) << std::endl;
-    // std::cout << "arm_wrist_joint: " << result_angles2.at(3) << std::endl;
+    // std::cout << "arm_shoulder_tilt_joint: "    << result_angles2.at(0) << std::endl;
+    // std::cout << "arm_elbow_upper_tilt_joint: " << result_angles2.at(1) << std::endl;
+    // std::cout << "arm_elbow_lower_tilt_joint: " << result_angles2.at(2) << std::endl;
+    // std::cout << "arm_wrist_joint: "            << result_angles2.at(3) << std::endl;
     
     // [ADD] choose the best angles (result_angles1 or result_angles2)
 
@@ -334,14 +331,14 @@ bool SobitProJointController::moveGripperToTargetCoord( const double goal_positi
     if ( arm_to_target_z < -ARM_LENTGH ) is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3)-1.57); 
     else                                 is_reached = moveArm(result_angles1.at(0), result_angles1.at(1), result_angles1.at(2), 0.0, result_angles1.at(3));
 
-    std::cout << "Target Position: (x, y, z) : (" <<goal_position_x << ", " << goal_position_y << ", "<< goal_position_z << ")" << std::endl;
-    std::cout << "Result Position: (x, y, z) : (" << result_xz1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_xz1.z << ")" << std::endl;
+    std::cout << "Target Position: (x, y, z) : (" << target_pos_x << ", " << target_pos_y << ", "<< target_pos_z << ")" << std::endl;
+    std::cout << "Result Position: (x, y, z) : (" << result_pos1.x + move_wheel_x << ", " << move_wheel_y << ", " << result_pos1.z << ")" << std::endl;
 
     return is_reached;
 }
 
 bool SobitProJointController::moveGripperToTargetTF( const std::string& target_name,
-                                                     const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ){
+                                                     const double shift_x, const double shift_y, const double shift_z ){
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
@@ -355,25 +352,25 @@ bool SobitProJointController::moveGripperToTargetTF( const std::string& target_n
 
     auto& tf_target_to_arm = transformStamped.transform.translation;
     is_reached = moveGripperToTargetCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
-                                           diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+                                           shift_x, shift_y, shift_z );
     
     return is_reached;
 }
 
-bool SobitProJointController::moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z,
-                                                       const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ){
+bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+                                                       const double shift_x, const double shift_y, const double shift_z ){
     // 作成中
     double target_z         = 0.;
 
     /** 目標値から0.1[m]程下げた位置までアームを移動 **/
     /**  ハンドに負荷がかかった場合はそこで停止する  **/
-    while( -target_z < diff_goal_position_z ) {
-        moveGripperToTargetCoord( goal_position_x, goal_position_y, goal_position_z, 
-                                  diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+    while( -target_z < shift_z ) {
+        moveGripperToTargetCoord( target_pos_x, target_pos_y, target_pos_z, 
+                                  shift_x, shift_y, shift_z );
         
         // ハンドのジョイントに負荷がかかった場合、そこで停止する
         // [UPD] new graspDecision() with speficic range
-        if ( 500 < arm_wrist_curr_ && arm_wrist_curr_ < 1000 ) {
+        if ( 500 < arm_wrist_tilt_joint_curr_ && arm_wrist_tilt_joint_curr_ < 1000 ) {
             break;
         }
 
@@ -385,7 +382,7 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double goal_positio
 }
 
 bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name,
-                                                    const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z ){
+                                                    const double shift_x, const double shift_y, const double shift_z ){
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
@@ -399,7 +396,7 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
 
     auto& tf_target_to_arm = transformStamped.transform.translation;
     is_reached = moveGripperToPlaceCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
-                                          diff_goal_position_x, diff_goal_position_y, diff_goal_position_z );
+                                          shift_x, shift_y, shift_z );
     
     return is_reached;
 }
@@ -408,31 +405,22 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
 bool SobitProJointController::graspDecision(){
     bool is_grasped = false;
 
-    while ( hand_curr_ == 0. ) ros::spinOnce();
+    while ( gripper_joint_curr_ == 0. ) ros::spinOnce();
     
     // ros::spinOnce();
-    std::cout << "hand_curr_ :" << hand_curr_ << std::endl;
+    std::cout << "gripper_joint_curr_ :" << gripper_joint_curr_ << std::endl;
 
-    is_grasped = (300 <= hand_curr_ && hand_curr_ <= 1000) ? true : false;
+    is_grasped = (300 <= gripper_joint_curr_ && gripper_joint_curr_ <= 1000) ? true : false;
 
     return is_grasped;
 }
 
-void SobitProJointController::callbackCurrentStateArray( const sobits_msgs::current_state_array msg ){
+void SobitProJointController::callbackCurrArm( const sobits_msgs::current_state_array msg ){
     ros::spinOnce();
 
     for( const auto actuator : msg.current_state_array ){
-        if( actuator.joint_name == "arm_wrist_tilt_joint" ){
-            //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
-            //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-            arm_wrist_curr_ = actuator.current_ma;
-        }
-
-        if( actuator.joint_name == "hand_joint" ){
-            //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
-            //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-            hand_curr_ = actuator.current_ma;
-        }
+        if( actuator.joint_name == joint_names_[ARM_WRIST_TILT_JOINT] ) arm_wrist_tilt_joint_curr_ = actuator.current_ma;
+        if( actuator.joint_name == joint_names_[GRIPPER_JOINT] )        gripper_joint_curr_        = actuator.current_ma;
     }
 }
 

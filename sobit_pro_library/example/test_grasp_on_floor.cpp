@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     ros::Duration(3.0).sleep();
 
     // Open the hand
-    pro_joint_ctrl.moveJoint( sobit_pro::Joint::HAND_JOINT, 1.57, 2.0, true );
+    pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 1.57, 2.0, true );
     ros::Duration(2.0).sleep();
 
     // Move the hand towards the target "target_name" and check if grasped
@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 
     if (grasp_flag){
         // Close Hand
-        pro_joint_ctrl.moveJoint(sobit_pro::Joint::HAND_JOINT, 0.0, 2.0, true);
+        pro_joint_ctrl.moveJoint(sobit_pro::Joint::GRIPPER_JOINT, 0.0, 2.0, true);
 
         //Pose: grasp_high_pose
         pro_joint_ctrl.moveToPose("grasp_high_pose");

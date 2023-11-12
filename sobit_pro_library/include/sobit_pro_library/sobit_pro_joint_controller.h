@@ -14,32 +14,33 @@
 #include <sobits_msgs/current_state.h>
 #include <sobits_msgs/current_state_array.h>
 
-#define ARM_UPPER  0.15
-#define ARM_INNER  0.15
-#define ARM_LOWER  0.15
-#define ARM_HAND   0.25 // Prev 25.0?
+#define ARM_UPPER   0.15
+#define ARM_INNER   0.15
+#define ARM_LOWER   0.15
+#define ARM_GRIPPER 0.25 // Prev 25.0?
 #define ARM_LENTGH ARM_UPPER+ARM_INNER+ARM_LOWER
 
-namespace sobit_pro {
-enum Joint {    ARM_SHOULDER_1_TILT_JOINT = 0,
-                ARM_SHOULDER_2_TILT_JOINT,
-                ARM_ELBOW_UPPER_1_TILT_JOINT,
-                ARM_ELBOW_UPPER_2_TILT_JOINT,
-                ARM_ELBOW_LOWER_TILT_JOINT,
-                ARM_ELBOW_LOWER_PAN_JOINT,
-                ARM_WRIST_TILT_JOINT,
-                HAND_JOINT,
-                HEAD_CAMERA_PAN_JOINT,
-                HEAD_CAMERA_TILT_JOINT,
-                JOINT_NUM
-            };
+namespace sobit_pro{
 
-typedef struct {
+enum Joint{ ARM_SHOULDER_1_TILT_JOINT = 0,
+            ARM_SHOULDER_2_TILT_JOINT,
+            ARM_ELBOW_UPPER_1_TILT_JOINT,
+            ARM_ELBOW_UPPER_2_TILT_JOINT,
+            ARM_ELBOW_LOWER_TILT_JOINT,
+            ARM_ELBOW_LOWER_PAN_JOINT,
+            ARM_WRIST_TILT_JOINT,
+            GRIPPER_JOINT,
+            HEAD_PAN_JOINT,
+            HEAD_TILT_JOINT,
+            JOINT_NUM
+           };
+
+typedef struct{
     std::string         pose_name;
     std::vector<double> joint_val;
 } Pose;
 
-class SobitProJointController : private ROSCommonNode {
+class SobitProJointController : private ROSCommonNode{
     private:
         ros::NodeHandle   nh_;
         ros::NodeHandle   pnh_;
@@ -51,6 +52,10 @@ class SobitProJointController : private ROSCommonNode {
         tf2_ros::TransformListener tfListener_;
 
         std::vector<Pose> pose_list_;
+
+        double arm_wrist_tilt_joint_curr_ = 0.;
+        double gripper_joint_curr_        = 0.;
+
         const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint", 
                                                         "arm_shoulder_2_tilt_joint",
                                                         "arm_elbow_upper_1_tilt_joint",
@@ -65,28 +70,26 @@ class SobitProJointController : private ROSCommonNode {
         void setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
         void addJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
         void checkPublishersConnection( const ros::Publisher& pub );
-        double distanceToSec( const std::string& joint_name, const double rad, const double sec );
+
+        void callbackCurrArm( const sobits_msgs::current_state_array );
+        ros::Subscriber sub_curr_arm = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
 
         void loadPose();
-        bool moveAllJoint( const double arm_upper,
-                           const double arm_inner,
-                           const double arm_lower,
-                           const double arm_lower_pan,
-                           const double arm_wrist,
-                           const double gripper,
-                           const double head_pan,
-                           const double head_tilt,
-                           const double sec, bool is_sleep = true );
-        geometry_msgs::Point forwardKinematics( const double arm_upper_joint_angle,
-                                                const double arm_inner_joint_angle,
+        bool moveAllJoint( const double arm_shoulder_tilt_joint,
+                           const double arm_elbow_upper_tilt_joint,
+                           const double arm_elbow_lower_tilt_joint,
+                           const double arm_elbow_lower_pan_joint,
+                           const double arm_wrist_tilt_joint,
+                           const double gripper_joint,
+                           const double head_pan_joint,
+                           const double head_tilt_joint,
+                           const double sec = 5.0, bool is_sleep = true );
+        geometry_msgs::Point forwardKinematics( const double arm_shoulder_tilt_joint_angle,
+                                                const double arm_elbow_upper_tilt_joint_angle,
                                                 const double arm_elbow_lower_tilt_joint_angle );
-        std::vector<std::vector<double>> inverseKinematics( const double arm_inner_joint_to_object_x, const double arm_inner_joint_to_object_z,
-                                                            const double arm_upper_joint_angle );
+        std::vector<std::vector<double>> inverseKinematics( const double arm_elbow_upper_tilt_joint_to_target_x, const double arm_elbow_upper_tilt_joint_to_target_z,
+                                                            const double arm_shoulder_tilt_joint_angle );
 
-        double arm_wrist_curr_ = 0.;
-        double hand_curr_      = 0.;
-        void callbackCurrentStateArray( const sobits_msgs::current_state_array );
-        ros::Subscriber sub_current_state_array = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this );
 
     public:
         SobitProJointController( const std::string& name );
@@ -97,30 +100,31 @@ class SobitProJointController : private ROSCommonNode {
         bool moveJoint( const Joint joint_num,
                         const double rad,
                         const double sec = 5.0, bool is_sleep = true );
-        bool moveArm( const double arm_upper,
-                      const double arm_inner,
-                      const double arm_lower,
-                      const double arm_lower_pan,
+        bool moveArm( const double arm_shoulder_tilt_joint,
+                      const double arm_elbow_upper_tilt_joint,
+                      const double arm_elbow_lower_tilt_joint,
+                      const double arm_elbow_lower_pan_joint,
                       const double arm_wrist,
                       const double sec = 5.0, bool is_sleep = true );
-        bool moveHeadPanTilt( const double head_pan,
-                              const double head_tilt,
+        bool moveHeadPanTilt( const double head_pan_joint,
+                              const double head_tilt_joint,
                               const double sec = 5.0, bool is_sleep = true );
-        bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z,
-                                       const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+                                       const double shift_x, const double shift_y, const double shift_z );
         bool moveGripperToTargetTF( const std::string& target_name,
-                                    const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-        bool moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z,
-                                      const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+                                    const double shift_x, const double shift_y, const double shift_z );
+        bool moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+                                      const double shift_x, const double shift_y, const double shift_z );
         bool moveGripperToPlaceTF( const std::string& target_name,
-                                   const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+                                   const double shift_x, const double shift_y, const double shift_z );
         bool graspDecision();
 };
+
 } // namespace sobit_pro
 
-inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::string&                joint_name,
-                                                                    const double                      rad,
-                                                                    const double                      sec,
+inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::string& joint_name,
+                                                                    const double       rad,
+                                                                    const double       sec,
                                                                     trajectory_msgs::JointTrajectory* jt ) {
     trajectory_msgs::JointTrajectory      joint_trajectory;
     trajectory_msgs::JointTrajectoryPoint joint_trajectory_point;
@@ -171,12 +175,5 @@ inline void sobit_pro::SobitProJointController::checkPublishersConnection( const
     return;
 }
 
-inline double sobit_pro::SobitProJointController::distanceToSec( const std::string& joint_name, const double rad, const double sec ) {
-    // get the current position of the joint
-    // calculate the distance to the target (current_pos - goal_pos) in rad
-    // calculate the seconds to be executed if to complete 90 degrees 1 sec is needed
-    // multiply the result by a constant so it can be faster or slower
-    return sec;
-}
 
 #endif /* _SOBIT_PRO_LIBRARY_JOINT_CONTROLLER_H_ */

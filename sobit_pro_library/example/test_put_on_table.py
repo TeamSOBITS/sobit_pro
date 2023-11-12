@@ -54,7 +54,7 @@ def test():
     if( res == True ){
 
         # ハンドを動かす
-        pro_joint_ctr.moveJoint( Joint.HAND_JOINT, -1.57, 2.0, True )
+        pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
         # 決められたポーズをする
         pro_joint_ctr.moveToPose( "put_high_pose" )

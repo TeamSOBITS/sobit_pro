@@ -15,7 +15,7 @@ def test():
         ang = -1.0 * ang
 
         # カメラパンチルトを動かす
-        pro_joint_ctr.moveJoint( Joint.HEAD_CAMERA_PAN_JOINT, ang, 2.0, False )
+        pro_joint_ctr.moveJoint( Joint.HEAD_PAN_JOINT, ang, 2.0, False )
         r.sleep()
 
 if __name__ == '__main__':
