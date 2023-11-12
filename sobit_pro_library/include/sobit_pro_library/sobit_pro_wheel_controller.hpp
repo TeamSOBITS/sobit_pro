@@ -6,8 +6,12 @@
 
 #include <ros/ros.h>
 #include <sobit_pro_library/sobit_pro_library.h>
-#include <tf/transform_broadcaster.h>
+// #include <tf/transform_broadcaster.h>
+#include <tf2_ros/transform_broadcaster.h>
+#include <tf2/LinearMath/Quaternion.h>
+#include <tf2/LinearMath/Matrix3x3.h>
 
+#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
 
@@ -53,12 +57,20 @@ inline void sobit_pro::SobitProWheelController::checkPublishersConnection( const
 
 inline void sobit_pro::SobitProWheelController::callbackOdometry( const nav_msgs::OdometryConstPtr& odom_msg ){ curt_odom_ = *odom_msg; }
 
+// Check!!
 inline double sobit_pro::SobitProWheelController::geometryQuat2Yaw( const geometry_msgs::Quaternion& geometry_quat ){
-    tf::Quaternion quat;
+    // tf::Quaternion quat;
+    tf2::Quaternion quat_tf;
     double roll, pitch, yaw;
-    quaternionMsgToTF( geometry_quat, quat );
-    quat.normalize();
-    tf::Matrix3x3( quat ).getRPY( roll, pitch, yaw );
+
+    tf2::fromMsg(geometry_quat, quat_tf);
+    quat_tf.normalize();
+    tf2::Matrix3x3(quat_tf).getRPY(roll, pitch, yaw);
+
+    // quaternionMsgToTF( geometry_quat, quat );
+    // quat.normalize();
+    // tf::Matrix3x3( quat ).getRPY( roll, pitch, yaw );
+    
     return yaw;
 }
 
