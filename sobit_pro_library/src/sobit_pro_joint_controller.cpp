@@ -402,7 +402,7 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
 }
 
 // [UPD] new graspDecision() with speficic range
-bool SobitProJointController::graspDecision(){
+bool SobitProJointController::graspDecision( const int min_curr, const int max_curr ){
     bool is_grasped = false;
 
     while ( gripper_joint_curr_ == 0. ) ros::spinOnce();
@@ -410,7 +410,7 @@ bool SobitProJointController::graspDecision(){
     // ros::spinOnce();
     std::cout << "gripper_joint_curr_ :" << gripper_joint_curr_ << std::endl;
 
-    is_grasped = (300 <= gripper_joint_curr_ && gripper_joint_curr_ <= 1000) ? true : false;
+    is_grasped = (min_curr <= gripper_joint_curr_ && gripper_joint_curr_ <= max_curr) ? true : false;
 
     return is_grasped;
 }
