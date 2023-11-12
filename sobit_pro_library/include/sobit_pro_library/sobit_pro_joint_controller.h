@@ -83,8 +83,8 @@ class SobitProJointController : private ROSCommonNode {
         std::vector<std::vector<double>> inverseKinematics( double arm_inner_joint_to_object_x, double arm_inner_joint_to_object_z,
                                                             double arm_upper_joint_angle );
 
-        double arm_wrist_tilt_joint_current_ = 0.;
-        double hand_joint_current_ = 0.;
+        double arm_wrist_curr_ = 0.;
+        double hand_curr_      = 0.;
         void callbackCurrentStateArray( const sobits_msgs::current_state_array );
         ros::Subscriber sub_current_state_array = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrentStateArray, this );
 

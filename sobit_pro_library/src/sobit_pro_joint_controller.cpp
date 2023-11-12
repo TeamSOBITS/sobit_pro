@@ -373,7 +373,7 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double goal_positio
         
         // ハンドのジョイントに負荷がかかった場合、そこで停止する
         // [UPD] new graspDecision() with speficic range
-        if ( 500 < arm_wrist_tilt_joint_current_ && arm_wrist_tilt_joint_current_ < 1000 ) {
+        if ( 500 < arm_wrist_curr_ && arm_wrist_curr_ < 1000 ) {
             break;
         }
 
@@ -408,12 +408,12 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
 bool SobitProJointController::graspDecision(){
     bool is_grasped = false;
 
-    while ( hand_joint_current_ == 0. ) ros::spinOnce();
+    while ( hand_curr_ == 0. ) ros::spinOnce();
     
     // ros::spinOnce();
-    std::cout << "hand_joint_current_ :" << hand_joint_current_ << std::endl;
+    std::cout << "hand_curr_ :" << hand_curr_ << std::endl;
 
-    is_grasped = (300 <= hand_joint_current_ && hand_joint_current_ <= 1000) ? true : false;
+    is_grasped = (300 <= hand_curr_ && hand_curr_ <= 1000) ? true : false;
 
     return is_grasped;
 }
@@ -425,13 +425,13 @@ void SobitProJointController::callbackCurrentStateArray( const sobits_msgs::curr
         if( current_state.joint_name == "arm_wrist_tilt_joint" ){
             //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
             //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-            arm_wrist_tilt_joint_current_ = current_state.current_ma;
+            arm_wrist_curr_ = current_state.current_ma;
         }
 
         if( current_state.joint_name == "hand_joint" ){
             //std::cout << "\njoint_name:" << current_state.joint_name << std::endl;
             //std::cout << "\njoint_current:" << current_state.current_ma << std::endl;
-            hand_joint_current_ = current_state.current_ma;
+            hand_curr_ = current_state.current_ma;
         }
     }
 }
