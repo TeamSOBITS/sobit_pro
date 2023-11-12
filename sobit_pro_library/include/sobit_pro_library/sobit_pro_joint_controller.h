@@ -11,14 +11,14 @@
 #include <trajectory_msgs/JointTrajectory.h>
 #include <geometry_msgs/TransformStamped.h>
 #include <geometry_msgs/Point.h>
-#include <sobits_msgs/current_state.h>
+// #include <sobits_msgs/current_state.h>
 #include <sobits_msgs/current_state_array.h>
 
 #define ARM_UPPER   0.15
 #define ARM_INNER   0.15
 #define ARM_LOWER   0.15
 #define ARM_GRIPPER 0.25 // Prev 25.0?
-#define ARM_LENTGH ARM_UPPER+ARM_INNER+ARM_LOWER
+#define ARM_LENTGH  ARM_UPPER+ARM_INNER+ARM_LOWER
 
 namespace sobit_pro{
 
@@ -73,7 +73,6 @@ class SobitProJointController : private ROSCommonNode{
         void checkPublishersConnection( const ros::Publisher& pub );
         void callbackCurrArm( const sobits_msgs::current_state_array& msg );
 
-        
         geometry_msgs::Point forwardKinematics( const double arm_shoulder_tilt_joint_angle,
                                                 const double arm_elbow_upper_tilt_joint_angle,
                                                 const double arm_elbow_lower_tilt_joint_angle );
@@ -104,7 +103,7 @@ class SobitProJointController : private ROSCommonNode{
                       const double arm_elbow_upper_tilt_joint,
                       const double arm_elbow_lower_tilt_joint,
                       const double arm_elbow_lower_pan_joint,
-                      const double arm_wrist,
+                      const double arm_wrist_tilt_joint,
                       const double sec = 5.0, bool is_sleep = true );
         bool moveHeadPanTilt( const double head_pan_joint,
                               const double head_tilt_joint,
