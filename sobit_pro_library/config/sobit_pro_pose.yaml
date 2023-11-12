@@ -237,7 +237,6 @@ sobit_pro_pose:
         head_camera_tilt_joint: -0.70,
     }
 
-
     - { 
         pose_name: "pre_shelf_middle_bot_pose",
         arm_shoulder_1_tilt_joint: -0.40,
@@ -249,6 +248,7 @@ sobit_pro_pose:
         head_camera_pan_joint: 0.00,
         head_camera_tilt_joint: -0.70,
     }
+
     - { 
         pose_name: "shelf_middle_bot_pose",
         arm_shoulder_1_tilt_joint: 0.50,
