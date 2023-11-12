@@ -63,19 +63,21 @@ class SobitProJointController : private ROSCommonNode {
         void checkPublishersConnection( const ros::Publisher& pub );
         double distanceToSec( const std::string& joint_name, const double rad, const double sec );
 
-        void loadPose( );
+        void loadPose();
         bool moveAllJoint( const double arm_upper,
-                            const double arm_inner,
-                            const double arm_lower,
-                            const double arm_lower_pan,
-                            const double arm_wrist,
-                            const double gripper,
-                            const double head_pan,
-                            const double head_tilt,
-                            const double sec,
-                            bool         is_sleep = true );
-        geometry_msgs::Point forwardKinematics( double arm_upper_joint_angle, double arm_inner_joint_angle, double arm_elbow_lower_tilt_joint_angle );
-        std::vector<std::vector<double>> inverseKinematics( double arm_inner_joint_to_object_x, double arm_inner_joint_to_object_z, double arm_upper_joint_angle );
+                           const double arm_inner,
+                           const double arm_lower,
+                           const double arm_lower_pan,
+                           const double arm_wrist,
+                           const double gripper,
+                           const double head_pan,
+                           const double head_tilt,
+                           const double sec, bool is_sleep = true );
+        geometry_msgs::Point forwardKinematics( double arm_upper_joint_angle,
+                                                double arm_inner_joint_angle,
+                                                double arm_elbow_lower_tilt_joint_angle );
+        std::vector<std::vector<double>> inverseKinematics( double arm_inner_joint_to_object_x, double arm_inner_joint_to_object_z,
+                                                            double arm_upper_joint_angle );
 
         double arm_wrist_tilt_joint_current_ = 0.;
         double hand_joint_current_ = 0.;
@@ -84,16 +86,30 @@ class SobitProJointController : private ROSCommonNode {
 
     public:
         SobitProJointController( const std::string& name );
-        SobitProJointController( );
+        SobitProJointController();
 
-        bool moveToPose( const std::string& pose_name, const double sec = 5.0, bool is_sleep = true );
-        bool moveJoint( const Joint joint_num, const double rad, const double sec = 5.0, bool is_sleep = true );
-        bool moveArm( const double arm_upper, const double arm_inner, const double arm_lower, const double arm_lower_pan, const double arm_wrist, const double sec = 5.0, bool is_sleep = true );
-        bool moveHeadPanTilt( const double head_pan, const double head_tilt, const double sec = 5.0, bool is_sleep = true );
-        bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-        bool moveGripperToTargetTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-        bool moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
-        bool moveGripperToPlaceTF( const std::string& target_name, const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveToPose( const std::string& pose_name,
+                         const double sec = 5.0, bool is_sleep = true );
+        bool moveJoint( const Joint joint_num,
+                        const double rad,
+                        const double sec = 5.0, bool is_sleep = true );
+        bool moveArm( const double arm_upper,
+                      const double arm_inner,
+                      const double arm_lower,
+                      const double arm_lower_pan,
+                      const double arm_wrist,
+                      const double sec = 5.0, bool is_sleep = true );
+        bool moveHeadPanTilt( const double head_pan,
+                              const double head_tilt,
+                              const double sec = 5.0, bool is_sleep = true );
+        bool moveGripperToTargetCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z,
+                                       const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToTargetTF( const std::string& target_name,
+                                    const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToPlaceCoord( const double goal_position_x, const double goal_position_y, const double goal_position_z,
+                                      const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
+        bool moveGripperToPlaceTF( const std::string& target_name,
+                                   const double diff_goal_position_x, const double diff_goal_position_y, const double diff_goal_position_z );
         bool graspDecision( );
 };
 } // namespace sobit_pro
@@ -104,6 +120,7 @@ inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::s
                                                                     trajectory_msgs::JointTrajectory* jt ) {
     trajectory_msgs::JointTrajectory      joint_trajectory;
     trajectory_msgs::JointTrajectoryPoint joint_trajectory_point;
+
     joint_trajectory.joint_names.push_back( joint_name );
     joint_trajectory_point.positions.push_back( rad );
     // joint_trajectory_point.velocities.push_back( 0.0 );
@@ -111,34 +128,42 @@ inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::s
     // joint_trajectory_point.effort.push_back( 0.0 );
     joint_trajectory_point.time_from_start = ros::Duration( sec );
     joint_trajectory.points.push_back( joint_trajectory_point );
+
     *jt = joint_trajectory;
+
     return;
 }
 
-inline void sobit_pro::SobitProJointController::addJointTrajectory( const std::string&                joint_name,
-                                                                    const double                      rad,
-                                                                    const double                      sec,
+inline void sobit_pro::SobitProJointController::addJointTrajectory( const std::string& joint_name,
+                                                                    const double       rad,
+                                                                    const double       sec,
                                                                     trajectory_msgs::JointTrajectory* jt ) {
     trajectory_msgs::JointTrajectory joint_trajectory = *jt;
+
     joint_trajectory.joint_names.push_back( joint_name );
     joint_trajectory.points[0].positions.push_back( rad );
     // joint_trajectory.points[0].velocities.push_back( 0.0 );
     // joint_trajectory.points[0].accelerations.push_back( 0.0 );
     // joint_trajectory.points[0].effort.push_back( 0.0 );
     joint_trajectory.points[0].time_from_start = ros::Duration( sec );
-    *jt                                        = joint_trajectory;
+
+    *jt = joint_trajectory;
+
     return;
 }
 
 inline void sobit_pro::SobitProJointController::checkPublishersConnection( const ros::Publisher& pub ) {
     ros::Rate loop_rate( 10 );
-    while ( pub.getNumSubscribers( ) == 0 && ros::ok( ) ) {
-        try {
-            loop_rate.sleep( );
-        } catch ( const std::exception& ex ) {
+
+    while( pub.getNumSubscribers( ) == 0 && ros::ok( ) ){
+        try{
+            loop_rate.sleep();
+
+        } catch( const std::exception& ex ){
             break;
         }
     }
+
     return;
 }
 
