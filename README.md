@@ -234,11 +234,11 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 1.  `moveArm()` : アームの関節を任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveArm(
-        const double arm1,              # ARM_SHOULDER_TILT_JOINTの回転角度 (rad)
-        const double arm2,              # ARM_ELBOW_UPPER_TILT_JOINTの回転角度 (rad)
-        const double arm3,              # ARM_ELBOW_LOWER_TILT_JOINTの回転角度 (rad)
-        const double arm3_pan,          # ARM_ELBOW_LOWER_PAN_JOINTの回転角度 (rad)
-        const double arm4,              # ARM_WRIST_TILT_JOINTの回転角度 (rad)
+        const double arm_upper,              # ARM_SHOULDER_TILT_JOINTの回転角度 (rad)
+        const double arm_inner,              # ARM_ELBOW_UPPER_TILT_JOINTの回転角度 (rad)
+        const double arm_lower,              # ARM_ELBOW_LOWER_TILT_JOINTの回転角度 (rad)
+        const double arm_lower_pan,          # ARM_ELBOW_LOWER_PAN_JOINTの回転角度 (rad)
+        const double arm_wrist,              # ARM_WRIST_TILT_JOINTの回転角度 (rad)
         const double sec = 5.0,         # 回転時間 (s)
         bool is_sleep = true            # 回転後に待機するかどうか
     );
@@ -257,12 +257,12 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 1.  `moveGripperToTargetCoord()` : ハンドをxyz座標に動かします（把持モード）．
     ```cpp
     bool sobit::SobitProJointController::moveGripperToTargetCoord(
-        const double goal_position_x,       # 把持目的地のx (m)
-        const double goal_position_y,       # 把持目的地のy (m)
-        const double goal_position_z,       # 把持目的地のz (m)
-        const double diff_goal_position_x,  # xyz座標のx軸をシフトする (m)
-        const double diff_goal_position_y,  # xyz座標のy軸をシフトする (m)
-        const double diff_goal_position_z   # xyz座標のz軸をシフトする (m)
+        const double target_pos_x,       # 把持目的地のx (m)
+        const double target_pos_y,       # 把持目的地のy (m)
+        const double target_pos_z,       # 把持目的地のz (m)
+        const double shift_x,  # xyz座標のx軸をシフトする (m)
+        const double shift_y,  # xyz座標のy軸をシフトする (m)
+        const double shift_z   # xyz座標のz軸をシフトする (m)
     );
     ```
 
@@ -270,21 +270,21 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     ```cpp
     bool sobit::SobitProJointController::moveGripperToTargetTF(
         const std::string& target_name,     # 把持目的tf名
-        const double diff_goal_position_x,  # xyz座標のx軸をシフトする (m)
-        const double diff_goal_position_y,  # xyz座標のy軸をシフトする (m)
-        const double diff_goal_position_z   # xyz座標のz軸をシフトする (m)
+        const double shift_x,  # xyz座標のx軸をシフトする (m)
+        const double shift_y,  # xyz座標のy軸をシフトする (m)
+        const double shift_z   # xyz座標のz軸をシフトする (m)
     );
     ```
 
 1.  `moveGripperToPlaceCoord()` : ハンドをxyz座標に動かします（配置モード）．
     ```cpp
     bool sobit::SobitProJointController::moveGripperToPlaceCoord(
-        const double goal_position_x,       # 配置目的地のx (m)
-        const double goal_position_y,       # 配置目的地のx (m)
-        const double goal_position_z,       # 配置目的地のx (m)
-        const double diff_goal_position_x,  # xyz座標のx軸をシフトする (m)
-        const double diff_goal_position_y,  # xyz座標のy軸をシフトする (m)
-        const double diff_goal_position_z   # xyz座標のz軸をシフトする (m)
+        const double target_pos_x,       # 配置目的地のx (m)
+        const double target_pos_y,       # 配置目的地のx (m)
+        const double target_pos_z,       # 配置目的地のx (m)
+        const double shift_x,  # xyz座標のx軸をシフトする (m)
+        const double shift_y,  # xyz座標のy軸をシフトする (m)
+        const double shift_z   # xyz座標のz軸をシフトする (m)
     ); 
     ```
 
@@ -292,9 +292,9 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     ```cpp
     bool sobit::SobitProJointController::moveGripperToPlaceTF(
         const std::string& target_name,     # 配置目的tf名
-        const double diff_goal_position_x,  # xyz座標のx軸をシフトする (m)
-        const double diff_goal_position_y,  # xyz座標のy軸をシフトする (m)
-        const double diff_goal_position_z   # xyz座標のz軸をシフトする (m)
+        const double shift_x,  # xyz座標のx軸をシフトする (m)
+        const double shift_y,  # xyz座標のy軸をシフトする (m)
+        const double shift_z   # xyz座標のz軸をシフトする (m)
     );
     ```
 
@@ -319,9 +319,9 @@ SOBIT PROのジョイント名とその定数名を以下の通りです．
 | 5 | arm_elbow_lower_tilt_joint | ARM_ELBOW_LOWER_TILT_JOINT |
 | 6 | arm_elbow_lower_pan_joint | ARM_ELBOW_LOWER_PAN_JOINT |
 | 7 | arm_wrist_tilt_joint | ARM_WRIST_TILT_JOINT |
-| 8 | hand_joint | HAND_JOINT |
-| 9 | head_camera_pan_joint | HEAD_CAMERA_PAN_JOINT |
-| 10 | head_camera_tilt_joint | HEAD_CAMERA_TILT_JOINT |
+| 8 | hand_joint | GRIPPER_JOINT |
+| 9 | head_camera_pan_joint | HEAD_PAN_JOINT |
+| 10 | head_camera_tilt_joint | HEAD_TILT_JOINT |
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
