@@ -77,11 +77,11 @@ class SobitProJointController : private ROSCommonNode {
                            const double head_pan,
                            const double head_tilt,
                            const double sec, bool is_sleep = true );
-        geometry_msgs::Point forwardKinematics( double arm_upper_joint_angle,
-                                                double arm_inner_joint_angle,
-                                                double arm_elbow_lower_tilt_joint_angle );
-        std::vector<std::vector<double>> inverseKinematics( double arm_inner_joint_to_object_x, double arm_inner_joint_to_object_z,
-                                                            double arm_upper_joint_angle );
+        geometry_msgs::Point forwardKinematics( const double arm_upper_joint_angle,
+                                                const double arm_inner_joint_angle,
+                                                const double arm_elbow_lower_tilt_joint_angle );
+        std::vector<std::vector<double>> inverseKinematics( const double arm_inner_joint_to_object_x, const double arm_inner_joint_to_object_z,
+                                                            const double arm_upper_joint_angle );
 
         double arm_wrist_curr_ = 0.;
         double hand_curr_      = 0.;

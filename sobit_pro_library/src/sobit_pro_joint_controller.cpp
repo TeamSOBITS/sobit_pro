@@ -209,9 +209,9 @@ bool SobitProJointController::moveArm( const double arm_upper,
     }
 }
 
-geometry_msgs::Point SobitProJointController::forwardKinematics( double arm_upper_joint_angle,
-                                                                 double arm_inner_joint_angle,
-                                                                 double arm_elbow_lower_tilt_joint_angle ){
+geometry_msgs::Point SobitProJointController::forwardKinematics( const double arm_upper_joint_angle,
+                                                                 const double arm_inner_joint_angle,
+                                                                 const double arm_elbow_lower_tilt_joint_angle ){
     geometry_msgs::Point res_point;
 
     res_point.x =   ARM_UPPER * cosf(arm_upper_joint_angle)
@@ -230,8 +230,8 @@ geometry_msgs::Point SobitProJointController::forwardKinematics( double arm_uppe
     return res_point;
 }
 
-std::vector<std::vector<double>> SobitProJointController::inverseKinematics( double arm_inner_joint_to_object_x, double arm_inner_joint_to_object_z,
-                                                                             double arm_upper_joint_angle ){
+std::vector<std::vector<double>> SobitProJointController::inverseKinematics( const double arm_inner_joint_to_object_x, const double arm_inner_joint_to_object_z,
+                                                                             const double arm_upper_joint_angle ){
     double diagonal_length     = sqrtf(powf(arm_inner_joint_to_object_x, 2.) + powf(arm_inner_joint_to_object_z, 2.));
     double diagonal_angle      = atanf(arm_inner_joint_to_object_z / arm_inner_joint_to_object_x);
     double cos_arm_inner_joint = (powf(diagonal_length, 2) + powf(ARM_INNER, 2.) - powf(ARM_LOWER, 2.)) / (2. * diagonal_length * ARM_INNER);
