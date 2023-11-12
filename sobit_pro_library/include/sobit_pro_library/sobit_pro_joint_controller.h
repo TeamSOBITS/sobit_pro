@@ -165,12 +165,8 @@ inline void sobit_pro::SobitProJointController::checkPublishersConnection( const
     ros::Rate loop_rate( 10 );
 
     while( pub.getNumSubscribers( ) == 0 && ros::ok( ) ){
-        try{
-            loop_rate.sleep();
-
-        } catch( const std::exception& ex ){
-            break;
-        }
+        try{ loop_rate.sleep(); }
+        catch( const std::exception& ex ){ break; }
     }
 
     return;
