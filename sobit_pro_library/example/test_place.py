@@ -16,11 +16,11 @@ def test_place_on_table():
     rospy.init_node('sobit_pro_test_place_on_table')
     
     args = sys.argv
-    pro_joint_ctr = SobitProJointController(args[0])
-    pro_wheel_ctr = SobitProWheelController(args[0])
+    pro_joint_ctrl = SobitProJointController(args[0])
+    pro_wheel_ctrl = SobitProWheelController(args[0])
 
     # Set the detecting_pose
-    pro_joint_ctr.moveToPose( "detecting_pose", 5.0, True )
+    pro_joint_ctrl.moveToPose( "detecting_pose", 5.0, True )
 
     """
     # Lauch the placeable_position_estimator node
@@ -48,23 +48,23 @@ def test_place_on_table():
 
     # Option 1: Place object on the given TF position
     # Arm will move down until it touches the placeable_point
-    is_done = pro_joint_ctr.moveGripperToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 )
+    is_done = pro_joint_ctrl.moveGripperToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 )
 
     # Option 2: Place object on the given coordinates (x,y,z) position
     # Arm will move down until it touches the placeable_point
-    # res = pro_joint_ctr.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
+    # res = pro_joint_ctrl.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
 
     if( is_done ):
         # Open the gripper
-        pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+        pro_joint_ctrl.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
 
         # Set the put_high_pose pose to avoid collision
-        pro_joint_ctr.moveToPose( "put_high_pose", 5.0, True )
+        pro_joint_ctrl.moveToPose( "put_high_pose", 5.0, True )
     else:
         rospy.logerr( "Failed to place the object" )
 
     # Set the initial pose
-    pro_joint_ctr.moveToPose( "initial_pose", 5.0, True )
+    pro_joint_ctrl.moveToPose( "initial_pose", 5.0, True )
 
     """
     # Kill the placeable_position_estimator node
