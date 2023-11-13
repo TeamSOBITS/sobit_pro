@@ -275,7 +275,8 @@ bool SobitProJointController::moveArm( const double arm_shoulder_tilt_joint,
 }
 
 bool SobitProJointController::moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                                        const double shift_x     , const double shift_y     , const double shift_z ){
+                                                        const double shift_x     , const double shift_y     , const double shift_z,
+                                                        const double sec, bool is_sleep ){
     double arm_to_target_x = target_pos_x + shift_x;
     double arm_to_target_y = target_pos_y + shift_y;
     double arm_to_target_z = target_pos_z + shift_z;
@@ -359,7 +360,8 @@ bool SobitProJointController::moveGripperToTargetCoord( const double target_pos_
 }
 
 bool SobitProJointController::moveGripperToTargetTF( const std::string& target_name,
-                                                     const double shift_x, const double shift_y, const double shift_z ){
+                                                     const double shift_x, const double shift_y, const double shift_z,
+                                                     const double sec, bool is_sleep ){
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
@@ -380,7 +382,8 @@ bool SobitProJointController::moveGripperToTargetTF( const std::string& target_n
 
 // Check!!
 bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                                       const double shift_x     , const double shift_y     , const double shift_z ){
+                                                       const double shift_x     , const double shift_y     , const double shift_z,
+                                                       const double sec, bool is_sleep ){
     double target_z   = 0.;
     bool   is_reached = false;
 
@@ -399,7 +402,8 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x
 }
 
 bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name,
-                                                    const double shift_x, const double shift_y, const double shift_z ){
+                                                    const double shift_x, const double shift_y, const double shift_z,
+                                                    const double sec, bool is_sleep ){
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
