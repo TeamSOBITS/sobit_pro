@@ -5,7 +5,7 @@
 #include <cstring>
 
 #include <ros/ros.h>
-#include <sobit_pro_library/sobit_pro_library.h>
+#include "sobit_pro_library/sobit_pro_library.h"
 #include <tf2_ros/transform_listener.h>
 
 #include <trajectory_msgs/JointTrajectory.h>
