@@ -1,64 +1,64 @@
-#include <sobit_pro_library/sobit_pro_joint_controller.h>
+#include <cstdlib>
 
-int main(int argc, char *argv[]) {
-    ros::init(argc, argv, "sobit_pro_joiunt_controller_test");
-    sobit_pro::SobitProJointController pro_joint_ctr;
+#include <ros/ros.h>
+#include "sobit_pro_library/sobit_pro_joint_controller.h"
 
-    // 決められたポーズをする
-    pro_joint_ctr.moveToPose( "detecting_pose" );
-    ros::Duration(5.0).sleep();
 
-    /* Python版
-    # 置ける位置を検出するノードを立てる
-    Popen(['roslaunch','sobit_pro_bringup','placeable_position_estimator.launch'])
-    rospy.sleep(10.0)
+int main( int argc, char *argv[] ){
+    ros::init(argc, argv, "sobit_pro_test_put_on_table");
 
-    # 検出モードをオンにする
-    rospy.wait_for_service('placeable_position_estimator/execute_ctrl')
-    try:
-        client = rospy.ServiceProxy('calculate_two_numbers', SetBool)
-        client(True)
-    except rospy.ServiceException as e:
-        print("Failed to call service calculate_two_numbers : %s" %e)
-    rospy.sleep(10.0)
-    */
+    sobit_pro::SobitProJointController pro_joint_ctrl;
 
-    // 物体をおける位置のTF(placeable_point)があった場合、
-    // そこの位置までアームを移動させる
-    bool res = pro_joint_ctr.moveGripperToTargetTF( "placeable_point", -0.15, 0.0, 0.07 );
+    std::string target_name = "placeable_point";
+    bool is_done = false;
 
-    // 物体をおける位置の座標を指定して、
-    // そこの位置までアームを移動させる
-    // bool res = pro_joint_ctr.moveGripperToTargetCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.07 );
+    // Set the detecting_pose
+    pro_joint_ctrl.moveToPose( "detecting_pose", 5.0, true );
 
-    // 物体をおける位置のTF(placeable_point)があった場合、
-    // そこの位置までアームを下げながら移動させる
-    // ただし、物体がおける位置に触れた時はその位置で停止する
-    // bool res = pro_joint_ctr.moveGripperToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 );
+    // Lauch the placeable_position_estimator node
+    std::string package_name = "sobit_pro_bringup";
+    std::string node_name    = "placeable_position_estimator";
+    std::string launch_name  = node_name+".launch";
+    std::string command      = "roslaunch " + package_name + " " + launch_name;
+    int is_launch = system(command.c_str());
 
-    // 物体をおける位置のTF(placeable_point)があった場合、
-    // そこの位置までアームを下げながら移動させる
-    // ただし、物体がおける位置に触れた時はその位置で停止する
-    // bool res = pro_joint_ctr.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 );
-
-    
-
-    if ( res == true ) {
-
-        // 決められたポーズをする
-        pro_joint_ctr.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
-
-        // 決められたポーズをする
-        pro_joint_ctr.moveToPose( "put_high_pose" );
+    if( is_launch == -1 ){
+        ROS_ERROR("Failed to execute roslaunch command");
+        return 1;
     }
 
-    // 決められたポーズをする
-    pro_joint_ctr.moveToPose( "initial_pose" );
+    ros::Duration(10.0).sleep();
 
-    /* Python版
-    Popen(['rosnode','kill','/placeable_position_estimator/placeable_position_estimater_node'])
-    rospy.sleep(6)
-    */
+    // Option 1: Place object on the given TF position
+    // Arm will move down until it touches the placeable_point
+    is_done = pro_joint_ctrl.moveGripperToPlaceTF( target_name, -0.15, 0.0, 0.2 );
+
+    // Option 2: Place object on the given coordinates (x,y,z) position
+    // Arm will move down until it touches the placeable_point
+    // bool res = pro_joint_ctrl.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 );
+
+    if( is_done ){
+        // Open the gripper
+        pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
+
+        // Set the put_high_pose pose to avoid collision
+        pro_joint_ctrl.moveToPose( "put_high_pose", 5.0, true );
+    } else{
+        ROS_ERROR("Failed to place the object");
+    }
+
+    // Set the initial pose
+    pro_joint_ctrl.moveToPose( "initial_pose", 5.0, true );
+
+    // Kill the placeable_position_estimator node
+    command   = "rosnode kill /" + node_name + "/" + node_name + "_node";
+    is_launch = system(command.c_str());
+    ros::Duration(5.0).sleep();
+
+    if( is_launch == -1 ){
+        ROS_ERROR("Failed to kill the placeable_position_estimator node");
+        return 1;
+    }
 
     return 0;
 }

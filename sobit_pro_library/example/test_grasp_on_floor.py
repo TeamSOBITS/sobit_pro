@@ -1,52 +1,58 @@
 #!/usr/bin/env python3
-import rospy
-from sobit_pro_module import SobitProJointController
-from sobit_pro_module import SobitProWheelController
-from sobit_pro_module import Joint
-from geometry_msgs.msg import Point
-from subprocess import *
+# -*- coding: utf-8 -*-
+
 import sys
 
-def test():
-    rospy.init_node('test')
+import rospy
+from sobit_pro_module import SobitProJointController
+from sobit_pro_module import Joint
+
+
+def test_grasp_on_floor():
+    rospy.init_node('sobit_pro_test_grasp_on_floor')
+
     args = sys.argv
-    pro_joint_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
-    pro_wheel_ctr = SobitProWheelController(args[0]) # args[0] : C++上でros::init()を行うための引数
+    pro_joint_ctrl = SobitProJointController(args[0])
 
-    # 物体認識Launchさせる
-    Popen(['gnome-terminal', '--', 'roslaunch', 'sobit_pro_bringup', 'object_detection_azure_kinect.launch'])
-    rospy.sleep(5.0)
+    target_name = "potato_chips"
+    is_done     = False
 
+    # Set the detecting_pose
+    pro_joint_ctrl.moveToPose( "detecting_pose", 5.0, True )
 
-    # 決められたポーズをする
-    pro_joint_ctr.moveToPose( "detecting_pose" )
-    rospy.sleep(5.0)
+    # Open the hand
+    pro_joint_ctrl.moveJoint( Joint.GRIPPER_JOINT, -1.57, 5.0, True )
 
-    # ハンドを動かす（開く）
-    pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+    # Option 1: Grasp the target on the given TF position
+    # Move the gripper to the target position
+    is_done = (pro_joint_ctrl.moveGripperToTargetTF( target_name, -0.15,0.0,0.05 ))
+    # Close the gripper
+           and (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+    # Check if grasped based on the force sensor
+           and (pro_joint_ctrl.graspDecision( 300, 1000 ))
 
-    # 把持する物体のTF(例：beans)があった場合、
-    # そこの位置までアームを移動させる
-    res = pro_joint_ctr.moveGripperToTargetTF( "potato_chips", -0.15, 0.0, 0.05 )
+    """
+    # Option 2: Grasp the target on the given coordinates (x,y,z) position
+    # Check if grasped based on the force sensor
+    is_done = (pro_joint_ctrl.moveGripperToTargetCoord( 0.0,0.0,0.0, -0.15,0.0,0.05 ))
+    # Close the gripper
+           and (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+    # Check if grasped based on the force sensor
+           and (pro_joint_ctrl.graspDecision( 300, 1000 ))
+    """
 
-    # 把持する対象の物体の座標を指定して、
-    # そこの位置までアームを移動させる
-    # res = pro_joint_ctr.moveGripperToTargetCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.05 )
+    if( is_done ):
+        # Set the put_high_pose pose to avoid collision
+        pro_joint_ctrl.moveToPose("grasp_high_pose", 5.0, True)
+    else:
+        rospy.logerr("Failed to grasp the object")
 
-    # 物体を掴むことが出来たかの確認
-    grasp = pro_joint_ctr.graspDecision()
+    # Set the initial pose
+    pro_joint_ctrl.moveToPose( "initial_pose", 5.0, True )
 
-    if( (res == True) and (grasp == True) ):
-        # ハンドを動かす（閉じる）
-        pro_joint_ctr.moveJoint( Joint.GRIPPER_JOINT, 0.0, 2.0, True )
-
-        # 決められたポーズをする
-        pro_joint_ctr.moveToPose( "grasp_high_pose" )
-
-    # 決められたポーズをする
-    pro_joint_ctr.moveToPose( "initial_pose" )
 
 if __name__ == '__main__':
     try:
-        test()
-    except rospy.ROSInterruptException: pass
+        test_grasp_on_floor()
+    except rospy.ROSInterruptException:
+        pass

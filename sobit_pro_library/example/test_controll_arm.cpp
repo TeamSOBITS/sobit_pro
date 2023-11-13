@@ -1,17 +1,20 @@
-#include <sobit_pro_library/sobit_pro_joint_controller.h>
+#include <ros/ros.h>
+#include "sobit_pro_library/sobit_pro_joint_controller.h"
 
-int main(int argc, char *argv[]) {
-    ros::init(argc, argv, "sobit_pro_joiunt_controller_test");
-    sobit_pro::SobitProJointController pro_joint_ctr;
 
-    // アームを動かす
-    pro_joint_ctr.moveArm( 1.0, 1.0, -1.0, 0.0, -1.0, 3.0 );
+int main( int argc, char *argv[] ){
+    ros::init(argc, argv, "sobit_pro_test_control_arm");
+    
+    sobit_pro::SobitProJointController pro_joint_ctrl;
 
-    // ハンドを動かす
-    pro_joint_ctr.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 2.0, true );
+    // Move all the arm joints
+    pro_joint_ctrl.moveArm( 1.0, 1.0, -1.0, 0.0, -1.0, 3.0, true );
 
-    // 決められたポーズをする
-    pro_joint_ctr.moveToPose( "initial_pose", 3.0 );
+    // Open the gripper
+    pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 5.0, true );
+
+    // Set the initial pose
+    pro_joint_ctrl.moveToPose( "initial_pose", 5.0, true );
 
     return 0;
 }

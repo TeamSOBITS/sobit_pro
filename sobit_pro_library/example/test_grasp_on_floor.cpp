@@ -1,43 +1,50 @@
-#include "ros/ros.h"
-#include <sobit_pro_library/sobit_pro_wheel_controller.hpp>
-#include <sobit_pro_library/sobit_pro_joint_controller.h>
+#include <ros/ros.h>
+#include "sobit_pro_library/sobit_pro_joint_controller.h"
 
 
-int main(int argc, char *argv[]) {
-    ros::init(argc, argv, "test");
+int main( int argc, char *argv[] ){
+    ros::init(argc, argv, "sobit_pro_test_grasp_on_floor");
 
     sobit_pro::SobitProJointController pro_joint_ctrl;
-    sobit_pro::SobitProWheelController pro_wheel_ctrl;
-    double grasp_flag = false;
-    std::string target_name = "potato_chips";
 
-    // Pose: detecting_pose
-    pro_joint_ctrl.moveToPose("detecting_pose");
-    ros::Duration(3.0).sleep();
+    std::string target_name = "potato_chips";
+    bool is_done = false;
+
+    // Set the detecting_pose
+    pro_joint_ctrl.moveToPose("detecting_pose", 5.0, true);
 
     // Open the hand
-    pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 1.57, 2.0, true );
-    ros::Duration(2.0).sleep();
+    pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 5.0, true );
 
-    // Move the hand towards the target "target_name" and check if grasped
-    grasp_flag = (pro_joint_ctrl.moveGripperToTargetTF(target_name, -0.15, 0.0, 0.05)) & (pro_joint_ctrl.graspDecision());
+    // Option 1: Grasp the target on the given TF position
+    // Move the gripper to the target position
+    is_done = (pro_joint_ctrl.moveGripperToTargetTF( target_name, -0.15,0.0,0.05 ))
+    // Close the gripper
+           && (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+    // Check if grasped based on the force sensor
+           && (pro_joint_ctrl.graspDecision( 300, 1000 ));
 
-    // Move the hand towards the target depending on its coords
-    // grasp_flag = pro_joint_ctrl.moveGripperToPlaceablePositionCoord(0.5, 0.5, 0.5, -0.15, 0.0, 0.05);
-    std::cout << "Is grasped? " << (grasp_flag ? "True":"False") << std::endl;
+    /***
+    // Option 2: Grasp the target on the given coordinates (x,y,z) position
+    // Check if grasped based on the force sensor
+    is_done = (pro_joint_ctrl.moveGripperToTargetCoord( 0.0,0.0,0.0, -0.15,0.0,0.05 ))
+    // Close the gripper
+           && (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+    // Check if grasped based on the force sensor
+           && (pro_joint_ctrl.graspDecision( 300, 1000 ));
+    ***/
 
-    if (grasp_flag){
-        // Close Hand
-        pro_joint_ctrl.moveJoint(sobit_pro::Joint::GRIPPER_JOINT, 0.0, 2.0, true);
+    std::cout << "Is "<< target_name << " grasped? " << is_done << std::endl;
 
-        //Pose: grasp_high_pose
-        pro_joint_ctrl.moveToPose("grasp_high_pose");
-        ros::Duration(2.0).sleep();
+    if( is_done ){
+        // Set the put_high_pose pose to avoid collision
+        pro_joint_ctrl.moveToPose("grasp_high_pose", 5.0, true);
+    } else {
+        ROS_ERROR("Failed to grasp the object");
     }
 
-    // Pose: "initial pose"
-    pro_joint_ctrl.moveToPose("initial_pose");
-    ros::Duration(2.0).sleep();
+    // Set the initial pose
+    pro_joint_ctrl.moveToPose("initial_pose", 5.0, true);
 
     return 0;
 }

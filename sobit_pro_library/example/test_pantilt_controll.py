@@ -1,24 +1,41 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+import sys
+
 import rospy
 from sobit_pro_module import SobitProJointController
 from sobit_pro_module import Joint
-import sys
 
-def test():
-    rospy.init_node('test')
-    r = rospy.Rate(1) # 10hz
-    ang = 0.8
+
+def test_control_head():
+    rospy.init_node('sobit_pro_test_control_head')
+
     args = sys.argv
-    pro_joint_ctr = SobitProJointController(args[0]) # args[0] : C++上でros::init()を行うための引数
+    pro_joint_ctrl = SobitProJointController(args[0])
+
+    MAX_ANGLE    =  1.57
+    MIN_ANGLE    = -1.57
+    target_angle =  0.0
+    increment    =  0.1
 
     while not rospy.is_shutdown():
-        ang = -1.0 * ang
+        target_angle += increment
+        if target_angle > MAX_ANGLE or target_angle < MAX_ANGLE:
+            increment *= -1.0
 
-        # カメラパンチルトを動かす
-        pro_joint_ctr.moveJoint( Joint.HEAD_PAN_JOINT, ang, 2.0, False )
-        r.sleep()
+        # Option 1: Move the head joints simultaneously
+        pro_joint_ctrl.moveHeadPanTilt( target_angle, target_angle, 0.5, False )
+
+        """
+        # Option 2: Move the head joints individually
+        pro_joint_ctrl.moveJoint( Joint.HEAD_PAN_JOINT , target_angle, 0.5, False )
+        pro_joint_ctrl.moveJoint( Joint.HEAD_TILT_JOINT, target_angle, 0.5, False )
+        """
+
 
 if __name__ == '__main__':
     try:
-        test()
-    except rospy.ROSInterruptException: pass
+        test_control_head()
+    except rospy.ROSInterruptException:
+        pass
