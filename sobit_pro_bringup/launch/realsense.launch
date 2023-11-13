@@ -95,8 +95,8 @@ Processing enabled by this node:
   <arg name="ir"                              default="infra1" />
   <arg name="depth"                           default="depth" />
   <arg name="depth_registered_pub"            default="depth_registered" />
-  <arg name="depth_registered"                default="depth_registered" unless="$(arg align_depth)" />
-  <arg name="depth_registered"                default="aligned_depth_to_color" if="$(arg align_depth)" />
+  <arg name="depth_registered"                default="depth_registered"        unless="$(arg align_depth)" />
+  <arg name="depth_registered"                default="aligned_depth_to_color"  if="$(arg align_depth)" />
   <arg name="depth_registered_filtered"       default="$(arg depth_registered)" />
   <arg name="projector"                       default="projector" />
 
@@ -113,7 +113,7 @@ Processing enabled by this node:
   <arg name="disparity_processing"            default="false"/>
   <arg name="disparity_registered_processing" default="false"/>
   <arg name="hw_registered_processing"        default="$(arg align_depth)" />
-  <arg name="sw_registered_processing"        default="true" unless="$(arg align_depth)" />
+  <arg name="sw_registered_processing"        default="true"  unless="$(arg align_depth)" />
   <arg name="sw_registered_processing"        default="false" if="$(arg align_depth)" />
 
   <group ns="$(arg camera)">

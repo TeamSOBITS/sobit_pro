@@ -1,29 +1,29 @@
 <launch>
 
     <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
-    <arg name="enable_mb"           default="true"/>
-    <arg name="enable_arm"          default="true"/>
-    <arg name="enable_head"         default="true"/>
+    <arg name="enable_mb"       default="true"/>
+    <arg name="enable_arm"      default="true"/>
+    <arg name="enable_head"     default="true"/>
 
     <!-- URG: lan-cable (true), usb-cable (false) -->
-    <arg name="urg_lan"             default="true"/>
+    <arg name="urg_lan"         default="true"/>
 
     <!-- RVIZ: launch (true), not launch (false) -->
-    <arg name="open_rviz"           default="true"/>
+    <arg name="open_rviz"       default="true"/>
 
     <!-- Actuators Control-->
     <include file="$(find sobit_pro_control)/launch/sobit_pro_control.launch">
-        <arg name="enable_mb"       value="$(arg enable_mb)"/>
-        <arg name="enable_arm"      value="$(arg enable_arm)"/>
-        <arg name="enable_head"     value="$(arg enable_head)"/>
+        <arg name="enable_mb"   value="$(arg enable_mb)"/>
+        <arg name="enable_arm"  value="$(arg enable_arm)"/>
+        <arg name="enable_head" value="$(arg enable_head)"/>
     </include>
 
     <!-- Probability of bring-up sound -->
-    <param name="sound_param"       value="95"/>
+    <param name="sound_param"   value="95"/>
 
     <!-- URG -->
     <include file="$(find sobit_pro_bringup)/launch/urg.launch">
-        <arg name="urg_lan"         value="$(arg urg_lan)"/>
+        <arg name="urg_lan"     value="$(arg urg_lan)"/>
     </include>
 
     <!-- Azure Kinect -->
@@ -34,6 +34,6 @@
 
     <!-- RVIZ -->
     <group if="$(arg open_rviz)"> 
-        <node pkg="rviz" type="rviz" name="rviz" required="false" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro_swivel.rviz"/>
+        <node name="rviz" pkg="rviz" type="rviz" required="false" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro_bringup.rviz"/>
     </group>
 </launch>
