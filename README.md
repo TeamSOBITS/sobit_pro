@@ -212,20 +212,37 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 1.  `moveToPose()` : 決められたポーズに動かします．
     ```cpp
     bool moveToPose(
-        const std::string& pose_name,   # ポーズ名
-        const double sec = 5.0          # 動作時間 (s)
+        const std::string& pose_name,               // ポーズ名
+        const double sec = 5.0                      // 動作時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 > [!NOTE]
 > 既存のポーズは[sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml)に確認でいます．ポーズの作成方法については[ポーズの設定方法](#ポーズの設定方法)をご参照ください．
 
+1.  `moveAllJoint()` : 指定されたジョイントを任意の角度も動かします．
+    ```cpp
+    bool sobit::SobitProJointController::moveJoint (
+        const double arm_shoulder_tilt_joint,       // 回転角度 [rad]
+        const double arm_elbow_upper_tilt_joint,    // 回転角度 [rad]
+        const double arm_elbow_lower_tilt_joint,    // 回転角度 [rad]
+        const double arm_elbow_lower_pan_joint,     // 回転角度 [rad]
+        const double arm_wrist_tilt_joint,          // 回転角度 [rad]
+        const double gripper_joint,                 // 回転角度 [rad]
+        const double head_pan_joint,                // 回転角度 [rad]
+        const double head_tilt_joint,               // 回転角度 [rad]
+        const double sec = 5.0,                     // 回転時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
+    );
+    ```
+
 1.  `moveJoint()` : 指定されたジョイントを任意の角度も動かします．
     ```cpp
     bool sobit::SobitProJointController::moveJoint (
-        const Joint joint_num,          # ジョイント名 (定数名)
-        const double rad,               # 回転角度 (rad)
-        const double sec = 5.0,         # 回転時間 (s)
-        bool is_sleep = true            # 回転後に待機するかどうか
+        const Joint joint_num,                      // ジョイント名 (定数名)
+        const double rad,                           // 回転角度 [rad]
+        const double sec = 5.0,                     // 回転時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 > [!NOTE]
@@ -234,73 +251,92 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 1.  `moveArm()` : アームの関節を任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveArm(
-        const double arm_upper,              # ARM_SHOULDER_TILT_JOINTの回転角度 (rad)
-        const double arm_inner,              # ARM_ELBOW_UPPER_TILT_JOINTの回転角度 (rad)
-        const double arm_lower,              # ARM_ELBOW_LOWER_TILT_JOINTの回転角度 (rad)
-        const double arm_lower_pan,          # ARM_ELBOW_LOWER_PAN_JOINTの回転角度 (rad)
-        const double arm_wrist,              # ARM_WRIST_TILT_JOINTの回転角度 (rad)
-        const double sec = 5.0,         # 回転時間 (s)
-        bool is_sleep = true            # 回転後に待機するかどうか
+        const double arm_shoulder_tilt_joint,       // ARM_SHOULDER_TILT_JOINTの回転角度 [rad]
+        const double arm_elbow_upper_tilt_joint,    // ARM_ELBOW_UPPER_TILT_JOINTの回転角度 [rad]
+        const double arm_elbow_lower_tilt_joint,    // ARM_ELBOW_LOWER_TILT_JOINTの回転角度 [rad]
+        const double arm_elbow_lower_pan_joint,     // ARM_ELBOW_LOWER_PAN_JOINTの回転角度 [rad]
+        const double arm_wrist_tilt_joint,          // ARM_WRIST_TILT_JOINTの回転角度 [rad]
+        const double sec = 5.0,                     // 回転時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 
 1.  `moveHeadPanTilt()` : パンチルト機構を任意の角度に動かす
     ```cpp
     bool sobit::SobitProJointController::moveHeadPanTilt(
-        const double head_camera_pan,   # パンの回転角度 (rad)
-        const double head_camera_tilt,  # チルトの回転角度 (rad)
-        const double sec = 5.0,         # 移動時間 (s)
-        bool is_sleep = true            # 回転後に待機するかどうか
+        const double head_camera_pan,               // パンの回転角度 [rad]
+        const double head_camera_tilt,              // チルトの回転角度 [rad]
+        const double sec = 5.0,                     // 移動時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 
 1.  `moveGripperToTargetCoord()` : ハンドをxyz座標に動かします（把持モード）．
     ```cpp
     bool sobit::SobitProJointController::moveGripperToTargetCoord(
-        const double target_pos_x,       # 把持目的地のx (m)
-        const double target_pos_y,       # 把持目的地のy (m)
-        const double target_pos_z,       # 把持目的地のz (m)
-        const double shift_x,  # xyz座標のx軸をシフトする (m)
-        const double shift_y,  # xyz座標のy軸をシフトする (m)
-        const double shift_z   # xyz座標のz軸をシフトする (m)
+        const double target_pos_x,                  // 把持目的地のx [m]
+        const double target_pos_y,                  // 把持目的地のy [m]
+        const double target_pos_z,                  // 把持目的地のz [m]
+        const double shift_x,                       // xyz座標のx軸をシフトする [m]
+        const double shift_y,                       // xyz座標のy軸をシフトする [m]
+        const double shift_z                        // xyz座標のz軸をシフトする [m]
+        const double sec = 5.0,                     // 移動時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 
 1.  `moveGripperToTargetTF()` : ハンドをtf名に動かします（把持モード）．
     ```cpp
     bool sobit::SobitProJointController::moveGripperToTargetTF(
-        const std::string& target_name,     # 把持目的tf名
-        const double shift_x,  # xyz座標のx軸をシフトする (m)
-        const double shift_y,  # xyz座標のy軸をシフトする (m)
-        const double shift_z   # xyz座標のz軸をシフトする (m)
+        const std::string& target_name,             // 把持目的tf名
+        const double shift_x,                       // xyz座標のx軸をシフトする [m]
+        const double shift_y,                       // xyz座標のy軸をシフトする [m]
+        const double shift_z                        // xyz座標のz軸をシフトする [m]
+        const double sec = 5.0,                     // 移動時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 
 1.  `moveGripperToPlaceCoord()` : ハンドをxyz座標に動かします（配置モード）．
     ```cpp
     bool sobit::SobitProJointController::moveGripperToPlaceCoord(
-        const double target_pos_x,       # 配置目的地のx (m)
-        const double target_pos_y,       # 配置目的地のx (m)
-        const double target_pos_z,       # 配置目的地のx (m)
-        const double shift_x,  # xyz座標のx軸をシフトする (m)
-        const double shift_y,  # xyz座標のy軸をシフトする (m)
-        const double shift_z   # xyz座標のz軸をシフトする (m)
+        const double target_pos_x,                  // 配置目的地のx [m]
+        const double target_pos_y,                  // 配置目的地のx [m]
+        const double target_pos_z,                  // 配置目的地のx [m]
+        const double shift_x,                       // xyz座標のx軸をシフトする [m]
+        const double shift_y,                       // xyz座標のy軸をシフトする [m]
+        const double shift_z                        // xyz座標のz軸をシフトする [m]
+        const double sec = 5.0,                     // 移動時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     ); 
     ```
 
 1.  `moveGripperToPlaceTF()` : ハンドをtf名に動かします（配置モード）．
     ```cpp
     bool sobit::SobitProJointController::moveGripperToPlaceTF(
-        const std::string& target_name,     # 配置目的tf名
-        const double shift_x,  # xyz座標のx軸をシフトする (m)
-        const double shift_y,  # xyz座標のy軸をシフトする (m)
-        const double shift_z   # xyz座標のz軸をシフトする (m)
+        const std::string& target_name,             // 配置目的tf名
+        const double shift_x,                       // xyz座標のx軸をシフトする [m]
+        const double shift_y,                       // xyz座標のy軸をシフトする [m]
+        const double shift_z                        // xyz座標のz軸をシフトする [m]
+        const double sec = 5.0,                     // 移動時間 [s]
+        bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 
-1.  `graspDecision()` : 定めた範囲内の電流値を超えた場合，配置判定を返す．
+1.  `graspDecision()` : 定めた範囲内の電流値を超えた場合，把持判定を返す．
     ```cpp
-    bool sobit::SobitProJointController::graspDecision( );
+    bool sobit::SobitProJointController::graspDecision(
+        const int min_curr = 300,                   // 最小電流値
+        const int max_curr = 1000                   // 最大電流値
+    );
+    ```
+
+1.  `placeDecision()` : 定めた範囲内の電流値を超えた場合，配置判定を返す．
+    ```cpp
+    bool sobit::SobitProJointController::placeDecision(
+        const int min_curr = 500,                   // 最小電流値
+        const int max_curr = 1000                   // 最大電流値
+    );
     ```
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
@@ -319,9 +355,9 @@ SOBIT PROのジョイント名とその定数名を以下の通りです．
 | 5 | arm_elbow_lower_tilt_joint | ARM_ELBOW_LOWER_TILT_JOINT |
 | 6 | arm_elbow_lower_pan_joint | ARM_ELBOW_LOWER_PAN_JOINT |
 | 7 | arm_wrist_tilt_joint | ARM_WRIST_TILT_JOINT |
-| 8 | hand_joint | GRIPPER_JOINT |
-| 9 | head_camera_pan_joint | HEAD_PAN_JOINT |
-| 10 | head_camera_tilt_joint | HEAD_TILT_JOINT |
+| 8 | hand_joint | HAND_JOINT |
+| 9 | head_pan_joint | HEAD_PAN_JOINT |
+| 10 | head_tilt_joint | HEAD_TILT_JOINT |
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
@@ -339,8 +375,8 @@ sobit_pro_pose:
         arm_elbow_lower_pan_joint: -1.57,
         arm_wrist_tilt_joint: -1.57,
         hand_joint: 0.0,
-        head_camera_pan_joint: 0.0,
-        head_camera_tilt_joint: 0.0
+        head_pan_joint: 0.0,
+        head_tilt_joint: 0.0
     }
     ...
 ```  
@@ -355,20 +391,20 @@ SOBIT PROの移動機構を動かすための情報まとめです．
 1.  `controlWheelLinear()` : 並進（直進移動・斜め移動・横移動）を移動させます．
     ```cpp
     bool sobit::SobitProWheelController::controlWheelLinear (
-        const double distance_x,            # x方向への直進移動距離 (m)
-        const double distance_y,            # y方向への直進移動距離 (m)
+        const double distance_x,                    // x方向への直進移動距離 [m]
+        const double distance_y,                    // y方向への直進移動距離 [m]
     )
     ```  
 2.  `controlWheelRotateRad()` : 回転運動を行う(弧度法：Radian)
     ```cpp
     bool sobit::SobitProWheelController::controlWheelRotateRad (
-        const double angle_rad,             # 中心回転角度 (rad)
+        const double angle_rad,                     // 中心回転角度 [rad]
     )
     ```  
-3.  controlWheelRotateDeg()   :   回転運動を行う(度数法：Degree)
+3.  `controlWheelRotateDeg()` : 回転運動を行う(度数法：Degree)
     ```cpp
     bool sobit::SobitProWheelController::controlWheelRotateDeg ( 
-        const double angle_deg,             # 中心回転角度 (deg)
+        const double angle_deg,                     // 中心回転角度 (deg)
     )
     ```
 
