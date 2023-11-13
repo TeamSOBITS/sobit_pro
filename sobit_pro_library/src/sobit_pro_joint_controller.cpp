@@ -97,7 +97,7 @@ void SobitProJointController::loadPose(){
         joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT]   =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]]);
         joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT]    =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]]);
         joint_val[Joint::ARM_WRIST_TILT_JOINT]         =  static_cast<double>(pose_param[i][joint_names_[Joint::ARM_WRIST_TILT_JOINT]]);
-        joint_val[Joint::GRIPPER_JOINT]                =  static_cast<double>(pose_param[i][joint_names_[Joint::GRIPPER_JOINT]]);
+        joint_val[Joint::HAND_JOINT]                =  static_cast<double>(pose_param[i][joint_names_[Joint::HAND_JOINT]]);
         joint_val[Joint::HEAD_PAN_JOINT]               =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_PAN_JOINT]]);
         joint_val[Joint::HEAD_TILT_JOINT]              =  static_cast<double>(pose_param[i][joint_names_[Joint::HEAD_TILT_JOINT]]);
 
@@ -132,7 +132,7 @@ bool SobitProJointController::moveToPose( const std::string& pose_name,
                              joint_val[Joint::ARM_ELBOW_LOWER_TILT_JOINT],
                              joint_val[Joint::ARM_ELBOW_LOWER_PAN_JOINT],
                              joint_val[Joint::ARM_WRIST_TILT_JOINT],
-                             joint_val[Joint::GRIPPER_JOINT],
+                             joint_val[Joint::HAND_JOINT],
                              joint_val[Joint::HEAD_PAN_JOINT],
                              joint_val[Joint::HEAD_TILT_JOINT],
                              sec, is_sleep);
@@ -163,7 +163,7 @@ bool SobitProJointController::moveAllJoint( const double arm_shoulder_tilt_joint
         addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_elbow_lower_tilt_joint , sec, &arm_joint_trajectory );
         addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_elbow_lower_pan_joint  , sec, &arm_joint_trajectory );
         addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm_wrist_tilt_joint       , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::GRIPPER_JOINT]               ,  gripper_joint              , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HAND_JOINT]               ,  gripper_joint              , sec, &arm_joint_trajectory );
 
         // Set Joint Trajectory for Head
         setJointTrajectory( joint_names_[Joint::HEAD_PAN_JOINT]              ,  head_pan_joint             , sec, &head_joint_trajectory );

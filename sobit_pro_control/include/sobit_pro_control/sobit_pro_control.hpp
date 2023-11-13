@@ -39,7 +39,7 @@ class SobitProControl{
         // Constructor
         SobitProControl():
         steer_fl_goal_pos(0), steer_fr_goal_pos(0), steer_bl_goal_pos(0), steer_br_goal_pos(0),
-        wheel_fl_goal_vel(0),   wheel_fr_goal_vel(0),   wheel_bl_goal_vel(0),   wheel_br_goal_vel(0){
+        wheel_fl_goal_vel(0), wheel_fr_goal_vel(0), wheel_bl_goal_vel(0), wheel_br_goal_vel(0){
         }
 
         MODE getMotion(int motion){

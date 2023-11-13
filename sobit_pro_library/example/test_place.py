@@ -56,7 +56,7 @@ def test_place_on_table():
 
     if( is_done ):
         # Open the gripper
-        pro_joint_ctrl.moveJoint( Joint.GRIPPER_JOINT, -1.57, 2.0, True )
+        pro_joint_ctrl.moveJoint( Joint.HAND_JOINT, -1.57, 2.0, True )
 
         # Set the put_high_pose pose to avoid collision
         pro_joint_ctrl.moveToPose( "put_high_pose", 5.0, True )

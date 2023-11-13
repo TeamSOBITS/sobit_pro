@@ -13,7 +13,7 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
         .value( "ARM_ELBOW_LOWER_TILT_JOINT",   Joint::ARM_ELBOW_LOWER_TILT_JOINT )
         .value( "ARM_ELBOW_LOWER_PAN_JOINT",    Joint::ARM_ELBOW_LOWER_PAN_JOINT )
         .value( "ARM_WRIST_TILT_JOINT",         Joint::ARM_WRIST_TILT_JOINT )
-        .value( "GRIPPER_JOINT",                Joint::GRIPPER_JOINT )
+        .value( "HAND_JOINT",                Joint::HAND_JOINT )
         .value( "HEAD_PAN_JOINT",               Joint::HEAD_PAN_JOINT )
         .value( "HEAD_TILT_JOINT",              Joint::HEAD_TILT_JOINT )
         .value( "JOINT_NUM",                    Joint::JOINT_NUM )

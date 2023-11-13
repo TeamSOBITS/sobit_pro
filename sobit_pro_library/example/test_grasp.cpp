@@ -14,13 +14,13 @@ int main( int argc, char *argv[] ){
     pro_joint_ctrl.moveToPose("detecting_pose", 5.0, true);
 
     // Open the hand
-    pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, -1.57, 5.0, true );
+    pro_joint_ctrl.moveJoint( sobit_pro::Joint::HAND_JOINT, -1.57, 5.0, true );
 
     // Option 1: Grasp the target on the given TF position
     // Move the gripper to the target position
     is_done = (pro_joint_ctrl.moveGripperToTargetTF( target_name, -0.15,0.0,0.05 ))
     // Close the gripper
-           && (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+           && (pro_joint_ctrl.moveJoint( sobit_pro::Joint::HAND_JOINT, 0.0, 5.0, true ))
     // Check if grasped based on the force sensor
            && (pro_joint_ctrl.graspDecision( 300, 1000 ));
 
@@ -29,7 +29,7 @@ int main( int argc, char *argv[] ){
     // Check if grasped based on the force sensor
     is_done = (pro_joint_ctrl.moveGripperToTargetCoord( 0.0,0.0,0.0, -0.15,0.0,0.05 ))
     // Close the gripper
-           && (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+           && (pro_joint_ctrl.moveJoint( sobit_pro::Joint::HAND_JOINT, 0.0, 5.0, true ))
     // Check if grasped based on the force sensor
            && (pro_joint_ctrl.graspDecision( 300, 1000 ));
     ***/

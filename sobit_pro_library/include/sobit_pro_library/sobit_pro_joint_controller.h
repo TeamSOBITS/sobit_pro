@@ -29,7 +29,7 @@ enum Joint{ ARM_SHOULDER_1_TILT_JOINT = 0,
             ARM_ELBOW_LOWER_TILT_JOINT,
             ARM_ELBOW_LOWER_PAN_JOINT,
             ARM_WRIST_TILT_JOINT,
-            GRIPPER_JOINT,
+            HAND_JOINT,
             HEAD_PAN_JOINT,
             HEAD_TILT_JOINT,
             JOINT_NUM
@@ -65,8 +65,8 @@ class SobitProJointController : private ROSCommonNode{
                                                         "arm_elbow_lower_pan_joint",
                                                         "arm_wrist_tilt_joint",
                                                         "hand_joint",
-                                                        "head_camera_pan_joint",
-                                                        "head_camera_tilt_joint" };
+                                                        "head_pan_joint",
+                                                        "head_tilt_joint" };
 
         void setJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
         void addJointTrajectory( const std::string& joint_name, const double rad, const double sec, trajectory_msgs::JointTrajectory* jt );
@@ -182,7 +182,7 @@ inline void sobit_pro::SobitProJointController::callbackCurrArm( const sobits_ms
 
     for( const auto actuator : msg.current_state_array ){
         if( actuator.joint_name == joint_names_[ARM_WRIST_TILT_JOINT] ) arm_wrist_tilt_joint_curr_ = actuator.current_ma;
-        if( actuator.joint_name == joint_names_[GRIPPER_JOINT] )        gripper_joint_curr_        = actuator.current_ma;
+        if( actuator.joint_name == joint_names_[HAND_JOINT] )        gripper_joint_curr_        = actuator.current_ma;
     }
 }
 
