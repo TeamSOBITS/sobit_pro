@@ -13,8 +13,10 @@ class ROSCommonNode {
             char** argv = &cstr;
             int    argc = 0;
             delete[] cstr;
+
             ros::init( argc, argv, "sobit_pro_library_node" );
         }
+
         ROSCommonNode() {}
 };
 
