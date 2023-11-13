@@ -14,29 +14,29 @@ from geometry_msgs.msg import Twist
 def test_control_wheel():
     rospy.init_node('sobit_pro_test_control_wheel')
 
-    args = sys.argv
-    pro_wheel_ctrl = SobitProWheelController(args[0])
-
     pub = rospy.Publisher("/mobile_base/commands/velocity",Twist,queue_size=1)
     vel = Twist()
     vel.linear.x = 0.1
 
-    for angular in np.arange(-math.pi/2, math.pi/2, 0.05):
+    for angular in np.arange(-math.pi/2, math.pi/2, 0.01):
         vel.angular.z = angular
-        print("linear = %f\tangular = %f", vel.linear.x, vel.angular.z)
+        print("linear = " + str(vel.linear.x) + "\tangular = " + str(vel.angular.z))
         pub.publish(vel)
-        rospy.sleep(1.0)
+        rospy.sleep(0.1)
     
-    for angular in np.arange(math.pi/2, -math.pi/2, 0.05):
+    for angular in np.arange(math.pi/2, -math.pi/2, 0.01):
         vel.angular.z = angular
-        print("linear = %f\tangular = %f", vel.linear.x, vel.angular.z)
+        print("linear = " + str(vel.linear.x) + "\tangular = " + str(vel.angular.z))
         pub.publish(vel)
-        rospy.sleep(1.0)
+        rospy.sleep(0.1)
     
     zero_vel = Twist()
     pub.publish(zero_vel)
 
     """
+    args = sys.argv
+    pro_wheel_ctrl = SobitProWheelController(args[0])
+
     # Move the wheels (linear motion)
     pro_wheel_ctrl.controlWheelLinear(1.0, 0.0)
 
@@ -48,6 +48,9 @@ def test_control_wheel():
 
     # Move the wheels (linear motion)
     pro_wheel_ctrl.controlWheelLinear(-1.0, 0.0)
+
+    del pro_wheel_ctrl
+    del args
     """
 
 if __name__ == '__main__':

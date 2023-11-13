@@ -66,6 +66,10 @@ def test_place_on_table():
     # Set the initial pose
     pro_joint_ctrl.moveToPose( "initial_pose", 5.0, True )
 
+    del pro_joint_ctrl
+    del pro_wheel_ctrl
+    del args
+
     """
     # Kill the placeable_position_estimator node
     command = "rosnode kill /" + node_name + "/" + node_name + "_node"

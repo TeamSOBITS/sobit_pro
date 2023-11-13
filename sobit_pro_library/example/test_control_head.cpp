@@ -10,14 +10,15 @@ int main( int argc, char *argv[] ){
     const double MAX_ANGLE =  1.57;
     const double MIN_ANGLE = -1.57;
     double target_angle    =  0.0;
-    double increment       =  0.1;
+    double increment       =  0.05;
 
     while( ros::ok() ){
         target_angle += increment;
-        if (target_angle > MAX_ANGLE || target_angle < MAX_ANGLE) increment *= -1.0;
+        if (target_angle > MAX_ANGLE || target_angle < MIN_ANGLE) increment *= -1.0;
 
         // Option 1: Move the head joints simultaneously
         pro_joint_ctrl.moveHeadPanTilt( target_angle, target_angle, 0.5, false );
+        ros::Duration(0.5).sleep();
 
         /***
         // Option 2: Move the head joints individually

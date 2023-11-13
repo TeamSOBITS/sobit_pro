@@ -23,6 +23,9 @@ def test_control_arm():
     # Set the initial pose
     pro_joint_ctrl.moveToPose( "initial_pose", 5.0, True )
 
+    del pro_joint_ctrl
+    del args
+
 
 if __name__ == '__main__':
     try:

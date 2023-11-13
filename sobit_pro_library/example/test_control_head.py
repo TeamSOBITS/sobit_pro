@@ -17,21 +17,25 @@ def test_control_head():
     MAX_ANGLE    =  1.57
     MIN_ANGLE    = -1.57
     target_angle =  0.0
-    increment    =  0.1
+    increment    =  0.05
 
     while not rospy.is_shutdown():
         target_angle += increment
-        if target_angle > MAX_ANGLE or target_angle < MAX_ANGLE:
+        if target_angle > MAX_ANGLE or target_angle < MIN_ANGLE:
             increment *= -1.0
 
         # Option 1: Move the head joints simultaneously
         pro_joint_ctrl.moveHeadPanTilt( target_angle, target_angle, 0.5, False )
+        rospy.sleep(0.5)
 
         """
         # Option 2: Move the head joints individually
         pro_joint_ctrl.moveJoint( Joint.HEAD_PAN_JOINT , target_angle, 0.5, False )
         pro_joint_ctrl.moveJoint( Joint.HEAD_TILT_JOINT, target_angle, 0.5, False )
         """
+
+    del pro_joint_ctrl
+    del args
 
 
 if __name__ == '__main__':

@@ -25,20 +25,20 @@ def test_grasp_on_floor():
 
     # Option 1: Grasp the target on the given TF position
     # Move the gripper to the target position
-    is_done = (pro_joint_ctrl.moveGripperToTargetTF( target_name, -0.15,0.0,0.05 ))
+    is_done  = pro_joint_ctrl.moveGripperToTargetTF( target_name, -0.15,0.0,0.05 )
     # Close the gripper
-           and (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+    is_done *= pro_joint_ctrl.moveJoint( Joint.GRIPPER_JOINT, 0.0, 5.0, True )
     # Check if grasped based on the force sensor
-           and (pro_joint_ctrl.graspDecision( 300, 1000 ))
+    is_done *= pro_joint_ctrl.graspDecision( 300, 1000 )
 
     """
     # Option 2: Grasp the target on the given coordinates (x,y,z) position
     # Check if grasped based on the force sensor
-    is_done = (pro_joint_ctrl.moveGripperToTargetCoord( 0.0,0.0,0.0, -0.15,0.0,0.05 ))
+    is_done  = pro_joint_ctrl.moveGripperToTargetCoord( 0.0,0.0,0.0, -0.15,0.0,0.05 )
     # Close the gripper
-           and (pro_joint_ctrl.moveJoint( sobit_pro::Joint::GRIPPER_JOINT, 0.0, 5.0, true ))
+    is_done *= pro_joint_ctrl.moveJoint( Joint.GRIPPER_JOINT, 0.0, 5.0, true )
     # Check if grasped based on the force sensor
-           and (pro_joint_ctrl.graspDecision( 300, 1000 ))
+    is_done *= pro_joint_ctrl.graspDecision( 300, 1000 )
     """
 
     if( is_done ):
@@ -49,6 +49,9 @@ def test_grasp_on_floor():
 
     # Set the initial pose
     pro_joint_ctrl.moveToPose( "initial_pose", 5.0, True )
+
+    del pro_joint_ctrl
+    del args
 
 
 if __name__ == '__main__':
