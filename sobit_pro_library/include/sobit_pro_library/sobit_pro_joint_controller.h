@@ -109,11 +109,11 @@ class SobitProJointController : private ROSCommonNode{
                               const double head_tilt_joint,
                               const double sec = 5.0, bool is_sleep = true );
         bool moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                       const double shift_x, const double shift_y, const double shift_z );
+                                       const double shift_x     , const double shift_y     , const double shift_z );
         bool moveGripperToTargetTF( const std::string& target_name,
                                     const double shift_x, const double shift_y, const double shift_z );
         bool moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                      const double shift_x, const double shift_y, const double shift_z );
+                                      const double shift_x     , const double shift_y     , const double shift_z );
         bool moveGripperToPlaceTF( const std::string& target_name,
                                    const double shift_x, const double shift_y, const double shift_z );
         bool graspDecision( const int min_curr = 300, const int max_curr = 1000 );
