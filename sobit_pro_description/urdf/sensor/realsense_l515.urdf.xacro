@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <robot name="realsense_l515" xmlns:xacro="http://ros.org/wiki/xacro">
+
   <xacro:macro name="realsense_l515" params="prefix parent">
 
     <joint name="${prefix}_base_joint" type="fixed">

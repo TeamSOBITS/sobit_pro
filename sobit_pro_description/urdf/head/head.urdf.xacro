@@ -21,9 +21,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.05125-0.15125/2} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/head/head_camera_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.15125 0.0285 0.044"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/head/head_camera_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -57,9 +59,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="0.0 0.0 ${0.00525+0.03525/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/head/head_camera_pan.stl" scale="0.001 0.001 0.001" />
+          <box size="0.0285 0.037 0.03525"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/head/head_camera_pan.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -93,9 +97,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="0.0 0.0 ${0.028+0.0115/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/head/head_camera_tilt.stl" scale="0.001 0.001 0.001" />
+          <box size="0.046 0.0466 0.0115"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/head/head_camera_tilt.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>

@@ -20,9 +20,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.0215+(0.08251-0.0215)/2} 0.0 ${(0.0415-0.033)/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.06102 0.102 0.0745" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -54,7 +56,7 @@
       <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
-
+  
     <link name="${prefix_hand}_inner_l_link">
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
@@ -64,9 +66,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.05408+(0.06006-0.00707)/2} 0.0 -${0.066/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_l.stl" scale="0.001 0.001 0.001" />
+          <box size="${0.06006-0.0071} 0.01 0.066" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_l.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -97,9 +101,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.05408+(0.06006-0.00707)/2} 0.0 -${0.066/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_r.stl" scale="0.001 0.001 0.001" />
+          <box size="${0.06006-0.0071} 0.01 0.066" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_inner_r.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -113,9 +119,11 @@
 
 
     <joint name="${prefix_hand}_outer_l_joint" type="revolute">
-      <parent link="${prefix_hand}_base_link" />
+      <parent link="${prefix_hand}_inner_l_link" />
+      <!-- <parent link="${prefix_hand}_base_link" /> -->
       <child link="${prefix_hand}_outer_l_link" />
-      <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" />
+      <origin xyz="-0.01988747 0.025 -0.01022197" rpy="0.0 0.0 0.0" />
+      <!-- <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" /> -->
       <axis xyz="0.0 0.0 -1.0" />
       <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
@@ -130,9 +138,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.06123+0.04281/2} 0.0 -${0.056/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_l.stl" scale="0.001 0.001 0.001" />
+          <box size="0.04281 0.01 0.056" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_l.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -146,9 +156,11 @@
 
 
     <joint name="${prefix_hand}_outer_r_joint" type="revolute">
-      <parent link="${prefix_hand}_base_link" />
+      <parent link="${prefix_hand}_inner_r_link" />
+      <!-- <parent link="${prefix_hand}_base_link" /> -->
       <child link="${prefix_hand}_outer_r_link" />
-      <origin xyz="0.043193 -0.04015 0.0282231" rpy="0.0 0.0 0.0" />
+      <origin xyz="-0.01988747 -0.025 -0.01022197" rpy="0.0 0.0 0.0" />
+      <!-- <origin xyz="0.043193 -0.04015 0.0282231" rpy="0.0 0.0 0.0" /> -->
       <axis xyz="0.0 0.0 1.0" />
       <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
@@ -163,9 +175,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.06123+0.04281/2} 0.0 -${0.056/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_r.stl" scale="0.001 0.001 0.001" />
+          <box size="0.04281 0.01 0.056" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_outer_r.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -196,9 +210,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.03+(0.08+0.00707)/2} -0.025 -${0.018/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_l.stl" scale="0.001 0.001 0.001" />
+          <box size="${0.08-0.00707} 0.01137 0.044" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_l.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -229,9 +245,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.03+(0.08+0.00707)/2} 0.025 -${0.018/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_r.stl" scale="0.001 0.001 0.001" />
+          <box size="${0.08-0.00707} 0.01137 0.044" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_r.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="wheel" xmlns:xacro="http://ros.org/wiki/xacro">
+
   <xacro:macro name="stack_wheel_steer_base" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 
     <joint name="wheel_${prefix}_steer_base_joint" type="fixed">
@@ -17,9 +18,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.01388-0.05525/2} 0.0 -${0.005+0.034/2+0.02/2}" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.0285 0.084 0.05525" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -54,9 +57,11 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.0244+0.0436/2} 0.0 ${0.034/2+0.0149-0.1766/2}" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_steer.stl" scale="0.001 0.001 0.001" />
+          <box size="0.0495 0.1766 0.0436" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_steer.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -74,7 +79,7 @@
   <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 
     <joint name="wheel_${prefix}_drive_joint" type="revolute">
-      <origin xyz="${x_loc} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
+      <origin xyz="${x_loc+0.0019} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
       <parent link="${parent}" />
       <child link="wheel_${prefix}_drive_link" />
       <axis xyz="-1.0 0.0 0.0 " />
@@ -91,9 +96,11 @@
         <material name="wheel" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" />
+        <origin xyz="-${0.0055+0.029/2} 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_drive.stl" scale="0.001 0.001 0.001" />
+          <cylinder radius="${0.144/2}" length="0.029"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_drive.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -115,15 +122,15 @@
     <xacro:stack_wheel_steer_base parent="${parent}" prefix="b_r" number="3" x_loc= "-${0.210*cos(radians(45.))}" y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
     <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_r" number="4" x_loc= "${0.210*cos(radians(45.))}"  y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
     
-    <xacro:stack_wheel_steer parent="wheel_f_l_steer_base_link" prefix="f_l" number="1" x_loc= "0.013875"  y_loc= "0.0"  z_loc="-0.032" />
-    <xacro:stack_wheel_steer parent="wheel_b_l_steer_base_link" prefix="b_l" number="2" x_loc= "0.013875" y_loc= "0.0"  z_loc="-0.032" />
+    <xacro:stack_wheel_steer parent="wheel_f_l_steer_base_link" prefix="f_l" number="1" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
+    <xacro:stack_wheel_steer parent="wheel_b_l_steer_base_link" prefix="b_l" number="2" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
     <xacro:stack_wheel_steer parent="wheel_b_r_steer_base_link" prefix="b_r" number="3" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
-    <xacro:stack_wheel_steer parent="wheel_f_r_steer_base_link" prefix="f_r" number="4" x_loc= "0.013875"  y_loc= "0.0" z_loc="-0.032" />
+    <xacro:stack_wheel_steer parent="wheel_f_r_steer_base_link" prefix="f_r" number="4" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
 
-    <xacro:stack_wheel_drive parent="wheel_f_l_steer_link" prefix="f_l" number="1" x_loc= "0.02"  y_loc= "0.0"  z_loc="-0.118" />
-    <xacro:stack_wheel_drive parent="wheel_b_l_steer_link" prefix="b_l" number="2" x_loc= "0.02" y_loc= "0.0"  z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_f_l_steer_link" prefix="f_l" number="1" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_b_l_steer_link" prefix="b_l" number="2" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
     <xacro:stack_wheel_drive parent="wheel_b_r_steer_link" prefix="b_r" number="3" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
-    <xacro:stack_wheel_drive parent="wheel_f_r_steer_link" prefix="f_r" number="4" x_loc= "0.02"  y_loc= "0.0" z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_f_r_steer_link" prefix="f_r" number="4" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
 
   </xacro:macro>
 </robot>

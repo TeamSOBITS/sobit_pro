@@ -17,9 +17,11 @@
         <material name="blue" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="-${0.02893+0.3/2} 0.0 ${0.034-0.489/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/cover.stl" scale="0.001 0.001 0.001" />
+          <box size="${(0.02893+0.3/2)*2} 0.3965 0.489"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/body/cover.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
