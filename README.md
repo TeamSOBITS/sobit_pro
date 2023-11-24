@@ -48,7 +48,6 @@
       </ul>
     </li>
     <li><a href="#マイルストーン">マイルストーン</a></li>
-    <li><a href="#変更履歴">変更履歴</a></li>
     <!-- <li><a href="#contributing">Contributing</a></li> -->
     <!-- <li><a href="#license">License</a></li> -->
     <li><a href="#参考文献">参考文献</a></li>
@@ -84,7 +83,7 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
 | ------------- | ------------- |
 | Ubuntu | 20.04 (Focal Fossa) |
 | ROS | Noetic Ninjemys |
-| Python | 3.0~ |
+| Python | 3.8 |
 
 > [!NOTE]
 > `Ubuntu`や`ROS`のインストール方法に関しては，[SOBIT Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)に参照してください．
@@ -116,9 +115,6 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
    $ catkin_make
    ```
 
-> [!NOTE]
-> `install.sh`を実行する際に，SOBIT PROはカスタムの移動機構を用いているため，`SOBITS Common`の`custom`版がインストールされます．
-
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 
@@ -136,8 +132,8 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
     <arg name="open_rviz"           default="true"/>
     ...
    ```
-    > [!NOTE]
-    > 使用したい機能に応じて，`true`か`false`かに書き換えてください．
+> [!NOTE]
+> 使用したい機能に応じて，`true`か`false`かに書き換えてください．
 
 2. [minimal.launch](sobit_pro_bringup/launch/minimal.launch)というlaunchファイルを実行します．
    ```sh
@@ -500,17 +496,6 @@ TBD
     - [ ] コーディングスタイルの統一
 
 現時点のバッグや新規機能の依頼を確認するために[Issueページ][license-url] をご覧ください．
-
-<p align="right">(<a href="#readme-top">上に戻る</a>)</p>
-
-
-<!-- 変更履歴 -->
-## 変更履歴
-
-- 1.0: SOBIT PROと移動機構の設定パラメタ化 (2023-11-07)
-  - 詳細 1
-  - 詳細 2
-  - 詳細 3
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
