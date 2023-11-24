@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-
 <robot name="back" xmlns:xacro="http://ros.org/wiki/xacro" >
+
   <xacro:macro name="back" params="prefix parent" >
 
     <joint name="${prefix}_base_joint" type="fixed" >
@@ -18,9 +18,11 @@
         <material name="grey" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
+        <origin xyz="0.0 0.0 ${0.517/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/back/back_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.02 0.02 0.517"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/back/back_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
