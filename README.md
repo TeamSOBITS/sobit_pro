@@ -8,7 +8,7 @@
 [![Issues][issues-shield]][issues-url]
 [![License][license-shield]][license-url]
 
-# SOBITS PRO
+# SOBIT PRO
 
 <!-- 目次 -->
 <details>
@@ -348,16 +348,16 @@ SOBIT PROのジョイント名とその定数名を以下の通りです．
 
 | ジョイント番号 | ジョイント名 | ジョイント定数名 |
 | :---: | --- | --- |
-| 1 | arm_shoulder_1_tilt_joint | ARM_SHOULDER_1_TILT_JOINT |
-| 2 | arm_shoulder_2_tilt_joint | ARM_SHOULDER_2_TILT_JOINT |
-| 3 | arm_elbow_upper_1_tilt_joint | ARM_ELBOW_UPPER_1_TILT_JOINT |
-| 4 | arm_elbow_upper_2_tilt_joint | ARM_ELBOW_UPPER_2_TILT_JOINT |
-| 5 | arm_elbow_lower_tilt_joint | ARM_ELBOW_LOWER_TILT_JOINT |
-| 6 | arm_elbow_lower_pan_joint | ARM_ELBOW_LOWER_PAN_JOINT |
-| 7 | arm_wrist_tilt_joint | ARM_WRIST_TILT_JOINT |
-| 8 | hand_joint | HAND_JOINT |
-| 9 | head_pan_joint | HEAD_PAN_JOINT |
-| 10 | head_tilt_joint | HEAD_TILT_JOINT |
+| 0 | arm_shoulder_1_tilt_joint | ARM_SHOULDER_1_TILT_JOINT |
+| 1 | arm_shoulder_2_tilt_joint | ARM_SHOULDER_2_TILT_JOINT |
+| 2 | arm_elbow_upper_1_tilt_joint | ARM_ELBOW_UPPER_1_TILT_JOINT |
+| 3 | arm_elbow_upper_2_tilt_joint | ARM_ELBOW_UPPER_2_TILT_JOINT |
+| 4 | arm_elbow_lower_tilt_joint | ARM_ELBOW_LOWER_TILT_JOINT |
+| 5 | arm_elbow_lower_pan_joint | ARM_ELBOW_LOWER_PAN_JOINT |
+| 6 | arm_wrist_tilt_joint | ARM_WRIST_TILT_JOINT |
+| 7 | hand_joint | HAND_JOINT |
+| 8 | head_pan_joint | HEAD_PAN_JOINT |
+| 9 | head_tilt_joint | HEAD_TILT_JOINT |
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
