@@ -48,14 +48,14 @@ def test_place_on_table():
 
     # Option 1: Place object on the given TF position
     # Arm will move down until it touches the placeable_point
-    is_done = pro_joint_ctrl.moveGripperToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 )
+    is_done = pro_joint_ctrl.moveHandToPlaceTF( "placeable_point", -0.15, 0.0, 0.2 )
 
     # Option 2: Place object on the given coordinates (x,y,z) position
     # Arm will move down until it touches the placeable_point
-    # res = pro_joint_ctrl.moveGripperToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
+    # res = pro_joint_ctrl.moveHandToPlaceCoord( 0.0, 0.0, 0.0, -0.15, 0.0, 0.2 )
 
     if( is_done ):
-        # Open the gripper
+        # Open the hand
         pro_joint_ctrl.moveJoint( Joint.HAND_JOINT, -1.57, 2.0, True )
 
         # Set the put_high_pose pose to avoid collision

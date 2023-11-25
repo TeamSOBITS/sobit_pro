@@ -17,7 +17,7 @@ def test_control_arm():
     # Move all the arm joints
     pro_joint_ctrl.moveArm( 1.0, 1.0, -1.0, 0.0, -1.0, 3.0, True )
 
-    # Open the gripper
+    # Open the hand
     pro_joint_ctrl.moveJoint( Joint.HAND_JOINT, -1.57, 5.0, True )
 
     # Set the initial pose

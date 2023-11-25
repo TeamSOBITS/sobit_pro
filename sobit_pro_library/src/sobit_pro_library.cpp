@@ -31,7 +31,7 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             pybind11::arg( "arm_elbow_lower_tilt_joint" ),
             pybind11::arg( "arm_elbow_lower_pan_joint" ),
             pybind11::arg( "arm_wrist_tilt_joint" ),
-            pybind11::arg( "gripper_joint" ),
+            pybind11::arg( "hand_joint" ),
             pybind11::arg( "head_pan_joint" ),
             pybind11::arg( "head_tilt_joint" ),
             pybind11::arg( "sec" ) = 5.0, pybind11::arg( "is_sleep" ) = true
@@ -54,22 +54,22 @@ PYBIND11_MODULE( sobit_pro_module, m ) {
             pybind11::arg( "head_tilt_joint" ),
             pybind11::arg( "sec" ) = 5.0, pybind11::arg( "is_sleep" ) = true
             )
-        .def( "moveGripperToTargetCoord", &SobitProJointController::moveGripperToTargetCoord, "move Gripper To Target Coordinate",
+        .def( "moveHandToTargetCoord", &SobitProJointController::moveHandToTargetCoord, "move Gripper To Target Coordinate",
             pybind11::arg( "target_pos_x" ), pybind11::arg( "target_pos_y" ), pybind11::arg( "target_pos_z" ),
             pybind11::arg( "shift_x" )     , pybind11::arg( "shift_y" )     , pybind11::arg( "shift_z" ),
             pybind11::arg( "sec" ) = 5.0, pybind11::arg( "is_sleep" ) = true
             )
-        .def( "moveGripperToTargetTF", &SobitProJointController::moveGripperToTargetTF, "move Gripper To Target TF",
+        .def( "moveHandToTargetTF", &SobitProJointController::moveHandToTargetTF, "move Gripper To Target TF",
             pybind11::arg( "target_name" ),
             pybind11::arg( "shift_x" ), pybind11::arg( "shift_y" ), pybind11::arg( "shift_z" ),
             pybind11::arg( "sec" ) = 5.0, pybind11::arg( "is_sleep" ) = true
             )
-        .def( "moveGripperToPlaceCoord", &SobitProJointController::moveGripperToPlaceCoord, "move Gripper To Placeable Position Coordinate",
+        .def( "moveHandToPlaceCoord", &SobitProJointController::moveHandToPlaceCoord, "move Gripper To Placeable Position Coordinate",
             pybind11::arg( "target_pos_x" ), pybind11::arg( "target_pos_y" ), pybind11::arg( "target_pos_z" ),
             pybind11::arg( "shift_x" )     , pybind11::arg( "shift_y" )     , pybind11::arg( "shift_z" ),
             pybind11::arg( "sec" ) = 5.0, pybind11::arg( "is_sleep" ) = true
             )
-        .def( "moveGripperToPlaceTF", &SobitProJointController::moveGripperToPlaceTF, "move Gripper To Placeable Position TF",
+        .def( "moveHandToPlaceTF", &SobitProJointController::moveHandToPlaceTF, "move Gripper To Placeable Position TF",
             pybind11::arg( "target_name" ),
             pybind11::arg( "shift_x" ), pybind11::arg( "shift_y" ), pybind11::arg( "shift_z" ),
             pybind11::arg( "sec" ) = 5.0, pybind11::arg( "is_sleep" ) = true

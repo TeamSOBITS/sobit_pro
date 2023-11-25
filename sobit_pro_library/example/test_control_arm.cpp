@@ -10,7 +10,7 @@ int main( int argc, char *argv[] ){
     // Move all the arm joints
     pro_joint_ctrl.moveArm( 1.0, 1.0, -1.0, 0.0, -1.0, 3.0, true );
 
-    // Open the gripper
+    // Open the hand
     pro_joint_ctrl.moveJoint( sobit_pro::Joint::HAND_JOINT, -1.57, 5.0, true );
 
     // Set the initial pose

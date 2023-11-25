@@ -147,7 +147,7 @@ bool SobitProJointController::moveAllJoint( const double arm_shoulder_tilt_joint
                                             const double arm_elbow_lower_tilt_joint,
                                             const double arm_elbow_lower_pan_joint,
                                             const double arm_wrist_tilt_joint,
-                                            const double gripper_joint,
+                                            const double hand_joint,
                                             const double head_pan_joint,
                                             const double head_tilt_joint,
                                             const double sec, bool is_sleep){
@@ -163,7 +163,7 @@ bool SobitProJointController::moveAllJoint( const double arm_shoulder_tilt_joint
         addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_TILT_JOINT]  ,  arm_elbow_lower_tilt_joint , sec, &arm_joint_trajectory );
         addJointTrajectory( joint_names_[Joint::ARM_ELBOW_LOWER_PAN_JOINT]   ,  arm_elbow_lower_pan_joint  , sec, &arm_joint_trajectory );
         addJointTrajectory( joint_names_[Joint::ARM_WRIST_TILT_JOINT]        ,  arm_wrist_tilt_joint       , sec, &arm_joint_trajectory );
-        addJointTrajectory( joint_names_[Joint::HAND_JOINT]               ,  gripper_joint              , sec, &arm_joint_trajectory );
+        addJointTrajectory( joint_names_[Joint::HAND_JOINT]                  ,  hand_joint              , sec, &arm_joint_trajectory );
 
         // Set Joint Trajectory for Head
         setJointTrajectory( joint_names_[Joint::HEAD_PAN_JOINT]              ,  head_pan_joint             , sec, &head_joint_trajectory );
@@ -274,7 +274,7 @@ bool SobitProJointController::moveArm( const double arm_shoulder_tilt_joint,
     }
 }
 
-bool SobitProJointController::moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+bool SobitProJointController::moveHandToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
                                                         const double shift_x     , const double shift_y     , const double shift_z,
                                                         const double sec, bool is_sleep ){
     double arm_to_target_x = target_pos_x + shift_x;
@@ -359,7 +359,7 @@ bool SobitProJointController::moveGripperToTargetCoord( const double target_pos_
     return is_reached;
 }
 
-bool SobitProJointController::moveGripperToTargetTF( const std::string& target_name,
+bool SobitProJointController::moveHandToTargetTF( const std::string& target_name,
                                                      const double shift_x, const double shift_y, const double shift_z,
                                                      const double sec, bool is_sleep ){
     geometry_msgs::TransformStamped transformStamped;
@@ -374,14 +374,14 @@ bool SobitProJointController::moveGripperToTargetTF( const std::string& target_n
     }
 
     auto& tf_target_to_arm = transformStamped.transform.translation;
-    is_reached = moveGripperToTargetCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
+    is_reached = moveHandToTargetCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
                                            shift_x, shift_y, shift_z );
     
     return is_reached;
 }
 
 // Check!!
-bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+bool SobitProJointController::moveHandToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
                                                        const double shift_x     , const double shift_y     , const double shift_z,
                                                        const double sec, bool is_sleep ){
     double target_z   = 0.;
@@ -389,7 +389,7 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x
 
     // Reduce the target_pos_z by 0.05[m], until expected collision is detected
     while( !(is_reached && placeDecision(500, 1000)) ) {
-        is_reached = moveGripperToTargetCoord( target_pos_x, target_pos_y, target_pos_z, 
+        is_reached = moveHandToTargetCoord( target_pos_x, target_pos_y, target_pos_z, 
                                                shift_x, shift_y, shift_z+target_z );
 
         if( !is_reached ) return is_reached;
@@ -401,7 +401,7 @@ bool SobitProJointController::moveGripperToPlaceCoord( const double target_pos_x
     return is_reached;
 }
 
-bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_name,
+bool SobitProJointController::moveHandToPlaceTF( const std::string& target_name,
                                                     const double shift_x, const double shift_y, const double shift_z,
                                                     const double sec, bool is_sleep ){
     geometry_msgs::TransformStamped transformStamped;
@@ -416,7 +416,7 @@ bool SobitProJointController::moveGripperToPlaceTF( const std::string& target_na
     }
 
     auto& tf_target_to_arm = transformStamped.transform.translation;
-    is_reached = moveGripperToPlaceCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
+    is_reached = moveHandToPlaceCoord( tf_target_to_arm.x, tf_target_to_arm.y, tf_target_to_arm.z,
                                           shift_x, shift_y, shift_z );
     
     return is_reached;
@@ -426,12 +426,12 @@ bool SobitProJointController::graspDecision( const int min_curr, const int max_c
     bool is_grasped = false;
 
     // Spin until the current value is obtained
-    while( gripper_joint_curr_ == 0. ) ros::spinOnce();
+    while( hand_joint_curr_ == 0. ) ros::spinOnce();
 
     // ros::spinOnce();
-    std::cout << "gripper_joint_curr_ = " << gripper_joint_curr_ << std::endl;
+    std::cout << "hand_joint_curr_ = " << hand_joint_curr_ << std::endl;
 
-    is_grasped = (min_curr <= gripper_joint_curr_ && gripper_joint_curr_ <= max_curr) ? true : false;
+    is_grasped = (min_curr <= hand_joint_curr_ && hand_joint_curr_ <= max_curr) ? true : false;
 
     return is_grasped;
 }

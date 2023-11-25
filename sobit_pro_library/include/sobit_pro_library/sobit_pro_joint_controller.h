@@ -55,7 +55,7 @@ class SobitProJointController : private ROSCommonNode{
         std::vector<Pose> pose_list_;
 
         double arm_wrist_tilt_joint_curr_ = 0.;
-        double gripper_joint_curr_        = 0.;
+        double hand_joint_curr_           = 0.;
 
         const std::vector<std::string> joint_names_ = { "arm_shoulder_1_tilt_joint", 
                                                         "arm_shoulder_2_tilt_joint",
@@ -92,7 +92,7 @@ class SobitProJointController : private ROSCommonNode{
                            const double arm_elbow_lower_tilt_joint,
                            const double arm_elbow_lower_pan_joint,
                            const double arm_wrist_tilt_joint,
-                           const double gripper_joint,
+                           const double hand_joint,
                            const double head_pan_joint,
                            const double head_tilt_joint,
                            const double sec = 5.0, bool is_sleep = true );
@@ -108,16 +108,16 @@ class SobitProJointController : private ROSCommonNode{
         bool moveHeadPanTilt( const double head_pan_joint,
                               const double head_tilt_joint,
                               const double sec = 5.0, bool is_sleep = true );
-        bool moveGripperToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+        bool moveHandToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
                                        const double shift_x     , const double shift_y     , const double shift_z,
                                        const double sec = 5.0, bool is_sleep = true );
-        bool moveGripperToTargetTF( const std::string& target_name,
+        bool moveHandToTargetTF( const std::string& target_name,
                                     const double shift_x, const double shift_y, const double shift_z,
                                     const double sec = 5.0, bool is_sleep = true );
-        bool moveGripperToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
+        bool moveHandToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
                                       const double shift_x     , const double shift_y     , const double shift_z,
                                       const double sec = 5.0, bool is_sleep = true );
-        bool moveGripperToPlaceTF( const std::string& target_name,
+        bool moveHandToPlaceTF( const std::string& target_name,
                                    const double shift_x, const double shift_y, const double shift_z,
                                    const double sec = 5.0, bool is_sleep = true );
         bool graspDecision( const int min_curr = 300, const int max_curr = 1000 );
@@ -182,7 +182,7 @@ inline void sobit_pro::SobitProJointController::callbackCurrArm( const sobits_ms
 
     for( const auto actuator : msg.current_state_array ){
         if( actuator.joint_name == joint_names_[ARM_WRIST_TILT_JOINT] ) arm_wrist_tilt_joint_curr_ = actuator.current_ma;
-        if( actuator.joint_name == joint_names_[HAND_JOINT] )        gripper_joint_curr_        = actuator.current_ma;
+        if( actuator.joint_name == joint_names_[HAND_JOINT] )           hand_joint_curr_           = actuator.current_ma;
     }
 }
 
