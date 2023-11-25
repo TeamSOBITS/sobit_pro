@@ -224,7 +224,7 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
         const double arm_elbow_lower_tilt_joint,    // 回転角度 [rad]
         const double arm_elbow_lower_pan_joint,     // 回転角度 [rad]
         const double arm_wrist_tilt_joint,          // 回転角度 [rad]
-        const double gripper_joint,                 // 回転角度 [rad]
+        const double hand_joint,                    // 回転角度 [rad]
         const double head_pan_joint,                // 回転角度 [rad]
         const double head_tilt_joint,               // 回転角度 [rad]
         const double sec = 5.0,                     // 回転時間 [s]
@@ -267,9 +267,9 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveGripperToTargetCoord()` : ハンドをxyz座標に動かします（把持モード）．
+1.  `moveHandToTargetCoord()` : ハンドをxyz座標に動かします（把持モード）．
     ```cpp
-    bool sobit::SobitProJointController::moveGripperToTargetCoord(
+    bool sobit::SobitProJointController::moveHandToTargetCoord(
         const double target_pos_x,                  // 把持目的地のx [m]
         const double target_pos_y,                  // 把持目的地のy [m]
         const double target_pos_z,                  // 把持目的地のz [m]
@@ -281,9 +281,9 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveGripperToTargetTF()` : ハンドをtf名に動かします（把持モード）．
+1.  `moveHandToTargetTF()` : ハンドをtf名に動かします（把持モード）．
     ```cpp
-    bool sobit::SobitProJointController::moveGripperToTargetTF(
+    bool sobit::SobitProJointController::moveHandToTargetTF(
         const std::string& target_name,             // 把持目的tf名
         const double shift_x,                       // xyz座標のx軸をシフトする [m]
         const double shift_y,                       // xyz座標のy軸をシフトする [m]
@@ -293,9 +293,9 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveGripperToPlaceCoord()` : ハンドをxyz座標に動かします（配置モード）．
+1.  `moveHandToPlaceCoord()` : ハンドをxyz座標に動かします（配置モード）．
     ```cpp
-    bool sobit::SobitProJointController::moveGripperToPlaceCoord(
+    bool sobit::SobitProJointController::moveHandToPlaceCoord(
         const double target_pos_x,                  // 配置目的地のx [m]
         const double target_pos_y,                  // 配置目的地のx [m]
         const double target_pos_z,                  // 配置目的地のx [m]
@@ -307,9 +307,9 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     ); 
     ```
 
-1.  `moveGripperToPlaceTF()` : ハンドをtf名に動かします（配置モード）．
+1.  `moveHandToPlaceTF()` : ハンドをtf名に動かします（配置モード）．
     ```cpp
-    bool sobit::SobitProJointController::moveGripperToPlaceTF(
+    bool sobit::SobitProJointController::moveHandToPlaceTF(
         const std::string& target_name,             // 配置目的tf名
         const double shift_x,                       // xyz座標のx軸をシフトする [m]
         const double shift_y,                       // xyz座標のy軸をシフトする [m]
