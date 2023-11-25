@@ -42,6 +42,7 @@
     　<a href="#ハードウェア">ハードウェア</a>
       <ul>
         <li><a href="#パーツのダウンロード方法">パーツのダウンロード方法</a></li>
+        <li><a href="#電子回路図">電子回路図</a></li>
         <li><a href="#ロボットの組み立て">ロボットの組み立て</a></li>
         <li><a href="#ロボットの特徴">ロボットの特徴</a></li>
         <li><a href="#部品リスト（BOM）">部品リスト（BOM）</a></li>
@@ -61,7 +62,7 @@
 
 ![SOBIT PRO](sobit_pro/docs/img/sobit_pro.png)
 
-SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニピュレータ（SOBIT PRO）を動かすためのライブラリです．
+SOBITSが開発した4輪独立ステアリング駆動式のモバイルマニピュレータ（SOBIT PRO）を動かすためのライブラリです．
 
 > [!WARNING]
 > 初心者の場合，実機のロボットを扱う際に，先輩方に付き添ってもらいながらロボットを動かしましょう．
@@ -69,11 +70,12 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 
-
 <!-- セットアップ -->
 ## セットアップ
 
 ここで，本レポジトリのセットアップ方法について説明します．
+
+<p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 ### 環境条件
 
@@ -87,6 +89,9 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
 
 > [!NOTE]
 > `Ubuntu`や`ROS`のインストール方法に関しては，[SOBIT Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)に参照してください．
+
+<p align="right">(<a href="#readme-top">上に戻る</a>)</p>
+
 
 ### インストール方法
 
@@ -116,7 +121,6 @@ SOBITSは開発した4輪独立ステアリング駆動式のモバイルマニ�
    ```
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
-
 
 
 <!-- 実行・操作方法 -->
@@ -199,7 +203,7 @@ $ roslaunch sobit_pro_description display.launch
 
 
 ### ジョイントコントローラ
-SOBIT_PROのパンチルト機構とマニピュレータを動かすための情報まとめです．
+SOBIT PROのパンチルト機構とマニピュレータを動かすための情報まとめです．
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
@@ -216,9 +220,9 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 > [!NOTE]
 > 既存のポーズは[sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml)に確認でいます．ポーズの作成方法については[ポーズの設定方法](#ポーズの設定方法)をご参照ください．
 
-1.  `moveAllJoint()` : 指定されたジョイントを任意の角度も動かします．
+1.  `moveAllJoint()` : すべてのジョイントを任意の角度に動かします．
     ```cpp
-    bool sobit::SobitProJointController::moveJoint (
+    bool sobit::SobitProJointController::moveAllJoint (
         const double arm_shoulder_tilt_joint,       // 回転角度 [rad]
         const double arm_elbow_upper_tilt_joint,    // 回転角度 [rad]
         const double arm_elbow_lower_tilt_joint,    // 回転角度 [rad]
@@ -232,7 +236,7 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveJoint()` : 指定されたジョイントを任意の角度も動かします．
+1.  `moveJoint()` : 指定されたジョイントを任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveJoint (
         const Joint joint_num,                      // ジョイント名 (定数名)
@@ -247,21 +251,21 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 1.  `moveArm()` : アームの関節を任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveArm(
-        const double arm_shoulder_tilt_joint,       // ARM_SHOULDER_TILT_JOINTの回転角度 [rad]
-        const double arm_elbow_upper_tilt_joint,    // ARM_ELBOW_UPPER_TILT_JOINTの回転角度 [rad]
-        const double arm_elbow_lower_tilt_joint,    // ARM_ELBOW_LOWER_TILT_JOINTの回転角度 [rad]
-        const double arm_elbow_lower_pan_joint,     // ARM_ELBOW_LOWER_PAN_JOINTの回転角度 [rad]
-        const double arm_wrist_tilt_joint,          // ARM_WRIST_TILT_JOINTの回転角度 [rad]
+        const double arm_shoulder_tilt_joint,       // 回転角度 [rad]
+        const double arm_elbow_upper_tilt_joint,    // 回転角度 [rad]
+        const double arm_elbow_lower_tilt_joint,    // 回転角度 [rad]
+        const double arm_elbow_lower_pan_joint,     // 回転角度 [rad]
+        const double arm_wrist_tilt_joint,          // 回転角度 [rad]
         const double sec = 5.0,                     // 回転時間 [s]
         bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
 
-1.  `moveHeadPanTilt()` : パンチルト機構を任意の角度に動かす
+1.  `moveHeadPanTilt()` : パンチルト機構を任意の角度に動かす．
     ```cpp
     bool sobit::SobitProJointController::moveHeadPanTilt(
-        const double head_camera_pan,               // パンの回転角度 [rad]
-        const double head_camera_tilt,              // チルトの回転角度 [rad]
+        const double head_camera_pan,               // 回転角度 [rad]
+        const double head_camera_tilt,              // 回転角度 [rad]
         const double sec = 5.0,                     // 移動時間 [s]
         bool is_sleep = true                        // 回転後に待機するかどうか
     );
@@ -297,8 +301,8 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     ```cpp
     bool sobit::SobitProJointController::moveHandToPlaceCoord(
         const double target_pos_x,                  // 配置目的地のx [m]
-        const double target_pos_y,                  // 配置目的地のx [m]
-        const double target_pos_z,                  // 配置目的地のx [m]
+        const double target_pos_y,                  // 配置目的地のy [m]
+        const double target_pos_z,                  // 配置目的地のz [m]
         const double shift_x,                       // xyz座標のx軸をシフトする [m]
         const double shift_y,                       // xyz座標のy軸をシフトする [m]
         const double shift_z                        // xyz座標のz軸をシフトする [m]
@@ -319,7 +323,7 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `graspDecision()` : 定めた範囲内の電流値を超えた場合，把持判定を返す．
+1.  `graspDecision()` : ハンドに流れる電流値に応じて，把持判定が決まります．
     ```cpp
     bool sobit::SobitProJointController::graspDecision(
         const int min_curr = 300,                   // 最小電流値
@@ -327,7 +331,7 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `placeDecision()` : 定めた範囲内の電流値を超えた場合，配置判定を返す．
+1.  `placeDecision()` : ハンドに流れる電流値に応じて，配置判定が決まります．
     ```cpp
     bool sobit::SobitProJointController::placeDecision(
         const int min_curr = 500,                   // 最小電流値
@@ -340,7 +344,6 @@ SOBIT_PROのパンチルト機構とマニピュレータを動かすための�
 
 #### ジョイント名
 SOBIT PROのジョイント名とその定数名を以下の通りです．
-
 
 | ジョイント番号 | ジョイント名 | ジョイント定数名 |
 | :---: | --- | --- |
@@ -373,7 +376,7 @@ sobit_pro_pose:
         hand_joint: 0.0,
         head_pan_joint: 0.0,
         head_tilt_joint: 0.0
-    }
+        }
     ...
 ```  
 
@@ -384,7 +387,7 @@ SOBIT PROの移動機構を動かすための情報まとめです．
 
 
 #### 動作関数
-1.  `controlWheelLinear()` : 並進（直進移動・斜め移動・横移動）を移動させます．
+1.  `controlWheelLinear()` : 並進（直進移動・斜め移動・横移動）に移動させます．
     ```cpp
     bool sobit::SobitProWheelController::controlWheelLinear (
         const double distance_x,                    // x方向への直進移動距離 [m]
@@ -424,13 +427,19 @@ SOBIT PROはオープンソースハードウェアとして[OnShape](https://ca
 
 1. Onshapeにアクセスしましょう．
 
-    > [!NOTE]
-    > ファイルをダウンロードするために，`OnShape`のアカウントを作成する必要がありません．ただし，本ドキュメント全体をコピする場合，アカウントの作成を推薦します．
+> [!NOTE]
+> ファイルをダウンロードするために，`OnShape`のアカウントを作成する必要がありません．ただし，本ドキュメント全体をコピする場合，アカウントの作成を推薦します．
 
-1. `Instances`の中にパーツを右クリックで選択します．
-1. 一覧が表示され，`Export`ブタンを押してください．
-1. 表示されたウィンドウの中に，`Format`という項目があります．`STEP`を選択してください．
-1. 最後に，青色の`Export`ボタンを押してダウンロードが開始されます．
+2. `Instances`の中にパーツを右クリックで選択します．
+3. 一覧が表示され，`Export`ブタンを押してください．
+4. 表示されたウィンドウの中に，`Format`という項目があります．`STEP`を選択してください．
+5. 最後に，青色の`Export`ボタンを押してダウンロードが開始されます．
+
+<p align="right">(<a href="#readme-top">上に戻る</a>)</p>
+
+
+### 電子回路図
+TBD
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
@@ -524,7 +533,6 @@ Don't forget to give the project a star! Thanks again!
 Distributed under the MIT License. See `LICENSE.txt` for more NOTErmation.
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p> -->
-
 
 
 <!-- 参考文献 -->
