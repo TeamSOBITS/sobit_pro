@@ -64,7 +64,7 @@
 
 This is a library to operate the 4-wheel independent steering-drive mobile manipulator (SOBIT PRO) developed by SOBITS.
 
-> [!WARNING].
+> [!WARNING]
 > If you have no preivous experience controlling this robot, please have a senior colleague accompany you while you want to use this robot.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -75,7 +75,8 @@ This is a library to operate the 4-wheel independent steering-drive mobile manip
 
 This section describes how to set up this repository.
 
-<p align="right">(<a href="#readme-top">上に戻る</a>)</p>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 
 ### Prerequisites
 
@@ -156,7 +157,7 @@ First, please set up the following environment before proceeding to the next ins
 
 ### If only using mobile mechanism
 
-SOBIT PROの移動機構単体で動かすことができます．
+SOBIT PRO can be moved by the moving mechanism alone.
 
 1. Rewrite [minimal.launch](sobit_pro_bringup/launch/minimal.launch) as follows
     ```xml
@@ -217,10 +218,11 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
         bool is_sleep = true                        // Flag for sleep after movement
     );
     ```
+
 > [!NOTE]
 > Existing poses are found in [sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml). Please refer to [How to set new poses](#how-to-set-new-poses) for how to create poses.
 
-1.  `moveAllJoint()` : Moves all joints to an arbitrary angle.
+2.  `moveAllJoint()` : Moves all joints to an arbitrary angle.
     ```cpp
     bool sobit::SobitProJointController::moveAllJoint (
         const double arm_shoulder_tilt_joint,       // Moving Angle [rad]
@@ -236,7 +238,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `moveJoint()` : Moves a specified joint to an arbitrary angle.
+3.  `moveJoint()` : Moves a specified joint to an arbitrary angle.
     ```cpp
     bool sobit::SobitProJointController::moveJoint (
         const Joint joint_num,                      // Joint Number (Defined)
@@ -245,10 +247,11 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
         bool is_sleep = true                        // Flag for sleep after movement
     );
     ```
+
 > [!NOTE]
 > `Joint Number` please check [Joints Name](#joints-name).
  
-1.  `moveArm()` : Moves the robot arm joints to an arbitrary angle.
+4.  `moveArm()` : Moves the robot arm joints to an arbitrary angle.
     ```cpp
     bool sobit::SobitProJointController::moveArm(
         const double arm_shoulder_tilt_joint,       // Moving Angle [rad]
@@ -261,7 +264,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `moveHeadPanTilt()` : Moves the pan-tilt mechanism to an arbitrary angle.
+5.  `moveHeadPanTilt()` : Moves the pan-tilt mechanism to an arbitrary angle.
     ```cpp
     bool sobit::SobitProJointController::moveHeadPanTilt(
         const double head_camera_pan,               // Moving Angle [rad]
@@ -271,7 +274,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `moveHandToTargetCoord()` : Move the hand to xyz coordinates (grasp mode).
+6.  `moveHandToTargetCoord()` : Move the hand to xyz coordinates (grasp mode).
     ```cpp
     bool sobit::SobitProJointController::moveHandToTargetCoord(
         const double target_pos_x,                  // Grasp destination x [m]
@@ -285,7 +288,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `moveHandToTargetTF()` : Moves the hand to the tf name (grasp mode).
+7.  `moveHandToTargetTF()` : Moves the hand to the tf name (grasp mode).
     ```cpp
     bool sobit::SobitProJointController::moveHandToTargetTF(
         const std::string& target_name,             // Grasp Target tf name
@@ -297,7 +300,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `moveHandToPlaceCoord()` : Moves the hand to xyz coordinates (placement mode).
+8.  `moveHandToPlaceCoord()` : Moves the hand to xyz coordinates (placement mode).
     ```cpp
     bool sobit::SobitProJointController::moveHandToPlaceCoord(
         const double target_pos_x,                  // Place destination x [m]
@@ -311,7 +314,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     ); 
     ```
 
-1.  `moveHandToPlaceTF()` : Moves the hand to the tf name (placement mode).
+9.  `moveHandToPlaceTF()` : Moves the hand to the tf name (placement mode).
     ```cpp
     bool sobit::SobitProJointController::moveHandToPlaceTF(
         const std::string& target_name,             // Place Target tf name
@@ -323,7 +326,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `graspDecision()` : Based on the hand current value , the grasp judgment is returned.
+10.  `graspDecision()` : Based on the hand current value , the grasp judgment is returned.
     ```cpp
     bool sobit::SobitProJointController::graspDecision(
         const int min_curr = 300,                   // Minimum current value
@@ -331,7 +334,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
     );
     ```
 
-1.  `placeDecision()` : Based on the hand current value , the place judgment is returned.
+11.  `placeDecision()` : Based on the hand current value , the place judgment is returned.
     ```cpp
     bool sobit::SobitProJointController::placeDecision(
         const int min_curr = 500,                   // Minimum current value
@@ -390,20 +393,20 @@ This is a summary of information for moving the SOBIT PRO moving mechanism.
 1.  `controlWheelLinear()` : Perform translational motion (straight-line, diagonal, or lateral movement).
     ```cpp
     bool sobit::SobitProWheelController::controlWheelLinear (
-        const double distance_x,                    // x方向への直進移動距離 [m]
-        const double distance_y,                    // y方向への直進移動距離 [m]
+        const double distance_x,                    // Straight travel distance in x direction [m]
+        const double distance_y,                    // Straight travel distance in y direction [m]
     )
     ```  
 2.  `controlWheelRotateRad()` : Perform rotational motion (method: Radian)
     ```cpp
     bool sobit::SobitProWheelController::controlWheelRotateRad (
-        const double angle_rad,                     // 中心回転角度 [rad]
+        const double angle_rad,                     // Center Rotation Angle [rad]
     )
     ```  
 3.  `controlWheelRotateDeg()` : Perform rotational motion (method: Degree)
     ```cpp
     bool sobit::SobitProWheelController::controlWheelRotateDeg ( 
-        const double angle_deg,                     // 中心回転角度 (deg)
+        const double angle_deg,                     // Center Rotation Angle (deg)
     )
     ```
 
@@ -498,10 +501,11 @@ TBD
 <!-- MILESTONE -->
 ## Milestone
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+- [x] Switching between SOBIT PRO and only the movement mechanism by parameter
+- [x] Modification of example files
+- [x] OSS
+    - [x] Improved documentation
+    - [x] Unified coding style
 
 See the [open issues][license-url] for a full list of proposed features (and known issues).
 

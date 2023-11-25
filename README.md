@@ -217,10 +217,11 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
         bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
+
 > [!NOTE]
 > 既存のポーズは[sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml)に確認でいます．ポーズの作成方法については[ポーズの設定方法](#ポーズの設定方法)をご参照ください．
 
-1.  `moveAllJoint()` : すべてのジョイントを任意の角度に動かします．
+2.  `moveAllJoint()` : すべてのジョイントを任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveAllJoint (
         const double arm_shoulder_tilt_joint,       // 回転角度 [rad]
@@ -236,7 +237,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveJoint()` : 指定されたジョイントを任意の角度に動かします．
+3.  `moveJoint()` : 指定されたジョイントを任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveJoint (
         const Joint joint_num,                      // ジョイント名 (定数名)
@@ -245,10 +246,11 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
         bool is_sleep = true                        // 回転後に待機するかどうか
     );
     ```
+
 > [!NOTE]
 > `ジョイント名`は[ジョイント名](#ジョイント名)をご確認ください．
  
-1.  `moveArm()` : アームの関節を任意の角度に動かします．
+4.  `moveArm()` : アームの関節を任意の角度に動かします．
     ```cpp
     bool sobit::SobitProJointController::moveArm(
         const double arm_shoulder_tilt_joint,       // 回転角度 [rad]
@@ -261,7 +263,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveHeadPanTilt()` : パンチルト機構を任意の角度に動かす．
+5.  `moveHeadPanTilt()` : パンチルト機構を任意の角度に動かす．
     ```cpp
     bool sobit::SobitProJointController::moveHeadPanTilt(
         const double head_camera_pan,               // 回転角度 [rad]
@@ -271,7 +273,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveHandToTargetCoord()` : ハンドをxyz座標に動かします（把持モード）．
+6.  `moveHandToTargetCoord()` : ハンドをxyz座標に動かします（把持モード）．
     ```cpp
     bool sobit::SobitProJointController::moveHandToTargetCoord(
         const double target_pos_x,                  // 把持目的地のx [m]
@@ -285,7 +287,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveHandToTargetTF()` : ハンドをtf名に動かします（把持モード）．
+7.  `moveHandToTargetTF()` : ハンドをtf名に動かします（把持モード）．
     ```cpp
     bool sobit::SobitProJointController::moveHandToTargetTF(
         const std::string& target_name,             // 把持目的tf名
@@ -297,7 +299,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `moveHandToPlaceCoord()` : ハンドをxyz座標に動かします（配置モード）．
+8.  `moveHandToPlaceCoord()` : ハンドをxyz座標に動かします（配置モード）．
     ```cpp
     bool sobit::SobitProJointController::moveHandToPlaceCoord(
         const double target_pos_x,                  // 配置目的地のx [m]
@@ -311,7 +313,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     ); 
     ```
 
-1.  `moveHandToPlaceTF()` : ハンドをtf名に動かします（配置モード）．
+9.  `moveHandToPlaceTF()` : ハンドをtf名に動かします（配置モード）．
     ```cpp
     bool sobit::SobitProJointController::moveHandToPlaceTF(
         const std::string& target_name,             // 配置目的tf名
@@ -323,7 +325,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `graspDecision()` : ハンドに流れる電流値に応じて，把持判定が決まります．
+10.  `graspDecision()` : ハンドに流れる電流値に応じて，把持判定が決まります．
     ```cpp
     bool sobit::SobitProJointController::graspDecision(
         const int min_curr = 300,                   // 最小電流値
@@ -331,7 +333,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
     );
     ```
 
-1.  `placeDecision()` : ハンドに流れる電流値に応じて，配置判定が決まります．
+11.  `placeDecision()` : ハンドに流れる電流値に応じて，配置判定が決まります．
     ```cpp
     bool sobit::SobitProJointController::placeDecision(
         const int min_curr = 500,                   // 最小電流値
@@ -499,10 +501,10 @@ TBD
 ## マイルストーン
 
 - [x] パラメタによるSOBIT PROと移動機構のみの切り替え
-- [ ] exampleファイルの修正
-- [ ] OSS
-    - [ ] ドキュメンテーションの充実
-    - [ ] コーディングスタイルの統一
+- [x] exampleファイルの修正
+- [x] OSS
+    - [x] ドキュメンテーションの充実
+    - [x] コーディングスタイルの統一
 
 現時点のバッグや新規機能の依頼を確認するために[Issueページ][license-url] をご覧ください．
 
@@ -524,7 +526,6 @@ Don't forget to give the project a star! Thanks again!
 5. Open a Pull Request
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p> -->
-
 
 
 <!-- LICENSE -->
