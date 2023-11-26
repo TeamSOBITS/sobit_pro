@@ -25,7 +25,7 @@
       </ul>
     </li>
     <li>
-    　<a href="#実行・操作方法">実行・操作方法</a>
+    　<a href="#実行操作方法">実行・操作方法</a>
       <ul>
         <li><a href="#移動機構のみを使用する場合">移動機構のみを使用する場合</a></li>
         <li><a href="#Rviz上の可視化">Rviz上の可視化</a></li>
@@ -45,7 +45,7 @@
         <li><a href="#電子回路図">電子回路図</a></li>
         <li><a href="#ロボットの組み立て">ロボットの組み立て</a></li>
         <li><a href="#ロボットの特徴">ロボットの特徴</a></li>
-        <li><a href="#部品リスト（BOM）">部品リスト（BOM）</a></li>
+        <li><a href="#部品リストBOM">部品リスト（BOM）</a></li>
       </ul>
     </li>
     <li><a href="#マイルストーン">マイルストーン</a></li>
@@ -77,6 +77,7 @@ SOBITSが開発した4輪独立ステアリング駆動式のモバイルマニ�
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
+
 ### 環境条件
 
 まず，以下の環境を整えてから，次のインストール段階に進んでください．
@@ -88,7 +89,7 @@ SOBITSが開発した4輪独立ステアリング駆動式のモバイルマニ�
 | Python | 3.8 |
 
 > [!NOTE]
-> `Ubuntu`や`ROS`のインストール方法に関しては，[SOBIT Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)に参照してください．
+> `Ubuntu`や`ROS`のインストール方法に関しては，[SOBITS Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6)に参照してください．
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
@@ -136,6 +137,7 @@ SOBITSが開発した4輪独立ステアリング駆動式のモバイルマニ�
     <arg name="open_rviz"           default="true"/>
     ...
    ```
+
 > [!NOTE]
 > 使用したい機能に応じて，`true`か`false`かに書き換えてください．
 
@@ -185,6 +187,7 @@ SOBIT PROの移動機構単体で動かすことができます．
 
 
 ### Rviz上の可視化
+
 実機を動かす前段階として，Rviz上でSOBIT PROを可視化し，ロボットの構成を表示することができます．
 
 ```sh
@@ -198,17 +201,20 @@ $ roslaunch sobit_pro_description display.launch
 
 
 ## ソフトウェア
+
 <details>
 <summary>SOBIT PROと関わるソフトの情報まとめ</summary>
 
 
 ### ジョイントコントローラ
+
 SOBIT PROのパンチルト機構とマニピュレータを動かすための情報まとめです．
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 
 #### 動作関数
+
 1.  `moveToPose()` : 決められたポーズに動かします．
     ```cpp
     bool moveToPose(
@@ -345,6 +351,7 @@ SOBIT PROのパンチルト機構とマニピュレータを動かすための�
 
 
 #### ジョイント名
+
 SOBIT PROのジョイント名とその定数名を以下の通りです．
 
 | ジョイント番号 | ジョイント名 | ジョイント定数名 |
@@ -364,6 +371,7 @@ SOBIT PROのジョイント名とその定数名を以下の通りです．
 
 
 #### ポーズの設定方法
+
 [sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml)というファイルでポーズの追加・編集ができます．以下のようなフォーマットになります．
 
 ```yaml
@@ -383,12 +391,14 @@ sobit_pro_pose:
 ```  
 
 ### ホイルコントローラ
+
 SOBIT PROの移動機構を動かすための情報まとめです．
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 
 #### 動作関数
+
 1.  `controlWheelLinear()` : 並進（直進移動・斜め移動・横移動）に移動させます．
     ```cpp
     bool sobit::SobitProWheelController::controlWheelLinear (
@@ -441,18 +451,21 @@ SOBIT PROはオープンソースハードウェアとして[OnShape](https://ca
 
 
 ### 電子回路図
+
 TBD
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 
 ### ロボットの組み立て
+
 TBD
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
 
 ### ロボットの特徴
+
 | 項目 | 詳細 |
 | --- | --- |
 | 最大直進速度 | 0.7[m/s] |
@@ -491,6 +504,7 @@ TBD
 | --- | --- | 1 | [link]() |
 | --- | --- | 1 | [link]() |
 | --- | --- | 1 | [link]() |
+
 
 </details>
 
@@ -558,4 +572,4 @@ Distributed under the MIT License. See `LICENSE.txt` for more NOTErmation.
 [issues-shield]: https://img.shields.io/github/issues/TeamSOBITS/sobit_pro.svg?style=for-the-badge
 [issues-url]: https://github.com/TeamSOBITS/sobit_pro/issues
 [license-shield]: https://img.shields.io/github/license/TeamSOBITS/sobit_pro.svg?style=for-the-badge
-[license-url]: https://github.com/TeamSOBITS/sobit_pro/blob/master/LICENSE
+[license-url]: LICENSE

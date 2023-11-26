@@ -45,7 +45,7 @@
         <li><a href="#electronic-circuit-diagram">Electronic circuit Diagram</a></li>
         <li><a href="#robot-assembly">Robot Assembly</a></li>
         <li><a href="#features">Features</a></li>
-        <li><a href="#bill-of-material-(BOM)">Bill of Material (BOM)</a></li>
+        <li><a href="#bill-of-material-BOM">Bill of Material (BOM)</a></li>
       </ul>
     </li>
     <li><a href="#milestone">Milestone</a></li>
@@ -89,7 +89,7 @@ First, please set up the following environment before proceeding to the next ins
 | Python | 3.8 |
 
 > [!NOTE]
-> If you need to install `Ubuntu` or `ROS`, please check our [SOBIT Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6).
+> If you need to install `Ubuntu` or `ROS`, please check our [SOBITS Manual](https://github.com/TeamSOBITS/sobits_manual#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%81%AB%E3%81%A4%E3%81%84%E3%81%A6).
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 
@@ -186,6 +186,7 @@ SOBIT PRO can be moved by the moving mechanism alone.
 
 
 ### Visualize on Rviz
+
 As a preliminary step to running the actual machine, SOBIT PRO can be visualized on Rviz to display the robot's configuration.
 
 ```sh
@@ -199,17 +200,20 @@ If it works correctly, Rviz will be displayed as follows.
 
 
 ## Software
+
 <details>
 <summary>Summary of information on SOBIT PRO and related software</summary>
 
 
 ### Joint Controller
+
 This is a summary of information for moving the pan-tilt mechanism and manipulators of SOBIT PRO.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 #### Movement Methods
+
 1.  `moveToPose()` : Move it to a predetermined pose.
     ```cpp
     bool moveToPose(
@@ -346,6 +350,7 @@ This is a summary of information for moving the pan-tilt mechanism and manipulat
 
 
 #### Joints name
+
 The joint names of SOBIT PRO and their constants are listed below.
 
 | Joint Number | Joint Name | Joint Constant Name |
@@ -365,6 +370,7 @@ The joint names of SOBIT PRO and their constants are listed below.
 
 
 #### How to set new poses
+
 Poses can be added and edited in the file [sobit_pro_pose.yaml](sobit_pro_library/config/sobit_pro_pose.yaml). The format is as follows:
 
 ```yaml
@@ -384,12 +390,14 @@ sobit_pro_pose:
 ```  
 
 ### Wheel Controller
+
 This is a summary of information for moving the SOBIT PRO moving mechanism.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 #### Moving Methods
+
 1.  `controlWheelLinear()` : Perform translational motion (straight-line, diagonal, or lateral movement).
     ```cpp
     bool sobit::SobitProWheelController::controlWheelLinear (
@@ -416,6 +424,7 @@ This is a summary of information for moving the SOBIT PRO moving mechanism.
 
 
 ## Hardware
+
 SOBIT PRO is available as open source hardware at [OnShape](https://cad.onshape.com/documents/4acbecde07fba120a62ec033/w/c6217b66947274dee4e8f911/e/c2e5c16292d7dfc11ee3cc01?renderMode=0&uiState=654a13b8711fc82bedc118e2).
 
 ![SOBIT PRO in OnShape](sobit_pro/docs/img/sobit_pro_onshape.png)
@@ -442,18 +451,21 @@ SOBIT PRO is available as open source hardware at [OnShape](https://cad.onshape.
 
 
 ### Electronic Circuit Diagram
+
 TBD
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Robot Assembly
+
 TBD
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Features
+
 | Item | Details |
 | --- | --- |
 | Maximum linear velocity | 0.7[m/s] |
@@ -559,4 +571,4 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 [issues-shield]: https://img.shields.io/github/issues/TeamSOBITS/sobit_pro.svg?style=for-the-badge
 [issues-url]: https://github.com/TeamSOBITS/sobit_pro/issues
 [license-shield]: https://img.shields.io/github/license/TeamSOBITS/sobit_pro.svg?style=for-the-badge
-[license-url]: https://github.com/TeamSOBITS/sobit_pro/blob/master/LICENSE
+[license-url]: LICENSE
