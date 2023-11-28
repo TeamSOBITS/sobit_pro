@@ -78,13 +78,12 @@
 
   <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 
-    <joint name="wheel_${prefix}_drive_joint" type="revolute">
+    <joint name="wheel_${prefix}_drive_joint" type="continuous">
       <origin xyz="${x_loc+0.0019} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
       <parent link="${parent}" />
       <child link="wheel_${prefix}_drive_link" />
       <axis xyz="-1.0 0.0 0.0 " />
-      <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
-      <!-- <dynamics damping="0.2" friction="0" /> -->
+      <limit effort="10" velocity="10" />
     </joint>
 
     <link name="wheel_${prefix}_drive_link">
