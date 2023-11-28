@@ -52,8 +52,8 @@
       <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_inner_l_link" />
       <origin xyz="0.0631932 0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
-      <axis xyz="0.0 0.0 -1.0" />
-      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="-1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
   
@@ -119,13 +119,13 @@
 
 
     <joint name="${prefix_hand}_outer_l_joint" type="revolute">
-      <parent link="${prefix_hand}_inner_l_link" />
-      <!-- <parent link="${prefix_hand}_base_link" /> -->
+      <!-- <parent link="${prefix_hand}_inner_l_link" /> -->
+      <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_outer_l_link" />
-      <origin xyz="-0.01988747 0.025 -0.01022197" rpy="0.0 0.0 0.0" />
-      <!-- <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" /> -->
-      <axis xyz="0.0 0.0 -1.0" />
-      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <!-- <origin xyz="-0.01988747 0.025 -0.01022197" rpy="0.0 0.0 0.0" /> -->
+      <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <mimic joint="${prefix_hand}_inner_l_joint" multiplier="1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
 
@@ -156,11 +156,11 @@
 
 
     <joint name="${prefix_hand}_outer_r_joint" type="revolute">
-      <parent link="${prefix_hand}_inner_r_link" />
-      <!-- <parent link="${prefix_hand}_base_link" /> -->
+      <!-- <parent link="${prefix_hand}_inner_r_link" /> -->
+      <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_outer_r_link" />
-      <origin xyz="-0.01988747 -0.025 -0.01022197" rpy="0.0 0.0 0.0" />
-      <!-- <origin xyz="0.043193 -0.04015 0.0282231" rpy="0.0 0.0 0.0" /> -->
+      <!-- <origin xyz="-0.01988747 -0.025 -0.01022197" rpy="0.0 0.0 0.0" /> -->
+      <origin xyz="0.043193 -0.04015 0.0282231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
       <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
@@ -193,27 +193,27 @@
 
 
     <joint name="${prefix_hand}_${prefix_finger}_l_joint" type="revolute">
-      <parent link="${prefix_hand}_outer_l_link" />
+      <parent link="${prefix_hand}_inner_l_link" />
       <child link="${prefix_hand}_${prefix_finger}_l_link" />
-      <origin xyz="0.1040 0.0 -0.0190" rpy="0.0 0.0 0.0" />
+      <origin xyz="0.114316 0.0 -0.027729" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <mimic joint="${prefix_hand}_inner_l_joint" multiplier="-1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
 
     <link name="${prefix_hand}_${prefix_finger}_l_link">
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="-0.029998 0.025 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
         <geometry>
           <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_l.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="${0.03+(0.08+0.00707)/2} -0.025 -${0.018/2}" rpy="0.0 0.0 0.0" />
+        <origin xyz="${0.007071+(0.012042+0.061128)/2} 0.0 -${0.018/2}" rpy="0.0 0.0 0.0" />
         <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <box size="${0.08-0.00707} 0.01137 0.044" />
+          <box size="${0.012042+0.061128} 0.01137 0.044" />
           <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_l.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
@@ -228,27 +228,27 @@
 
 
     <joint name="${prefix_hand}_${prefix_finger}_r_joint" type="revolute">
-      <parent link="${prefix_hand}_outer_r_link" />
+      <parent link="${prefix_hand}_inner_r_link" />
       <child link="${prefix_hand}_${prefix_finger}_r_link" />
-      <origin xyz="0.1040 0.0 -0.0190" rpy="0.0 0.0 0.0" />
-      <axis xyz="0.0 0.0 -1.0" />
-      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <origin xyz="0.114316 0.0 -0.027729" rpy="0.0 0.0 0.0" />
+      <axis xyz="0.0 0.0 1.0" />
+      <mimic joint="${prefix_hand}_inner_r_joint" multiplier="-1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
 
     <link name="${prefix_hand}_${prefix_finger}_r_link">
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="-0.029998 -0.025 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
         <geometry>
           <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_r.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="${0.03+(0.08+0.00707)/2} 0.025 -${0.018/2}" rpy="0.0 0.0 0.0" />
+        <origin xyz="${0.007071+(0.012042+0.061128)/2} 0.0 -${0.018/2}" rpy="0.0 0.0 0.0" />
         <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <box size="${0.08-0.00707} 0.01137 0.044" />
+          <box size="${0.012042+0.061128} 0.01137 0.044" />
           <!-- <mesh filename="package://sobit_pro_description/meshes/hand/hand_finger_r.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
