@@ -18,19 +18,23 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="${0.01388-0.05525/2} 0.0 -${0.005+0.034/2+0.02/2}" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.01388-0.05525/2} 0.0 -${0.005+0.034/2+0.02/2}" rpy="0.0 0.0 0.0" />
         <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <box size="0.0285 0.084 0.05525" />
+          <box size="0.05525 0.0285 0.084" />
           <!-- <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.01388-0.05525/2} 0.0 -${0.005+0.034/2+0.02/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" /> -->
         <mass value="1" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*1*(0.05525**2+0.084**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*1*(0.0285**2 +0.084**2)}" iyz="0.0"
+                 izz="${1/12*1*(0.05525**2+0.0285**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
     
@@ -57,19 +61,23 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="${0.0244+0.0436/2} 0.0 ${0.034/2+0.0149-0.1766/2}" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.0244+0.0436/2} 0.0 ${0.034/2+0.0149-0.1766/2}" rpy="0.0 0.0 0.0" />
         <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <box size="0.0495 0.1766 0.0436" />
+          <!-- <box size="0.0495 0.1766 0.0436" /> -->
+          <box size="0.0436 0.0495 0.1766" />
           <!-- <mesh filename="package://sobit_pro_description/meshes/wheel/wheel_steer.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.0244+0.0436/2} 0.0 ${0.034/2+0.0149-0.1766/2}" rpy="0.0 0.0 0.0" />
         <mass value="1" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*1*(0.0436**2+0.1766**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*1*(0.0495**2+0.1766**2)}" iyz="0.0"
+                 izz="${1/12*1*(0.0436**2+0.0495**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -103,11 +111,14 @@
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI+M_PI/2.0}" />
+        <origin xyz="-${0.0055+0.029/2} 0.0 0.0" rpy="0.0 0.0 0.0" />
         <mass value="1" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/2 *1*(0.144/2)**2}"              ixy="0.0" ixz="0.0"
+                 iyy="${1/12*1*(3*(0.144/2)**2+0.029**2)}" iyz="0.0"
+                 izz="${1/12*1*(3*(0.144/2)**2+0.029**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -116,10 +127,10 @@
 
   <xacro:macro name="wheel" params="parent prefix">
 
-    <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_l" number="1" x_loc= "${0.210*cos(radians(45.))}"  y_loc= "${0.210*cos(radians(45.))}"  z_loc="-0.019" />
-    <xacro:stack_wheel_steer_base parent="${parent}" prefix="b_l" number="2" x_loc= "-${0.210*cos(radians(45.))}" y_loc= "${0.210*cos(radians(45.))}"  z_loc="-0.019" />
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_l" number="1" x_loc= " ${0.210*cos(radians(45.))}" y_loc= " ${0.210*cos(radians(45.))}" z_loc="-0.019" />
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="b_l" number="2" x_loc= "-${0.210*cos(radians(45.))}" y_loc= " ${0.210*cos(radians(45.))}" z_loc="-0.019" />
     <xacro:stack_wheel_steer_base parent="${parent}" prefix="b_r" number="3" x_loc= "-${0.210*cos(radians(45.))}" y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
-    <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_r" number="4" x_loc= "${0.210*cos(radians(45.))}"  y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
+    <xacro:stack_wheel_steer_base parent="${parent}" prefix="f_r" number="4" x_loc= " ${0.210*cos(radians(45.))}" y_loc= "-${0.210*cos(radians(45.))}" z_loc="-0.019" />
     
     <xacro:stack_wheel_steer parent="wheel_f_l_steer_base_link" prefix="f_l" number="1" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
     <xacro:stack_wheel_steer parent="wheel_b_l_steer_base_link" prefix="b_l" number="2" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />

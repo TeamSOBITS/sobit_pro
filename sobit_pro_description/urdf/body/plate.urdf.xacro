@@ -25,11 +25,14 @@
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.3**2+0.3**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -57,11 +60,14 @@
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.3**2+0.3**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
     
@@ -89,11 +95,14 @@
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.3**2+0.3**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
