@@ -212,7 +212,7 @@
       <child link="${prefix_hand}_${prefix_finger}_l_link" />
       <origin xyz="0.114316 0.0 -0.027729" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <mimic joint="${prefix_hand}_inner_l_joint" multiplier="-1.0" offset="0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
 
@@ -250,7 +250,7 @@
       <child link="${prefix_hand}_${prefix_finger}_r_link" />
       <origin xyz="0.114316 0.0 -0.027729" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <mimic joint="${prefix_hand}_inner_r_joint" multiplier="-1.0" offset="0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="-1.0" offset="0" />
       <limit lower="${-M_PI/2.0}" upper="0" effort="1" velocity="1" />
     </joint>
 
