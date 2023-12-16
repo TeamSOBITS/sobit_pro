@@ -19,7 +19,7 @@ ros_packages=(
 # Clone all packages
 for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     echo "Clonning: ${ros_packages[i]}"
-    git clone https://github.com/TeamSOBITS/${ros_packages[i]}.git
+    git clone -b feature/oss https://github.com/TeamSOBITS/${ros_packages[i]}.git
 
     # Check if install.sh exists in each package
     if [ -f ${ros_packages[i]}/install.sh ]; then
