@@ -4,6 +4,7 @@
 import sys
 
 import rospy
+from geometry_msgs.msg import Twist
 from sobit_pro_module import SobitProWheelController
 from sobit_pro_module import SobitProJointController
 from sobit_pro_module import Joint
