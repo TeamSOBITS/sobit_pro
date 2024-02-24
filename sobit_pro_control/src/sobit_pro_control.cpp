@@ -11,9 +11,10 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
         // Translational motion
         case TRANSLATIONAL_MOTION_MODE:{
             // Goal velocity calculation
-            float vel_ms    = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // vel_twist to vel_ms
-            float vel_rpm   = vel_ms / WHEEL_LENGTH * 60.;  // vel_ms to vel_rpm
-            float vel_value = vel_rpm / VEL_UNIT;           // vel_rpm to vel_value
+            float vel_ms    = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // vel_twist [m/s] to vel_ms [m/s]
+            float vel_rads  = vel_ms / (WHEEL_DIAMETER/2.); // vel_ms   [m/s]   to vel_rads  [rad/s]
+            float vel_rpm   = vel_rads * 60. / (2.*M_PI);   // vel_rads [rad/s] to vel_rpm   [rpm]
+            float vel_value = vel_rpm / VEL_UNIT;           // vel_rpm  [rpm]   to vel_value [dxl value]
 
             // Goal position calculation
             float goal_deg = atan2f(vel_twist.linear.x, vel_twist.linear.y) / (M_PI / 180.);
@@ -119,10 +120,11 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
         // Rotational motion
         case ROTATIONAL_MOTION_MODE:{
             // Goal velocity calculation
-            float vel_deg   = vel_twist.angular.z * 180. / M_PI;        // vel_ang to vel_deg
-            float vel_ms    = vel_deg / 360. * BODY_DIAMETER * M_PI;    // vel_deg to vel_ms
-            float vel_rpm   = vel_ms / WHEEL_LENGTH * 60.;              // vel_ms to vel_rpm
-            float vel_value = vel_rpm / VEL_UNIT;                       // vel_rpm to vel_value
+            float vel_deg   = vel_twist.angular.z * 180. / M_PI;     // vel_ang  [rad/s] to vel_deg   [deg/s]
+            float vel_ms    = vel_deg / 360. * BODY_DIAMETER * M_PI; // vel_deg  [deg/s] to vel_ms    [m/s]
+            float vel_rads  = vel_ms / (WHEEL_DIAMETER/2.);          // vel_ms   [m/s]   to vel_rads  [rad/s]
+            float vel_rpm   = vel_rads * 60. / (2.*M_PI);            // vel_rads [rad/s] to vel_rpm   [rpm]
+            float vel_value = vel_rpm / VEL_UNIT;                    // vel_rpm  [rpm]   to vel_value [dxl value]
 
             // Goal angle calculation
             steer_fl_goal_pos = 0.; steer_fr_goal_pos = 0.;
