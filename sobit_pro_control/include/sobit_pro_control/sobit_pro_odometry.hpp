@@ -12,15 +12,15 @@
 #include <geometry_msgs/Point.h>
 
 // Define motion key value
-#define STOP_MOTION          0
-#define TRANSLATIONAL_MOTION 1
-#define ROTATIONAL_MOTION    2
-#define SWIVEL_MOTION        3 // Motion can be added
+// #define STOP_MOTION          0
+// #define TRANSLATIONAL_MOTION 1
+// #define ROTATIONAL_MOTION    2
+// #define SWIVEL_MOTION        3 // Motion can be added
 
-#define WHEEL_DIAMETER       0.144                  // Wheel Circumference
-#define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER    // Wheel Length
-#define BODY_DIAMETER        0.44775010             // Robot Diameter
-#define TRACK                0.31660713             // Distance between left and right wheels
+// #define WHEEL_DIAMETER       0.144                  // Wheel Circumference
+// #define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER    // Wheel Length
+// #define BODY_DIAMETER        0.44775010             // Robot Diameter
+// #define TRACK                0.31660713             // Distance between left and right wheels
 
 class SobitProOdometry{
     private:
@@ -47,10 +47,10 @@ class SobitProOdometry{
 
         MODE getMotion(int motion){
             switch (motion){
-                case (STOP_MOTION)         : motion_mode = STOP_MOTION_MODE;          break;
-                case (TRANSLATIONAL_MOTION): motion_mode = TRANSLATIONAL_MOTION_MODE; break;
-                case (ROTATIONAL_MOTION)   : motion_mode = ROTATIONAL_MOTION_MODE;    break;
-                case (SWIVEL_MOTION)       : motion_mode = SWIVEL_MOTION_MODE;        break; // Motion can be added
+                case (STOP_MOTION_MODE)          : motion_mode = STOP_MOTION_MODE;          break;
+                case (TRANSLATIONAL_MOTION_MODE) : motion_mode = TRANSLATIONAL_MOTION_MODE; break;
+                case (ROTATIONAL_MOTION_MODE)    : motion_mode = ROTATIONAL_MOTION_MODE;    break;
+                case (SWIVEL_MOTION_MODE)        : motion_mode = SWIVEL_MOTION_MODE;        break; // Motion can be added
 
                 default: motion_mode = NONE; break;
             }

@@ -15,7 +15,7 @@
 #include <geometry_msgs/Twist.h>
 #include <nav_msgs/Odometry.h>
 
-#define MAX_VEL_DIF 0.075
+// #define MAX_VEL_DIF 0.075
 
 namespace sobit_pro {
     class SobitProWheelController  : private ROSCommonNode {
@@ -35,6 +35,8 @@ namespace sobit_pro {
             double deg2Rad( const double deg );
 
         public:
+            static constexpr const double MAX_VEL_DIF = 0.075;
+
             SobitProWheelController( const std::string &name );
             SobitProWheelController();
 

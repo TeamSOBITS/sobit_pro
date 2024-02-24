@@ -275,8 +275,8 @@ bool SobitProJointController::moveArm( const double arm_shoulder_tilt_joint,
 }
 
 bool SobitProJointController::moveHandToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                                        const double shift_x     , const double shift_y     , const double shift_z,
-                                                        const double sec, bool is_sleep ){
+                                                     const double shift_x     , const double shift_y     , const double shift_z,
+                                                     const double sec, bool is_sleep ){
     double arm_to_target_x = target_pos_x + shift_x;
     double arm_to_target_y = target_pos_y + shift_y;
     double arm_to_target_z = target_pos_z + shift_z;
@@ -360,8 +360,8 @@ bool SobitProJointController::moveHandToTargetCoord( const double target_pos_x, 
 }
 
 bool SobitProJointController::moveHandToTargetTF( const std::string& target_name,
-                                                     const double shift_x, const double shift_y, const double shift_z,
-                                                     const double sec, bool is_sleep ){
+                                                  const double shift_x, const double shift_y, const double shift_z,
+                                                  const double sec, bool is_sleep ){
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
@@ -382,9 +382,9 @@ bool SobitProJointController::moveHandToTargetTF( const std::string& target_name
 
 // Check!!
 bool SobitProJointController::moveHandToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                                       const double shift_x     , const double shift_y     , const double shift_z,
-                                                       const double sec, bool is_sleep ){
-    double target_z   = 0.;
+                                                    const double shift_x     , const double shift_y     , const double shift_z,
+                                                    const double sec, bool is_sleep ){
+    double target_z    = 0.;
     bool   is_reached = false;
 
     // Reduce the target_pos_z by 0.05[m], until expected collision is detected
@@ -402,8 +402,8 @@ bool SobitProJointController::moveHandToPlaceCoord( const double target_pos_x, c
 }
 
 bool SobitProJointController::moveHandToPlaceTF( const std::string& target_name,
-                                                    const double shift_x, const double shift_y, const double shift_z,
-                                                    const double sec, bool is_sleep ){
+                                                 const double shift_x, const double shift_y, const double shift_z,
+                                                 const double sec, bool is_sleep ){
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 

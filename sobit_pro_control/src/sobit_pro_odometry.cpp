@@ -1,3 +1,4 @@
+#include "sobit_pro_control/sobit_pro_control.hpp"
 #include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 // Calculate Odometry
@@ -28,10 +29,10 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
     nav_msgs::Odometry calculation_odom = *result_odom;
     tf2::Quaternion quat_tf;
 
-    if     ( prev_motion == STOP_MOTION )          motion_mode = STOP_MOTION_MODE;
-    else if( prev_motion == TRANSLATIONAL_MOTION ) motion_mode = TRANSLATIONAL_MOTION_MODE;
-    else if( prev_motion == ROTATIONAL_MOTION )    motion_mode = ROTATIONAL_MOTION_MODE;
-    else if( prev_motion == SWIVEL_MOTION )        motion_mode = SWIVEL_MOTION_MODE;
+    if     ( prev_motion == STOP_MOTION_MODE )          motion_mode = STOP_MOTION_MODE;
+    else if( prev_motion == TRANSLATIONAL_MOTION_MODE ) motion_mode = TRANSLATIONAL_MOTION_MODE;
+    else if( prev_motion == ROTATIONAL_MOTION_MODE )    motion_mode = ROTATIONAL_MOTION_MODE;
+    else if( prev_motion == SWIVEL_MOTION_MODE )        motion_mode = SWIVEL_MOTION_MODE;
 
     switch( motion_mode ){
         // Translational motion
@@ -109,7 +110,7 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             // tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
             double yaw = 0.;
-            yaw = ((fl_distance_m + fr_distance_m + bl_distance_m + br_distance_m) / 4.) / (TRACK / sqrtf(2.));
+            yaw = ((fl_distance_m + fr_distance_m + bl_distance_m + br_distance_m) / 4.) / (SobitProControl::TRACK / sqrtf(2.));
 
             // Transform quaternion->msg (calculation_odom)
             quat_tf.setRPY(0., 0., (prev_yaw + yaw));
@@ -134,14 +135,14 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             double pose_x = 0., pose_y = 0., yaw = 0.;
             geometry_msgs::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
 
-            wheel_point_fl.x = TRACK / 2.;
-            wheel_point_fl.y = TRACK / 2.;
-            wheel_point_fr.x = TRACK / 2.;
-            wheel_point_fr.y = TRACK / 2. * (-1);
-            wheel_point_bl.x = TRACK / 2. * (-1);
-            wheel_point_bl.y = TRACK / 2.;
-            wheel_point_br.x = TRACK / 2. * (-1);
-            wheel_point_br.y = TRACK / 2. * (-1);
+            wheel_point_fl.x = SobitProControl::TRACK / 2.;
+            wheel_point_fl.y = SobitProControl::TRACK / 2.;
+            wheel_point_fr.x = SobitProControl::TRACK / 2.;
+            wheel_point_fr.y = SobitProControl::TRACK / 2. * (-1);
+            wheel_point_bl.x = SobitProControl::TRACK / 2. * (-1);
+            wheel_point_bl.y = SobitProControl::TRACK / 2.;
+            wheel_point_br.x = SobitProControl::TRACK / 2. * (-1);
+            wheel_point_br.y = SobitProControl::TRACK / 2. * (-1);
 
             double fl_direction_rad = fl_direction_deg * M_PI / 180. ;
             double fr_direction_rad = fr_direction_deg * M_PI / 180. ;
@@ -216,7 +217,7 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
 double SobitProOdometry::distance_calculation(double wheel_curt_pos){
     double distance_m;
 
-    distance_m = WHEEL_LENGTH * wheel_curt_pos / 4096.;
+    distance_m = SobitProControl::WHEEL_LENGTH * wheel_curt_pos / 4096.;
 
 
     return distance_m;

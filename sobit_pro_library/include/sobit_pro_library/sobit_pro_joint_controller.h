@@ -115,17 +115,17 @@ class SobitProJointController : private ROSCommonNode{
                               const double head_tilt_joint,
                               const double sec = 5.0, bool is_sleep = true );
         bool moveHandToTargetCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                       const double shift_x     , const double shift_y     , const double shift_z,
-                                       const double sec = 5.0, bool is_sleep = true );
-        bool moveHandToTargetTF( const std::string& target_name,
-                                    const double shift_x, const double shift_y, const double shift_z,
+                                    const double shift_x     , const double shift_y     , const double shift_z,
                                     const double sec = 5.0, bool is_sleep = true );
+        bool moveHandToTargetTF( const std::string& target_name,
+                                 const double shift_x, const double shift_y, const double shift_z,
+                                 const double sec = 5.0, bool is_sleep = true );
         bool moveHandToPlaceCoord( const double target_pos_x, const double target_pos_y, const double target_pos_z,
-                                      const double shift_x     , const double shift_y     , const double shift_z,
-                                      const double sec = 5.0, bool is_sleep = true );
-        bool moveHandToPlaceTF( const std::string& target_name,
-                                   const double shift_x, const double shift_y, const double shift_z,
+                                   const double shift_x     , const double shift_y     , const double shift_z,
                                    const double sec = 5.0, bool is_sleep = true );
+        bool moveHandToPlaceTF( const std::string& target_name,
+                                const double shift_x, const double shift_y, const double shift_z,
+                                const double sec = 5.0, bool is_sleep = true );
         bool graspDecision( const int min_curr = 300, const int max_curr = 1000 );
         bool placeDecision( const int min_curr = 500, const int max_curr = 1000 );
 
@@ -154,8 +154,8 @@ inline void sobit_pro::SobitProJointController::setJointTrajectory( const std::s
 }
 
 inline void sobit_pro::SobitProJointController::addJointTrajectory( const std::string& joint_name,
-                                                                    const double       rad,
-                                                                    const double       sec,
+                                                                    const double        rad,
+                                                                    const double        sec,
                                                                     trajectory_msgs::JointTrajectory* jt ) {
     trajectory_msgs::JointTrajectory joint_trajectory = *jt;
 

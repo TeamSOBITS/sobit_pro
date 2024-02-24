@@ -24,12 +24,6 @@
 
 class SobitProControl{
     private:
-        const double LIMIT_VEL_VALUE = 1023.; // DXL Velocity Limit Value (previous 200.)
-        const double VEL_UNIT        = 0.229; // DXL Velocity Unit [rmp]
-        const double WHEEL_DIAMETER  = 0.144; // Wheel Circumference
-        const double WHEEL_LENGTH    = M_PI*WHEEL_DIAMETER; // Wheel Length
-        const double BODY_DIAMETER   = 0.44775010; // Robot Diameter (respect to the center of wheels)
-        const double TRACK           = 0.31660713; // Distance between left and right wheels
         int64_t steer_pos[4] = {0, };
         int64_t wheel_vel[4] = {0, };
 
@@ -38,7 +32,19 @@ class SobitProControl{
             STOP_MOTION_MODE, TRANSLATIONAL_MOTION_MODE, ROTATIONAL_MOTION_MODE, SWIVEL_MOTION_MODE // Motion can be added
         } motion_mode;
 
-  public:
+    public:
+        static const int STOP_MOTION          = 0;
+        static const int TRANSLATIONAL_MOTION = 1;
+        static const int ROTATIONAL_MOTION    = 2;
+        static const int SWIVEL_MOTION        = 3; // Motion can be added
+
+        static constexpr const double LIMIT_VEL_VALUE = 1023.; // DXL Velocity Limit Value (previous 200.)
+        static constexpr const double VEL_UNIT        = 0.229; // DXL Velocity Unit [rmp]
+        static constexpr const double WHEEL_DIAMETER  = 0.144; // Wheel Circumference
+        static constexpr const double WHEEL_LENGTH    = M_PI*WHEEL_DIAMETER; // Wheel Length
+        static constexpr const double BODY_DIAMETER   = 0.44775010; // Robot Diameter (respect to the center of wheels)
+        static constexpr const double TRACK           = 0.31660713; // Distance between left and right wheels
+
         double steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
         double wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
 
