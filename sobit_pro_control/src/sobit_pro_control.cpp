@@ -11,14 +11,14 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
         // Translational motion
         case TRANSLATIONAL_MOTION_MODE:{
             // Goal velocity calculation
-            float vel_ms    = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // vel_twist [m/s] to vel_ms [m/s]
-            float vel_rads  = vel_ms / (WHEEL_DIAMETER/2.); // vel_ms   [m/s]   to vel_rads  [rad/s]
-            float vel_rpm   = vel_rads * 60. / (2.*M_PI);   // vel_rads [rad/s] to vel_rpm   [rpm]
-            float vel_value = vel_rpm / VEL_UNIT;           // vel_rpm  [rpm]   to vel_value [dxl value]
+            double vel_ms    = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // vel_twist [m/s] to vel_ms [m/s]
+            double vel_rads  = vel_ms / (WHEEL_DIAMETER/2.); // vel_ms   [m/s]   to vel_rads  [rad/s]
+            double vel_rpm   = vel_rads * 60. / (2.*M_PI);   // vel_rads [rad/s] to vel_rpm   [rpm]
+            double vel_value = vel_rpm / VEL_UNIT;           // vel_rpm  [rpm]   to vel_value [dxl value]
 
             // Goal position calculation
-            float goal_deg = atan2f(vel_twist.linear.x, vel_twist.linear.y) / (M_PI / 180.);
-            float steer_fl_deg, steer_fr_deg, steer_bl_deg, steer_br_deg;
+            double goal_deg = atan2f(vel_twist.linear.x, vel_twist.linear.y) / (M_PI / 180.);
+            double steer_fl_deg, steer_fr_deg, steer_bl_deg, steer_br_deg;
 
             if( (-45 <= goal_deg) && (goal_deg <= 45) ){
                 steer_fl_deg = -45. - goal_deg; // rad = deg * (M_PI / 180.)
@@ -120,11 +120,11 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
         // Rotational motion
         case ROTATIONAL_MOTION_MODE:{
             // Goal velocity calculation
-            float vel_deg   = vel_twist.angular.z * 180. / M_PI;     // vel_ang  [rad/s] to vel_deg   [deg/s]
-            float vel_ms    = vel_deg / 360. * BODY_DIAMETER * M_PI; // vel_deg  [deg/s] to vel_ms    [m/s]
-            float vel_rads  = vel_ms / (WHEEL_DIAMETER/2.);          // vel_ms   [m/s]   to vel_rads  [rad/s]
-            float vel_rpm   = vel_rads * 60. / (2.*M_PI);            // vel_rads [rad/s] to vel_rpm   [rpm]
-            float vel_value = vel_rpm / VEL_UNIT;                    // vel_rpm  [rpm]   to vel_value [dxl value]
+            double vel_deg   = vel_twist.angular.z * 180. / M_PI;     // vel_ang  [rad/s] to vel_deg   [deg/s]
+            double vel_ms    = vel_deg / 360. * BODY_DIAMETER * M_PI; // vel_deg  [deg/s] to vel_ms    [m/s]
+            double vel_rads  = vel_ms / (WHEEL_DIAMETER/2.);          // vel_ms   [m/s]   to vel_rads  [rad/s]
+            double vel_rpm   = vel_rads * 60. / (2.*M_PI);            // vel_rads [rad/s] to vel_rpm   [rpm]
+            double vel_value = vel_rpm / VEL_UNIT;                    // vel_rpm  [rpm]   to vel_value [dxl value]
 
             // Goal angle calculation
             steer_fl_goal_pos = 0.; steer_fr_goal_pos = 0.;
@@ -163,9 +163,9 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
 
         //Swivel motion
         case SWIVEL_MOTION_MODE:{
-            float base_vel = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.));
-            float r = base_vel / fabsf(vel_twist.angular.z);
-            float base_angle = atan2f(vel_twist.linear.y , vel_twist.linear.x);
+            double base_vel = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.));
+            double r = base_vel / fabsf(vel_twist.angular.z);
+            double base_angle = atan2f(vel_twist.linear.y , vel_twist.linear.x);
 
             geometry_msgs::Point base_center;
             base_center.x = r * cosf(base_angle + (M_PI/2.) * (vel_twist.angular.z/fabsf(vel_twist.angular.z)));
@@ -181,14 +181,14 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             wheel_point_br.x = TRACK / 2. * (-1);
             wheel_point_br.y = TRACK / 2. * (-1);
 
-            float r_wheel_fl, r_wheel_fr, r_wheel_bl, r_wheel_br;
+            double r_wheel_fl, r_wheel_fr, r_wheel_bl, r_wheel_br;
             r_wheel_fl = sqrtf(powf(TRACK / sqrtf(2.), 2.) + powf(r, 2.) - 2.*(TRACK / sqrtf(2.))*r*(((wheel_point_fl.x * base_center.x) + (wheel_point_fl.y * base_center.y))/((TRACK / sqrtf(2.)) * r)));
             r_wheel_fr = sqrtf(powf(TRACK / sqrtf(2.), 2.) + powf(r, 2.) - 2.*(TRACK / sqrtf(2.))*r*(((wheel_point_fr.x * base_center.x) + (wheel_point_fr.y * base_center.y))/((TRACK / sqrtf(2.)) * r)));
             r_wheel_bl = sqrtf(powf(TRACK / sqrtf(2.), 2.) + powf(r, 2.) - 2.*(TRACK / sqrtf(2.))*r*(((wheel_point_bl.x * base_center.x) + (wheel_point_bl.y * base_center.y))/((TRACK / sqrtf(2.)) * r)));
             r_wheel_br = sqrtf(powf(TRACK / sqrtf(2.), 2.) + powf(r, 2.) - 2.*(TRACK / sqrtf(2.))*r*(((wheel_point_br.x * base_center.x) + (wheel_point_br.y * base_center.y))/((TRACK / sqrtf(2.)) * r)));
 
             geometry_msgs::Point wheel_base_fl, wheel_base_fr, wheel_base_bl, wheel_base_br;
-            float wheel_to_base_dist = 1.3;
+            double wheel_to_base_dist = 1.3;
             wheel_base_fl.x = wheel_point_fl.x * wheel_to_base_dist;
             wheel_base_fl.y = wheel_point_fl.y * wheel_to_base_dist;
             wheel_base_fr.x = wheel_point_fr.x * wheel_to_base_dist;
@@ -198,7 +198,7 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             wheel_base_br.x = wheel_point_br.x * wheel_to_base_dist;
             wheel_base_br.y = wheel_point_br.y * wheel_to_base_dist;
 
-            float steer_fl_rad, steer_fr_rad, steer_bl_rad, steer_br_rad;
+            double steer_fl_rad, steer_fr_rad, steer_bl_rad, steer_br_rad;
             steer_fl_rad = acosf(((-1)*(wheel_point_fl.x) * (base_center.x-wheel_point_fl.x) + (-1)*(wheel_point_fl.y) * (base_center.y-wheel_point_fl.y))/((TRACK / sqrtf(2.)) * r_wheel_fl)) * (((-1)*(wheel_point_fl.x)*(base_center.y-wheel_point_fl.y) - (-1)*(wheel_point_fl.y)*(base_center.x-wheel_point_fl.x))/fabsf((-1)*(wheel_point_fl.x)*(base_center.y-wheel_point_fl.y) - (-1)*(wheel_point_fl.y)*(base_center.x-wheel_point_fl.x)));
             steer_fr_rad = acosf(((-1)*(wheel_point_fr.x) * (base_center.x-wheel_point_fr.x) + (-1)*(wheel_point_fr.y) * (base_center.y-wheel_point_fr.y))/((TRACK / sqrtf(2.)) * r_wheel_fr)) * (((-1)*(wheel_point_fr.x)*(base_center.y-wheel_point_fr.y) - (-1)*(wheel_point_fr.y)*(base_center.x-wheel_point_fr.x))/fabsf((-1)*(wheel_point_fr.x)*(base_center.y-wheel_point_fr.y) - (-1)*(wheel_point_fr.y)*(base_center.x-wheel_point_fr.x)));
             steer_bl_rad = acosf(((-1)*(wheel_point_bl.x) * (base_center.x-wheel_point_bl.x) + (-1)*(wheel_point_bl.y) * (base_center.y-wheel_point_bl.y))/((TRACK / sqrtf(2.)) * r_wheel_bl)) * (((-1)*(wheel_point_bl.x)*(base_center.y-wheel_point_bl.y) - (-1)*(wheel_point_bl.y)*(base_center.x-wheel_point_bl.x))/fabsf((-1)*(wheel_point_bl.x)*(base_center.y-wheel_point_bl.y) - (-1)*(wheel_point_bl.y)*(base_center.x-wheel_point_bl.x)));
@@ -226,7 +226,7 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
                 else if ( steer_br_rad < ((-1) * M_PI / 2.) ) steer_br_rad += M_PI;
             }
             
-            float temp_x, temp_y;
+            double temp_x, temp_y;
             temp_x = wheel_base_fl.x;
             temp_y = wheel_base_fl.y;
             wheel_base_fl.x = (temp_x - wheel_point_fl.x) * cosf(steer_fl_rad) - (temp_y - wheel_point_fl.y) * sinf(steer_fl_rad) + wheel_point_fl.x;
@@ -248,7 +248,7 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             wheel_base_br.y = (temp_x - wheel_point_br.x) * sinf(steer_br_rad) + (temp_y - wheel_point_br.y) * cosf(steer_br_rad) + wheel_point_br.y;
 
 
-            float vel_value = (base_vel / (M_PI*WHEEL_DIAMETER) * 60. / VEL_UNIT);
+            double vel_value = (base_vel / (M_PI*WHEEL_DIAMETER) * 60. / VEL_UNIT);
             if( vel_value > LIMIT_VEL_VALUE ){
                 wheel_fl_goal_vel = LIMIT_VEL_VALUE * (vel_twist.angular.z / fabsf(vel_twist.angular.z));
                 wheel_fr_goal_vel = LIMIT_VEL_VALUE * (vel_twist.angular.z / fabsf(vel_twist.angular.z));

@@ -41,9 +41,9 @@ class SobitProOdometry{
                   int32_t prev_motion,
                   nav_msgs::Odometry prev_odom, nav_msgs::Odometry* result_odom,
                   ros::Time prev_time);
-        float distance_calculation(float wheel_curt_pos);
-        float position_calculation(float steer_curt_pos);
-        void  pose_broadcaster(const nav_msgs::Odometry tf_odom);
+        double distance_calculation(double wheel_curt_pos);
+        double position_calculation(double steer_curt_pos);
+        void   pose_broadcaster(const nav_msgs::Odometry tf_odom);
 
         MODE getMotion(int motion){
             switch (motion){

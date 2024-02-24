@@ -8,22 +8,28 @@
 #include <geometry_msgs/Point.h>
 
 // Define motion key value
-#define STOP_MOTION          0
-#define TRANSLATIONAL_MOTION 1
-#define ROTATIONAL_MOTION    2
-#define SWIVEL_MOTION        3 // Motion can be added
+// #define STOP_MOTION          0
+// #define TRANSLATIONAL_MOTION 1
+// #define ROTATIONAL_MOTION    2
+// #define SWIVEL_MOTION        3 // Motion can be added
     
-#define LIMIT_VEL_VALUE      1023.    // DXL Velocity Limit Value (previous 200.)
-#define VEL_UNIT             0.229    // DXL Velocity Unit [rmp]
-#define WHEEL_DIAMETER       0.144    // Wheel Circumference
-#define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER // Wheel Length
+// #define LIMIT_VEL_VALUE      1023.    // DXL Velocity Limit Value (previous 200.)
+// #define VEL_UNIT             0.229    // DXL Velocity Unit [rmp]
+// #define WHEEL_DIAMETER       0.144    // Wheel Circumference
+// #define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER // Wheel Length
 
-#define BODY_DIAMETER        0.44775010 // Robot Diameter (respect to the center of wheels)
-#define TRACK                0.31660713 // Distance between left and right wheels
+// #define BODY_DIAMETER        0.44775010 // Robot Diameter (respect to the center of wheels)
+// #define TRACK                0.31660713 // Distance between left and right wheels
 
 
 class SobitProControl{
     private:
+        const double LIMIT_VEL_VALUE = 1023.; // DXL Velocity Limit Value (previous 200.)
+        const double VEL_UNIT        = 0.229; // DXL Velocity Unit [rmp]
+        const double WHEEL_DIAMETER  = 0.144; // Wheel Circumference
+        const double WHEEL_LENGTH    = M_PI*WHEEL_DIAMETER; // Wheel Length
+        const double BODY_DIAMETER   = 0.44775010; // Robot Diameter (respect to the center of wheels)
+        const double TRACK           = 0.31660713; // Distance between left and right wheels
         int64_t steer_pos[4] = {0, };
         int64_t wheel_vel[4] = {0, };
 
@@ -33,8 +39,8 @@ class SobitProControl{
         } motion_mode;
 
   public:
-        float steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
-        float wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
+        double steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
+        double wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
 
         // Constructor
         SobitProControl():
@@ -44,10 +50,10 @@ class SobitProControl{
 
         MODE getMotion(int motion){
             switch (motion){
-                case (STOP_MOTION)         : motion_mode = STOP_MOTION_MODE;          break;
-                case (TRANSLATIONAL_MOTION): motion_mode = TRANSLATIONAL_MOTION_MODE; break;
-                case (ROTATIONAL_MOTION)   : motion_mode = ROTATIONAL_MOTION_MODE;    break;
-                case (SWIVEL_MOTION)       : motion_mode = SWIVEL_MOTION_MODE;        break; // Motion can be added
+                case (STOP_MOTION_MODE)          : motion_mode = STOP_MOTION_MODE;          break;
+                case (TRANSLATIONAL_MOTION_MODE) : motion_mode = TRANSLATIONAL_MOTION_MODE; break;
+                case (ROTATIONAL_MOTION_MODE)    : motion_mode = ROTATIONAL_MOTION_MODE;    break;
+                case (SWIVEL_MOTION_MODE)        : motion_mode = SWIVEL_MOTION_MODE;        break; // Motion can be added
 
                 default: motion_mode = NONE; break;
             }

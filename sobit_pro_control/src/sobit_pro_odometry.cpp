@@ -13,18 +13,18 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
                             nav_msgs::Odometry prev_odom, nav_msgs::Odometry* result_odom,
                             ros::Time prev_time){
 
-    float fl_distance_m    = distance_calculation(wheel_fl_curt_pos - wheel_fl_init_pos); // Calculation distance[m]
-    float fr_distance_m    = distance_calculation(wheel_fr_curt_pos - wheel_fr_init_pos); // Calculation distance[m]
-    float bl_distance_m    = distance_calculation(wheel_bl_curt_pos - wheel_bl_init_pos); // Calculation distance[m]
-    float br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
+    double fl_distance_m    = distance_calculation(wheel_fl_curt_pos - wheel_fl_init_pos); // Calculation distance[m]
+    double fr_distance_m    = distance_calculation(wheel_fr_curt_pos - wheel_fr_init_pos); // Calculation distance[m]
+    double bl_distance_m    = distance_calculation(wheel_bl_curt_pos - wheel_bl_init_pos); // Calculation distance[m]
+    double br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
 
-    float fl_direction_deg = position_calculation(steer_fl_curt_pos); // Record present position
-    float fr_direction_deg = position_calculation(steer_fr_curt_pos); // Record present position
-    float bl_direction_deg = position_calculation(steer_bl_curt_pos); // Record present position
-    float br_direction_deg = position_calculation(steer_br_curt_pos); // Record present position
+    double fl_direction_deg = position_calculation(steer_fl_curt_pos); // Record present position
+    double fr_direction_deg = position_calculation(steer_fr_curt_pos); // Record present position
+    double bl_direction_deg = position_calculation(steer_bl_curt_pos); // Record present position
+    double br_direction_deg = position_calculation(steer_br_curt_pos); // Record present position
 
     double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
-    float distance_m;
+    double distance_m;
     nav_msgs::Odometry calculation_odom = *result_odom;
     tf2::Quaternion quat_tf;
 
@@ -108,7 +108,7 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
             // tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
-            float yaw = 0.;
+            double yaw = 0.;
             yaw = ((fl_distance_m + fr_distance_m + bl_distance_m + br_distance_m) / 4.) / (TRACK / sqrtf(2.));
 
             // Transform quaternion->msg (calculation_odom)
@@ -131,7 +131,7 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             // quaternionMsgToTF(prev_odom.pose.pose.orientation, quat_tf);
             // tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
             
-            float pose_x = 0., pose_y = 0., yaw = 0.;
+            double pose_x = 0., pose_y = 0., yaw = 0.;
             geometry_msgs::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
 
             wheel_point_fl.x = TRACK / 2.;
@@ -143,15 +143,15 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             wheel_point_br.x = TRACK / 2. * (-1);
             wheel_point_br.y = TRACK / 2. * (-1);
 
-            float fl_direction_rad = fl_direction_deg * M_PI / 180. ;
-            float fr_direction_rad = fr_direction_deg * M_PI / 180. ;
-            float bl_direction_rad = bl_direction_deg * M_PI / 180. ;
-            float br_direction_rad = br_direction_deg * M_PI / 180. ;
+            double fl_direction_rad = fl_direction_deg * M_PI / 180. ;
+            double fr_direction_rad = fr_direction_deg * M_PI / 180. ;
+            double bl_direction_rad = bl_direction_deg * M_PI / 180. ;
+            double br_direction_rad = br_direction_deg * M_PI / 180. ;
 
-            float a_fl = tanf(atan2f(wheel_point_fl.y, wheel_point_fl.x) + fl_direction_rad);
-            float a_fr = tanf(atan2f(wheel_point_fr.y, wheel_point_fr.x) + fr_direction_rad);
-            float a_bl = tanf(atan2f(wheel_point_bl.y, wheel_point_bl.x) + bl_direction_rad);
-            float a_br = tanf(atan2f(wheel_point_br.y, wheel_point_br.x) + br_direction_rad);
+            double a_fl = tanf(atan2f(wheel_point_fl.y, wheel_point_fl.x) + fl_direction_rad);
+            double a_fr = tanf(atan2f(wheel_point_fr.y, wheel_point_fr.x) + fr_direction_rad);
+            double a_bl = tanf(atan2f(wheel_point_bl.y, wheel_point_bl.x) + bl_direction_rad);
+            double a_br = tanf(atan2f(wheel_point_br.y, wheel_point_br.x) + br_direction_rad);
 
             geometry_msgs::Point base_center;
 
@@ -213,8 +213,8 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
 }
 
 // Distance calculation
-float SobitProOdometry::distance_calculation(float wheel_curt_pos){
-    float distance_m;
+double SobitProOdometry::distance_calculation(double wheel_curt_pos){
+    double distance_m;
 
     distance_m = WHEEL_LENGTH * wheel_curt_pos / 4096.;
 
@@ -223,8 +223,8 @@ float SobitProOdometry::distance_calculation(float wheel_curt_pos){
 }
 
 // Position calculation
-float SobitProOdometry::position_calculation(float steer_curt_pos){
-    float direction_deg;
+double SobitProOdometry::position_calculation(double steer_curt_pos){
+    double direction_deg;
 
     direction_deg = (steer_curt_pos - 2048.) * 360. / 4096.;
 
