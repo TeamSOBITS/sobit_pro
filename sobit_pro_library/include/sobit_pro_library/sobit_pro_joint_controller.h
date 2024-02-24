@@ -14,11 +14,11 @@
 // #include <sobits_msgs/current_state.h>
 #include <sobits_msgs/current_state_array.h>
 
-#define ARM_UPPER   0.15
-#define ARM_INNER   0.15
-#define ARM_LOWER   0.15
-#define ARM_GRIPPER 0.25 // Prev 25.0?
-#define ARM_LENTGH  ARM_UPPER+ARM_INNER+ARM_LOWER
+// #define ARM_UPPER   0.15
+// #define ARM_INNER   0.15
+// #define ARM_LOWER   0.15
+// #define ARM_GRIPPER 0.25 // Prev 25.0?
+// #define ARM_LENTGH  ARM_UPPER+ARM_INNER+ARM_LOWER
 
 namespace sobit_pro{
 
@@ -53,6 +53,12 @@ class SobitProJointController : private ROSCommonNode{
         tf2_ros::TransformListener tfListener_;
 
         std::vector<Pose> pose_list_;
+
+        const double ARM_UPPER   = 0.15;
+        const double ARM_INNER   = 0.15;
+        const double ARM_LOWER   = 0.15;
+        const double ARM_GRIPPER = 0.25; // Prev 25.0?
+        const double ARM_LENTGH  = ARM_UPPER+ARM_INNER+ARM_LOWER;
 
         double arm_wrist_tilt_joint_curr_ = 0.;
         double hand_joint_curr_           = 0.;
