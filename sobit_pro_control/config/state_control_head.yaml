@@ -8,8 +8,8 @@ joint_state_controller:
 head_trajectory_controller:
   type: position_controllers/JointTrajectoryController
   joints:
-    - head_camera_pan_joint
-    - head_camera_tilt_joint
+    - head_pan_joint
+    - head_tilt_joint
   constraints:
     stopped_velocity_tolerance: 0.5
     goal_time: 0.05

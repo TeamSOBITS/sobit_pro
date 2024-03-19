@@ -6,7 +6,7 @@
     <position_joint_transmission joint="${prefix}_elbow_upper_1_tilt_joint" reduction="1" />
     <position_joint_transmission joint="${prefix}_elbow_upper_2_tilt_joint" reduction="1" />
     <position_joint_transmission joint="${prefix}_elbow_lower_tilt_link"    reduction="1" />
-    <position_joint_transmission joint="${prefix}_elbow_lower_pan_link"    reduction="1" />
+    <position_joint_transmission joint="${prefix}_elbow_lower_pan_link"     reduction="1" />
     <position_joint_transmission joint="${prefix}_wrist_tilt_joint"         reduction="1" />
   </xacro:macro>
 </robot>

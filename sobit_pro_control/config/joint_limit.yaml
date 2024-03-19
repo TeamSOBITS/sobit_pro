@@ -1,81 +1,90 @@
 joint_limits:
-  arm_shoulder_1_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  arm_shoulder_2_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  arm_elbow_upper_1_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  arm_elbow_upper_2_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  arm_elbow_lower_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  arm_elbow_lower_pan_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  arm_wrist_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  hand_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 0
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  head_camera_pan_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 1.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
-  head_camera_tilt_joint:
-    has_position_limits: true
-    min_position: -1.57
-    max_position: 0.57
-    has_velocity_limits: true
-    max_velocity: 5.969211435
-    has_acceleration_limits: true
-    max_acceleration: 4.0
+    arm_shoulder_1_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    arm_shoulder_2_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    arm_elbow_upper_1_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    arm_elbow_upper_2_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    arm_elbow_lower_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    arm_elbow_lower_pan_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    arm_wrist_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    hand_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 0
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    head_pan_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0
+
+    head_tilt_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 0.57
+        has_velocity_limits: true
+        max_velocity: 5.969211435
+        has_acceleration_limits: true
+        max_acceleration: 4.0

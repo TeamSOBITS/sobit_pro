@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- Reference: https://matrix-io.github.io/matrix-documentation/matrix-creator/resources/microphone/ -->
 <robot name="matrix" xmlns:xacro="http://ros.org/wiki/xacro">
+
   <xacro:macro name="matrix" params="prefix parent">
 
     <joint name="${prefix}_board_joint" type="fixed">

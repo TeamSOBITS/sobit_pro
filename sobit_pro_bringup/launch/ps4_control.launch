@@ -1,11 +1,11 @@
 <launch>
-    
-    <!--joy_node-->
+    <arg name="diagonal_path" default="true"/>
+
+    <!-- joy_node -->
     <node name="joy_node" pkg="joy" type="joy_node"/>
 
-    <!--joy_control-->
-    <node pkg="sobit_pro_bringup" type="sobit_pro_ps4_control.py" name="sobit_pro_ps4_control" output="screen"/>
-    <arg name="diagonal_path" default="true"/>
+    <!-- joy_control -->
+    <node name="sobit_pro_ps4_control" pkg="sobit_pro_bringup" type="sobit_pro_ps4_control.py" output="screen"/>
     <param name="diagonal_path" type="bool" value="$(arg diagonal_path)"/>
 
 </launch>

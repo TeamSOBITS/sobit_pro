@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<robot name="sobit_pro" xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="sobit_pro"
+       xmlns:xacro="http://www.ros.org/wiki/xacro" >
   <!-- Add Common Xacro: transmissions, colors -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/common.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/materials.urdf.xacro" />
@@ -36,7 +37,7 @@
   <xacro:arm   prefix="arm"  parent="plate_top_link" />
   <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
   <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
-  <xacro:azure_camera prefix="head_camera" parent="head_camera_tilt_link" />
+  <xacro:azure_camera prefix="head_camera" parent="head_tilt_link" />
   <xacro:matrix prefix="matrix" parent="head_camera_base" />
   <!-- <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" /> -->
   <xacro:realsense_d405 prefix="hand_camera" parent="arm_wrist_tilt_link" />

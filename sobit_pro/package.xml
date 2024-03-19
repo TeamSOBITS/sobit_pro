@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<?xml-model
+  href="http://download.ros.org/schema/package_format3.xsd"
+  schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>sobit_pro</name>
+  <version>0.0.0</version>
+  <description>
+    ROS packages for SOBIT PRO (meta package).
+  </description>
+  <maintainer email="kvalentincardenas@gmail.com">Keith Valentin</maintainer>
+
+  <license>BSD</license>
+
+  <url type="website">https://home.soka.ac.jp/~choi/index.html</url>
+  <url type="repository">https://github.com/TeamSOBITS/sobit_pro</url>
+  <url type="bugtracker">https://github.com/TeamSOBITS/sobit_pro/issues</url>
+  <author email="choi.7f@gmail.com">Team SOBITS</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <exec_depend>sobit_pro_bringup</exec_depend>
+  <exec_depend>sobit_pro_control</exec_depend>
+  <exec_depend>sobit_pro_description</exec_depend>
+  <exec_depend>sobit_pro_library</exec_depend>
+  
+  <export><metapackage/></export>
+
+</package>

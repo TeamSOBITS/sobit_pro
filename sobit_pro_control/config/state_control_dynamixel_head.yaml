@@ -2,8 +2,8 @@ dynamixel_port:
   port_name: "/dev/input/dx_upper"
   baud_rate: 3000000
   joints:
-    - head_camera_pan_joint
-    - head_camera_tilt_joint
-  head_camera_pan_joint:        {id: 21, center: 2048, home:  0.00, mode: 3, vel: 200, acc: 0, pos_d_gain:    0, pos_i_gain:  0, pos_p_gain:  800, gear_ratio: 1 }
-  head_camera_tilt_joint:       {id: 22, center: 2048, home:  0.00, mode: 3, vel: 200, acc: 0, pos_d_gain:    0, pos_i_gain:  0, pos_p_gain:  800, gear_ratio: 1 }
+    - head_pan_joint
+    - head_tilt_joint
+  head_pan_joint:        {id: 21, center: 2048, home:  0.00, mode: 3, vel: 200, acc: 0, pos_d_gain:    0, pos_i_gain:  0, pos_p_gain:  800, gear_ratio: 1 }
+  head_tilt_joint:       {id: 22, center: 2048, home:  0.00, mode: 3, vel: 200, acc: 0, pos_d_gain:    0, pos_i_gain:  0, pos_p_gain:  800, gear_ratio: 1 }
   

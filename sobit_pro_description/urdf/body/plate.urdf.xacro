@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="plate" xmlns:xacro="http://ros.org/wiki/xacro">
-    <xacro:macro name="plate" params="prefix parent">>
+    <xacro:macro name="plate" params="prefix parent">
 
     <joint name="${prefix}_bottom_joint" type="fixed">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
@@ -17,17 +17,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" />
+          <box size="0.3 0.3 0.009" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.3**2+0.3**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -47,17 +52,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" />
+          <box size="0.3 0.3 0.009" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.3**2+0.3**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
     
@@ -77,17 +87,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" />
+          <box size="0.3 0.3 0.009" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.3**2+0.3**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 

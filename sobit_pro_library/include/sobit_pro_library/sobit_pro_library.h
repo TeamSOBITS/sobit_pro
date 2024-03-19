@@ -2,8 +2,8 @@
 #define _SOBIT_PRO_LIBRARY_SOBIT_PRO_LIBRARY_H_
 
 #include <pybind11/pybind11.h>
+
 #include <ros/ros.h>
-#include <string>
 
 class ROSCommonNode {
     public:
@@ -13,8 +13,10 @@ class ROSCommonNode {
             char** argv = &cstr;
             int    argc = 0;
             delete[] cstr;
+
             ros::init( argc, argv, "sobit_pro_library_node" );
         }
+
         ROSCommonNode() {}
 };
 

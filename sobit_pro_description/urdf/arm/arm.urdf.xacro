@@ -19,17 +19,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
+        <origin xyz="${0.140/2} 0.0 ${0.043/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.140 0.156 0.043" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/arm/arm_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
+        <origin xyz="${0.140/2} 0.0 ${0.043/2}" rpy="0.0 0.0 ${M_PI/2}" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.140**2+0.043**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.156**2+0.043**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.140**2+0.156**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -52,17 +57,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.1166/2+0.0224} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_upper.stl" scale="0.001 0.001 0.001" />
+          <box size="0.1166 0.124 0.043" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/arm/arm_upper.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.1166/2+0.0224} 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.1166**2+0.043**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.124**2 +0.043**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.1166**2+0.124**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -74,7 +84,7 @@
       <axis xyz="0.0 1.0 0.0 " />
       <mimic joint="${prefix}_shoulder_1_tilt_joint" multiplier="1" offset="0" />
       <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
-      <!-- <dynamics damping="0.2" friction="0" /> -->
+      <dynamics damping="0.2" friction="0" />
     </joint>
 
     <link name="${prefix}_shoulder_2_tilt_link" />
@@ -98,17 +108,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.023+0.127/2} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_inner.stl" scale="0.001 0.001 0.001" />
+          <box size="0.127 0.048 0.035" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/arm/arm_inner.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.023+0.127/2} 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.127**2+0.035**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.048**2+0.035**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.127**2+0.048**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -120,7 +135,7 @@
       <axis xyz="0.0 1.0 0.0 " />
       <mimic joint="${prefix}_elbow_upper_1_tilt_joint" multiplier="1" offset="0" />
       <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
-      <!-- <dynamics damping="0.2" friction="0" /> -->
+      <dynamics damping="0.2" friction="0" />
     </joint>
 
     <link name="${prefix}_elbow_upper_2_tilt_link" />
@@ -144,17 +159,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.028-0.005/2} 0.0 -${(0.0215-0.01825)/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_tilt.stl" scale="0.001 0.001 0.001" />
+          <box size="0.005 0.041 0.024" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_tilt.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.028-0.005/2} 0.0 -${(0.0215-0.01825)/2}" rpy="0.0 0.0 ${M_PI/2}" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.005**2+0.024**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.041**2+0.024**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.005**2+0.041**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -163,7 +183,7 @@
       <parent link="${prefix}_elbow_lower_tilt_link" />
       <child link="${prefix}_elbow_lower_pan_link" />
       <origin xyz="0.028 0.0 0.0" rpy="0.0 0.0 0.0" />
-      <axis xyz="-1.0 0.0 0.0 " />
+      <axis xyz="1.0 0.0 0.0 " />
       <limit lower="${-M_PI / 2}" upper="${M_PI/2}" effort="10" velocity="10" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
@@ -177,17 +197,23 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.002+0.120/2} 0.0 -${(0.0215-0.01825)/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_pan.stl" scale="0.001 0.001 0.001" />
+          <box size="0.120 0.048 0.03975" />
+          <!-- <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_pan.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
+        <origin xyz="${0.002+0.120/2} 0.0 -${(0.0215-0.01825)/2}" rpy="0.0 0.0 ${M_PI/2}" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                 iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+        <!-- CHECK -->
+        <inertia ixx="${1/12*0.08*(0.120**2+0.03975**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.048**2+0.03975**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.120**2+0.048**2)}" />
+        <!-- <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                 iyy="0.001" iyz="0.0"
+                 izz="0.001" /> -->
       </inertial>
     </link>
     

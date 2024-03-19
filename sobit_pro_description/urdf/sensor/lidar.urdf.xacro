@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="lidar" xmlns:xacro="http://ros.org/wiki/xacro">
+
   <xacro:macro name="lidar" params="prefix parent">
 
     <joint name="${prefix}_base_joint" type="fixed">
@@ -17,17 +18,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <origin xyz="${0.092/2} 0.0 -${0.007/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/sensor/lidar_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.092 0.184 0.007"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/sensor/lidar_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <origin xyz="${0.092/2} 0.0 -${0.007/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.092**2+0.007**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.184**2+0.007**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.092**2+0.184**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 

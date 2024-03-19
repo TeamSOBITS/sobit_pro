@@ -3,13 +3,16 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.transmission.xacro" />
   
   <xacro:macro name="head" params="prefix parent">
-    <joint name="${prefix}_camera_base_joint" type="fixed">
+    <joint name="${prefix}_base_joint" type="fixed">
+    <!-- <joint name="${prefix}_camera_base_joint" type="fixed"> -->
       <parent link="${parent}" />
-      <child link="${prefix}_camera_base_link" />
+      <!-- <child link="${prefix}_camera_base_link" /> -->
+      <child link="${prefix}_base_link" />
       <origin xyz="0.0900 0.0 0.5270" rpy="0.0 0.0 0.0" />
     </joint>
 
-    <link name="${prefix}_camera_base_link">
+    <link name="${prefix}_base_link">
+    <!-- <link name="${prefix}_camera_base_link"> -->
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
         <geometry>
@@ -18,30 +21,39 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.05125-0.15125/2} 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/head/head_camera_base.stl" scale="0.001 0.001 0.001" />
+          <box size="0.15125 0.0285 0.044"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/head/head_camera_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2.0} 0.0 ${M_PI/2.0}" />
+        <origin xyz="${0.05125-0.15125/2} 0.0 0.0" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.15125**2+0.044**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.0285**2 +0.044**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.15125**2+0.0285**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
 
-    <joint name="${prefix}_camera_pan_joint" type="revolute">
-      <parent link="${prefix}_camera_base_link" />
-      <child link="${prefix}_camera_pan_link" />
+    <!-- <joint name="${prefix}_camera_pan_joint" type="revolute"> -->
+    <joint name="${prefix}_pan_joint" type="revolute">
+      <parent link="${prefix}_base_link" />
+      <!-- <parent link="${prefix}_camera_base_link" /> -->
+      <child link="${prefix}_pan_link" />
+      <!-- <child link="${prefix}_camera_pan_link" /> -->
       <origin xyz="0.03985 0.0 0.0190" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
       <limit effort="30" lower="${-M_PI/2.0}" upper="${M_PI/2.0}" velocity="${M_PI/2.0}" />
     </joint>
 
-    <link name="${prefix}_camera_pan_link">
+    <link name="${prefix}_pan_link">
+    <!-- <link name="${prefix}_camera_pan_link"> -->
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
         <geometry>
@@ -50,30 +62,39 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="0.0 0.0 ${0.00525+0.03525/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/head/head_camera_pan.stl" scale="0.001 0.001 0.001" />
+          <box size="0.0285 0.037 0.03525"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/head/head_camera_pan.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="0.0 0.0 ${0.00525+0.03525/2}" rpy="0.0 0.0 ${M_PI/2}" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.0285**2+0.03525**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.037**2 +0.03525**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.0285**2+0.037**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
 
-    <joint name="${prefix}_camera_tilt_joint" type="revolute">
-      <parent link="${prefix}_camera_pan_link" />
-      <child link="${prefix}_camera_tilt_link" />
+    <joint name="${prefix}_tilt_joint" type="revolute">
+    <!-- <joint name="${prefix}_camera_tilt_joint" type="revolute"> -->
+      <parent link="${prefix}_pan_link" />
+      <!-- <parent link="${prefix}_camera_pan_link" /> -->
+      <child link="${prefix}_tilt_link" />
+      <!-- <child link="${prefix}_camera_tilt_link" /> -->
       <origin xyz="0.0 0.0 0.0405" rpy="0.0 0.0 0.0" />
       <axis xyz="0 -1 0" />
       <limit effort="30" lower="${-M_PI/2.0}" upper="${M_PI/2.0}" velocity="${M_PI/2.0}" />
     </joint>
 
-    <link name="${prefix}_camera_tilt_link">
+    <link name="${prefix}_tilt_link">
+    <!-- <link name="${prefix}_camera_tilt_link"> -->
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
         <geometry>
@@ -82,17 +103,22 @@
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="0.0 0.0 ${0.028+0.0115/2}" rpy="0.0 0.0 0.0" />
+        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" /> -->
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/head/head_camera_tilt.stl" scale="0.001 0.001 0.001" />
+          <box size="0.046 0.0466 0.0115"/>
+          <!-- <mesh filename="package://sobit_pro_description/meshes/head/head_camera_tilt.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
-        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2.0}" />
+        <origin xyz="0.0 0.0 ${0.028+0.0115/2}" rpy="0.0 0.0 0.0" />
         <mass value="0.08" />
-        <inertia ixx="1.0" ixy="0.0" ixz="0.0"
+        <inertia ixx="${1/12*0.08*(0.046**2 +0.0115**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.0466**2+0.0115**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.046**2 +0.0466**2)}" />
+        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
                  iyy="1.0" iyz="0.0"
-                 izz="1.0" />
+                 izz="1.0" /> -->
       </inertial>
     </link>
 
