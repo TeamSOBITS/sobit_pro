@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<robot name="realsense_d415" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="realsense_d415" params="prefix parent">
+
+    <joint name="${prefix}_base_joint" type="fixed">
+      <origin xyz="0.173245 0.0 -0.02550" rpy="0.0 ${60*M_PI/180} 0.0" />
+      <parent link="${parent}" />
+      <child link="${prefix}_base_link" />
+    </joint>
+
+    <link name="${prefix}_base_link" />
+
+
+    <xacro:sensor_d415 parent="${prefix}_base_link" name="${prefix}" use_nominal_extrinsics="false" >
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+    </xacro:sensor_d415>
+
+  </xacro:macro>
+</robot>
