@@ -34,6 +34,11 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
     else if( prev_motion == ROTATIONAL_MOTION_MODE )    motion_mode = ROTATIONAL_MOTION_MODE;
     else if( prev_motion == SWIVEL_MOTION_MODE )        motion_mode = SWIVEL_MOTION_MODE;
 
+    // Time Difference Calculation
+    ros::Duration dt = ros::Time::now() - prev_time;
+    double dt_sec = dt.toSec();
+    if (dt_sec == 0.0) dt_sec = 1e-6;
+
     switch( motion_mode ){
         // Translational motion
         case TRANSLATIONAL_MOTION_MODE:{
@@ -95,6 +100,16 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             if (std::isnan(calculation_odom.pose.pose.position.x)    || std::isnan(calculation_odom.pose.pose.position.y)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (pose) ------");
             if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) ROS_ERROR("------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (orientation) ------");
 
+            // Calculate Linear Velocity
+            calculation_odom.twist.twist.linear.x = distance_m * cosf(fr_direction_deg * (M_PI / 180.)) / dt_sec;
+            calculation_odom.twist.twist.linear.y = distance_m * sinf(fr_direction_deg * (M_PI / 180.)) / dt_sec;
+            calculation_odom.twist.twist.linear.z = 0.0;
+
+            // No angular velocity in translational mode
+            calculation_odom.twist.twist.angular.x = 0.0;
+            calculation_odom.twist.twist.angular.y = 0.0;
+            calculation_odom.twist.twist.angular.z = 0.0;
+
             *result_odom = calculation_odom;
 
 
@@ -120,7 +135,16 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
 
             *result_odom = calculation_odom;
 
+            // Calculate Angular Velocity
+            calculation_odom.twist.twist.linear.x = 0.0;
+            calculation_odom.twist.twist.linear.y = 0.0;
+            calculation_odom.twist.twist.linear.z = 0.0;
 
+            // Angular velocity from yaw change
+            calculation_odom.twist.twist.angular.x = 0.0;
+            calculation_odom.twist.twist.angular.y = 0.0;
+            calculation_odom.twist.twist.angular.z = yaw / dt_sec;
+            
             return true;
         }
 
@@ -199,6 +223,16 @@ bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos
             // ROS_INFO("base_center = %.4f, %.4f,  yaw = %.4f", base_center.x, base_center.y, yaw);
             // ROS_INFO("odom = %.4f, %.4f, %.4f\n",calculation_odom.pose.pose.position.x, calculation_odom.pose.pose.position.y, (prev_yaw + yaw));
 
+            // Calculate Linear and Angular Velocity
+            calculation_odom.twist.twist.linear.x = (pose_x - prev_odom.pose.pose.position.x) / dt_sec;
+            calculation_odom.twist.twist.linear.y = (pose_y - prev_odom.pose.pose.position.y) / dt_sec;
+            calculation_odom.twist.twist.linear.z = 0.0;
+
+            // Angular velocity from yaw change
+            calculation_odom.twist.twist.angular.x = 0.0;
+            calculation_odom.twist.twist.angular.y = 0.0;
+            calculation_odom.twist.twist.angular.z = yaw / dt_sec;
+            
             *result_odom = calculation_odom;
 
 
