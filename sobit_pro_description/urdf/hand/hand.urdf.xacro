@@ -72,7 +72,7 @@
       <child link="${prefix_hand}_link" />
       <origin xyz="0.0631932 -0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <limit lower="${-M_PI/2.0}" upper="0" effort="25" velocity="4.796165" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="4.1" velocity="4.796165" />
     </joint>
 
     <link name="${prefix_hand}_link">

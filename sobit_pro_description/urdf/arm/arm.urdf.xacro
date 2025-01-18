@@ -40,7 +40,7 @@
       <child link="${prefix}_shoulder_1_tilt_link" />
       <origin xyz="0.1560 0.0 0.0215" rpy="0.0 0.0 0.0 " />
       <axis xyz="0.0 -1.0 0.0 " />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="11.031179004" />
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="${10.6*2}" velocity="11.031179004" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
@@ -74,8 +74,8 @@
       <origin xyz="0.1560 0.0 0.0215" rpy="0.0 0.0 ${M_PI}" />
       <axis xyz="0.0 1.0 0.0 " />
       <mimic joint="${prefix}_shoulder_1_tilt_joint" multiplier="1" offset="0" />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="11.031179004" />
-      <!-- <dynamics damping="0.2" friction="0" /> -->
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="${10.6*2}" velocity="11.031179004" />
+      <dynamics damping="0.2" friction="0" />
     </joint>
 
     <link name="${prefix}_shoulder_2_tilt_link" />
@@ -86,7 +86,7 @@
       <child link="${prefix}_elbow_upper_1_tilt_link" />
       <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 -1.0 0.0 " />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="9.59233" />
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="${4.1*2}" velocity="9.59233" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
@@ -120,8 +120,8 @@
       <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
       <axis xyz="0.0 1.0 0.0 " />
       <mimic joint="${prefix}_elbow_upper_1_tilt_joint" multiplier="1" offset="0" />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="9.59233" />
-      <!-- <dynamics damping="0.2" friction="0" /> -->
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="${4.1*2}" velocity="9.59233" />
+      <dynamics damping="0.2" friction="0" />
     </joint>
 
     <link name="${prefix}_elbow_upper_2_tilt_link" />
@@ -132,7 +132,7 @@
       <child link="${prefix}_elbow_lower_tilt_link" />
       <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 -1.0 0.0 " />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="4.796165" />
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="4.1" velocity="4.796165" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
@@ -165,7 +165,7 @@
       <child link="${prefix}_elbow_lower_pan_link" />
       <origin xyz="0.028 0.0 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="1.0 0.0 0.0 " />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="4.796165" />
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="4.1" velocity="4.796165" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 
@@ -198,7 +198,7 @@
       <child link="${prefix}_wrist_tilt_link" />
       <origin xyz="0.122009 0.0 0.0" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 -1.0 0.0" />
-      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="25" velocity="4.796165" />
+      <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="4.1" velocity="4.796165" />
       <!-- <dynamics damping="0.2" friction="0" /> -->
     </joint>
 

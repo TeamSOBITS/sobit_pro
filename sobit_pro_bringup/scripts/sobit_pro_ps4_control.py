@@ -15,8 +15,8 @@ from sobit_pro_module import Joint
 
 class JoyControl:
     def __init__(self):
-        self.sub_joy           = rospy.Subscriber('/joy', Joy, self.subscribe_joy, queue_size=10)
-        self.pub_wheel_control = rospy.Publisher('/mobile_base/commands/velocity', Twist, queue_size = 10)
+        self.sub_joy           = rospy.Subscriber('joy', Joy, self.subscribe_joy, queue_size=10)
+        self.pub_wheel_control = rospy.Publisher('mobile_base/commands/velocity', Twist, queue_size = 10)
 
         # Init SobitProWheelController and SobitProJointController
         self.args = sys.argv
@@ -149,7 +149,7 @@ class JoyControl:
     def move_wheel_translational_motion(self, linear):
         speed = Twist()
 
-        if diagonal_path:
+        if enable_diagonal:
             if abs(self.left_joystick_ud) < abs(self.left_joystick_lr) :
                 speed.linear.x = 0
                 speed.linear.y = self.left_joystick_lr * linear
@@ -176,7 +176,7 @@ class JoyControl:
 
 if __name__ == '__main__':
     rospy.init_node('sobit_pro_ps4_control_node')
-    diagonal_path = rospy.get_param("~diagonal_path", False)
+    enable_diagonal = rospy.get_param("~enable_diagonal", False)
 
     ps4_control = JoyControl()
     rospy.spin()

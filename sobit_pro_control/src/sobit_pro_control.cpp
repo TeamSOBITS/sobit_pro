@@ -298,20 +298,22 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
     }
 }
 
-int64_t *SobitProControl::setSteerPos(){
-    steer_pos[1] = int64_t(steer_fl_goal_pos + 2048);
-    steer_pos[0] = int64_t(steer_fr_goal_pos + 2048);
-    steer_pos[3] = int64_t(steer_bl_goal_pos + 2048);
-    steer_pos[2] = int64_t(steer_br_goal_pos + 2048);
+// TODO: change ID in real robot
+int32_t *SobitProControl::setSteerPos(){
+    steer_pos[0] = int32_t(steer_fl_goal_pos + 2048);
+    steer_pos[1] = int32_t(steer_fr_goal_pos + 2048);
+    steer_pos[2] = int32_t(steer_bl_goal_pos + 2048);
+    steer_pos[3] = int32_t(steer_br_goal_pos + 2048);
 
     return steer_pos;
 }
 
-int64_t *SobitProControl::setWheelVel(){
-    wheel_vel[0] = int64_t(wheel_fr_goal_vel);
-    wheel_vel[1] = int64_t(wheel_fl_goal_vel);
-    wheel_vel[2] = int64_t(wheel_br_goal_vel);
-    wheel_vel[3] = int64_t(wheel_bl_goal_vel);
+// TODO: change ID in real robot
+int32_t *SobitProControl::setWheelVel(){
+    wheel_vel[0] = int32_t(wheel_fl_goal_vel);
+    wheel_vel[1] = int32_t(wheel_fr_goal_vel);
+    wheel_vel[2] = int32_t(wheel_bl_goal_vel);
+    wheel_vel[3] = int32_t(wheel_br_goal_vel);
 
     return wheel_vel;
 }

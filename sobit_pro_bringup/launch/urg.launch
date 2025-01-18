@@ -1,8 +1,8 @@
 <launch>
     <arg name="urg_lan"         default="true"/>
-	<arg name="scan_topic_name" default="/scan"/>
+    <arg name="scan_topic_name" default="/scan"/>
 
-	<node name="urg_node" pkg="urg_node" type="urg_node">
+    <node name="urg_node" pkg="urg_node" type="urg_node">
         <param name="ip_address" type="string" value="172.16.10.10" if="$(eval arg('urg_lan'))"/>
         <param name="serial_port"       value="/dev/ttyACM0"        unless="$(eval arg('urg_lan'))"/>
         <param name="serial_baud"       value="115200"              unless="$(eval arg('urg_lan'))"/>
@@ -13,6 +13,6 @@
         <param name="angle_min"         value="-1.5707963"/>
         <param name="angle_max"         value="1.5707963"/>
 
-		<remap from="/scan" to="$(arg scan_topic_name)"/>
-	</node>
+        <remap from="/scan" to="$(arg scan_topic_name)"/>
+    </node>
 </launch>

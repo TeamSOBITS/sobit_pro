@@ -7,25 +7,11 @@
 #include <geometry_msgs/Twist.h>
 #include <geometry_msgs/Point.h>
 
-// Define motion key value
-// #define STOP_MOTION          0
-// #define TRANSLATIONAL_MOTION 1
-// #define ROTATIONAL_MOTION    2
-// #define SWIVEL_MOTION        3 // Motion can be added
-    
-// #define LIMIT_VEL_VALUE      1023.    // DXL Velocity Limit Value (previous 200.)
-// #define VEL_UNIT             0.229    // DXL Velocity Unit [rmp]
-// #define WHEEL_DIAMETER       0.144    // Wheel Circumference
-// #define WHEEL_LENGTH         M_PI*WHEEL_DIAMETER // Wheel Length
-
-// #define BODY_DIAMETER        0.44775010 // Robot Diameter (respect to the center of wheels)
-// #define TRACK                0.31660713 // Distance between left and right wheels
-
 
 class SobitProControl{
     private:
-        int64_t steer_pos[4] = {0, };
-        int64_t wheel_vel[4] = {0, };
+        int32_t steer_pos[4] = {0, };
+        int32_t wheel_vel[4] = {0, };
 
         enum MODE{
             NONE = -1,
@@ -38,12 +24,13 @@ class SobitProControl{
         static const int ROTATIONAL_MOTION    = 2;
         static const int SWIVEL_MOTION        = 3; // Motion can be added
 
-        static constexpr const double LIMIT_VEL_VALUE = 1023.; // DXL Velocity Limit Value (previous 200.)
-        static constexpr const double VEL_UNIT        = 0.229; // DXL Velocity Unit [rmp]
-        static constexpr const double WHEEL_DIAMETER  = 0.144; // Wheel Circumference
-        static constexpr const double WHEEL_LENGTH    = M_PI*WHEEL_DIAMETER; // Wheel Length
-        static constexpr const double BODY_DIAMETER   = 0.44775010; // Robot Diameter (respect to the center of wheels)
-        static constexpr const double TRACK           = 0.31660713; // Distance between left and right wheels
+
+        static constexpr const double LIMIT_VEL_VALUE = 330.;       // DXL Velocity Limit Value - XM430-W210: 330
+        static constexpr const double VEL_UNIT        = 0.229;      // DXL Velocity Unit [rmp]
+        static constexpr const double WHEEL_DIAMETER  = 0.144;      // Wheel Circumference [m]
+        static constexpr const double WHEEL_LENGTH    = M_PI*WHEEL_DIAMETER; // Wheel Length [m]
+        static constexpr const double BODY_DIAMETER   = 0.44775010; // Robot Diameter [m] (respect to the center of wheels)
+        static constexpr const double TRACK           = 0.31660713; // Distance between left and right wheels [m]
 
         double steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
         double wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
@@ -68,8 +55,8 @@ class SobitProControl{
 
         void setParams(geometry_msgs::Twist vel_twist);
         inline int getMotionMode(){ return int(motion_mode); };
-        int64_t *setSteerPos();
-        int64_t *setWheelVel();
+        int32_t *setSteerPos();
+        int32_t *setWheelVel();
 };
 
 #endif // SOBIT_PRO_CONTROL_H_

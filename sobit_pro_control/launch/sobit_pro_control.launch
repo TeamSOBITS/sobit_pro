@@ -4,6 +4,10 @@
     <arg name="enable_arm"      default="True" />
     <arg name="enable_head"     default="True" />
 
+    <!-- Namespace -->
+    <arg name="robot_namespace" default="sobit_pro" />
+
+    <!-- Load URDF file -->
     <arg name="urdf_file" 
          default="$(find xacro)/xacro
                  '$(find sobit_pro_description)/robots/sobit_pro.urdf.xacro'
@@ -13,9 +17,6 @@
     
     <param name="robot_description" command="$(arg urdf_file)"/>
 
-    <!-- Load Poses -->
-    <include file="$(find sobit_pro_library)/launch/load_sobit_pro_pose.launch"/>
-
     <!-- Load joint controller configurations from YAML file to parameter server -->
     <rosparam file="$(find sobit_pro_control)/config/joint_limit.yaml" command="load"/>
 
@@ -23,13 +24,13 @@
     <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="joint_state_controller"/>
 
     <group if="$(eval arg('enable_arm') and arg('enable_head'))">
-        <node name="sobit_pro_arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
+        <node name="arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
         <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_arm_head.yaml"    command="load"/>
     </group>
 
     <group if="$(eval arg('enable_arm'))">
         <group if="$(eval not(arg('enable_head')))">
-            <node name="sobit_pro_arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
+            <node name="arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
             <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_arm.yaml" command="load"/>
         </group>
 
@@ -39,7 +40,7 @@
     
     <group if="$(eval arg('enable_head'))">
         <group if="$(eval not(arg('enable_arm')))">
-            <node name="sobit_pro_arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
+            <node name="arm_head_control" pkg="sobits_common" type="dynamixel_servo_control" output="screen"/>
             <rosparam file="$(find sobit_pro_control)/config/state_control_dynamixel_head.yaml" command="load"/>
         </group>
 
@@ -52,6 +53,9 @@
     </group>
 
     <!-- Convert joint states to TF transforms -->
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+            respawn="false" output="screen" >
+        <param name="tf_prefix" type="string" value="$(arg robot_namespace)" />
+    </node>
 
 </launch>

@@ -39,7 +39,7 @@
       <child link="${prefix}_pan_link" />
       <origin xyz="0.03985 0.0 0.0190" rpy="0.0 0.0 0.0" />
       <axis xyz="0 0 1" />
-      <limit effort="25" lower="${-M_PI/2.0}" upper="${M_PI/2.0}" velocity="${M_PI/2.0}" />
+      <limit lower="${-M_PI/2.0}" upper="${M_PI/2.0}" effort="4.1" velocity="4.796165" />
     </joint>
 
     <link name="${prefix}_pan_link">
@@ -71,7 +71,7 @@
       <child link="${prefix}_tilt_link" />
       <origin xyz="0.0 0.0 0.0405" rpy="0.0 0.0 0.0" />
       <axis xyz="0 -1 0" />
-      <limit effort="25" lower="${-M_PI/2.0}" upper="${M_PI/2.0}" velocity="${M_PI/2.0}" />
+      <limit lower="${-M_PI/2.0}" upper="${M_PI/2.0}" effort="4.1" velocity="4.796165" />
     </joint>
 
     <link name="${prefix}_tilt_link">

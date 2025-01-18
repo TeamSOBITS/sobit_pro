@@ -4,6 +4,7 @@ Licensed under the MIT License.
 -->
 
 <launch>
+  <arg name="robot_namespace" default="sobit_pro" />
   <arg name="tf_prefix"                   default="head_camera_" /> <!-- Prefix added to tf frame IDs. It typically contains a trailing '_'. DO NOT USE EMPTY-->
   <arg name="overwrite_robot_description" default="true" />         <!-- Flag to publish a standalone azure_description instead of the default robot_descrition parameter-->
 
@@ -47,27 +48,29 @@ Licensed under the MIT License.
   <arg name="wired_sync_mode" default="0"/>                       <!-- Wired sync mode. 0: OFF, 1: MASTER, 2: SUBORDINATE. --> 
   <arg name="subordinate_delay_off_master_usec" default="0"/>     <!-- Delay subordinate camera off master camera by specified amount in usec. --> 
 
-  <node pkg="azure_kinect_ros_driver" type="node" name="azure_kinect_ros_driver" output="screen" required="$(arg required)">
-    <param name="depth_enabled"     type="bool"   value="$(arg depth_enabled)" />
-    <param name="depth_mode"        type="string" value="$(arg depth_mode)" />
-    <param name="depth_unit"        type="string" value="$(arg depth_unit)" />
-    <param name="color_enabled"     type="bool"   value="$(arg color_enabled)" />
-    <param name="color_format"      type="string" value="$(arg color_format)" />
-    <param name="color_resolution"  type="string" value="$(arg color_resolution)" />
-    <param name="fps"               type="int"    value="$(arg fps)" />
-    <param name="point_cloud"       type="bool"   value="$(arg point_cloud)" />
-    <param name="rgb_point_cloud"   type="bool"   value="$(arg rgb_point_cloud)" />
-    <param name="point_cloud_in_depth_frame"   type="bool"   value="$(arg point_cloud_in_depth_frame)" />
-    <param name="sensor_sn"         type="string" value="$(arg sensor_sn)" />
-    <param name="tf_prefix"         type="string" value="$(arg tf_prefix)" />
-    <param name="recording_file"          type="string" value="$(arg recording_file)" />
-    <param name="recording_loop_enabled"  type="bool"   value="$(arg recording_loop_enabled)" />
-    <param name="body_tracking_enabled"           type="bool"   value="$(arg body_tracking_enabled)" />
-    <param name="body_tracking_smoothing_factor"  type="double" value="$(arg body_tracking_smoothing_factor)" />
-    <param name="rescale_ir_to_mono8" type="bool" value="$(arg rescale_ir_to_mono8)" />
-    <param name="ir_mono8_scaling_factor" type="double" value="$(arg ir_mono8_scaling_factor)" />
-    <param name="imu_rate_target" type="int" value="$(arg imu_rate_target)"/>
-    <param name="wired_sync_mode" type="int" value="$(arg wired_sync_mode)"/>
-    <param name="subordinate_delay_off_master_usec" type="int" value="$(arg subordinate_delay_off_master_usec)"/>
-  </node>
+  <group ns="$(arg robot_namespace)">
+    <node pkg="azure_kinect_ros_driver" type="node" name="azure_kinect_ros_driver" output="screen" required="$(arg required)">
+      <param name="depth_enabled"     type="bool"   value="$(arg depth_enabled)" />
+      <param name="depth_mode"        type="string" value="$(arg depth_mode)" />
+      <param name="depth_unit"        type="string" value="$(arg depth_unit)" />
+      <param name="color_enabled"     type="bool"   value="$(arg color_enabled)" />
+      <param name="color_format"      type="string" value="$(arg color_format)" />
+      <param name="color_resolution"  type="string" value="$(arg color_resolution)" />
+      <param name="fps"               type="int"    value="$(arg fps)" />
+      <param name="point_cloud"       type="bool"   value="$(arg point_cloud)" />
+      <param name="rgb_point_cloud"   type="bool"   value="$(arg rgb_point_cloud)" />
+      <param name="point_cloud_in_depth_frame"   type="bool"   value="$(arg point_cloud_in_depth_frame)" />
+      <param name="sensor_sn"         type="string" value="$(arg sensor_sn)" />
+      <param name="tf_prefix"         type="string" value="$(arg tf_prefix)" />
+      <param name="recording_file"          type="string" value="$(arg recording_file)" />
+      <param name="recording_loop_enabled"  type="bool"   value="$(arg recording_loop_enabled)" />
+      <param name="body_tracking_enabled"           type="bool"   value="$(arg body_tracking_enabled)" />
+      <param name="body_tracking_smoothing_factor"  type="double" value="$(arg body_tracking_smoothing_factor)" />
+      <param name="rescale_ir_to_mono8" type="bool" value="$(arg rescale_ir_to_mono8)" />
+      <param name="ir_mono8_scaling_factor" type="double" value="$(arg ir_mono8_scaling_factor)" />
+      <param name="imu_rate_target" type="int" value="$(arg imu_rate_target)"/>
+      <param name="wired_sync_mode" type="int" value="$(arg wired_sync_mode)"/>
+      <param name="subordinate_delay_off_master_usec" type="int" value="$(arg subordinate_delay_off_master_usec)"/>
+    </node>
+  </group>
 </launch>

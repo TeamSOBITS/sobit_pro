@@ -68,7 +68,7 @@ void SobitProMotorDriver::closeDynamixel(){
     portHandler_->closePort();
 }
 
-bool SobitProMotorDriver::controlSteersPos(int64_t *value){
+bool SobitProMotorDriver::controlSteersPos(int32_t *value){
     bool dxl_addparam_result_;
     int8_t dxl_comm_result_;
     uint8_t value_data_byte[4] = {0, };
@@ -121,7 +121,7 @@ bool SobitProMotorDriver::controlSteersPos(int64_t *value){
     return true;
 }
 
-bool SobitProMotorDriver::controlWheelsVel(int64_t *value){
+bool SobitProMotorDriver::controlWheelsVel(int32_t *value){
     bool dxl_addparam_result_;
     int8_t dxl_comm_result_;
     uint8_t value_data_byte[4] = {0, };

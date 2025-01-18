@@ -3,16 +3,16 @@
 using namespace sobit_pro;
 
 SobitProWheelController::SobitProWheelController ( const std::string& name ) : ROSCommonNode( name ), nh_(), pnh_("~"){
-    pub_cmd_vel_ = nh_.advertise< geometry_msgs::Twist >( "/mobile_base/commands/velocity", 1 );
-    sub_odom_ = nh_.subscribe( "/odom", 1, &SobitProWheelController::callbackOdometry, this );
+    pub_cmd_vel_ = nh_.advertise< geometry_msgs::Twist >( "mobile_base/commands/velocity", 1 );
+    sub_odom_ = nh_.subscribe( "odom", 1, &SobitProWheelController::callbackOdometry, this );
 
     ros::spinOnce();
     ros::Duration(3.0).sleep();
 }
 
 SobitProWheelController::SobitProWheelController () : ROSCommonNode( ), nh_(), pnh_("~"){ 
-    sub_odom_ = nh_.subscribe( "/odom", 1, &SobitProWheelController::callbackOdometry, this );
-    pub_cmd_vel_ = nh_.advertise< geometry_msgs::Twist >( "/mobile_base/commands/velocity", 1 );
+    sub_odom_ = nh_.subscribe( "odom", 1, &SobitProWheelController::callbackOdometry, this );
+    pub_cmd_vel_ = nh_.advertise< geometry_msgs::Twist >( "mobile_base/commands/velocity", 1 );
 
     ros::spinOnce();
     ros::Duration(3.0).sleep();

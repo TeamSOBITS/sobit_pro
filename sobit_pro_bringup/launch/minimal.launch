@@ -4,35 +4,36 @@
     <arg name="enable_arm"      default="True" />
     <arg name="enable_head"     default="True" />
 
-    <!-- URG: lan-cable (true), usb-cable (false) -->
+    <!-- URG: lan-cable (True), usb-cable (False) -->
     <arg name="urg_lan"         default="True"/>
 
-    <!-- RVIZ: launch (true), not launch (false) -->
-    <arg name="enable_rviz"       default="True"/>
-
-    <!-- Actuators Control-->
-    <include file="$(find sobit_pro_control)/launch/sobit_pro_control.launch">
-        <arg name="enable_mb"   value="$(arg enable_mb)"/>
-        <arg name="enable_arm"  value="$(arg enable_arm)"/>
-        <arg name="enable_head" value="$(arg enable_head)"/>
-    </include>
+    <!-- RVIZ: launch (True), not launch (False) -->
+    <arg name="enable_rviz"     default="True"/>
 
     <!-- Probability of bring-up sound -->
     <param name="sound_param"   value="95"/>
 
-    <!-- URG -->
-    <include file="$(find sobit_pro_bringup)/launch/urg.launch">
-        <arg name="urg_lan"     value="$(arg urg_lan)"/>
+    <!-- Load Poses -->
+    <include file="$(find sobit_pro_library)/launch/load_sobit_pro_pose.launch"/>
+
+    <!-- Launch robot 1 -->
+    <include file="$(find sobit_pro_bringup)/launch/common.launch">
+        <arg name="enable_mb"       value="$(arg enable_mb)"/>
+        <arg name="enable_arm"      value="$(arg enable_arm)"/>
+        <arg name="enable_head"     value="$(arg enable_head)"/>
+        <arg name="urg_lan"         value="$(arg urg_lan)"/>
+        <arg name="enable_rviz"     value="$(arg enable_rviz)"/>
+        <arg name="robot_namespace" value="sobit_pro"/>
     </include>
 
-    <!-- Azure Kinect -->
-    <!-- <include file="$(find sobit_pro_bringup)/launch/azure_kinect.launch"/> -->
+    <!-- Launch robot 2 -->
+    <!-- <include file="$(find sobit_pro_bringup)/launch/common.launch">
+        <arg name="enable_mb"       value="$(arg enable_mb)"/>
+        <arg name="enable_arm"      value="$(arg enable_arm)"/>
+        <arg name="enable_head"     value="$(arg enable_head)"/>
+        <arg name="urg_lan"         value="$(arg urg_lan)"/>
+        <arg name="enable_rviz"     value="$(arg enable_rviz)"/>
+        <arg name="robot_namespace" value="sobit_pro_2"/>
+    </include> -->
 
-    <!-- RealSense -->
-    <!-- <include file="$(find sobit_pro_bringup)/launch/realsense.launch"/> -->
-
-    <!-- RVIZ -->
-    <group if="$(arg enable_rviz)"> 
-        <node name="rviz" pkg="rviz" type="rviz" required="false" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro_bringup.rviz"/>
-    </group>
 </launch>
