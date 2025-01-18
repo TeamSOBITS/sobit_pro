@@ -2,7 +2,7 @@
 <robot name="sobit_pro"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <xacro:macro name="lidar" params="prefix parent">
+  <xacro:macro name="lidar" params="prefix parent robot_namespace">
 
     <joint name="${prefix}_base_joint" type="fixed">
       <parent link="${parent}" />
@@ -34,7 +34,7 @@
     </link>
 
 
-    <xacro:hokuyo_ust_mount prefix="${prefix}" parent="${prefix}_base_link" topic="scan" model="ust-10" >
+    <xacro:hokuyo_ust_mount prefix="${prefix}" parent="${prefix}_base_link" topic="scan" robot_namespace="${robot_namespace}/" model="ust-10" min_angle="-${M_PI/2}" max_angle="${M_PI/2}" >
       <origin xyz="0.067 0.0 0.0" rpy="0.0 0.0 0.0" />
     </xacro:hokuyo_ust_mount>
 
