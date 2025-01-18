@@ -1,6 +1,8 @@
 #include "sobit_pro_control/sobit_pro_control.hpp"
 #include "sobit_pro_control/sobit_pro_odometry.hpp"
 
+#include <iostream>
+
 // Calculate Odometry
 bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
                             int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
@@ -238,9 +240,13 @@ void SobitProOdometry::pose_broadcaster(nav_msgs::Odometry tf_odom){
     static tf2_ros::TransformBroadcaster br;
     geometry_msgs::TransformStamped transformStamped;
 
+    std::string robot_name = (ros::this_node::getNamespace() != "/")
+                            ? ros::this_node::getNamespace().substr(1) + "/"
+                            : "";
+
     transformStamped.header.stamp            = ros::Time::now();
-    transformStamped.header.frame_id         = "odom";
-    transformStamped.child_frame_id          = "base_footprint";
+    transformStamped.header.frame_id         = robot_name + "odom";
+    transformStamped.child_frame_id          = robot_name + "base_footprint";
     transformStamped.transform.translation.x = tf_odom.pose.pose.position.x;
     transformStamped.transform.translation.y = tf_odom.pose.pose.position.y;
     transformStamped.transform.translation.z = tf_odom.pose.pose.position.z;

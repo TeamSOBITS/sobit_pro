@@ -10,7 +10,4 @@ head_trajectory_controller:
   joints: &robot_head_joints
     - head_pan_joint
     - head_tilt_joint
-  constraints:
-    stopped_velocity_tolerance: 0.5
-    goal_time: 0.05
   allow_partial_joints_goal: true

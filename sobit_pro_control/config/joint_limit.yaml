@@ -4,87 +4,203 @@ joint_limits:
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        # max_velocity: 5.515589502 # XM540-W150: 230*0.229=52.67[rpm] (~53[rpm]) - 52.67*2*PI/60=5.515589502[rad/s]
+        max_velocity: 11.031179004 # XM540-W150(2)
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     arm_shoulder_2_tilt_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        # max_velocity: 5.515589502 # XM540-W150: 230*0.229=52.67[rpm] (~53[rpm]) - 52.67*2*PI/60=5.515589502[rad/s]
+        max_velocity: 11.031179004 # XM540-W150(2)
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     arm_elbow_upper_1_tilt_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        # max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        max_velocity: 9.59233 # XM430-W350(2)
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     arm_elbow_upper_2_tilt_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        # max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        max_velocity: 9.59233 # XM430-W350(2)
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     arm_elbow_lower_tilt_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     arm_elbow_lower_pan_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     arm_wrist_tilt_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     hand_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 0
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     head_pan_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 1.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
 
     head_tilt_joint:
         has_position_limits: true
         min_position: -1.57
         max_position: 0.57
         has_velocity_limits: true
-        max_velocity: 5.969211435
-        has_acceleration_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
         max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
+
+    wheel_f_l_steer_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
+        max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
+
+    wheel_f_r_steer_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
+        max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
+
+    wheel_b_l_steer_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
+        max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
+
+    wheel_b_r_steer_joint:
+        has_position_limits: true
+        min_position: -1.57
+        max_position: 1.57
+        has_velocity_limits: true
+        max_velocity: 4.796165 # XM430-W350: 200*0.229=45.8[rpm] (~46[rpm]) - 45.8*2*PI/60=4.796165[rad/s]
+        has_acceleration_limits: false
+        max_acceleration: 4.0
+        has_jerk_limits: false
+        max_jerk: 100.0
+        has_effort_limits: false
+        max_effort: 20.0
+
+    wheel_f_l_drive_joint:
+        has_position_limits: false # Continuous joint
+        has_velocity_limits: true
+        max_velocity: 7.913672 # XM430-W210: 330*0.229=75.57[rpm] (~77[rpm]) - 75.57*2*PI/60=7.913672[rad/s]
+
+    wheel_f_r_drive_joint:
+        has_position_limits: false # Continuous joint
+        has_velocity_limits: true
+        max_velocity: 7.913672 # XM430-W210: 330*0.229=75.57[rpm] (~77[rpm]) - 75.57*2*PI/60=7.913672[rad/s]
+
+    wheel_b_l_drive_joint:
+        has_position_limits: false # Continuous joint
+        has_velocity_limits: true
+        max_velocity: 7.913672 # XM430-W210: 330*0.229=75.57[rpm] (~77[rpm]) - 75.57*2*PI/60=7.913672[rad/s]
+
+    wheel_b_r_drive_joint:
+        has_position_limits: false # Continuous joint
+        has_velocity_limits: true
+        max_velocity: 7.913672 # XM430-W210: 330*0.229=75.57[rpm] (~77[rpm]) - 75.57*2*PI/60=7.913672[rad/s]

@@ -19,10 +19,8 @@
       </visual>
       <collision>
         <origin xyz="0.0 ${(0.02-0.1146-0.0146)/2} -${0.02/2}" rpy="0.0 0.0 0.0" />
-        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" /> -->
         <geometry>
           <box size="0.0292 ${0.1146+0.0146} 0.03"/>
-          <!-- <mesh filename="package://sobit_pro_description/meshes/sensor/mic_base.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
         <material name="black" />
       </collision>
@@ -33,9 +31,6 @@
         <inertia ixx="${1/12*0.15*(0.0292**2+0.03**2)}"            ixy="0.0" ixz="0.0"
                  iyy="${1/12*0.15*((0.1146+0.0146)**2+0.03**2)}"   iyz="0.0"
                  izz="${1/12*0.15*(0.0292**2+(0.1146+0.0146)**2)}" />
-        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                 iyy="1.0" iyz="0.0"
-                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -56,10 +51,8 @@
       </visual>
       <collision>
         <origin xyz="${0.0+0.04911} -${0.0112/2} ${0.035+0.0266}" rpy="0.0 ${M_PI/2-25*M_PI/180} 0.0" />
-        <!-- <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" /> -->
         <geometry>
           <cylinder radius="${0.022/2}" length="0.281"/>
-          <!-- <mesh filename="package://sobit_pro_description/meshes/sensor/mic.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
         <material name="black" />
       </collision>

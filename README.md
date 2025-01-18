@@ -129,17 +129,17 @@ SOBITSが開発した4輪独立ステアリング駆動式のモバイルマニ�
 
 1. SOBIT PROの起動する機能をパラメタとして[minimal.launch](sobit_pro_bringup/launch/minimal.launch)に設定します．
    ```xml
-    <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
-    <arg name="enable_mb"           default="true"/>
-    <arg name="enable_arm"          default="true"/>
-    <arg name="enable_head"         default="true"/>
+    <!-- Activate Mobile-Base (True), Arm (True), Head (True) -->
+    <arg name="enable_mb"           default="True"/>
+    <arg name="enable_arm"          default="True"/>
+    <arg name="enable_head"         default="True"/>
     ...
-    <arg name="open_rviz"           default="true"/>
+    <arg name="enable_rviz"         default="True"/>
     ...
    ```
 
 > [!NOTE]
-> 使用したい機能に応じて，`true`か`false`かに書き換えてください．
+> 使用したい機能に応じて，`True`か`False`かに書き換えてください．
 
 2. [minimal.launch](sobit_pro_bringup/launch/minimal.launch)というlaunchファイルを実行します．
    ```sh
@@ -162,13 +162,13 @@ SOBIT PROの移動機構単体で動かすことができます．
 
 1. [minimal.launch](sobit_pro_bringup/launch/minimal.launch)の設定を次にように書き換えます．
     ```xml
-    <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
-    <arg name="enable_mb"           default="true"/>
-    <arg name="enable_arm"          default="false"/>
-    <arg name="enable_head"         default="false"/>
+    <!-- Activate Mobile-Base (True), Arm (True), Head (True) -->
+    <arg name="enable_mb"           default="True"/>
+    <arg name="enable_arm"          default="False"/>
+    <arg name="enable_head"         default="False"/>
 
-    <!-- URG: lan-cable (true), usb-cable (false) -->
-    <arg name="urg_lan"             default="false"/>
+    <!-- URG: lan-cable (True), usb-cable (False) -->
+    <arg name="urg_lan"             default="False"/>
     ...
     ```
 2. [minimal.launch](sobit_pro_bringup/launch/minimal.launch)というlaunchファイルを実行します．
@@ -181,7 +181,7 @@ SOBIT PROの移動機構単体で動かすことができます．
     ```
 
 > [!NOTE]
-> URG(LiDAR)はLAN式通信の場合は`true`に，USB式通信の場合は`false`に設定してください．
+> URG(LiDAR)はLAN式通信の場合は`True`に，USB式通信の場合は`False`に設定してください．
 
 <p align="right">(<a href="#readme-top">上に戻る</a>)</p>
 

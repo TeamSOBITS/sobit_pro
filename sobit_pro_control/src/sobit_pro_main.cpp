@@ -62,7 +62,7 @@ bool SobitProMain::start_up_sound(){
     std::uniform_int_distribution<int> distribution(1, 100);
     int rand_sound = distribution(gen);
     int sound_param;
-    nh.param("sound_param", sound_param, 75);
+    nh.param("/sound_param", sound_param, 75);
     
     std::string sound      = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
     std::string pack_path  = ros::package::getPath("sobit_pro_control");
@@ -109,10 +109,14 @@ void SobitProMain::control_wheel(){
     wheel_bl_init_pos = sobit_pro_motor_driver.feedbackWheelPos(SobitProMotorDriver::WHEEL_B_L);
     wheel_br_init_pos = sobit_pro_motor_driver.feedbackWheelPos(SobitProMotorDriver::WHEEL_B_R);
 
+    // Get the robot namespace
+    std::string robot_name = (ros::this_node::getNamespace() != "/")
+                            ? ros::this_node::getNamespace().substr(1) + "/"
+                            : "";
     // Initilize Odometry
     prev_odom.header.stamp            = ros::Time::now();
-    prev_odom.header.frame_id         = "odom";
-    prev_odom.child_frame_id          = "base_footprint";
+    prev_odom.header.frame_id         = robot_name + "odom";
+    prev_odom.child_frame_id          = robot_name + "base_footprint";
     prev_odom.pose.pose.position.x    = 0.0;
     prev_odom.pose.pose.position.y    = 0.0;
     prev_odom.pose.pose.position.z    = 0.0;
@@ -128,8 +132,8 @@ void SobitProMain::control_wheel(){
     prev_odom.twist.twist.angular.z   = 0.0;
 
     result_odom.header.stamp            = ros::Time::now();
-    result_odom.header.frame_id         = "odom";
-    result_odom.child_frame_id          = "base_footprint";
+    result_odom.header.frame_id         = robot_name + "odom";
+    result_odom.child_frame_id          = robot_name + "base_footprint";
     result_odom.pose.pose.position.x    = 0.0;
     result_odom.pose.pose.position.y    = 0.0;
     result_odom.pose.pose.position.z    = 0.0;
@@ -161,7 +165,10 @@ void SobitProMain::control_wheel(){
         steer_br_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(SobitProMotorDriver::STEER_B_R);
 
         // When steer changing angle is large(>90[deg]), stop the wheels to avoid hardware damage
-        if( (1024 <= fabsf(set_steer_pos[0] - steer_fr_curt_pos)) || (1024 <= fabsf(set_steer_pos[1] - steer_fl_curt_pos)) || (1024 <= fabsf(set_steer_pos[2] - steer_br_curt_pos)) || (1024 <= fabsf(set_steer_pos[3] - steer_bl_curt_pos)) ){
+        if( (1024 <= fabsf(set_steer_pos[0] - steer_fl_curt_pos))
+         || (1024 <= fabsf(set_steer_pos[1] - steer_fr_curt_pos))
+         || (1024 <= fabsf(set_steer_pos[2] - steer_bl_curt_pos))
+         || (1024 <= fabsf(set_steer_pos[3] - steer_br_curt_pos)) ){
             ROS_INFO("Changing the direction of the wheel");
             set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
             sobit_pro_motor_driver.controlWheelsVel(set_wheel_vel);
@@ -177,7 +184,10 @@ void SobitProMain::control_wheel(){
             steer_fr_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(SobitProMotorDriver::STEER_F_R);
             steer_bl_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(SobitProMotorDriver::STEER_B_L);
             steer_br_curt_pos = sobit_pro_motor_driver.feedbackSteerPos(SobitProMotorDriver::STEER_B_R);
-        }while( (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[0] - steer_fr_curt_pos)) && (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[1] - steer_fl_curt_pos)) && (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[2] - steer_fl_curt_pos)) && (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[3] - steer_fl_curt_pos)) );
+        }while( (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[0] - steer_fl_curt_pos)) 
+             && (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[1] - steer_fr_curt_pos))
+             && (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[2] - steer_bl_curt_pos))
+             && (SobitProMotorDriver::DXL_MOVING_STATUS_THRESHOLD < fabsf(set_steer_pos[3] - steer_br_curt_pos)) );
 
         // Set goal wheel velocity value
         set_wheel_vel = sobit_pro_control.setWheelVel();
@@ -190,15 +200,15 @@ void SobitProMain::control_wheel(){
         joint_state.header.stamp = ros::Time::now();
 
         joint_state.name.resize(8);
-        joint_state.name[1] = "wheel_f_l_steer_joint";
-        joint_state.name[0] = "wheel_f_r_steer_joint";
-        joint_state.name[3] = "wheel_b_l_steer_joint";
-        joint_state.name[2] = "wheel_b_r_steer_joint";
+        joint_state.name[0] = "wheel_f_l_steer_joint";
+        joint_state.name[1] = "wheel_f_r_steer_joint";
+        joint_state.name[2] = "wheel_b_l_steer_joint";
+        joint_state.name[3] = "wheel_b_r_steer_joint";
 
-        joint_state.name[5] = "wheel_f_l_drive_joint";
-        joint_state.name[4] = "wheel_f_r_drive_joint";
-        joint_state.name[7] = "wheel_b_l_drive_joint";
-        joint_state.name[6] = "wheel_b_r_drive_joint";
+        joint_state.name[4] = "wheel_f_l_drive_joint";
+        joint_state.name[5] = "wheel_f_r_drive_joint";
+        joint_state.name[6] = "wheel_b_l_drive_joint";
+        joint_state.name[7] = "wheel_b_r_drive_joint";
 
         joint_state.position.resize(8);
         joint_state.position[0] = (set_steer_pos[0] - 2048.) * (M_PI/2. / 1024.); // Convert 2048. to 0.[rad]
@@ -211,10 +221,8 @@ void SobitProMain::control_wheel(){
         joint_state.position[6] = set_wheel_vel[2] * SobitProControl::VEL_UNIT * (M_PI*SobitProControl::WHEEL_DIAMETER) / 60.; // Convert rpm to m/s
         joint_state.position[7] = set_wheel_vel[3] * SobitProControl::VEL_UNIT * (M_PI*SobitProControl::WHEEL_DIAMETER) / 60.; // Convert rpm to m/s
 
-        // Publish JointState (check!)
-        //std::cout << "\n[ joint_state ]\n" << joint_state << std::endl;
+        // Publish JointState
         pub_joint_states.publish(joint_state);
-        // pub_joint_states.publish(sensor_msgs::JointState(joint_state));
 
         // Update the current wheel position
         wheel_fl_curt_pos = sobit_pro_motor_driver.feedbackWheelPos(SobitProMotorDriver::WHEEL_F_L);
@@ -225,10 +233,6 @@ void SobitProMain::control_wheel(){
         // Calculate Odometry based on motion mode (check!)
         sobit_pro_odometry.odom(steer_fl_curt_pos, steer_fr_curt_pos,
                                 steer_bl_curt_pos, steer_br_curt_pos,
-                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_F_L), sobit_pro_motor_driver.feedbackSteerPos(STEER_F_R),
-                                // sobit_pro_motor_driver.feedbackSteerPos(STEER_B_L), sobit_pro_motor_driver.feedbackSteerPos(STEER_B_R),
-                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_L), sobit_pro_motor_driver.feedbackWheelVel(WHEEL_F_R),
-                                // sobit_pro_motor_driver.feedbackWheelVel(WHEEL_B_L), sobit_pro_motor_driver.feedbackWheelVel(WHEEL_B_R),
                                 wheel_fl_curt_pos, wheel_fr_curt_pos,
                                 wheel_bl_curt_pos, wheel_br_curt_pos,
                                 wheel_fl_init_pos, wheel_fr_init_pos,
@@ -244,8 +248,6 @@ void SobitProMain::control_wheel(){
         wheel_br_init_pos = wheel_br_curt_pos;
 
         // Update odom for next loop calculation
-        // prev_odom = result_odom;
-        // prev_time = ros::Time::now();
         prev_odom.header.stamp            = result_odom.header.stamp;
         prev_odom.pose.pose.position.x    = result_odom.pose.pose.position.x;
         prev_odom.pose.pose.position.y    = result_odom.pose.pose.position.y;
@@ -269,7 +271,6 @@ void SobitProMain::control_wheel(){
         // std::cout << "\n[ Odometry orientation ]\n" << result_odom.pose.pose.orientation << std::endl;
         sobit_pro_odometry.pose_broadcaster(result_odom);
         pub_odometry.publish(result_odom);
-        // pub_odometry.publish(nav_msgs::Odometry(result_odom));
 
         rate.sleep();
     }
@@ -280,7 +281,6 @@ void SobitProMain::control_wheel(){
 // Bring Up SOBIT PRO main function
 int main(int argc, char **argv){
     ros::init(argc, argv, "sobit_pro_control");
-    ros::NodeHandle nh;
 
     // Initialize SobitProMain class
     SobitProMain sobit_pro_main;
