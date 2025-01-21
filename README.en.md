@@ -129,16 +129,16 @@ First, please set up the following environment before proceeding to the next ins
 
 1. Set the parameters inside [minimal.launch](sobit_pro_bringup/launch/minimal.launch) and select the functions to launch with SOBIT PRO.
    ```xml
-    <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
-    <arg name="enable_mb"           default="true"/>
-    <arg name="enable_arm"          default="true"/>
-    <arg name="enable_head"         default="true"/>
+    <!-- Activate Mobile-Base (True), Arm (True), Head (True) -->
+    <arg name="enable_mb"           default="True"/>
+    <arg name="enable_arm"          default="True"/>
+    <arg name="enable_head"         default="True"/>
     ...
-    <arg name="open_rviz"           default="true"/>
+    <arg name="enable_rviz"         default="True"/>
     ...
    ```
 > [!NOTE]
-> Rewrite it as `true` or `false` depending on the functions you want to use.
+> Rewrite it as `True` or `False` depending on the functions you want to use.
 
 2. Execute the launch file [minimal.launch](sobit_pro_bringup/launch/minimal.launch).
    ```sh
@@ -161,13 +161,13 @@ SOBIT PRO can be moved by the moving mechanism alone.
 
 1. Rewrite [minimal.launch](sobit_pro_bringup/launch/minimal.launch) as follows
     ```xml
-    <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
-    <arg name="enable_mb"           default="true"/>
-    <arg name="enable_arm"          default="false"/>
-    <arg name="enable_head"         default="false"/>
+    <!-- Activate Mobile-Base (True), Arm (True), Head (True) -->
+    <arg name="enable_mb"           default="True"/>
+    <arg name="enable_arm"          default="False"/>
+    <arg name="enable_head"         default="False"/>
 
-    <!-- URG: lan-cable (true), usb-cable (false) -->
-    <arg name="urg_lan"             default="false"/>
+    <!-- URG: lan-cable (True), usb-cable (False) -->
+    <arg name="urg_lan"             default="False"/>
     ...
     ```
 2. Execute the launch file [minimal.launch](sobit_pro_bringup/launch/minimal.launch).
@@ -180,7 +180,7 @@ SOBIT PRO can be moved by the moving mechanism alone.
     ```
 
 > [!NOTE]
-> URG(LiDAR) should be set to `true` for LAN type communication and to `false` for USB type communication.
+> URG(LiDAR) should be set to `True` for LAN type communication and to `False` for USB type communication.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

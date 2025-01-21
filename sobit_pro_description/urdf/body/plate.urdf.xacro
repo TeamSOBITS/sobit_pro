@@ -19,10 +19,8 @@
       </visual>
       <collision>
         <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
-        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" /> -->
         <geometry>
           <box size="0.3 0.3 0.009" />
-          <!-- <mesh filename="package://sobit_pro_description/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -31,9 +29,6 @@
         <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
                  iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
                  izz="${1/12*0.08*(0.3**2+0.3**2)}" />
-        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                 iyy="1.0" iyz="0.0"
-                 izz="1.0" /> -->
       </inertial>
     </link>
 
@@ -54,10 +49,8 @@
       </visual>
       <collision>
         <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
-        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" /> -->
         <geometry>
           <box size="0.3 0.3 0.009" />
-          <!-- <mesh filename="package://sobit_pro_description/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -66,9 +59,6 @@
         <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
                  iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
                  izz="${1/12*0.08*(0.3**2+0.3**2)}" />
-        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                 iyy="1.0" iyz="0.0"
-                 izz="1.0" /> -->
       </inertial>
     </link>
     
@@ -89,10 +79,8 @@
       </visual>
       <collision>
         <origin xyz="0.0 0.0 -${0.009/2}" rpy="0.0 0.0 0.0" />
-        <!-- <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" /> -->
         <geometry>
           <box size="0.3 0.3 0.009" />
-          <!-- <mesh filename="package://sobit_pro_description/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" /> -->
         </geometry>
       </collision>
       <inertial>
@@ -101,9 +89,6 @@
         <inertia ixx="${1/12*0.08*(0.3**2+0.009**2)}" ixy="0.0" ixz="0.0"
                  iyy="${1/12*0.08*(0.3**2+0.009**2)}" iyz="0.0"
                  izz="${1/12*0.08*(0.3**2+0.3**2)}" />
-        <!-- <inertia ixx="1.0" ixy="0.0" ixz="0.0"
-                 iyy="1.0" iyz="0.0"
-                 izz="1.0" /> -->
       </inertial>
     </link>
 

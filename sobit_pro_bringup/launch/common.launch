@@ -1,0 +1,42 @@
+<launch>
+    <!-- Activate Mobile-Base (True), Arm (True), Head (True) -->
+    <arg name="enable_mb"       default="True" />
+    <arg name="enable_arm"      default="True" />
+    <arg name="enable_head"     default="True" />
+
+    <!-- URG: lan-cable (True), usb-cable (False) -->
+    <arg name="urg_lan"         default="True"/>
+
+    <!-- RVIZ: launch (True), not launch (False) -->
+    <arg name="enable_rviz"     default="True"/>
+
+    <!-- Namespace -->
+    <arg name="robot_namespace" default="sobit_pro" />
+
+
+    <group ns="$(arg robot_namespace)">
+        <!-- Actuators Control-->
+        <include file="$(find sobit_pro_control)/launch/sobit_pro_control.launch">
+            <arg name="enable_mb"       value="$(arg enable_mb)"/>
+            <arg name="enable_arm"      value="$(arg enable_arm)"/>
+            <arg name="enable_head"     value="$(arg enable_head)"/>       
+            <arg name="robot_namespace" value="sobit_pro" />
+        </include>
+
+        <!-- URG -->
+        <include file="$(find sobit_pro_bringup)/launch/urg.launch">
+            <arg name="urg_lan"     value="$(arg urg_lan)"/>
+        </include>
+
+        <!-- Azure Kinect -->
+        <!-- <include file="$(find sobit_pro_bringup)/launch/azure_kinect.launch"/> -->
+
+        <!-- RealSense -->
+        <!-- <include file="$(find sobit_pro_bringup)/launch/realsense.launch"/> -->
+
+        <!-- RVIZ -->
+        <group if="$(arg enable_rviz)"> 
+            <node name="rviz" pkg="rviz" type="rviz" required="false" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro_bringup.rviz"/>
+        </group>
+    </group>
+</launch>

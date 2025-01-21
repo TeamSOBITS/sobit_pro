@@ -4,12 +4,12 @@
   <xacro:macro name="hand_transmission" params="prefix_hand prefix_finger">
 
     <xacro:position_joint_transmission joint="${prefix_hand}_joint"         reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix_hand}_inner_l_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix_hand}_inner_r_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix_hand}_outer_l_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix_hand}_outer_r_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix_hand}_${prefix_finger}_l_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix_hand}_${prefix_finger}_r_joint" reduction="1" />
+    <!-- <xacro:position_joint_transmission joint="${prefix_hand}_inner_l_joint" reduction="1" /> -->
+    <!-- <xacro:position_joint_transmission joint="${prefix_hand}_inner_r_joint" reduction="1" /> -->
+    <!-- <xacro:position_joint_transmission joint="${prefix_hand}_outer_l_joint" reduction="1" /> -->
+    <!-- <xacro:position_joint_transmission joint="${prefix_hand}_outer_r_joint" reduction="1" /> -->
+    <!-- <xacro:position_joint_transmission joint="${prefix_hand}_${prefix_finger}_l_joint" reduction="1" /> -->
+    <!-- <xacro:position_joint_transmission joint="${prefix_hand}_${prefix_finger}_r_joint" reduction="1" /> -->
 
   </xacro:macro>
 </robot>

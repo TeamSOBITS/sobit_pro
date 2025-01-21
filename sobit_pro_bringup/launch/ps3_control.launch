@@ -1,12 +1,17 @@
 <launch>
-    <arg name="diagonal_path" default="true"/>
+    <!-- Enable Diagonal -->
+    <arg name="enable_diagonal" default="True"/>
 
-    <!-- joy_node -->
-    <node name="joy_node" pkg="joy" type="joy_node"/>
+    <!-- Namespace -->
+    <arg name="robot_namespace" default="sobit_pro" />
 
-    <!-- joy_control -->
-    <node name="sobit_pro_ps3_control" pkg="sobit_pro_bringup" type="sobit_pro_ps3_control.py" output="screen">
-        <param name="diagonal_path" type="bool" value="$(arg diagonal_path)"/>
-    </node>
+    <group ns="$(arg robot_namespace)">
+        <!-- Launch Joy Node -->
+        <node name="joy_node" pkg="joy" type="joy_node"/>
 
+        <!-- Run PS3 Control for SOBIT PRO -->
+        <node name="ps3_control" pkg="sobit_pro_bringup" type="sobit_pro_ps3_control.py" output="screen">
+            <param name="enable_diagonal" type="bool" value="$(arg enable_diagonal)"/>
+        </node>
+    </group>
 </launch>

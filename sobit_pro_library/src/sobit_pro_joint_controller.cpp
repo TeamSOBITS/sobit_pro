@@ -4,19 +4,19 @@
 using namespace sobit_pro;
 
 SobitProJointController::SobitProJointController( const std::string& name ) : ROSCommonNode(name), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
-    pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
-    pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
+    pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("arm_trajectory_controller/command", 1);
+    pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("head_trajectory_controller/command", 1);
     
-    sub_curr_arm    = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
+    sub_curr_arm    = nh_.subscribe( "current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
 
     loadPose();
 }
 
 SobitProJointController::SobitProJointController() : ROSCommonNode(), nh_(), pnh_("~"), tfBuffer_(), tfListener_(tfBuffer_){
-    pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("/arm_trajectory_controller/command", 1);
-    pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("/head_trajectory_controller/command", 1);
+    pub_arm_joint_  = nh_.advertise<trajectory_msgs::JointTrajectory>("arm_trajectory_controller/command", 1);
+    pub_head_joint_ = nh_.advertise<trajectory_msgs::JointTrajectory>("head_trajectory_controller/command", 1);
 
-    sub_curr_arm    = nh_.subscribe( "/current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
+    sub_curr_arm    = nh_.subscribe( "current_state_array", 1, &SobitProJointController::callbackCurrArm, this );
 
     loadPose();
 }
@@ -367,9 +367,13 @@ bool SobitProJointController::moveHandToTargetTF( const std::string& target_name
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
+    std::string robot_name = (ros::this_node::getNamespace() != "/")
+                            ? ros::this_node::getNamespace().substr(1) + "/"
+                            : "";
+
     try{
-        tfBuffer_.canTransform("arm_base_link", target_name, ros::Time(0), ros::Duration(0.5));
-        transformStamped = tfBuffer_.lookupTransform ("arm_base_link", target_name, ros::Time(0));
+        tfBuffer_.canTransform(robot_name + "arm_base_link", target_name, ros::Time(0), ros::Duration(0.5));
+        transformStamped = tfBuffer_.lookupTransform (robot_name + "arm_base_link", target_name, ros::Time(0));
     } catch( tf2::TransformException &ex ){
         ROS_ERROR("%s", ex.what());
         return false;
@@ -411,9 +415,13 @@ bool SobitProJointController::moveHandToPlaceTF( const std::string& target_name,
     geometry_msgs::TransformStamped transformStamped;
     bool is_reached = false;
 
+    std::string robot_name = (ros::this_node::getNamespace() != "/")
+                            ? ros::this_node::getNamespace().substr(1) + "/"
+                            : "";
+
     try{
-        tfBuffer_.canTransform("arm_base_link", target_name, ros::Time(0), ros::Duration(2.0));
-        transformStamped = tfBuffer_.lookupTransform ("arm_base_link", target_name, ros::Time(0));
+        tfBuffer_.canTransform(robot_name + "arm_base_link", target_name, ros::Time(0), ros::Duration(2.0));
+        transformStamped = tfBuffer_.lookupTransform (robot_name + "arm_base_link", target_name, ros::Time(0));
     } catch( tf2::TransformException &ex ){
         ROS_ERROR("%s", ex.what());
         return false;

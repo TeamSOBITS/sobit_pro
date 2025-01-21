@@ -12,9 +12,6 @@ steer_trajectory_controller:
     - wheel_f_r_steer_joint
     - wheel_b_l_steer_joint
     - wheel_b_r_steer_joint
-  constraints:
-    stopped_velocity_tolerance: 0.5
-    goal_time: 0.05
   allow_partial_joints_goal: true
 
 wheel_trajectory_controller:
@@ -24,14 +21,3 @@ wheel_trajectory_controller:
     - wheel_f_r_drive_joint
     - wheel_b_l_drive_joint
     - wheel_b_r_drive_joint
-  gains: # Required because we're controlling a velocity interface
-    wheel_f_l_drive_joint: {p: 100,  d: 1, i: 1, i_clamp: 1} # Smaller 'p' term, since ff term does most of the work
-    wheel_f_r_drive_joint: {p: 100,  d: 1, i: 1, i_clamp: 1} # Smaller 'p' term, since ff term does most of the work
-    wheel_b_l_drive_joint: {p: 100,  d: 1, i: 1, i_clamp: 1} # Smaller 'p' term, since ff term does most of the work
-    wheel_b_r_drive_joint: {p: 100,  d: 1, i: 1, i_clamp: 1} # Smaller 'p' term, since ff term does most of the work
-
-  velocity_ff:
-    wheel_f_l_drive_joint: 1000.0
-    wheel_f_r_drive_joint: 1000.0
-    wheel_b_l_drive_joint: 1000.0
-    wheel_b_r_drive_joint: 1000.0

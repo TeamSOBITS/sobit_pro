@@ -47,6 +47,8 @@ Processing enabled by this node:
   <arg name="manager"             default="realsense2_camera_manager"/>
   <arg name="overwrite_robot_description" default="true" /> 
 
+  <arg name="robot_namespace"     default="sobit_pro/$(arg camera)"/>
+
  <!-- Camera device specific arguments -->
 
   <arg name="serial_no"           default=""/>
@@ -116,7 +118,7 @@ Processing enabled by this node:
   <arg name="sw_registered_processing"        default="true"  unless="$(arg align_depth)" />
   <arg name="sw_registered_processing"        default="false" if="$(arg align_depth)" />
 
-  <group ns="$(arg camera)">
+  <group ns="$(arg robot_namespace)">
 
     <!-- Launch the camera device nodelet-->
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
