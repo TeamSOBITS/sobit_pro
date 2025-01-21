@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<robot name="realsense_d415" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:macro name="realsense_d415" params="prefix parent">
+
+    <joint name="${prefix}_base_joint" type="fixed">
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+      <parent link="${parent}" />
+      <child link="${prefix}_base_link" />
+    </joint>
+
+    <link name="${prefix}_base_link">
+      <visual>
+        <origin xyz="0.15 0.15 -0.0155" rpy="0.0 0.0 ${90*M_PI/180}" />
+        <geometry>
+          <mesh filename="package://sobit_pro_description/meshes/body/plate_top_camera_mount.stl" scale="1.0 1.0 1.0" />
+        </geometry>
+        <material name="black" />
+      </visual>
+      <collision>
+        <origin xyz="0.13838397 0.0 -0.0155" rpy="0.0 0.0 ${90*M_PI/180}" />
+        <geometry>
+          <box size="0.09 0.03601924 0.011"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0.13838397 0.0 -0.0155" rpy="0.0 0.0 ${90*M_PI/180}" />
+        <mass value="0.027" />
+        <inertia ixx="${1/12*0.027*(0.09**2+0.011**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.027*(0.03601924**2+0.011**2)}" iyz="0.0"
+                 izz="${1/12*0.027*(0.09**2+0.03601924**2)}" />
+      </inertial>
+    </link>
+
+    <xacro:sensor_d415 parent="${prefix}_base_link" name="${prefix}" use_nominal_extrinsics="false" >
+      <origin xyz="0.173245 0.0 -0.02550" rpy="0.0 ${60*M_PI/180} 0.0" />
+    </xacro:sensor_d415>
+
+  </xacro:macro>
+</robot>
