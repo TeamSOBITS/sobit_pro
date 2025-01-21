@@ -31,9 +31,12 @@
         <!-- Azure Kinect -->
         <!-- <include file="$(find sobit_pro_bringup)/launch/azure_kinect.launch"/> -->
 
-        <!-- RealSense -->
-        <!-- <include file="$(find sobit_pro_bringup)/launch/realsense.launch"/> -->
+        <!-- RealSense Hand camera -->
+        <!-- <include file="$(find sobit_pro_bringup)/launch/realsense_hand.launch"/> -->
 
+        <!-- RealSense Plate Top camera -->
+        <!-- <include file="$(find sobit_pro_bringup)/launch/realsense_plate_top.launch"/> -->
+    
         <!-- RVIZ -->
         <group if="$(arg enable_rviz)"> 
             <node name="rviz" pkg="rviz" type="rviz" required="false" args="-d $(find sobit_pro_bringup)/rviz/sobit_pro_bringup.rviz"/>
