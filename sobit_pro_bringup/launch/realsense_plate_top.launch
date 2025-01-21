@@ -1,12 +1,18 @@
 <launch>
-  <arg name="serial_no"           default=""/>
-  <arg name="usb_port_id"         default=""/>
-  <arg name="device_type"         default=""/>
-  <arg name="json_file_path"      default=""/>
+
   <arg name="camera"              default="plate_top_camera"/>
   <arg name="tf_prefix"           default="$(arg camera)"/>
   <arg name="external_manager"    default="false"/>
   <arg name="manager"             default="realsense2_camera_manager"/>
+  <arg name="overwrite_robot_description" default="true" /> 
+
+  <!-- Camera device specific arguments -->
+
+  <arg name="serial_no"           default=""/>
+  <arg name="usb_port_id"         default=""/>
+  <arg name="device_type"         default=""/>
+  <arg name="json_file_path"      default=""/>
+  
   <arg name="output"              default="screen"/>
   <arg name="respawn"              default="false"/>
 
@@ -70,17 +76,15 @@
   <arg name="stereo_module/exposure/1"  default="7500"/>
   <arg name="stereo_module/gain/1"      default="16"/>
   <arg name="stereo_module/exposure/2"  default="1"/>
-  <arg name="stereo_module/gain/2"      default="16"/>
-  
-  
+  <arg name="stereo_module/gain/2"      default="16"/>  
 
   <group ns="$(arg camera)">
+
+    <!-- Launch the camera device nodelet-->
     <include file="$(find realsense2_camera)/launch/includes/nodelet.launch.xml">
       <arg name="tf_prefix"                value="$(arg tf_prefix)"/>
       <arg name="external_manager"         value="$(arg external_manager)"/>
       <arg name="manager"                  value="$(arg manager)"/>
-      <arg name="output"                   value="$(arg output)"/>
-      <arg name="respawn"                  value="$(arg respawn)"/>
       <arg name="serial_no"                value="$(arg serial_no)"/>
       <arg name="usb_port_id"              value="$(arg usb_port_id)"/>
       <arg name="device_type"              value="$(arg device_type)"/>
