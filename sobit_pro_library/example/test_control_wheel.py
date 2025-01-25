@@ -14,7 +14,7 @@ from geometry_msgs.msg import Twist
 def test_control_wheel():
     rospy.init_node('sobit_pro_test_control_wheel')
 
-    pub = rospy.Publisher("/mobile_base/commands/velocity",Twist,queue_size=1)
+    pub = rospy.Publisher("mobile_base/commands/velocity",Twist,queue_size=1)
     vel = Twist()
     vel.linear.x = 0.1
 
