@@ -1,43 +1,33 @@
 Panels:
-  - Class: rviz/Displays
-    Help Height: 0
+  - Class: rviz_common/Displays
+    Help Height: 78
     Name: Displays
     Property Tree Widget:
       Expanded:
         - /Global Options1
-        - /RobotModel1
-        - /TF1
-      Splitter Ratio: 0.47601476311683655
-    Tree Height: 1802
-  - Class: rviz/Selection
+        - /TF1/Frames1
+        - /TF1/Tree1
+      Splitter Ratio: 0.5905882120132446
+    Tree Height: 799
+  - Class: rviz_common/Selection
     Name: Selection
-  - Class: rviz/Tool Properties
+  - Class: rviz_common/Tool Properties
     Expanded:
-      - /2D Pose Estimate1
-      - /2D Nav Goal1
       - /Publish Point1
     Name: Tool Properties
     Splitter Ratio: 0.5886790156364441
-  - Class: rviz/Views
+  - Class: rviz_common/Views
     Expanded:
       - /Current View1
     Name: Views
     Splitter Ratio: 0.5
-  - Class: rviz/Time
-    Name: Time
-    SyncMode: 0
-    SyncSource: ""
-Preferences:
-  PromptSaveOnExit: true
-Toolbars:
-  toolButtonStyle: 2
 Visualization Manager:
   Class: ""
   Displays:
     - Alpha: 0.5
       Cell Size: 1
-      Class: rviz/Grid
-      Color: 160; 160; 164
+      Class: rviz_default_plugins/Grid
+      Color: 160; 160; 160
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
@@ -50,11 +40,19 @@ Visualization Manager:
         Z: 0
       Plane: XY
       Plane Cell Count: 10
-      Reference Frame: base_footprint
+      Reference Frame: <Fixed Frame>
       Value: true
-    - Alpha: 0.75
-      Class: rviz/RobotModel
-      Collision Enabled: false
+    - Alpha: 0.5
+      Class: rviz_default_plugins/RobotModel
+      Collision Enabled: true
+      Description File: ""
+      Description Source: Topic
+      Description Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /sobit_pro/robot_description
       Enabled: true
       Links:
         All Links Enabled: true
@@ -112,6 +110,21 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
+        camera_base:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_body:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_visor:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         cover_link:
           Alpha: 1
           Show Axes: false
@@ -206,16 +219,6 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        head_camera_plug_base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
-        head_camera_visor_base_link:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
-          Value: true
         head_pan_link:
           Alpha: 1
           Show Axes: false
@@ -292,6 +295,20 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+        plate_top_camera_base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        plate_top_camera_bottom_screw_frame:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+        plate_top_camera_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
         plate_top_link:
           Alpha: 1
           Show Axes: false
@@ -357,308 +374,335 @@ Visualization Manager:
           Show Axes: false
           Show Trail: false
           Value: true
+      Mass Properties:
+        Inertia: false
+        Mass: false
       Name: RobotModel
-      Robot Description: sobit_pro/robot_description
-      TF Prefix: ""
+      TF Prefix: sobit_pro
       Update Interval: 0
       Value: true
       Visual Enabled: true
-    - Class: rviz/TF
+    - Class: rviz_default_plugins/TF
       Enabled: true
-      Filter (blacklist): ""
-      Filter (whitelist): ""
       Frame Timeout: 15
       Frames:
-        All Enabled: false
-        arm_base_link:
+        All Enabled: true
+        sobit_pro/arm_base_link:
           Value: true
-        arm_elbow_lower_pan_link:
+        sobit_pro/arm_elbow_lower_pan_link:
           Value: true
-        arm_elbow_lower_tilt_link:
+        sobit_pro/arm_elbow_lower_tilt_link:
           Value: true
-        arm_elbow_upper_1_tilt_link:
+        sobit_pro/arm_elbow_upper_1_tilt_link:
           Value: true
-        arm_elbow_upper_2_tilt_link:
+        sobit_pro/arm_elbow_upper_2_tilt_link:
           Value: true
-        arm_shoulder_1_tilt_link:
+        sobit_pro/arm_shoulder_1_tilt_link:
           Value: true
-        arm_shoulder_2_tilt_link:
+        sobit_pro/arm_shoulder_2_tilt_link:
           Value: true
-        arm_wrist_tilt_link:
+        sobit_pro/arm_wrist_tilt_link:
           Value: true
-        back_base_link:
+        sobit_pro/back_base_link:
           Value: true
-        base_footprint:
+        sobit_pro/base_footprint:
           Value: true
-        base_link:
+        sobit_pro/base_link:
           Value: true
-        cover_link:
+        sobit_pro/camera_base:
           Value: true
-        hand_base_link:
+        sobit_pro/camera_body:
           Value: true
-        hand_camera_base_link:
+        sobit_pro/camera_visor:
           Value: true
-        hand_camera_bottom_screw_frame:
+        sobit_pro/cover_link:
           Value: true
-        hand_camera_color_frame:
+        sobit_pro/hand_base_link:
           Value: true
-        hand_camera_color_optical_frame:
+        sobit_pro/hand_camera_base_link:
           Value: true
-        hand_camera_depth_frame:
+        sobit_pro/hand_camera_bottom_screw_frame:
           Value: true
-        hand_camera_depth_optical_frame:
+        sobit_pro/hand_camera_color_frame:
           Value: true
-        hand_camera_infra1_frame:
+        sobit_pro/hand_camera_color_optical_frame:
           Value: true
-        hand_camera_infra1_optical_frame:
+        sobit_pro/hand_camera_depth_frame:
           Value: true
-        hand_camera_infra2_frame:
+        sobit_pro/hand_camera_depth_optical_frame:
           Value: true
-        hand_camera_infra2_optical_frame:
+        sobit_pro/hand_camera_infra1_frame:
           Value: true
-        hand_camera_link:
+        sobit_pro/hand_camera_infra1_optical_frame:
           Value: true
-        hand_finger_l_link:
+        sobit_pro/hand_camera_infra2_frame:
           Value: true
-        hand_finger_r_link:
+        sobit_pro/hand_camera_infra2_optical_frame:
           Value: true
-        hand_inner_l_link:
+        sobit_pro/hand_camera_link:
           Value: true
-        hand_link:
+        sobit_pro/hand_finger_l_link:
           Value: true
-        hand_outer_l_link:
+        sobit_pro/hand_finger_r_link:
           Value: true
-        hand_outer_r_link:
+        sobit_pro/hand_inner_l_link:
           Value: true
-        head_base_link:
+        sobit_pro/hand_link:
           Value: true
-        head_camera_base:
+        sobit_pro/hand_outer_l_link:
           Value: true
-        head_camera_plug_base_link:
+        sobit_pro/hand_outer_r_link:
           Value: true
-        head_camera_visor_base_link:
+        sobit_pro/head_base_link:
           Value: true
-        head_pan_link:
+        sobit_pro/head_camera_base:
           Value: true
-        head_tilt_link:
+        sobit_pro/head_pan_link:
           Value: true
-        lidar_base_link:
+        sobit_pro/head_tilt_link:
           Value: true
-        lidar_laser:
+        sobit_pro/lidar_base_link:
           Value: true
-        lidar_laser_mount:
+        sobit_pro/lidar_laser:
           Value: true
-        matrix_board_link:
+        sobit_pro/lidar_laser_mount:
           Value: true
-        matrix_sensor_0_link:
+        sobit_pro/matrix_board_link:
           Value: true
-        matrix_sensor_1_link:
+        sobit_pro/matrix_sensor_0_link:
           Value: true
-        matrix_sensor_2_link:
+        sobit_pro/matrix_sensor_1_link:
           Value: true
-        matrix_sensor_3_link:
+        sobit_pro/matrix_sensor_2_link:
           Value: true
-        matrix_sensor_4_link:
+        sobit_pro/matrix_sensor_3_link:
           Value: true
-        matrix_sensor_5_link:
+        sobit_pro/matrix_sensor_4_link:
           Value: true
-        matrix_sensor_6_link:
+        sobit_pro/matrix_sensor_5_link:
           Value: true
-        mic_base_link:
+        sobit_pro/matrix_sensor_6_link:
           Value: true
-        mic_link:
+        sobit_pro/mic_base_link:
           Value: true
-        plate_bottom_link:
+        sobit_pro/mic_link:
           Value: true
-        plate_middle_link:
+        sobit_pro/plate_bottom_link:
           Value: true
-        plate_top_link:
+        sobit_pro/plate_middle_link:
           Value: true
-        wheel_b_l_drive_link:
+        sobit_pro/plate_top_camera_base_link:
           Value: true
-        wheel_b_l_steer_base_link:
+        sobit_pro/plate_top_camera_bottom_screw_frame:
           Value: true
-        wheel_b_l_steer_link:
+        sobit_pro/plate_top_camera_link:
           Value: true
-        wheel_b_r_drive_link:
+        sobit_pro/plate_top_link:
           Value: true
-        wheel_b_r_steer_base_link:
+        sobit_pro/wheel_b_l_drive_link:
           Value: true
-        wheel_b_r_steer_link:
+        sobit_pro/wheel_b_l_steer_base_link:
           Value: true
-        wheel_f_l_drive_link:
+        sobit_pro/wheel_b_l_steer_link:
           Value: true
-        wheel_f_l_steer_base_link:
+        sobit_pro/wheel_b_r_drive_link:
           Value: true
-        wheel_f_l_steer_link:
+        sobit_pro/wheel_b_r_steer_base_link:
           Value: true
-        wheel_f_r_drive_link:
+        sobit_pro/wheel_b_r_steer_link:
           Value: true
-        wheel_f_r_steer_base_link:
+        sobit_pro/wheel_f_l_drive_link:
           Value: true
-        wheel_f_r_steer_link:
+        sobit_pro/wheel_f_l_steer_base_link:
           Value: true
-      Marker Alpha: 1
-      Marker Scale: 0.25
+        sobit_pro/wheel_f_l_steer_link:
+          Value: true
+        sobit_pro/wheel_f_r_drive_link:
+          Value: true
+        sobit_pro/wheel_f_r_steer_base_link:
+          Value: true
+        sobit_pro/wheel_f_r_steer_link:
+          Value: true
+      Marker Scale: 0.15000000596046448
       Name: TF
-      Show Arrows: true
+      Show Arrows: false
       Show Axes: true
       Show Names: true
       Tree:
-        base_footprint:
-          base_link:
-            plate_bottom_link:
-              lidar_base_link:
-                lidar_laser_mount:
-                  lidar_laser:
+        sobit_pro/base_footprint:
+          sobit_pro/base_link:
+            sobit_pro/camera_base:
+              sobit_pro/camera_body:
+                {}
+              sobit_pro/camera_visor:
+                {}
+            sobit_pro/plate_bottom_link:
+              sobit_pro/lidar_base_link:
+                sobit_pro/lidar_laser_mount:
+                  sobit_pro/lidar_laser:
                     {}
-              plate_middle_link:
-                plate_top_link:
-                  arm_base_link:
-                    arm_shoulder_1_tilt_link:
-                      arm_elbow_upper_1_tilt_link:
-                        arm_elbow_lower_tilt_link:
-                          arm_elbow_lower_pan_link:
-                            arm_wrist_tilt_link:
-                              hand_base_link:
-                                hand_inner_l_link:
-                                  hand_finger_l_link:
+              sobit_pro/plate_middle_link:
+                sobit_pro/plate_top_link:
+                  sobit_pro/arm_base_link:
+                    sobit_pro/arm_shoulder_1_tilt_link:
+                      sobit_pro/arm_elbow_upper_1_tilt_link:
+                        sobit_pro/arm_elbow_lower_tilt_link:
+                          sobit_pro/arm_elbow_lower_pan_link:
+                            sobit_pro/arm_wrist_tilt_link:
+                              sobit_pro/hand_base_link:
+                                sobit_pro/hand_inner_l_link:
+                                  sobit_pro/hand_finger_l_link:
                                     {}
-                                hand_link:
-                                  hand_finger_r_link:
+                                sobit_pro/hand_link:
+                                  sobit_pro/hand_finger_r_link:
                                     {}
-                                hand_outer_l_link:
+                                sobit_pro/hand_outer_l_link:
                                   {}
-                                hand_outer_r_link:
+                                sobit_pro/hand_outer_r_link:
                                   {}
-                              hand_camera_base_link:
-                                hand_camera_bottom_screw_frame:
-                                  hand_camera_link:
-                                    hand_camera_color_frame:
-                                      hand_camera_color_optical_frame:
+                              sobit_pro/hand_camera_base_link:
+                                sobit_pro/hand_camera_bottom_screw_frame:
+                                  sobit_pro/hand_camera_link:
+                                    sobit_pro/hand_camera_color_frame:
+                                      sobit_pro/hand_camera_color_optical_frame:
                                         {}
-                                    hand_camera_depth_frame:
-                                      hand_camera_depth_optical_frame:
+                                    sobit_pro/hand_camera_depth_frame:
+                                      sobit_pro/hand_camera_depth_optical_frame:
                                         {}
-                                    hand_camera_infra1_frame:
-                                      hand_camera_infra1_optical_frame:
+                                    sobit_pro/hand_camera_infra1_frame:
+                                      sobit_pro/hand_camera_infra1_optical_frame:
                                         {}
-                                    hand_camera_infra2_frame:
-                                      hand_camera_infra2_optical_frame:
+                                    sobit_pro/hand_camera_infra2_frame:
+                                      sobit_pro/hand_camera_infra2_optical_frame:
                                         {}
-                      arm_elbow_upper_2_tilt_link:
+                      sobit_pro/arm_elbow_upper_2_tilt_link:
                         {}
-                    arm_shoulder_2_tilt_link:
+                    sobit_pro/arm_shoulder_2_tilt_link:
                       {}
-                  back_base_link:
-                    head_base_link:
-                      head_pan_link:
-                        head_tilt_link:
-                          head_camera_base:
-                            head_camera_plug_base_link:
-                              head_camera_visor_base_link:
+                  sobit_pro/back_base_link:
+                    sobit_pro/head_base_link:
+                      sobit_pro/head_pan_link:
+                        sobit_pro/head_tilt_link:
+                          sobit_pro/head_camera_base:
+                            sobit_pro/matrix_board_link:
+                              sobit_pro/matrix_sensor_0_link:
                                 {}
-                            matrix_board_link:
-                              matrix_sensor_0_link:
+                              sobit_pro/matrix_sensor_1_link:
                                 {}
-                              matrix_sensor_1_link:
+                              sobit_pro/matrix_sensor_2_link:
                                 {}
-                              matrix_sensor_2_link:
+                              sobit_pro/matrix_sensor_3_link:
                                 {}
-                              matrix_sensor_3_link:
+                              sobit_pro/matrix_sensor_4_link:
                                 {}
-                              matrix_sensor_4_link:
+                              sobit_pro/matrix_sensor_5_link:
                                 {}
-                              matrix_sensor_5_link:
+                              sobit_pro/matrix_sensor_6_link:
                                 {}
-                              matrix_sensor_6_link:
-                                {}
-                    mic_base_link:
-                      mic_link:
+                    sobit_pro/mic_base_link:
+                      sobit_pro/mic_link:
                         {}
-                  cover_link:
+                  sobit_pro/cover_link:
                     {}
-                wheel_b_l_steer_base_link:
-                  wheel_b_l_steer_link:
-                    wheel_b_l_drive_link:
+                  sobit_pro/plate_top_camera_base_link:
+                    sobit_pro/plate_top_camera_bottom_screw_frame:
+                      sobit_pro/plate_top_camera_link:
+                        {}
+                sobit_pro/wheel_b_l_steer_base_link:
+                  sobit_pro/wheel_b_l_steer_link:
+                    sobit_pro/wheel_b_l_drive_link:
                       {}
-                wheel_b_r_steer_base_link:
-                  wheel_b_r_steer_link:
-                    wheel_b_r_drive_link:
+                sobit_pro/wheel_b_r_steer_base_link:
+                  sobit_pro/wheel_b_r_steer_link:
+                    sobit_pro/wheel_b_r_drive_link:
                       {}
-                wheel_f_l_steer_base_link:
-                  wheel_f_l_steer_link:
-                    wheel_f_l_drive_link:
+                sobit_pro/wheel_f_l_steer_base_link:
+                  sobit_pro/wheel_f_l_steer_link:
+                    sobit_pro/wheel_f_l_drive_link:
                       {}
-                wheel_f_r_steer_base_link:
-                  wheel_f_r_steer_link:
-                    wheel_f_r_drive_link:
+                sobit_pro/wheel_f_r_steer_base_link:
+                  sobit_pro/wheel_f_r_steer_link:
+                    sobit_pro/wheel_f_r_drive_link:
                       {}
       Update Interval: 0
       Value: true
   Enabled: true
   Global Options:
-    Background Color: 114; 159; 207
-    Default Light: true
-    Fixed Frame: base_link
+    Background Color: 225; 225; 225
+    Fixed Frame: sobit_pro/base_footprint
     Frame Rate: 30
   Name: root
   Tools:
-    - Class: rviz/Interact
-      Hide Inactive Objects: true
-    - Class: rviz/MoveCamera
-    - Class: rviz/Select
-    - Class: rviz/FocusCamera
-    - Class: rviz/Measure
-    - Class: rviz/SetInitialPose
-      Theta std deviation: 0.2617993950843811
-      Topic: /initialpose
-      X std deviation: 0.5
-      Y std deviation: 0.5
-    - Class: rviz/SetGoal
-      Topic: /move_base_simple/goal
-    - Class: rviz/PublishPoint
+    - Class: rviz_default_plugins/MoveCamera
+    - Class: rviz_default_plugins/Select
+    - Class: rviz_default_plugins/FocusCamera
+    - Class: rviz_default_plugins/Measure
+      Line color: 128; 128; 0
+    - Class: rviz_default_plugins/SetInitialPose
+      Covariance x: 0.25
+      Covariance y: 0.25
+      Covariance yaw: 0.06853891909122467
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /initialpose
+    - Class: rviz_default_plugins/SetGoal
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /move_base_simple/goal
+    - Class: rviz_default_plugins/PublishPoint
       Single click: true
-      Topic: /clicked_point
+      Topic:
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+        Value: /clicked_point
+  Transformation:
+    Current:
+      Class: rviz_default_plugins/TF
   Value: true
   Views:
     Current:
-      Class: rviz/ThirdPersonFollower
-      Distance: 2.4640002250671387
+      Class: rviz_default_plugins/Orbit
+      Distance: 2.7817835807800293
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
-      Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.30609071254730225
-        Y: 0.14150720834732056
-        Z: 0
-      Focal Shape Fixed Size: false
+        X: -0.21876677870750427
+        Y: -0.3345469534397125
+        Z: 0.6696410179138184
+      Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.7853981852531433
+      Pitch: 0.25999996066093445
       Target Frame: <Fixed Frame>
-      Yaw: 0.7853981852531433
+      Value: Orbit (rviz_default_plugins)
+      Yaw: 0.8949997425079346
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 2032
+  Height: 1016
   Hide Left Dock: false
-  Hide Right Dock: true
-  QMainWindow State: 000000ff00000000fd0000000400000000000002c500000766fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b000000a700fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a7fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000065000007660000017000fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000013e0000070cfc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a0056006900650077007300000000650000070c0000011700fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e1000001970000000300000e740000004efc0100000002fb0000000800540069006d0065000000000000000e74000004f100fffffffb0000000800540069006d0065010000000000000450000000000000000000000ba30000076600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000001ab000003a6fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c0061007900730100000039000003a6000000c500fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f000003a6fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730100000039000003a60000009d00fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000004420000003efc0100000002fb0000000800540069006d00650100000000000004420000000000000000fb0000000800540069006d00650100000000000004500000000000000000000004ba000003a600000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
-    collapsed: false
-  Time:
     collapsed: false
   Tool Properties:
     collapsed: false
   Views:
-    collapsed: true
-  Width: 3700
-  X: 140
-  Y: 54
+    collapsed: false
+  Width: 1920
+  X: 1920
+  Y: 27

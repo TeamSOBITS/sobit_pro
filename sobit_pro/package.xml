@@ -8,7 +8,7 @@
   <description>
     ROS packages for SOBIT PRO (meta package).
   </description>
-  <maintainer email="kvalentincardenas@gmail.com">Keith Valentin</maintainer>
+  <maintainer email="simjiahao9@gmail.com">Sim Jiahao</maintainer>
 
   <license>BSD</license>
 
@@ -17,13 +17,17 @@
   <url type="bugtracker">https://github.com/TeamSOBITS/sobit_pro/issues</url>
   <author email="choi.7f@gmail.com">Team SOBITS</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
   
-  <exec_depend>sobit_pro_bringup</exec_depend>
-  <exec_depend>sobit_pro_control</exec_depend>
+  <!-- <exec_depend>sobit_pro_bringup</exec_depend> -->
+  <!-- <exec_depend>sobit_pro_control</exec_depend> -->
   <exec_depend>sobit_pro_description</exec_depend>
-  <exec_depend>sobit_pro_library</exec_depend>
+  <!-- <exec_depend>sobit_pro_library</exec_depend> -->
   
-  <export><metapackage/></export>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>

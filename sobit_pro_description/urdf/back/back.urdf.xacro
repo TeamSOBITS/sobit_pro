@@ -14,7 +14,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/back/back_base.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/back/back_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="grey" />
       </visual>

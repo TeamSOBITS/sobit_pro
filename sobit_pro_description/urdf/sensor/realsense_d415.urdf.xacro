@@ -13,7 +13,7 @@
       <visual>
         <origin xyz="0.15 0.15 -0.0155" rpy="0.0 0.0 ${90*M_PI/180}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_top_camera_mount.stl" scale="1.0 1.0 1.0" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/body/plate_top_camera_mount.stl" scale="1.0 1.0 1.0" />
         </geometry>
         <material name="black" />
       </visual>

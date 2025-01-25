@@ -15,7 +15,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 0.0" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_base.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/arm/arm_base.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -48,7 +48,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_upper.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/arm/arm_upper.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -94,7 +94,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_inner.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/arm/arm_inner.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -140,7 +140,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_tilt.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/arm/arm_elbow_lower_tilt.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -173,7 +173,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/arm/arm_elbow_lower_pan.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/arm/arm_elbow_lower_pan.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>

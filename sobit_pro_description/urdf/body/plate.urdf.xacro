@@ -13,7 +13,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/body/plate_bottom.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -43,7 +43,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/body/plate_middle.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
@@ -73,7 +73,7 @@
       <visual>
         <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
         <geometry>
-          <mesh filename="package://sobit_pro_description/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/body/plate_top.stl" scale="0.001 0.001 0.001" />
         </geometry>
         <material name="black" />
       </visual>
