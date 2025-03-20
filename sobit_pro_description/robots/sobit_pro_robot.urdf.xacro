@@ -5,6 +5,8 @@
   <!-- Add Common Xacro: transmissions, colors -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/common.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/materials.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/transmission.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/controllers.urdf.xacro" />
   
   <!-- Add URDF: links, joints -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/base/base.urdf.xacro" />

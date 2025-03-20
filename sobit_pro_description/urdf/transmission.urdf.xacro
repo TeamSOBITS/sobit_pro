@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- SOBIT MINI (transmission) -->
+<robot name="sobit_mini_transmission" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Transmission macro: Position -->
+  <xacro:macro name="SimpleTransmissionPosition" params="joint reduction">
+    <transmission name="${joint}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint}">
+        <hardwareInterface>hardware_interface/PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${joint}_actuator">
+        <mechanicalReduction>${reduction}</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- Transmission macro: Effort -->
+  <xacro:macro name="SimpleTransmissionEffort" params="joint reduction">
+    <transmission name="${joint}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint}">
+        <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${joint}_actuator">
+        <mechanicalReduction>${reduction}</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+  <!-- Transmission macro: Velocity -->
+  <xacro:macro name="SimpleTransmissionVelocity" params="joint reduction">
+    <transmission name="${joint}_transmission">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint}">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${joint}_actuator">
+        <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+        <mechanicalReduction>${reduction}</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+
+</robot>

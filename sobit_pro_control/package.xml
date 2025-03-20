@@ -2,19 +2,14 @@
 <package format="3">
   <name>sobit_pro_control</name>
   <version>0.1.0</version>
-  <description>Control package for sobit pro using ROS 2</description>
-  <maintainer email="your_email@example.com">Your Name</maintainer>
-  <license>Apache-2.0</license>
+  <description>TODO: Package description</description>
+  <maintainer email="sobits@todo.todo">sobits</maintainer>
+  <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <depend>rclcpp</depend>
-  <depend>rclcpp_components</depend>
-  <depend>std_msgs</depend>
-  <depend>tf2</depend>
-  <depend>tf2_ros</depend>
-  <depend>tf2_geometry_msgs</depend>
-  <depend>dynamixel_sdk</depend>
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
