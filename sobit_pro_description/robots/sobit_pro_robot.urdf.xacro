@@ -13,7 +13,7 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/body/plate.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/body/cover.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/back/back.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel.urdf.xacro" />
+  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel.urdf.xacro" /> -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.urdf.xacro" />
@@ -48,7 +48,7 @@
   <xacro:if value="${$(arg enable_mb) and $(arg enable_arm) and $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
-    <xacro:wheel prefix="wheel" parent="plate_middle_link" />
+    <!-- <xacro:wheel prefix="wheel" parent="plate_middle_link" /> -->
     <xacro:cover prefix="cover" parent="plate_top_link" />
     <xacro:back  prefix="back"  parent="plate_top_link" />
     <xacro:head  prefix="head"  parent="back_base_link" />
@@ -67,7 +67,7 @@
   <xacro:if value="${$(arg enable_mb) and $(arg enable_arm) and not $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
-    <xacro:wheel prefix="wheel" parent="plate_middle_link" />
+    <!-- <xacro:wheel prefix="wheel" parent="plate_middle_link" /> -->
     <xacro:cover prefix="cover" parent="plate_top_link" />
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
     <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
@@ -81,7 +81,7 @@
   <xacro:if value="${$(arg enable_mb) and not $(arg enable_arm) and $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
-    <xacro:wheel prefix="wheel" parent="plate_middle_link" />
+    <!-- <xacro:wheel prefix="wheel" parent="plate_middle_link" /> -->
     <xacro:cover prefix="cover" parent="plate_top_link" />
     <xacro:back  prefix="back"  parent="plate_top_link" />
     <xacro:head  prefix="head"  parent="back_base_link" />
@@ -96,7 +96,7 @@
   <xacro:if value="${$(arg enable_mb) and not $(arg enable_arm) and not $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
-    <xacro:wheel prefix="wheel" parent="plate_middle_link" />
+    <!-- <xacro:wheel prefix="wheel" parent="plate_middle_link" /> -->
     <xacro:cover prefix="cover" parent="plate_top_link" />
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
   </xacro:if>
