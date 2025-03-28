@@ -17,5 +17,9 @@
       <origin xyz="0.0 0 0.0" rpy="0 0 0"/>
     </xacro:azure_kinect> -->
 
+    <xacro:azure_kinect parent="${prefix}_base" tf_prefix="${prefix}_" add_cover="false">
+      <origin xyz="0.0 0 0.0" rpy="0 0 0"/>
+    </xacro:azure_kinect>
+
   </xacro:macro>
 </robot>

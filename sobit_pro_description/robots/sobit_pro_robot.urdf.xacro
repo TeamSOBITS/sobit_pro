@@ -1,6 +1,5 @@
 <?xml version="1.0" ?>
-<robot name="sobit_pro"
-       xmlns:xacro="http://www.ros.org/wiki/xacro" >
+<robot name="sobit_pro" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Add Common Xacro: transmissions, colors -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/common.xacro" />
@@ -27,7 +26,8 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_d415.urdf.xacro" />
 
   <xacro:include filename="$(find urg_node)/urdf/hokuyo_ust.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/azure_kinect.urdf.xacro" />
+  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/azure_kinect.urdf.xacro" /> -->
+  <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" />
   <!-- <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" /> -->
   <!-- <xacro:include filename="$(find realsense2_description)/urdf/_l515.urdf.xacro" /> -->
   <xacro:include filename="$(find realsense2_description)/urdf/_d405.urdf.xacro" />
@@ -39,9 +39,14 @@
   <xacro:arg name="enable_arm"  default="True" />
   <xacro:arg name="enable_head" default="True" />
 
-  <xacro:arg name="enable_gz"   default="False" />
+  <!-- Add variables -->
+  <xacro:arg name="enable_gz"                 default="False" />
+  <xacro:arg name="enable_gz_lidar"           default="True" />
+  <xacro:arg name="robot_name"                default="sobit_pro" />
 
-  <xacro:arg name="robot_namespace" default="sobit_pro" />
+  <!-- <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" /> -->
+  <!-- <xacro:open_manipulator_x_ros2_control name="open_manipulator_x_ros2_control" /> -->
+  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
 
 
   <!-- enable_mb: true, enable_arm: true, enable_head: true -->
