@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="sobit_pro_controllers" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="controllers" params="name enable_gz:=False robot_name:=sobit_pro">
+  <xacro:macro name="controllers_DxUpper" params="name enable_gz:=False robot_name:=sobit_pro">
 
     <ros2_control name="${name}" type="system">
       <hardware>

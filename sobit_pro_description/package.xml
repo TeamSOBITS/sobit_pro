@@ -4,28 +4,10 @@
   <name>sobit_pro_description</name>
   <version>0.0.0</version>
   <description>TODO: Package description</description>
-  <maintainer email="simjiahao9@gmail.com">Sim Jiahao</maintainer>
-
-  <license>BSD-3-Clause</license>
-
-  <url type="website">https://home.soka.ac.jp/~choi/index.html</url>
-  <url type="repository">https://github.com/TeamSOBITS/sobit_pro</url>
-  <url type="bugtracker">https://github.com/TeamSOBITS/sobit_pro/issues</url>
-  <author email="choi.7f@gmail.com">Team SOBITS</author>
+  <maintainer email="sobits@todo.todo">sobits</maintainer>
+  <license>TODO: License declaration</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
-
-  <depend>joint_state_publisher</depend>
-  <depend>joint_state_publisher_gui</depend>
-  <depend>robot_state_publisher</depend>
-  <depend>xacro</depend>
-  <depend>urdf</depend>
-  <depend>rviz2</depend>
-  <depend>launch</depend>
-  <depend>launch_ros</depend>
-  <depend>ros2_control</depend>
-  <depend>ros2_controllers</depend>
-  <depend>dynamixel_hardware</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

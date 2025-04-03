@@ -22,7 +22,7 @@ def generate_launch_description():
     bringup_pkg = robot_name + "_bringup"
 
     rviz_config = os.path.join(get_package_share_directory(
-        bringup_pkg), "rviz", "real_2.rviz")
+        bringup_pkg), "rviz", "real.rviz")
     
     urg_config = os.path.join(get_package_share_directory(
         bringup_pkg), "config", "urg_node_params.yaml")

@@ -63,20 +63,20 @@ def launch_gz(context, *args, **kwargs):
         output='screen'
     )
 
-    velocity_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-             '--set-state', 'configured',
-             '--controller-manager', robot_name+'/controller_manager',
-             'velocity_controller'
-        ],
-        output='screen'
-    )
-
     joint_trajectory_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
              '--set-state', 'active',
              '--controller-manager', robot_name+'/controller_manager',
              'joint_trajectory_controller'
+        ],
+        output='screen'
+    )
+
+    velocity_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+             '--set-state', 'configured',
+             '--controller-manager', robot_name+'/controller_manager',
+             'velocity_controller'
         ],
         output='screen'
     )

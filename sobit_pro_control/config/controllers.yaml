@@ -25,6 +25,21 @@
       - hand_joint
       - head_pan_joint
       - head_tilt_joint
+      - wheel_f_l_steer_joint
+      - wheel_f_r_steer_joint
+      - wheel_b_l_steer_joint
+      - wheel_b_r_steer_joint
+      - wheel_f_l_drive_joint
+      - wheel_f_r_drive_joint
+      - wheel_b_l_drive_joint
+      - wheel_b_r_drive_joint
+
+    command_interfaces:
+      - velocity
+
+    state_interfaces:
+      - velocity
+
 
 
 
@@ -41,11 +56,16 @@
       - hand_joint
       - head_pan_joint
       - head_tilt_joint
+      - wheel_f_l_steer_joint
+      - wheel_f_r_steer_joint
+      - wheel_b_l_steer_joint
+      - wheel_b_r_steer_joint
 
 
     command_interfaces:
       - position
+      # - velocity
 
     state_interfaces:
       - position
-      - velocity
+      # - velocity

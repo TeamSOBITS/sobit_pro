@@ -1,32 +1,21 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.8)
 project(sobit_pro_bringup)
 
-# Use ament_python since this package contains Python scripts
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
+
+# find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclpy REQUIRED)
-find_package(sensor_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
+# uncomment the following section in order to fill in
+# further dependencies manually.
+# find_package(<dependency> REQUIRED)
 
-find_package(robot_state_publisher REQUIRED)
-find_package(xacro REQUIRED)
-find_package(urdf REQUIRED)
-find_package(rviz2 REQUIRED)
-find_package(ros2_control REQUIRED)
-find_package(ros2_controllers REQUIRED)
-find_package(dynamixel_hardware REQUIRED)
-
-# Install Python scripts
-install(DIRECTORY 
+install(DIRECTORY
   launch
   rviz
   config
   DESTINATION share/${PROJECT_NAME}
-)
-
-install(DIRECTORY 
-  scripts
-  DESTINATION lib/${PROJECT_NAME}
-  USE_SOURCE_PERMISSIONS
 )
 
 if(BUILD_TESTING)
@@ -41,5 +30,4 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
-# Export package information
 ament_package()
