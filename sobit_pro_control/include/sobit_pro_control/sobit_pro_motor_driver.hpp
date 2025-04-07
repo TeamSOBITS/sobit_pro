@@ -2,7 +2,8 @@
 #define SOBIT_PRO_MOTOR_DRIVER_H_
 
 #include <iostream>
-#include <dynamixel_sdk/dynamixel_sdk.h>
+// #include <dynamixel_sdk/dynamixel_sdk.h>
+#include <dynamixel_workbench_toolbox/dynamixel_workbench.h>
 
 
 class SobitProMotorDriver{
@@ -27,8 +28,8 @@ class SobitProMotorDriver{
         const int PROTOCOL_VERSION                = 2.0; // float
 
         // Default setting
-        const int BAUDRATE                        = 3000000; // Baudrate of Dynamixel
-        const char *DEVICENAME                    = "/dev/input/dx_lower";
+        const int BAUDRATE                        = 1000000; // Baudrate of Dynamixel
+        const char *DEVICENAME                    = "/dev/ttyUSB1";
 
         const int TORQUE_ENABLE                   = 1;       // Value for enabling the torque
         const int TORQUE_DISABLE                  = 0;       // Value for disabling the torque

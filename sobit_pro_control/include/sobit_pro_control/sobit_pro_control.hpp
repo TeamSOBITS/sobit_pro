@@ -7,10 +7,12 @@
 #include <geometry_msgs/msg/twist.hpp>
 #include <geometry_msgs/msg/point.hpp>
 
-class SobitProControl {
+# include <chrono>
+
+class SobitProControl : public rclcpp::Node{
     private:
-        std::array<int32_t, 4> steer_pos = {0, 0, 0, 0};
-        std::array<int32_t, 4> wheel_vel = {0, 0, 0, 0};
+        int32_t steer_pos[4] = {0, };
+        int32_t wheel_vel[4] = {0, };
 
         enum MODE {
             NONE = -1,
@@ -32,13 +34,15 @@ class SobitProControl {
         static constexpr double WHEEL_LENGTH    = M_PI * WHEEL_DIAMETER; // Wheel Length [m]
         static constexpr double BODY_DIAMETER   = 0.44775010;  // Robot Diameter [m] (respect to the center of wheels)
         static constexpr double TRACK           = 0.31660713;  // Distance between left and right wheels [m]
+        static constexpr const int DXL_MOVING_STATUS_THRESHOLD = 20; // Dynamixel moving status threshold  // old param : 10
 
         double steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
         double wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
 
         // Constructor
         SobitProControl()
-            : steer_fl_goal_pos(0), steer_fr_goal_pos(0),
+            : rclcpp::Node("sobit_pro_control"),
+              steer_fl_goal_pos(0), steer_fr_goal_pos(0),
               steer_bl_goal_pos(0), steer_br_goal_pos(0),
               wheel_fl_goal_vel(0), wheel_fr_goal_vel(0),
               wheel_bl_goal_vel(0), wheel_br_goal_vel(0) {}
@@ -56,8 +60,8 @@ class SobitProControl {
 
         void setParams(const geometry_msgs::msg::Twist& vel_twist);
         inline int getMotionMode() const { return static_cast<int>(motion_mode); }
-        std::array<int32_t, 4> setSteerPos();
-        std::array<int32_t, 4> setWheelVel();
+        int32_t *setSteerPos();
+        int32_t *setWheelVel();
 };
 
 #endif // SOBIT_PRO_CONTROL_HPP_

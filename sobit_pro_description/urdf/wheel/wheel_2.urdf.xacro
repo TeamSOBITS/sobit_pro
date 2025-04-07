@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="sobit_pro"
        xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:property name="M_PI" value="3.14159265359" />
+  <!-- <xacro:property name="M_PI" value="3.14159265359" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel.transmission.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/materials.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/materials.urdf.xacro" /> -->
 
   <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 

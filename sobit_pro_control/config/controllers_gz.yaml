@@ -9,14 +9,14 @@
     joint_trajectrory_controller:
       type: "joint_trajectory_controller/JointTrajectoryController"
     
-    # steer_trajectory_controller:
-    #   type: "position_controllers/JointTrajectoryController"
+    steer_trajectory_controller:
+      type: "position_controllers/JointTrajectoryController"
 
-    # wheel_trajectory_controller:
-    #   type: "velocity_controllers/JointGroupVelocityController"
+    wheel_trajectory_controller:
+      type: "velocity_controllers/JointGroupVelocityController"
 
     diff_controller:
-      # type: "diff_drive_controller/DiffDriveController"
+      type: "diff_drive_controller/DiffDriveController"
 
     joint_state_broadcaster:
       type: "joint_state_broadcaster/JointStateBroadcaster"

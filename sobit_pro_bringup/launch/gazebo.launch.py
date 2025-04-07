@@ -23,7 +23,7 @@ def generate_launch_description():
 
     rviz_file = os.path.join(description_package,
                             'rviz',
-                            'gazebo.rviz')
+                            'real.rviz')
 
     doc = xacro.parse(open(xacro_file))
     xacro.process_doc(doc)

@@ -1,21 +1,96 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10.2)
 project(sobit_pro_control)
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
-# find dependencies
-find_package(ament_cmake REQUIRED)
-# uncomment the following section in order to fill in
-# further dependencies manually.
-# find_package(<dependency> REQUIRED)
 
-install(DIRECTORY
-  config
-  DESTINATION share/${PROJECT_NAME}
+## Find ament_cmake and required packages
+find_package(ament_cmake REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(rclcpp_components REQUIRED)
+find_package(dynamixel_sdk REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(trajectory_msgs REQUIRED)
+
+find_package(control_msgs REQUIRED)
+find_package(rclcpp_action REQUIRED)
+
+find_package(dynamixel_workbench_toolbox REQUIRED)
+
+###########
+## Build ##
+###########
+
+## Include directories
+include_directories(
+  include
 )
 
+add_library(${PROJECT_NAME} SHARED
+  src/sobit_pro_main.cpp
+  src/sobit_pro_control.cpp
+  # src/sobit_pro_motor_driver.cpp
+  src/sobit_pro_odometry.cpp
+)
+
+# ament_target_dependencies(sobit_pro_control rclcpp nav_msgs tf2_ros)
+
+# target_include_directories(${PROJECT_NAME} PUBLIC
+#   include
+# )
+
+## Link dependencies
+ament_target_dependencies(${PROJECT_NAME}
+  "rclcpp"
+  "rclcpp_components"
+  "tf2"
+  "tf2_ros"
+  "tf2_geometry_msgs"
+  "std_msgs"
+  "nav_msgs"
+  "sensor_msgs"
+  "trajectory_msgs"
+
+  "control_msgs"
+  "rclcpp_action"
+  
+  "dynamixel_workbench_toolbox"
+)
+
+#############
+## Install ##
+#############
+
+# install(TARGETS ${PROJECT_NAME}
+#   DESTINATION lib/${PROJECT_NAME}
+# )
+
+install(DIRECTORY include/
+  DESTINATION include/
+)
+
+# install(DIRECTORY launch
+#   DESTINATION share/${PROJECT_NAME}/
+# )
+
+install(DIRECTORY config
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# install(DIRECTORY urdf
+#   DESTINATION share/${PROJECT_NAME}/
+# )
+
+#############
+## Testing ##
+#############
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   # the following line skips the linter which checks for copyrights
@@ -28,51 +103,5 @@ if(BUILD_TESTING)
   ament_lint_auto_find_test_dependencies()
 endif()
 
+## Export package
 ament_package()
-
-
-# Use C++14
-# set(CMAKE_CXX_STANDARD 14)
-# set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Find ament packages and libraries
-# find_package(ament_cmake REQUIRED)
-# find_package(rclcpp REQUIRED)
-# find_package(rclcpp_components REQUIRED)
-# find_package(std_msgs REQUIRED)
-# find_package(tf2 REQUIRED)
-# find_package(tf2_ros REQUIRED)
-# find_package(tf2_geometry_msgs REQUIRED)
-# find_package(dynamixel_sdk REQUIRED)
-
-# Include directories
-# include_directories(
-#   include
-# )
-
-# Build the executable
-# add_executable(${PROJECT_NAME} 
-  # src/sobit_pro_main.cpp
-  # src/sobit_pro_control.cpp
-  # src/sobit_pro_motor_driver.cpp
-  # src/sobit_pro_odometry.cpp
-# )
-
-# Link against ament libraries
-# ament_target_dependencies(${PROJECT_NAME} 
-#   rclcpp
-#   rclcpp_components
-#   std_msgs
-#   tf2
-#   tf2_ros
-#   tf2_geometry_msgs
-#   dynamixel_sdk
-# )
-
-# Install the executable
-# install(TARGETS ${PROJECT_NAME}
-#   DESTINATION lib/${PROJECT_NAME}
-# )
-
-# Export package information
-# ament_package()

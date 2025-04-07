@@ -1,6 +1,7 @@
 #include "sobit_pro_control/sobit_pro_control.hpp"
 
-void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
+// void SobitProControl::setParams( geometry_msgs::msg::Twist vel_twist )
+void SobitProControl::setParams(const geometry_msgs::msg::Twist& vel_twist){
     switch( motion_mode ){
         // Stop motion
         case STOP_MOTION_MODE:{
@@ -18,7 +19,7 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
 
             // Goal position calculation
             double goal_deg = atan2f(vel_twist.linear.x, vel_twist.linear.y) / (M_PI / 180.);
-            ROS_INFO("goal_deg = %.3f", goal_deg);
+            RCLCPP_INFO(this->get_logger(),"goal_deg = %.3f", goal_deg);
             double steer_fl_deg, steer_fr_deg, steer_bl_deg, steer_br_deg;
 
             if( (-45 <= goal_deg) && (goal_deg <= 45) ){
@@ -169,11 +170,11 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             double r = base_vel / fabsf(vel_twist.angular.z);
             double base_angle = atan2f(vel_twist.linear.y , vel_twist.linear.x);
 
-            geometry_msgs::Point base_center;
+            geometry_msgs::msg::Point base_center;
             base_center.x = r * cosf(base_angle + (M_PI/2.) * (vel_twist.angular.z/fabsf(vel_twist.angular.z)));
             base_center.y = r * sinf(base_angle + (M_PI/2.) * (vel_twist.angular.z/fabsf(vel_twist.angular.z)));
 
-            geometry_msgs::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
+            geometry_msgs::msg::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
             wheel_point_fl.x = TRACK / 2.;
             wheel_point_fl.y = TRACK / 2.;
             wheel_point_fr.x = TRACK / 2.;
@@ -189,7 +190,7 @@ void SobitProControl::setParams( geometry_msgs::Twist vel_twist ){
             r_wheel_bl = sqrtf(powf(TRACK / sqrtf(2.), 2.) + powf(r, 2.) - 2.*(TRACK / sqrtf(2.))*r*(((wheel_point_bl.x * base_center.x) + (wheel_point_bl.y * base_center.y))/((TRACK / sqrtf(2.)) * r)));
             r_wheel_br = sqrtf(powf(TRACK / sqrtf(2.), 2.) + powf(r, 2.) - 2.*(TRACK / sqrtf(2.))*r*(((wheel_point_br.x * base_center.x) + (wheel_point_br.y * base_center.y))/((TRACK / sqrtf(2.)) * r)));
 
-            geometry_msgs::Point wheel_base_fl, wheel_base_fr, wheel_base_bl, wheel_base_br;
+            geometry_msgs::msg::Point wheel_base_fl, wheel_base_fr, wheel_base_bl, wheel_base_br;
             double wheel_to_base_dist = 1.3;
             wheel_base_fl.x = wheel_point_fl.x * wheel_to_base_dist;
             wheel_base_fl.y = wheel_point_fl.y * wheel_to_base_dist;
