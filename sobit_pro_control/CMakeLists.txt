@@ -10,7 +10,6 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
-find_package(dynamixel_sdk REQUIRED)
 find_package(tf2 REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(tf2_geometry_msgs REQUIRED)
@@ -34,10 +33,35 @@ include_directories(
 )
 
 add_library(${PROJECT_NAME} SHARED
-  src/sobit_pro_main.cpp
   src/sobit_pro_control.cpp
-  # src/sobit_pro_motor_driver.cpp
   src/sobit_pro_odometry.cpp
+)
+
+ament_target_dependencies(${PROJECT_NAME}
+  rclcpp
+  std_msgs
+  # 他の必要な依存
+)
+
+add_executable(sobit_pro_main src/sobit_pro_main.cpp)
+target_link_libraries(sobit_pro_main ${PROJECT_NAME})
+ament_target_dependencies(sobit_pro_main
+  rclcpp
+  std_msgs
+  tf2
+  tf2_ros
+  tf2_geometry_msgs
+  nav_msgs
+  sensor_msgs
+  trajectory_msgs
+  control_msgs
+  rclcpp_action
+  dynamixel_workbench_toolbox
+)
+
+install(TARGETS
+  sobit_pro_main
+  DESTINATION lib/${PROJECT_NAME}
 )
 
 # ament_target_dependencies(sobit_pro_control rclcpp nav_msgs tf2_ros)

@@ -35,6 +35,13 @@ def generate_launch_description():
             arguments=["-d", rviz_config],
             output="screen",
         ),
+        Node(
+            package="sobit_pro_control",
+            executable="sobit_pro_main",
+            name="sobit_pro_main",
+            output="screen",
+            namespace="sobit_pro"
+        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(

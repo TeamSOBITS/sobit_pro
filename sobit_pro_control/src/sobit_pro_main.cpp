@@ -4,13 +4,15 @@
 #include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 // Create the instance
-SobitProControl     sobit_pro_control;
+// SobitProControl     sobit_pro_control;
 // SobitProMotorDriver sobit_pro_motor_driver;
-SobitProOdometry    sobit_pro_odometry;
+// SobitProOdometry    sobit_pro_odometry;
 
 // Twist callback
 void SobitProMain::callback(const geometry_msgs::msg::Twist::SharedPtr vel_twist)
 {
+    SobitProControl     sobit_pro_control;
+    SobitProOdometry    sobit_pro_odometry;
     // Translational
     if (((std::fabs(vel_twist->linear.x) > 0.000) || (std::fabs(vel_twist->linear.y) > 0.000)) &&
         (std::fabs(vel_twist->angular.z) <= 0.001))
@@ -58,6 +60,8 @@ void SobitProMain::callback(const geometry_msgs::msg::Twist::SharedPtr vel_twist
 
 void SobitProMain::joint_callback(const sensor_msgs::msg::JointState::SharedPtr joint_info)
 {
+    SobitProControl     sobit_pro_control;
+    SobitProOdometry    sobit_pro_odometry;
     for (size_t i = 0; i < joint_info->name.size(); ++i) {
         joints_pos[joint_info->name[i]] = joint_info->position[i];
         joints_vel[joint_info->name[i]] = joint_info->velocity[i];
@@ -69,6 +73,8 @@ void SobitProMain::joint_callback(const sensor_msgs::msg::JointState::SharedPtr 
 // Start up sound
 bool SobitProMain::start_up_sound()
 {
+    SobitProControl     sobit_pro_control;
+    SobitProOdometry    sobit_pro_odometry;
     bool is_sound = false;
 
     // Generate a random number
@@ -85,7 +91,7 @@ bool SobitProMain::start_up_sound()
     std::string sound = rand_sound <= sound_param ? "start_up" : "soka_univ_gakuseika";
 
     // パッケージパス取得
-    std::string pack_path = ament_index_cpp::get_package_share_directory("sobit_pro_sim_control");
+    std::string pack_path = ament_index_cpp::get_package_share_directory("sobit_pro_control");
     std::string sound_path = pack_path + "/mp3/" + sound + ".mp3";
 
     // ログ出力
@@ -110,10 +116,12 @@ bool SobitProMain::start_up_sound()
 // Shut down sound
 bool SobitProMain::shut_down_sound()
 {
+    SobitProControl     sobit_pro_control;
+    SobitProOdometry    sobit_pro_odometry;
     bool is_sound = false;
 
     // パッケージパス取得
-    std::string package_path = ament_index_cpp::get_package_share_directory("sobit_pro_sim_control");
+    std::string package_path = ament_index_cpp::get_package_share_directory("sobit_pro_control");
     std::string sound_path   = package_path + "/mp3/shut_down.mp3";
 
     // ログ出力
@@ -135,11 +143,13 @@ bool SobitProMain::shut_down_sound()
 // Control wheel
 void SobitProMain::control_wheel()
 {
-    auto node = std::make_shared<rclcpp::Node>("sobit_pro_control_wheel");
-    // [SIM] Wait for the joint_states to be published
-    while (rclcpp::ok() && (joints_pos.empty() || joints_vel.empty())) {
-        rclcpp::spin_some(node);
-    }
+    SobitProControl     sobit_pro_control;
+    SobitProOdometry    sobit_pro_odometry;
+    // auto node = std::make_shared<rclcpp::Node>("sobit_pro_control_wheel");
+    // // [SIM] Wait for the joint_states to be published
+    // while (rclcpp::ok() && (joints_pos.empty() || joints_vel.empty())) {
+    //     rclcpp::spin_some(node);
+    // }
 
     // [SIM] Set the initial position of the wheel
     wheel_fl_init_pos = SobitProMain::getJointPos("wheel_f_l_drive_joint") * 1024. / (M_PI / 2.) + 2048.;
@@ -198,7 +208,7 @@ void SobitProMain::control_wheel()
         pub_steer_joint_->publish(steer_joint_trajectory);
 
         do {
-            rclcpp::spin_some(node);
+            // rclcpp::spin_some(node);
             steer_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_steer_joint") * 1024. / (M_PI / 2.) + 2048.;
             steer_fr_curt_pos = SobitProMain::getJointPos("wheel_f_r_steer_joint") * 1024. / (M_PI / 2.) + 2048.;
             steer_bl_curt_pos = SobitProMain::getJointPos("wheel_b_l_steer_joint") * 1024. / (M_PI / 2.) + 2048.;
@@ -234,6 +244,7 @@ void SobitProMain::control_wheel()
 
 
 // Bring Up SOBIT PRO main function
+
 int main(int argc, char **argv){
     // ros::init(argc, argv, "sobit_pro_control");
     rclcpp::init(argc, argv);
@@ -247,16 +258,26 @@ int main(int argc, char **argv){
     // sobit_pro_motor_driver.addPresentParam();
 
     // Start up sound
-    sobit_pro_main->start_up_sound();
+    // sobit_pro_main->start_up_sound();
 
     // Control wheel (main loop)
     sobit_pro_main->control_wheel();
 
     // Shut down sound
-    sobit_pro_main->shut_down_sound();
+    // sobit_pro_main->shut_down_sound();
 
     // Shut down motor
     // sobit_pro_motor_driver.closeDynamixel();
 
     return 0;
 }
+
+// int main(int argc, char **argv){
+//     rclcpp::init(argc, argv);
+
+//     auto node = rclcpp::Node::make_shared("hello");
+//     RCLCPP_INFO(node->get_logger(), "Hello, ROS2 world!");
+
+//     rclcpp::shutdown();
+//     return 0;
+// }

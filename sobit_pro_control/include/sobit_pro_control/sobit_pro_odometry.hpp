@@ -27,10 +27,12 @@ class SobitProOdometry : public rclcpp::Node{
 
     public:
 
-        SobitProOdometry() : rclcpp::Node("sobit_pro_odometry_node") {
-            // 必要な初期化処理
-            tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
-        }
+        SobitProOdometry() 
+            : rclcpp::Node("sobit_pro_odometry_node"){}
+        // {
+        //     // 必要な初期化処理
+        //     tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+        // }
         
         bool odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
                   int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
