@@ -74,7 +74,7 @@ def launch_gz(context, *args, **kwargs):
 
     velocity_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
-             '--set-state', 'configured',
+             '--set-state', 'active',
              '--controller-manager', robot_name+'/controller_manager',
              'velocity_controller'
         ],

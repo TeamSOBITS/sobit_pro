@@ -10,27 +10,41 @@
         <param name="baud_rate">1000000</param>
         <!-- <param name="use_dummy">true</param> -->
       </hardware>
-      <joint name="wheel_f_l_steer_joint">
+      <joint name="wheel_f_r_steer_joint">
         <param name="id">5</param>
         <command_interface name="position">
           <param name="min">-1.57</param>
           <param name="max">1.57</param>  <!-- 1.57 -->
         </command_interface>
-        <command_interface name="velocity"/>
+        <!-- <command_interface name="velocity"/> -->
         <state_interface name="position">
           <param name="initial_value">0.0</param>
-        </state_interface>  
+        </state_interface>
         <state_interface name="velocity"/>
         <state_interface name="effort"/>
       </joint>
 
-      <joint name="wheel_f_r_steer_joint">
+      <joint name="wheel_f_l_steer_joint">
         <param name="id">6</param>
         <command_interface name="position">
           <param name="min">-1.57</param>
           <param name="max">1.57</param>  <!-- 1.57 -->
         </command_interface>
-        <command_interface name="velocity"/>
+        <!-- <command_interface name="velocity"/> -->
+        <state_interface name="position">
+          <param name="initial_value">0.0</param>
+        </state_interface>
+        <state_interface name="velocity"/>
+        <state_interface name="effort"/>
+      </joint>
+
+      <joint name="wheel_b_r_steer_joint">
+        <param name="id">7</param>
+        <command_interface name="position">
+          <param name="min">-1.57</param>
+          <param name="max">1.57</param>  <!-- 1.57 -->
+        </command_interface>
+        <!-- <command_interface name="velocity"/> -->
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>  
@@ -39,26 +53,12 @@
       </joint>
 
       <joint name="wheel_b_l_steer_joint">
-        <param name="id">7</param>
-        <command_interface name="position">
-          <param name="min">-1.57</param>
-          <param name="max">1.57</param>  <!-- 1.57 -->
-        </command_interface>
-        <command_interface name="velocity"/>
-        <state_interface name="position">
-          <param name="initial_value">0.0</param>
-        </state_interface>  
-        <state_interface name="velocity"/>
-        <state_interface name="effort"/>
-      </joint>
-
-      <joint name="wheel_b_r_steer_joint">
         <param name="id">8</param>
         <command_interface name="position">
           <param name="min">-1.57</param>
           <param name="max">1.57</param>  <!-- 1.57 -->
         </command_interface>
-        <command_interface name="velocity"/>
+        <!-- <command_interface name="velocity"/> -->
         <state_interface name="position">
           <param name="initial_value">0.0</param>
         </state_interface>  

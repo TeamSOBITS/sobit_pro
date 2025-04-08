@@ -74,7 +74,7 @@
   </xacro:macro>
 
 
-  <!-- <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
+  <xacro:macro name="stack_wheel_drive" params="parent prefix number x_loc y_loc z_loc roll=0.0 pitch=0.0 yaw=0.0">
 
     <joint name="wheel_${prefix}_drive_joint" type="continuous">
       <origin xyz="${x_loc+0.0019} ${y_loc} ${z_loc}" rpy="${roll} ${pitch} ${yaw}" />
@@ -107,7 +107,7 @@
       </inertial>
     </link>
 
-  </xacro:macro> -->
+  </xacro:macro>
 
 
   <xacro:macro name="wheel" params="parent prefix">
@@ -122,10 +122,10 @@
     <xacro:stack_wheel_steer parent="wheel_b_r_steer_base_link" prefix="b_r" number="3" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
     <xacro:stack_wheel_steer parent="wheel_f_r_steer_base_link" prefix="f_r" number="4" x_loc= "0.013875" y_loc= "0.0" z_loc="-0.032" />
 
-    <!-- <xacro:stack_wheel_drive parent="wheel_f_l_steer_link" prefix="f_l" number="1" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
+    <xacro:stack_wheel_drive parent="wheel_f_l_steer_link" prefix="f_l" number="1" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
     <xacro:stack_wheel_drive parent="wheel_b_l_steer_link" prefix="b_l" number="2" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
     <xacro:stack_wheel_drive parent="wheel_b_r_steer_link" prefix="b_r" number="3" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
-    <xacro:stack_wheel_drive parent="wheel_f_r_steer_link" prefix="f_r" number="4" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" /> -->
+    <xacro:stack_wheel_drive parent="wheel_f_r_steer_link" prefix="f_r" number="4" x_loc= "0.02" y_loc= "0.0" z_loc="-0.118" />
 
     <xacro:wheel_transmission prefix="${prefix}" />
 

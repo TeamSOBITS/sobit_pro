@@ -15,7 +15,7 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/back/back.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel.urdf.xacro" />
 
-  <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel_2.urdf.xacro" />
+  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel_2.urdf.xacro" /> -->
 
   <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.urdf.xacro" />
@@ -51,7 +51,7 @@
   <!-- <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" /> -->
   <!-- <xacro:open_manipulator_x_ros2_control name="open_manipulator_x_ros2_control" /> -->
   <xacro:controllers_DxUpper name="joints_control_upper" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
-  <!-- <xacro:controllers_DxLower name="joints_control_lower" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" /> -->
+  <xacro:controllers_DxLower name="joints_control_lower" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
 
 
   <!-- enable_mb: true, enable_arm: true, enable_head: true -->
