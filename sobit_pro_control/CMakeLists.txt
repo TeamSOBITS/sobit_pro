@@ -21,7 +21,7 @@ find_package(trajectory_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
 find_package(rclcpp_action REQUIRED)
 
-find_package(dynamixel_workbench_toolbox REQUIRED)
+# find_package(dynamixel_workbench_toolbox REQUIRED)
 
 ###########
 ## Build ##
@@ -56,7 +56,7 @@ ament_target_dependencies(sobit_pro_main
   trajectory_msgs
   control_msgs
   rclcpp_action
-  dynamixel_workbench_toolbox
+  # dynamixel_workbench_toolbox
 )
 
 install(TARGETS
@@ -85,7 +85,7 @@ ament_target_dependencies(${PROJECT_NAME}
   "control_msgs"
   "rclcpp_action"
   
-  "dynamixel_workbench_toolbox"
+  # "dynamixel_workbench_toolbox"
 )
 
 #############

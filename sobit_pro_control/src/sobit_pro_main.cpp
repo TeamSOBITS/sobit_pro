@@ -143,6 +143,7 @@ bool SobitProMain::shut_down_sound()
 // Control wheel
 void SobitProMain::control_wheel()
 {
+    std::cout << "aaaaaaaaaaa" << "\n";
     SobitProControl     sobit_pro_control;
     SobitProOdometry    sobit_pro_odometry;
     // auto node = std::make_shared<rclcpp::Node>("sobit_pro_control_wheel");
@@ -150,6 +151,7 @@ void SobitProMain::control_wheel()
     // while (rclcpp::ok() && (joints_pos.empty() || joints_vel.empty())) {
     //     rclcpp::spin_some(node);
     // }
+    std::cout << "bbbbbbbbbbbbbbb" << "\n";
 
     // [SIM] Set the initial position of the wheel
     wheel_fl_init_pos = SobitProMain::getJointPos("wheel_f_l_drive_joint") * 1024. / (M_PI / 2.) + 2048.;
@@ -161,15 +163,49 @@ void SobitProMain::control_wheel()
     std::string robot_name = (std::strcmp(this->get_namespace(), "/") != 0)
                             ? std::string(this->get_namespace()).substr(1) + "/"
                             : "";
+    
+    // Initilize Odometry // [NOT for Isaac Sim!]
+    prev_odom.header.stamp            = this->get_clock()->now();
+    prev_odom.header.frame_id         = robot_name + "odom";
+    prev_odom.child_frame_id          = robot_name + "base_footprint";
+    prev_odom.pose.pose.position.x    = 0.0;
+    prev_odom.pose.pose.position.y    = 0.0;
+    prev_odom.pose.pose.position.z    = 0.0;
+    prev_odom.pose.pose.orientation.x = 0.0;
+    prev_odom.pose.pose.orientation.y = 0.0;
+    prev_odom.pose.pose.orientation.z = 0.0;
+    prev_odom.pose.pose.orientation.w = 1.0;
+    prev_odom.twist.twist.linear.x    = 0.0;
+    prev_odom.twist.twist.linear.y    = 0.0;
+    prev_odom.twist.twist.linear.z    = 0.0;
+    prev_odom.twist.twist.angular.x   = 0.0;
+    prev_odom.twist.twist.angular.y   = 0.0;
+    prev_odom.twist.twist.angular.z   = 0.0;
+
+    result_odom.header.stamp            = this->get_clock()->now();
+    result_odom.header.frame_id         = robot_name + "odom";
+    result_odom.child_frame_id          = robot_name + "base_footprint";
+    result_odom.pose.pose.position.x    = 0.0;
+    result_odom.pose.pose.position.y    = 0.0;
+    result_odom.pose.pose.position.z    = 0.0;
+    result_odom.pose.pose.orientation.x = 0.0;
+    result_odom.pose.pose.orientation.y = 0.0;
+    result_odom.pose.pose.orientation.z = 0.0;
+    result_odom.pose.pose.orientation.w = 1.0;
+    result_odom.twist.twist.linear.x    = 0.0;
+    result_odom.twist.twist.linear.y    = 0.0;
+    result_odom.twist.twist.linear.z    = 0.0;
+    result_odom.twist.twist.angular.x   = 0.0;
+    result_odom.twist.twist.angular.y   = 0.0;
+    result_odom.twist.twist.angular.z   = 0.0;
 
     rclcpp::Rate rate(50);
 
     trajectory_msgs::msg::JointTrajectory steer_joint_trajectory;
-    // rclcpp_action::Client<control_msgs::action::FollowJointTrajectory>::SharedPtr steer_action_client_;
-
     std_msgs::msg::Float64MultiArray wheel_joint_vel;
 
     while (rclcpp::ok()) {
+        std::cout << "cccccccccccccccccc" << "\n";
         set_steer_pos = sobit_pro_control.setSteerPos();
 
         steer_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_steer_joint") * 1024. / (M_PI / 2.) + 2048.;
@@ -232,11 +268,45 @@ void SobitProMain::control_wheel()
         wheel_fr_curt_pos = SobitProMain::getJointPos("wheel_f_r_drive_joint") * 1024. / (M_PI / 2.) + 2048.;
         wheel_bl_curt_pos = SobitProMain::getJointPos("wheel_b_l_drive_joint") * 1024. / (M_PI / 2.) + 2048.;
         wheel_br_curt_pos = SobitProMain::getJointPos("wheel_b_r_drive_joint") * 1024. / (M_PI / 2.) + 2048.;
+        
+        rclcpp::Time tmp_time = prev_odom.header.stamp;
+        // Calculate Odometry based on motion mode (check!) // [NOT for Isaac Sim!]
+        sobit_pro_odometry.odom(steer_fl_curt_pos, steer_fr_curt_pos,
+                                steer_bl_curt_pos, steer_br_curt_pos,
+                                wheel_fl_curt_pos, wheel_fr_curt_pos,
+                                wheel_bl_curt_pos, wheel_br_curt_pos,
+                                wheel_fl_init_pos, wheel_fr_init_pos,
+                                wheel_bl_init_pos, wheel_br_init_pos,
+                                prev_motion,
+                                prev_odom, result_odom,
+                                tmp_time);
 
         wheel_fl_init_pos = wheel_fl_curt_pos;
         wheel_fr_init_pos = wheel_fr_curt_pos;
         wheel_bl_init_pos = wheel_bl_curt_pos;
         wheel_br_init_pos = wheel_br_curt_pos;
+
+        // Update odom for next loop calculation // [NOT for Isaac Sim!]
+        prev_odom.header.stamp            = result_odom.header.stamp;
+        prev_odom.pose.pose.position.x    = result_odom.pose.pose.position.x;
+        prev_odom.pose.pose.position.y    = result_odom.pose.pose.position.y;
+        prev_odom.pose.pose.position.z    = result_odom.pose.pose.position.z;
+        prev_odom.pose.pose.orientation.x = result_odom.pose.pose.orientation.x;
+        prev_odom.pose.pose.orientation.y = result_odom.pose.pose.orientation.y;
+        prev_odom.pose.pose.orientation.z = result_odom.pose.pose.orientation.z;
+        prev_odom.pose.pose.orientation.w = result_odom.pose.pose.orientation.w;
+        prev_odom.twist.twist.linear.x    = result_odom.twist.twist.linear.x;
+        prev_odom.twist.twist.linear.y    = result_odom.twist.twist.linear.y;
+        prev_odom.twist.twist.linear.z    = result_odom.twist.twist.linear.z;
+        prev_odom.twist.twist.angular.x   = result_odom.twist.twist.angular.x;
+        prev_odom.twist.twist.angular.y   = result_odom.twist.twist.angular.y;
+        prev_odom.twist.twist.angular.z   = result_odom.twist.twist.angular.z;
+
+        result_odom.header.stamp = this->get_clock()->now();
+
+        pub_odometry_->publish(result_odom);
+
+        std::cout << "ああ、数値を出力！" << "\n";
 
         rate.sleep();
     }

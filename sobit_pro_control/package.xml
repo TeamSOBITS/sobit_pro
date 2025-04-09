@@ -23,7 +23,7 @@
   <depend>control_msgs</depend>
   <depend>rclcpp_action</depend>
 
-  <depend>dynamixel_workbench_toolbox</depend>
+  <!-- <depend>dynamixel_workbench_toolbox</depend> -->
 
   <!-- Execution dependencies -->
   <!-- <exec_depend>rclcpp</exec_depend>
