@@ -1,12 +1,39 @@
 #include "sobit_pro_control/sobit_pro_main.hpp"
 #include "sobit_pro_control/sobit_pro_control.hpp"
-// #include "sobit_pro_control/sobit_pro_motor_driver.hpp"
 #include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 // Create the instance
 // SobitProControl     sobit_pro_control;
 // SobitProMotorDriver sobit_pro_motor_driver;
 // SobitProOdometry    sobit_pro_odometry;
+
+namespace sobit_pro
+{
+
+SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
+: Node("sobit_pro_main", options)
+{
+  // Configure the QoS profile
+  rclcpp::QoS qos_profile(1); // depth = 1
+  qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT);
+  qos_profile.history(RMW_QOS_POLICY_HISTORY_KEEP_LAST);
+  qos_profile.durability(RMW_QOS_POLICY_DURABILITY_VOLATILE);
+
+  this->sub_vel_ = this->create_subscription<geometry_msgs::msg::Twist>(
+      "mobile_base/commands/velocity", qos_profile, std::bind(&SobitProMain::callback, this, std::placeholders::_1));
+
+  this->sub_joint_info_ = this->create_subscription<sensor_msgs::msg::JointState>(
+      "joint_states", qos_profile, std::bind(&SobitProMain::joint_callback, this, std::placeholders::_1));
+
+  this->pub_odometry_ = this->create_publisher<nav_msgs::msg::Odometry>(
+      "odom", qos_profile);
+  this->pub_steer_joint_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+      "joint_trajectory_controller/joint_trajectory", qos_profile);
+  this->pub_wheel_joint_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
+      "wheel_trajectory_controller/command", qos_profile);
+  this->pub_wheels_error_ = this->create_publisher<std_msgs::msg::Bool>(
+      "wheels_error", qos_profile);
+}
 
 // Twist callback
 void SobitProMain::callback(const geometry_msgs::msg::Twist::SharedPtr vel_twist)
@@ -311,6 +338,8 @@ void SobitProMain::control_wheel()
         rate.sleep();
     }
 }
+
+} // namespace sobit_pro
 
 
 // Bring Up SOBIT PRO main function
