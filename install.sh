@@ -9,7 +9,6 @@ cd ..
 
 # Download required packages for SOBIT PRO
 ros_packages=(
-    # "sobits_common" \
     "dynamixel_hardware" \
     "sobits_msgs" \
     "urg_node" \
@@ -20,15 +19,15 @@ ros_packages=(
 # Clone all packages
 for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     echo "Clonning: ${ros_packages[i]}"
-    git clone https://github.com/TeamSOBITS/${ros_packages[i]}.git
+    git clone -b humble-devel https://github.com/TeamSOBITS/${ros_packages[i]}.git
 
     # Check if install.sh exists in each package
-    # if [ -f ${ros_packages[i]}/install.sh ]; then
-    #     echo "Running install.sh in ${ros_packages[i]}."
-    #     cd ${ros_packages[i]}
-    #     bash install.sh
-    #     cd ..
-    # fi
+    if [ -f ${ros_packages[i]}/install.sh ]; then
+        echo "Running install.sh in ${ros_packages[i]}."
+        cd ${ros_packages[i]}
+        bash install.sh
+        cd ..
+    fi
 }
 
 # Download required dependencies
@@ -37,35 +36,9 @@ sudo apt-get install -y \
     mpg321 
 
 # Download ROS packages
-# sudo apt-get update
-# sudo apt-get install -y \
-#     ros-$ROS_DISTRO-pybind11-catkin \
-#     ros-$ROS_DISTRO-robot-state-publisher \
-#     ros-$ROS_DISTRO-joint-state-controller \
-#     ros-$ROS_DISTRO-joint-state-publisher \
-#     ros-$ROS_DISTRO-joint-state-publisher-gui \
-#     ros-$ROS_DISTRO-joint-limits-interface \
-#     ros-$ROS_DISTRO-hardware-interface \
-#     ros-$ROS_DISTRO-transmission-interface \
-#     ros-$ROS_DISTRO-controller-interface \
-#     ros-$ROS_DISTRO-controller-manager \
-#     ros-$ROS_DISTRO-ros-control \
-#     ros-$ROS_DISTRO-ros-controllers \
-#     ros-$ROS_DISTRO-tf2 \
-#     ros-$ROS_DISTRO-tf2-ros \
-#     ros-$ROS_DISTRO-sensor-msgs \
-#     ros-$ROS_DISTRO-trajectory-msgs \
-#     ros-$ROS_DISTRO-geometry-msgs \
-#     ros-$ROS_DISTRO-joy
-
-# Download ROS packages
 sudo apt-get update
 sudo apt-get install -y \
     ros-$ROS_DISTRO-ecl-linear-algebra \
-    ros-$ROS_DISTRO-laser-proc \
-    ros-$ROS_DISTRO-urg-c \
-    ros-$ROS_DISTRO-urg-node \
-    ros-$ROS_DISTRO-urg-node-msgs \
     ros-$ROS_DISTRO-robot-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher-gui \
