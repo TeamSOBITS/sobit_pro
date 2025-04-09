@@ -20,7 +20,7 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   qos_profile.durability(RMW_QOS_POLICY_DURABILITY_VOLATILE);
 
   this->sub_vel_ = this->create_subscription<geometry_msgs::msg::Twist>(
-      "mobile_base/commands/velocity", qos_profile, std::bind(&SobitProMain::callback, this, std::placeholders::_1));
+      "cmd_vel", qos_profile, std::bind(&SobitProMain::callback, this, std::placeholders::_1));
 
   this->sub_joint_info_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "joint_states", qos_profile, std::bind(&SobitProMain::joint_callback, this, std::placeholders::_1));
