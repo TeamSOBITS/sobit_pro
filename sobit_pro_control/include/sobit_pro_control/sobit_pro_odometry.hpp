@@ -14,7 +14,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 
-class SobitProOdometry : public rclcpp::Node{
+class SobitProOdometry{
 private:
   enum MODE {
     NONE = -1,
@@ -24,23 +24,27 @@ private:
     SWIVEL_MOTION_MODE // Motion can be added
   } motion_mode;
 
-  std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+  rclcpp::Node* node_;
+  std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
 public:
-  SobitProOdometry() : rclcpp::Node("sobit_pro_odometry_node") {
-    // 必要な初期化処理
-    tf_broadcaster_ = std::make_shared<tf2_ros::TransformBroadcaster>(this);
+  SobitProOdometry(rclcpp::Node* node) : node_(node) {
+    RCLCPP_INFO(node_->get_logger(), "SobitProOdometry initialized.");
+    tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(node_);
+  }
+  ~SobitProOdometry() {
+    RCLCPP_INFO(node_->get_logger(), "SobitProOdometry destroyed.");
   }
 
-  bool odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
-            int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
-            int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
-            int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
-            int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
-            int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
-            int32_t prev_motion,
-            nav_msgs::msg::Odometry& prev_odom, nav_msgs::msg::Odometry& result_odom,//);
-            rclcpp::Time& prev_time);
+  bool odom(
+    int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
+    int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
+    int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
+    int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
+    int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
+    int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
+    int32_t prev_motion,
+    nav_msgs::msg::Odometry prev_odom, nav_msgs::msg::Odometry* result_odom);
 
   double distance_calculation(double wheel_curt_pos);
   double position_calculation(double steer_curt_pos);
@@ -48,11 +52,11 @@ public:
 
   MODE getMotion(int motion) {
     switch (motion) {
-      case STOP_MOTION_MODE:          motion_mode = STOP_MOTION_MODE; break;
+      case STOP_MOTION_MODE:          motion_mode = STOP_MOTION_MODE;          break;
       case TRANSLATIONAL_MOTION_MODE: motion_mode = TRANSLATIONAL_MOTION_MODE; break;
-      case ROTATIONAL_MOTION_MODE:    motion_mode = ROTATIONAL_MOTION_MODE; break;
-      case SWIVEL_MOTION_MODE:        motion_mode = SWIVEL_MOTION_MODE; break;
-      default:                        motion_mode = NONE; break;
+      case ROTATIONAL_MOTION_MODE:    motion_mode = ROTATIONAL_MOTION_MODE;    break;
+      case SWIVEL_MOTION_MODE:        motion_mode = SWIVEL_MOTION_MODE;        break;
+      default:                        motion_mode = NONE;                      break;
     }
     return motion_mode;
   }
