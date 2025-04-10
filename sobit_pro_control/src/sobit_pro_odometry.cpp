@@ -4,15 +4,15 @@
 #include <iostream>
 
 // Calculate Odometry
-bool SobitProOdometry::odom(int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
-                            int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
-                            int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
-                            int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
-                            int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
-                            int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
-                            int32_t prev_motion,
-                            nav_msgs::msg::Odometry& prev_odom, nav_msgs::msg::Odometry& result_odom,//){
-                            rclcpp::Time& prev_time){
+bool SobitProOdometry::odom(
+    int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
+    int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
+    int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
+    int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
+    int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
+    int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
+    int32_t prev_motion,
+    nav_msgs::msg::Odometry& prev_odom, nav_msgs::msg::Odometry& result_odom) {
 
     double fl_distance_m    = distance_calculation(wheel_fl_curt_pos - wheel_fl_init_pos); // Calculation distance[m]
     double fr_distance_m    = distance_calculation(wheel_fr_curt_pos - wheel_fr_init_pos); // Calculation distance[m]
