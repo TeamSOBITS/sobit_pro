@@ -17,36 +17,29 @@ find_package(std_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
-
 find_package(control_msgs REQUIRED)
-find_package(rclcpp_action REQUIRED)
-
-# find_package(dynamixel_workbench_toolbox REQUIRED)
 
 ###########
 ## Build ##
 ###########
 
 ## Include directories
-include_directories(
-  include
-)
+include_directories(include)
 
+# Library
 add_library(${PROJECT_NAME} SHARED
   src/sobit_pro_control.cpp
   src/sobit_pro_odometry.cpp
+  src/sobit_pro_main.cpp
 )
+
+rclcpp_components_register_node(${PROJECT_NAME}
+  PLUGIN "sobit_pro::SobitProMain"
+  EXECUTABLE sobit_pro_control_node)
 
 ament_target_dependencies(${PROJECT_NAME}
   rclcpp
-  std_msgs
-  # 他の必要な依存
-)
-
-add_executable(sobit_pro_main src/sobit_pro_main.cpp)
-target_link_libraries(sobit_pro_main ${PROJECT_NAME})
-ament_target_dependencies(sobit_pro_main
-  rclcpp
+  rclcpp_components
   std_msgs
   tf2
   tf2_ros
@@ -55,62 +48,27 @@ ament_target_dependencies(sobit_pro_main
   sensor_msgs
   trajectory_msgs
   control_msgs
-  rclcpp_action
-  # dynamixel_workbench_toolbox
 )
 
-install(TARGETS
-  sobit_pro_main
-  DESTINATION lib/${PROJECT_NAME}
-)
-
-# ament_target_dependencies(sobit_pro_control rclcpp nav_msgs tf2_ros)
-
-# target_include_directories(${PROJECT_NAME} PUBLIC
-#   include
-# )
-
-## Link dependencies
-ament_target_dependencies(${PROJECT_NAME}
-  "rclcpp"
-  "rclcpp_components"
-  "tf2"
-  "tf2_ros"
-  "tf2_geometry_msgs"
-  "std_msgs"
-  "nav_msgs"
-  "sensor_msgs"
-  "trajectory_msgs"
-
-  "control_msgs"
-  "rclcpp_action"
-  
-  # "dynamixel_workbench_toolbox"
-)
+install(TARGETS ${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin)
 
 #############
 ## Install ##
 #############
 
-# install(TARGETS ${PROJECT_NAME}
-#   DESTINATION lib/${PROJECT_NAME}
-# )
-
-install(DIRECTORY include/
-  DESTINATION include/
+install(DIRECTORY
+  include/${PROJECT_NAME}
+  DESTINATION include
 )
 
-# install(DIRECTORY launch
-#   DESTINATION share/${PROJECT_NAME}/
-# )
-
-install(DIRECTORY config
-  DESTINATION share/${PROJECT_NAME}/
+install(DIRECTORY
+  mp3
+  config
+  launch  DESTINATION share/${PROJECT_NAME}
 )
-
-# install(DIRECTORY urdf
-#   DESTINATION share/${PROJECT_NAME}/
-# )
 
 #############
 ## Testing ##
