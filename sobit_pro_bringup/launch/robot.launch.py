@@ -4,18 +4,13 @@ from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess
-from launch.substitutions import LaunchConfiguration
-
-from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, OpaqueFunction
-from launch.actions import RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, OpaqueFunction, RegisterEventHandler
+from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 from launch.event_handlers import OnProcessExit
-from launch.substitutions import LaunchConfiguration
-
-from launch_ros.actions import Node
 
 import xacro
+
 
 def generate_launch_description():
     arg_robot_name = DeclareLaunchArgument('robot_name', default_value='sobit_pro')
@@ -59,6 +54,24 @@ def launch_gz(context, *args, **kwargs):
             'enable_gz' : enable_gz,
             'robot_name' : robot_name,
         })
+    
+    rviz_config = PathJoinSubstitution([
+        FindPackageShare('sobit_light_bringup'),
+        'rviz',
+        'gazebo.rviz'
+    ]) if enable_gz == 'True' else PathJoinSubstitution([
+        FindPackageShare('sobit_light_bringup'),
+        'rviz',
+        'real.rviz'
+    ])
+
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        namespace=robot_name,
+        arguments=['-d', rviz_config],
+        output='screen',
+    )
 
     if enable_gz == 'False':
         controller_config = os.path.join(get_package_share_directory(
@@ -119,6 +132,17 @@ def launch_gz(context, *args, **kwargs):
         output="screen",
     )
 
+    move_base_node = Node(
+        package="sobit_pro_control",
+        executable="sobit_pro_control_node",
+        name="sobit_pro_control",
+        namespace=robot_name,
+        parameters=[
+            {"use_sim_time": True if enable_gz == 'True' else False},
+        ],
+        output="screen",
+        )
+
     if enable_gz == 'True':
         gz_spawn_entity_node = Node(
             package='ros_gz_sim',
@@ -170,6 +194,13 @@ def launch_gz(context, *args, **kwargs):
             joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[move_base_node],
+                )
+            ),
+            rviz_node,
         ]
 
     else:
@@ -194,5 +225,12 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[velocity_controller],
                 )
             ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[move_base_node],
+                )
+            ),
             robot_state_publisher_node,
+            rviz_node,
         ]
