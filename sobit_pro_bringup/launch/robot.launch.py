@@ -56,11 +56,11 @@ def launch_gz(context, *args, **kwargs):
         })
     
     rviz_config = PathJoinSubstitution([
-        FindPackageShare('sobit_light_bringup'),
+        FindPackageShare('sobit_pro_bringup'),
         'rviz',
         'gazebo.rviz'
     ]) if enable_gz == 'True' else PathJoinSubstitution([
-        FindPackageShare('sobit_light_bringup'),
+        FindPackageShare('sobit_pro_bringup'),
         'rviz',
         'real.rviz'
     ])
