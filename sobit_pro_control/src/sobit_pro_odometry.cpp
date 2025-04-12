@@ -268,14 +268,4 @@ void SobitProOdometry::pose_broadcaster(const nav_msgs::msg::Odometry &tf_odom) 
   transformStamped.transform.rotation.w    = tf_odom.pose.pose.orientation.w;
 
   tf_broadcaster_->sendTransform(transformStamped);
-
-  RCLCPP_INFO(
-      node_->get_logger(),
-      "TransformBroadcaster: %s -> %s\n"
-      "header.stamp.sec = %d\n"
-      "header.stamp.nanosec = %d\n",
-      transformStamped.header.frame_id.c_str(),
-      transformStamped.child_frame_id.c_str(),
-      transformStamped.header.stamp.sec,
-      transformStamped.header.stamp.nanosec);
 }
