@@ -37,13 +37,13 @@ public:
   }
 
   bool odom(
-    int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
-    int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
-    int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
-    int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
-    int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
-    int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
-    int32_t prev_motion,
+    double steer_fl_curt_pos, double steer_fr_curt_pos,
+    double steer_bl_curt_pos, double steer_br_curt_pos,
+    double wheel_fl_curt_pos, double wheel_fr_curt_pos,
+    double wheel_bl_curt_pos, double wheel_br_curt_pos,
+    double wheel_fl_init_pos, double wheel_fr_init_pos,
+    double wheel_bl_init_pos, double wheel_br_init_pos,
+    double prev_motion,
     nav_msgs::msg::Odometry prev_odom, nav_msgs::msg::Odometry* result_odom);
 
   double distance_calculation(double wheel_curt_pos);

@@ -1,6 +1,3 @@
-#ifndef SOBIT_PRO_MAIN_HPP_
-#define SOBIT_PRO_MAIN_HPP_
-
 #include <iostream>
 #include <random>
 
@@ -14,50 +11,55 @@
 #include "control_msgs/action/follow_joint_trajectory.hpp"
 
 #include "rclcpp/rclcpp.hpp"
+#include <rclcpp_components/register_node_macro.hpp>
 #include <ament_index_cpp/get_package_share_directory.hpp>
 
+#include "sobit_pro_control/sobit_pro_control.hpp"
+#include "sobit_pro_control/sobit_pro_odometry.hpp"
 
 namespace sobit_pro
 {
-
 class SobitProMain : public rclcpp::Node
 {
 public:
   explicit SobitProMain(const rclcpp::NodeOptions & options);
   ~SobitProMain();
-  
+
   bool start_up_sound();
   bool shut_down_sound();
   void control_wheel();
-    
+
 private:    
   // ROS2 I/F
   rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr    sub_vel_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr sub_joint_info_;
 
   rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr               pub_odometry_;
-  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_steer_joint_;
+          rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_steer_joint_;
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr      pub_wheel_joint_;
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   pub_wheels_error_;
 
-  // コールバック
+  // Callback
   void callback(const geometry_msgs::msg::Twist::SharedPtr msg);
   void joint_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
+  void control_callback();
 
-  // ユーティリティ関数
+  // Publish
   double getJointPos(const std::string& joint_name);
   double getJointVel(const std::string& joint_name);
   void setPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
   void addPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
   void checkPublishersConnection(rclcpp::PublisherBase::SharedPtr pub);
 
-  // ロボット状態管理
-  int32_t wheel_fl_init_pos, wheel_fr_init_pos, wheel_bl_init_pos, wheel_br_init_pos;
-  int32_t wheel_fl_curt_pos, wheel_fr_curt_pos, wheel_bl_curt_pos, wheel_br_curt_pos;
-  int32_t steer_fl_curt_pos, steer_fr_curt_pos, steer_bl_curt_pos, steer_br_curt_pos;
+  trajectory_msgs::msg::JointTrajectory steer_joint_trajectory;
+  std_msgs::msg::Float64MultiArray      wheel_joint_vel;
 
-  int32_t* set_steer_pos;
-  int32_t* set_wheel_vel;
+  double wheel_fl_init_pos, wheel_fr_init_pos, wheel_bl_init_pos, wheel_br_init_pos;
+  double wheel_fl_curt_pos, wheel_fr_curt_pos, wheel_bl_curt_pos, wheel_br_curt_pos;
+  double steer_fl_curt_pos, steer_fr_curt_pos, steer_bl_curt_pos, steer_br_curt_pos;
+
+  double* set_steer_pos;
+  double* set_wheel_vel;
 
   int32_t motion;
   int32_t prev_motion = -1;
@@ -70,6 +72,10 @@ private:
 
   std_msgs::msg::Bool wheels_error;
 
+  std::unique_ptr<SobitProControl> sobit_pro_control_;
+  std::unique_ptr<SobitProOdometry> sobit_pro_odometry_;
+
+  rclcpp::TimerBase::SharedPtr control_timer_;
 };
     
 // 実装部
@@ -128,4 +134,4 @@ inline void SobitProMain::checkPublishersConnection(rclcpp::PublisherBase::Share
 
 } // namespace sobit_pro
 
-#endif // SOBIT_PRO_MAIN_HPP_
+RCLCPP_COMPONENTS_REGISTER_NODE(sobit_pro::SobitProMain)

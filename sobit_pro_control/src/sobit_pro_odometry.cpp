@@ -5,13 +5,13 @@
 
 // Calculate Odometry
 bool SobitProOdometry::odom(
-  int32_t steer_fl_curt_pos, int32_t steer_fr_curt_pos,
-  int32_t steer_bl_curt_pos, int32_t steer_br_curt_pos,
-  int32_t wheel_fl_curt_pos, int32_t wheel_fr_curt_pos,
-  int32_t wheel_bl_curt_pos, int32_t wheel_br_curt_pos,
-  int32_t wheel_fl_init_pos, int32_t wheel_fr_init_pos,
-  int32_t wheel_bl_init_pos, int32_t wheel_br_init_pos,
-  int32_t prev_motion,
+  double steer_fl_curt_pos, double steer_fr_curt_pos,
+  double steer_bl_curt_pos, double steer_br_curt_pos,
+  double wheel_fl_curt_pos, double wheel_fr_curt_pos,
+  double wheel_bl_curt_pos, double wheel_br_curt_pos,
+  double wheel_fl_init_pos, double wheel_fr_init_pos,
+  double wheel_bl_init_pos, double wheel_br_init_pos,
+  double prev_motion,
   nav_msgs::msg::Odometry prev_odom, nav_msgs::msg::Odometry* result_odom)
 {
   double fl_distance_m    = distance_calculation(wheel_fl_curt_pos - wheel_fl_init_pos); // Calculation distance[m]
@@ -19,58 +19,60 @@ bool SobitProOdometry::odom(
   double bl_distance_m    = distance_calculation(wheel_bl_curt_pos - wheel_bl_init_pos); // Calculation distance[m]
   double br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
 
-  double fl_direction_deg = position_calculation(steer_fl_curt_pos); // Record present position
-  double fr_direction_deg = position_calculation(steer_fr_curt_pos); // Record present position
-  double bl_direction_deg = position_calculation(steer_bl_curt_pos); // Record present position
-  double br_direction_deg = position_calculation(steer_br_curt_pos); // Record present position
+  double fl_direction_deg = steer_fl_curt_pos / (M_PI/180.); // Record present position
+  double fr_direction_deg = steer_fr_curt_pos / (M_PI/180.); // Record present position
+  double bl_direction_deg = steer_bl_curt_pos / (M_PI/180.); // Record present position
+  double br_direction_deg = steer_br_curt_pos / (M_PI/180.); // Record present position
 
   double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
   double distance_m;
   nav_msgs::msg::Odometry calculation_odom = *result_odom;
   tf2::Quaternion quat_tf;
 
-  if     ( prev_motion == STOP_MOTION_MODE )          motion_mode = STOP_MOTION_MODE;
-  else if( prev_motion == TRANSLATIONAL_MOTION_MODE ) motion_mode = TRANSLATIONAL_MOTION_MODE;
-  else if( prev_motion == ROTATIONAL_MOTION_MODE )    motion_mode = ROTATIONAL_MOTION_MODE;
-  else if( prev_motion == SWIVEL_MOTION_MODE )        motion_mode = SWIVEL_MOTION_MODE;
+  if      (prev_motion == STOP_MOTION_MODE )          motion_mode = STOP_MOTION_MODE;
+  else if (prev_motion == TRANSLATIONAL_MOTION_MODE ) motion_mode = TRANSLATIONAL_MOTION_MODE;
+  else if (prev_motion == ROTATIONAL_MOTION_MODE )    motion_mode = ROTATIONAL_MOTION_MODE;
+  else if (prev_motion == SWIVEL_MOTION_MODE )        motion_mode = SWIVEL_MOTION_MODE;
 
-  switch( motion_mode ){
+
+  switch (motion_mode) {
     // Translational motion
     case TRANSLATIONAL_MOTION_MODE:{
-      // Convert Wheel Coordinates to Robot Coordinates
-      fl_direction_deg = fl_direction_deg - 45.;
-      fr_direction_deg = fr_direction_deg + 45.;
-      // Check!!
-      bl_direction_deg = fl_direction_deg + 45.;
-      br_direction_deg = fr_direction_deg - 45.;
       
       // Check the calculation
-      // if( (0 <= fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) && (fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) <= 1) ){
-      if( fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg)) <= 1.0f){
+      // if ((0 <= fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) && (fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) <= 1)) {
+      RCLCPP_INFO(
+          node_->get_logger(),
+          "fr_direction_deg = %.3f\tbl_direction_deg = %.3f\n",
+          fr_direction_deg, bl_direction_deg);
+      if (fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f){
+        // Convert Wheel Coordinates to Robot Coordinates
+        fl_direction_deg = fl_direction_deg - 45.;
+        fr_direction_deg = fr_direction_deg + 45.;
+        // Check!!
+        bl_direction_deg = fl_direction_deg + 45.;
+        br_direction_deg = fr_direction_deg - 45.;
+
         // Positive distance or Negative distance
-        if( (-45 <= fr_direction_deg) && (fr_direction_deg <= 90) ){
-          if( 0. <= fr_distance_m ) distance_m =  (fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
+        if ((-45 <= fr_direction_deg) && (fr_direction_deg <= 90)) {
+          if (0. <= fr_distance_m ) distance_m =  (fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
           else                      distance_m = -(fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
         }
-        else if(90 < fr_direction_deg && fr_direction_deg <= 135){
-          if( 0. <= fr_distance_m ) distance_m = -(fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
+        else if (90 < fr_direction_deg && fr_direction_deg <= 135) {
+          if (0. <= fr_distance_m ) distance_m = -(fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
           else                      distance_m =  (fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
         }
-        RCLCPP_ERROR(
-            this->get_logger(),
-            "Calculation ERROR : Translational motion\n
-            fl_distance_m = %.3f\tfl_direction_deg = %.3f\n
-            fr_distance_m = %.3f\tfr_direction_deg = %.3f\n",
-            fl_distance_m, fl_direction_deg,
-            fr_distance_m, fr_direction_deg);
+        else {
+          RCLCPP_ERROR(
+              node_->get_logger(),
+              "Calculation ERROR : Translational motion\n");
+        }
       }
-      else RCLCPP_ERROR(
-          this->get_logger(), 
-          "Odometry ERROR : Translational motion\n
-          fl_distance_m = %.3f\tfl_direction_deg = %.3f\n
-          fr_distance_m = %.3f\tfr_direction_deg = %.3f\n",
-          fl_distance_m, fl_direction_deg,
-          fr_distance_m, fr_direction_deg);
+      else {
+        RCLCPP_ERROR(
+            node_->get_logger(), 
+            "Odometry ERROR : Translational motion\n");
+        }
 
       // Transform euler to RPY (prev_odom)
       tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
@@ -80,11 +82,11 @@ bool SobitProOdometry::odom(
       calculation_odom.pose.pose.position.x =
           prev_odom.pose.pose.position.x
           + distance_m * cosf(fr_direction_deg * (M_PI / 180.)) * cosf(prev_yaw)
-          + distance_m * sinf(fr_direction_deg * (M_PI / 180.)) * cosf(prev_yaw + 1.5708);
+          + distance_m * sinf(fr_direction_deg * (M_PI / 180.)) * cosf(prev_yaw + M_PI_2);
       calculation_odom.pose.pose.position.y =
           prev_odom.pose.pose.position.y
           + distance_m * cosf(fr_direction_deg * (M_PI / 180.)) * sinf(prev_yaw)
-          + distance_m * sinf(fr_direction_deg * (M_PI / 180.)) * sinf(prev_yaw + 1.5708);
+          + distance_m * sinf(fr_direction_deg * (M_PI / 180.)) * sinf(prev_yaw + M_PI_2);
       calculation_odom.pose.pose.position.z = prev_odom.pose.pose.position.z; 
 
       calculation_odom.pose.pose.orientation.x = prev_odom.pose.pose.orientation.x;
@@ -102,8 +104,8 @@ bool SobitProOdometry::odom(
       // ROS_INFO("calculation_odom.pose.pose.orientation.w = %.3f", calculation_odom.pose.pose.orientation.w);
 
       // Debug
-      if (std::isnan(calculation_odom.pose.pose.position.x)    || std::isnan(calculation_odom.pose.pose.position.y)) RCLCPP_ERROR(this->get_logger(),"------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (pose) ------");
-      if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) RCLCPP_ERROR(this->get_logger(),"------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (orientation) ------");
+      if (std::isnan(calculation_odom.pose.pose.position.x)    || std::isnan(calculation_odom.pose.pose.position.y)) RCLCPP_ERROR(node_->get_logger(),"------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (pose) ------");
+      if (std::isnan(calculation_odom.pose.pose.orientation.x) || std::isnan(calculation_odom.pose.pose.orientation.y) || std::isnan(calculation_odom.pose.pose.orientation.z) || std::isnan(calculation_odom.pose.pose.orientation.w)) RCLCPP_ERROR(node_->get_logger(),"------ Odom calculation : Nan error in TRANSLATIONAL_MOTION_MODE (orientation) ------");
 
       *result_odom = calculation_odom;
 
@@ -175,17 +177,17 @@ bool SobitProOdometry::odom(
         
         if (sqrtf(powf((wheel_point_fr.x - base_center.x), 2.) + powf((wheel_point_fr.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_bl.x - base_center.x), 2.) + powf((wheel_point_bl.y - base_center.y), 2.))) {
           yaw = fr_distance_m / sqrtf(powf((wheel_point_fr.x - base_center.x), 2.) + powf((wheel_point_fr.y - base_center.y), 2.));
-        }else{
+        } else {
           yaw = bl_distance_m / sqrtf(powf((wheel_point_bl.x - base_center.x), 2.) + powf((wheel_point_bl.y - base_center.y), 2.));
         }
-      } else{
+      } else {
         // fl and br
         base_center.x = (a_fl * wheel_point_fl.x - a_br * wheel_point_br.x + wheel_point_br.y - wheel_point_fl.y) / (a_fl - a_br);
         base_center.y = a_fl * (base_center.x - wheel_point_fl.x) + wheel_point_fl.y;
 
-        if( sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.)) ){
+        if (sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.)) > sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.))) {
           yaw = fl_distance_m / sqrtf(powf((wheel_point_fl.x - base_center.x), 2.) + powf((wheel_point_fl.y - base_center.y), 2.));
-        } else{
+        } else {
           yaw = br_distance_m / sqrtf(powf((wheel_point_br.x - base_center.x), 2.) + powf((wheel_point_br.y - base_center.y), 2.));
         }
       }
@@ -235,12 +237,12 @@ bool SobitProOdometry::odom(
 
 // Distance calculation
 double SobitProOdometry::distance_calculation(double wheel_curt_pos){
-  return SobitProControl::WHEEL_LENGTH * wheel_curt_pos / 4096.;
+  return SobitProControl::WHEEL_DIAMETER/2 * wheel_curt_pos;
 }
 
 // Position calculation
 double SobitProOdometry::position_calculation(double steer_curt_pos){
-  return (steer_curt_pos - 2048.) * 360. / 4096.;
+  return steer_curt_pos / (M_PI / 180.);
 }
 
 // Pose broadcaster (Generate a pose from Odometry)
@@ -248,13 +250,13 @@ void SobitProOdometry::pose_broadcaster(const nav_msgs::msg::Odometry &tf_odom) 
   geometry_msgs::msg::TransformStamped transformStamped;
 
   std::string robot_name =
-      (std::strcmp(this->get_namespace(), "/") != 0)
-      ? std::string(this->get_namespace()).substr(1) + "/"
+      (std::strcmp(node_->get_namespace(), "/") != 0)
+      ? std::string(node_->get_namespace()).substr(1) + "/"
       : "";
 
-  transformStamped.header.stamp    = this->get_clock()->now();
-  transformStamped.header.frame_id = robot_name + "odom";
-  transformStamped.child_frame_id  = robot_name + "base_footprint";
+  transformStamped.header.stamp         = node_->now();
+  transformStamped.header.frame_id      = robot_name + "odom";
+  transformStamped.child_frame_id       = robot_name + "base_footprint";
 
   transformStamped.transform.translation.x = tf_odom.pose.pose.position.x;
   transformStamped.transform.translation.y = tf_odom.pose.pose.position.y;
@@ -266,4 +268,14 @@ void SobitProOdometry::pose_broadcaster(const nav_msgs::msg::Odometry &tf_odom) 
   transformStamped.transform.rotation.w    = tf_odom.pose.pose.orientation.w;
 
   tf_broadcaster_->sendTransform(transformStamped);
+
+  RCLCPP_INFO(
+      node_->get_logger(),
+      "TransformBroadcaster: %s -> %s\n"
+      "header.stamp.sec = %d\n"
+      "header.stamp.nanosec = %d\n",
+      transformStamped.header.frame_id.c_str(),
+      transformStamped.child_frame_id.c_str(),
+      transformStamped.header.stamp.sec,
+      transformStamped.header.stamp.nanosec);
 }
