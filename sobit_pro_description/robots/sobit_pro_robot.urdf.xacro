@@ -2,11 +2,10 @@
 <robot name="sobit_pro" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <!-- Add Common Xacro: transmissions, colors -->
-  <xacro:include filename="$(find sobit_pro_description)/urdf/common.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/values.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/materials.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/transmission.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/controllers_upper.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/controllers_lower.urdf.xacro" />
+  <xacro:include filename="$(find sobit_pro_description)/urdf/controllers.urdf.xacro" />
   
   <!-- Add URDF: links, joints -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/base/base.urdf.xacro" />
@@ -14,8 +13,6 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/body/cover.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/back/back.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel.urdf.xacro" />
-
-  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/wheel/wheel_2.urdf.xacro" /> -->
 
   <xacro:include filename="$(find sobit_pro_description)/urdf/arm/arm.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.urdf.xacro" />
@@ -30,9 +27,7 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_d415.urdf.xacro" />
 
   <xacro:include filename="$(find urg_node)/urdf/hokuyo_ust.urdf.xacro" />
-  <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/azure_kinect.urdf.xacro" /> -->
   <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" />
-  <!-- <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" /> -->
   <!-- <xacro:include filename="$(find realsense2_description)/urdf/_l515.urdf.xacro" /> -->
   <xacro:include filename="$(find realsense2_description)/urdf/_d405.urdf.xacro" />
   <xacro:include filename="$(find realsense2_description)/urdf/_d415.urdf.xacro" />
@@ -48,13 +43,8 @@
   <xacro:arg name="enable_gz_lidar"           default="True" />
   <xacro:arg name="robot_name"                default="sobit_pro" />
 
-  <!-- <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" /> -->
-  <!-- <xacro:open_manipulator_x_ros2_control name="open_manipulator_x_ros2_control" /> -->
-  <xacro:controllers_DxUpper name="joints_control_upper" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
-  <xacro:controllers_DxLower name="joints_control_lower" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
 
-
-  <!-- enable_mb: true, enable_arm: true, enable_head: true -->
+  <!-- enable_mb (true), enable_arm (true), enable_head (true) -->
   <xacro:if value="${$(arg enable_mb) and $(arg enable_arm) and $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -73,7 +63,7 @@
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
   </xacro:if>
 
-  <!-- enable_mb: true, enable_arm: true, enable_head: false -->
+  <!-- enable_mb (true), enable_arm (true), enable_head (false) -->
   <xacro:if value="${$(arg enable_mb) and $(arg enable_arm) and not $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -87,7 +77,7 @@
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
   </xacro:if>
 
-  <!-- enable_mb: true, enable_arm: false, enable_head: true -->
+  <!-- enable_mb (true), enable_arm (false), enable_head (true) -->
   <xacro:if value="${$(arg enable_mb) and not $(arg enable_arm) and $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -102,7 +92,7 @@
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
   </xacro:if>
 
-  <!-- enable_mb: true, enable_arm: false, enable_head: false -->
+  <!-- enable_mb (true), enable_arm (false), enable_head (false) -->
   <xacro:if value="${$(arg enable_mb) and not $(arg enable_arm) and not $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -111,7 +101,7 @@
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
   </xacro:if>
 
-  <!-- enable_mb: false, enable_arm: true, enable_head: true -->
+  <!-- enable_mb (false), enable_arm (true), enable_head (true) -->
   <xacro:if value="${not $(arg enable_mb) and $(arg enable_arm) and $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -128,7 +118,7 @@
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
   </xacro:if>
 
-  <!-- enable_mb: false, enable_arm: true, enable_head: false -->
+  <!-- enable_mb (false), enable_arm (true), enable_head (false) -->
   <xacro:if value="${not $(arg enable_mb) and $(arg enable_arm) and not $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -140,7 +130,7 @@
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
   </xacro:if>
 
-  <!-- enable_mb: false, enable_arm: false, enable_head: true -->
+  <!-- enable_mb (false), enable_arm (false), enable_head (true) -->
   <xacro:if value="${not $(arg enable_mb) and not $(arg enable_arm) and $(arg enable_head)}">
     <xacro:base/>
     <xacro:plate prefix="plate" parent="base_link" />
@@ -152,10 +142,13 @@
     <xacro:matrix prefix="matrix" parent="head_camera_base" />
   </xacro:if>
 
-  <!-- enable_gz: true -->
-  <!-- <xacro:if value="${$(arg enable_gz)}">
-    <xacro:include filename="$(find sobit_pro_sim_description)/urdf/gazebo.urdf.xacro" />
-    <xacro:gazebo/>
-  </xacro:if> -->
+  <!-- Add Dynamixel plugins -->
+  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
+
+  <!-- Add Gazebo plugins -->
+  <xacro:if value="${$(arg enable_gz)}">
+    <xacro:include filename="$(find sobit_pro_description)/urdf/gazebo.urdf.xacro" />
+    <xacro:gazebo_sensors robot_name="$(arg robot_name)" />
+  </xacro:if>
 
 </robot>
