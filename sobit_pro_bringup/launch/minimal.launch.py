@@ -19,6 +19,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     robot_name = 'sobit_pro'
+    robot_id = 0
     bringup_pkg = robot_name + "_bringup"
 
     rviz_config = os.path.join(get_package_share_directory(
@@ -35,13 +36,6 @@ def generate_launch_description():
             arguments=["-d", rviz_config],
             output="screen",
         ),
-        Node(
-            package="sobit_pro_control",
-            executable="sobit_pro_main",
-            name="sobit_pro_main",
-            output="screen",
-            namespace="sobit_pro"
-        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(
@@ -49,45 +43,13 @@ def generate_launch_description():
                     'launch',
                     'robot.launch.py')
                 ])
-
             ]),
             launch_arguments={
-                'robot_name': 'sobit_pro',
+                'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
+                'enable_gz' : 'False',
                 'robot_coords_x': '0', # x 
                 'robot_coords_y': '0', # y
                 'robot_coords_Y': '0', # yaw
             }.items()
         ),
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([
-        #         PathJoinSubstitution([os.path.join(
-        #             get_package_share_directory('sobit_pro_bringup'),
-        #             'launch',
-        #             'realsense_bringup.launch.py')
-        #         ])
-
-        #     ]),
-        # ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                PathJoinSubstitution([
-                    FindPackageShare('azure_kinect_ros_driver'),
-                    'launch',
-                    'driver.launch.py'
-                ])
-
-            ]),
-        ),
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource([
-                PathJoinSubstitution([
-                    get_package_share_directory('urg_node'),
-                    'launch',
-                    'urg.launch.py'
-                ])
-            ]),
-            launch_arguments={
-                "config_file" : urg_config
-            }.items()
-        )
     ])

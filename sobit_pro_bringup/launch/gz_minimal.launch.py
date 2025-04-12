@@ -12,7 +12,7 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     robot_name = 'sobit_pro'
-    robot_id = 1
+    robot_id = 0
 
     gz_bridge_node = Node(
         package='ros_gz_bridge',
@@ -28,18 +28,6 @@ def generate_launch_description():
         'sobit_pro_description'), 
         'worlds',
         'empty_w_physics.sdf'
-    )
-
-    rviz_config = PathJoinSubstitution([
-            FindPackageShare('sobit_pro_bringup'),
-            'rviz',
-            'real.rviz'
-    ])
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        output='screen',
-        arguments=['-d', rviz_config],
     )
 
     return LaunchDescription([
@@ -66,21 +54,14 @@ def generate_launch_description():
                     'robot.launch.py'
                 ])
             ]),
-            # launch_arguments={
-            #     'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
-            #     'robot_coords_x': '0', # x 
-            #     'robot_coords_y': '0', # y
-            #     'robot_coords_Y': '0', # yaw
-            #     'enable_gz' : 'True',
-            #     'enable_gz_front_cam_color' : 'True',
-            #     'enable_gz_back_cam_color' : 'True',
-            #     'enable_gz_head_cam_color' : 'True',
-            #     'enable_gz_head_cam_depth' : 'True',
-            #     'enable_gz_hand_cam_color' : 'True',
-            #     'enable_gz_hand_cam_depth' : 'True',
-            #     'enable_gz_lidar' : 'True',
-            #     'enable_gz_imu' : 'True',
-            # }.items()
+            launch_arguments={
+                'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
+                'enable_gz' : 'True',
+                'robot_coords_x': '0',    # x 
+                'robot_coords_y': '0',    # y
+                'robot_coords_z': '0.01', # z
+                'robot_coords_Y': '0',    # yaw
+            }.items()
         ),
         # Launch Robot No. 2
         # IncludeLaunchDescription(
@@ -93,18 +74,11 @@ def generate_launch_description():
         #     ]),
         #     launch_arguments={
         #         'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
+        #         'enable_gz' : 'True',
         #         'robot_coords_x': '0', # x 
         #         'robot_coords_y': '2', # y
+        #         'robot_coords_z': '0.01', # z
         #         'robot_coords_Y': '0', # yaw
-        #         'enable_gz_front_cam_color' : 'True',
-        #         'enable_gz_back_cam_color' : 'True',
-        #         'enable_gz_head_cam_color' : 'True',
-        #         'enable_gz_head_cam_depth' : 'True',
-        #         'enable_gz_hand_cam_color' : 'True',
-        #         'enable_gz_hand_cam_depth' : 'True',
-        #         'enable_gz_lidar' : 'True',
-        #         'enable_gz_imu' : 'True',
         #     }.items()
         # ),
-        rviz_node,
     ])
