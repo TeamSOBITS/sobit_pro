@@ -1,31 +1,21 @@
 /**/controller_manager:
   ros__parameters:
-    update_rate: 100  # Hz
+    update_rate: 50  # Hz
 
     velocity_controller:
       type: velocity_controllers/JointGroupVelocityController
-
     joint_trajectory_controller:
       type: joint_trajectory_controller/JointTrajectoryController
-    diff_controller:
-      type: diff_drive_controller/DiffDriveController
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
 
 /**/velocity_controller:
   ros__parameters:
     joints:
-      - wheel_f_r_drive_joint
       - wheel_f_l_drive_joint
-      - wheel_b_r_drive_joint
+      - wheel_f_r_drive_joint
       - wheel_b_l_drive_joint
-      ## メモ：/sobit_pro/velocity_controller/commandsへ[std_msgs/msg/Float64MultiArray]型でdataにこの順でpublishで速度発行
-    command_interfaces:
-      - velocity
-
-    state_interfaces:
-      - velocity
-
+      - wheel_b_r_drive_joint
 
 /**/joint_trajectory_controller:
   ros__parameters:
@@ -40,14 +30,13 @@
       - hand_joint
       - head_pan_joint
       - head_tilt_joint
-      - wheel_f_r_steer_joint
       - wheel_f_l_steer_joint
-      - wheel_b_r_steer_joint
+      - wheel_f_r_steer_joint
       - wheel_b_l_steer_joint
+      - wheel_b_r_steer_joint
 
     allow_partial_joints_goal: true
     command_interfaces:
       - position
-
     state_interfaces:
       - position
