@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- SOBIT MINI (transmission) -->
-<robot name="sobit_mini_transmission" xmlns:xacro="http://ros.org/wiki/xacro">
+<!-- SOBIT PRO (transmission) -->
+<robot name="sobit_pro_transmission" xmlns:xacro="http://ros.org/wiki/xacro">
 
-  <!-- Transmission macro: Position -->
+  <!-- Transmission macro - Position -->
   <xacro:macro name="SimpleTransmissionPosition" params="joint reduction">
     <transmission name="${joint}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
@@ -15,7 +15,7 @@
     </transmission>
   </xacro:macro>
 
-  <!-- Transmission macro: Effort -->
+  <!-- Transmission macro - Effort -->
   <xacro:macro name="SimpleTransmissionEffort" params="joint reduction">
     <transmission name="${joint}_transmission">
       <type>transmission_interface/SimpleTransmission</type>
@@ -28,7 +28,7 @@
     </transmission>
   </xacro:macro>
 
-  <!-- Transmission macro: Velocity -->
+  <!-- Transmission macro - Velocity -->
   <xacro:macro name="SimpleTransmissionVelocity" params="joint reduction">
     <transmission name="${joint}_transmission">
       <type>transmission_interface/SimpleTransmission</type>

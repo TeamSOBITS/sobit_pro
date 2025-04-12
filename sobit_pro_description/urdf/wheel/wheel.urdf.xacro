@@ -19,12 +19,12 @@
         </geometry>
         <material name="black" />
       </visual>
-      <collision>
+      <!-- <collision>
         <origin xyz="${0.01388-0.05525/2} 0.0 -${0.005+0.034/2+0.02/2}" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.05525 0.0285 0.084" />
         </geometry>
-      </collision>
+      </collision> -->
       <inertial>
         <origin xyz="${0.01388-0.05525/2} 0.0 -${0.005+0.034/2+0.02/2}" rpy="0.0 0.0 0.0" />
         <mass value="1" />
@@ -56,12 +56,12 @@
         </geometry>
         <material name="black" />
       </visual>
-      <collision>
+      <!-- <collision>
         <origin xyz="${0.0244+0.0436/2} 0.0 ${0.034/2+0.0149-0.1766/2}" rpy="0.0 0.0 0.0" />
         <geometry>
           <box size="0.0436 0.0495 0.1766" />
         </geometry>
-      </collision>
+      </collision> -->
       <inertial>
         <origin xyz="${0.0244+0.0436/2} 0.0 ${0.034/2+0.0149-0.1766/2}" rpy="0.0 0.0 0.0" />
         <mass value="1" />
@@ -81,7 +81,7 @@
       <parent link="${parent}" />
       <child link="wheel_${prefix}_drive_link" />
       <axis xyz="-1.0 0.0 0.0 " />
-      <limit effort="3.0" velocity="7.913672" />
+      <limit effort="10.0" velocity="7.913672" />
     </joint>
 
     <link name="wheel_${prefix}_drive_link">
