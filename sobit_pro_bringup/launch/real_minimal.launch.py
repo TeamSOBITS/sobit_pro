@@ -13,19 +13,8 @@ from launch.substitutions import PathJoinSubstitution
 def generate_launch_description():
     robot_name = 'sobit_pro'
     robot_id = 0
-    bringup_pkg = robot_name + "_bringup"
-
-    rviz_config = os.path.join(get_package_share_directory(
-        bringup_pkg), "rviz", "real.rviz")
  
     return LaunchDescription([
-        Node(
-            package="rviz2",
-            executable="rviz2",
-            name="rviz2",
-            arguments=["-d", rviz_config],
-            output="screen",
-        ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(
