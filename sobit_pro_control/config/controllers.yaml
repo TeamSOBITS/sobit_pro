@@ -41,4 +41,3 @@
     state_interfaces:
       - position
       - velocity
-      - effort
