@@ -13,7 +13,7 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   sobit_pro_odometry_ = std::make_unique<SobitProOdometry>(this);
 
   // Configure the QoS profile
-  rclcpp::QoS qos_profile(1); // depth = 1
+  rclcpp::QoS qos_profile(1);
   qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT);
   qos_profile.history(RMW_QOS_POLICY_HISTORY_KEEP_LAST);
   qos_profile.durability(RMW_QOS_POLICY_DURABILITY_VOLATILE);
@@ -42,6 +42,8 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   steer_joint_trajectory.points.resize(1);
   steer_joint_trajectory.points[0].positions.resize(4);
   wheel_joint_vel.data.resize(4);
+
+  is_steer_movable = true;
 
 
   // [SIM] Set the initial position of the wheel
@@ -229,26 +231,6 @@ void SobitProMain::control_callback()
   steer_bl_curt_pos = SobitProMain::getJointPos("wheel_b_l_steer_joint");
   steer_br_curt_pos = SobitProMain::getJointPos("wheel_b_r_steer_joint");
 
-  // When steer changing angle is large(>90[deg]), stop the wheels to avoid hardware damage
-  if ( (1024 <= fabs(set_steer_pos[0] - steer_fl_curt_pos))
-    || (1024 <= fabs(set_steer_pos[1] - steer_fr_curt_pos))
-    || (1024 <= fabs(set_steer_pos[2] - steer_bl_curt_pos))
-    || (1024 <= fabs(set_steer_pos[3] - steer_br_curt_pos))) {
-    RCLCPP_INFO(this->get_logger(),"Changing the direction of the wheel");
-    set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
-
-    wheel_joint_vel.data.clear();
-
-    wheel_joint_vel.data.push_back(set_wheel_vel[0]);
-    wheel_joint_vel.data.push_back(set_wheel_vel[1]);
-    wheel_joint_vel.data.push_back(set_wheel_vel[2]);
-    wheel_joint_vel.data.push_back(set_wheel_vel[3]);
-
-    RCLCPP_INFO(this->get_logger(), "No velocity command, setting wheel velocity to 0.");
-    // checkPublishersConnection(pub_wheel_joint_);
-    pub_wheel_joint_->publish(wheel_joint_vel);
-  }
-
   steer_joint_trajectory.joint_names.clear();
   steer_joint_trajectory.points.clear();
 
@@ -257,8 +239,15 @@ void SobitProMain::control_callback()
   addPosJointTrajectory("wheel_b_l_steer_joint", set_steer_pos[2], 0.1, &steer_joint_trajectory);
   addPosJointTrajectory("wheel_b_r_steer_joint", set_steer_pos[3], 0.1, &steer_joint_trajectory);
 
-  checkPublishersConnection(pub_steer_joint_);
-  pub_steer_joint_->publish(steer_joint_trajectory);
+  // if (is_steer_movable && checkPublishersConnection("joint_trajectory_controller/joint_trajectory")) {
+  if (is_steer_movable) {
+    RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
+
+    pub_steer_joint_->publish(steer_joint_trajectory);
+  }
+  else {
+    RCLCPP_DEBUG(this->get_logger(), "Steer joint is not movable.");
+  }
 
   steer_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_steer_joint");
   steer_fr_curt_pos = SobitProMain::getJointPos("wheel_f_r_steer_joint");
@@ -271,9 +260,11 @@ void SobitProMain::control_callback()
   || (SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[3] - steer_br_curt_pos))){
     RCLCPP_INFO(this->get_logger(), "Waiting for the steering to reach the target position...");
     set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
+    is_steer_movable = false;
   }
   else {
     set_wheel_vel = sobit_pro_control_->setWheelVel();
+    is_steer_movable = true;
   }
 
 
@@ -285,7 +276,7 @@ void SobitProMain::control_callback()
   wheel_joint_vel.data.push_back(set_wheel_vel[2]);
   wheel_joint_vel.data.push_back(set_wheel_vel[3]);
 
-  // checkPublishersConnection(pub_wheel_joint_);
+  // checkPublishersConnection("velocity_controller/commands");
   pub_wheel_joint_->publish(wheel_joint_vel);
 
   // [SIM] Update the current wheel position

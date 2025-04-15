@@ -49,7 +49,7 @@ private:
   double getJointVel(const std::string& joint_name);
   void setPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
   void addPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
-  void checkPublishersConnection(rclcpp::PublisherBase::SharedPtr pub);
+  bool checkPublishersConnection(std::string pub_name);
 
   trajectory_msgs::msg::JointTrajectory steer_joint_trajectory;
   std_msgs::msg::Float64MultiArray      wheel_joint_vel;
@@ -60,6 +60,8 @@ private:
 
   double* set_steer_pos;
   double* set_wheel_vel;
+
+  bool is_steer_movable;
 
   int32_t motion;
   int32_t prev_motion = -1;
@@ -125,11 +127,9 @@ inline void SobitProMain::addPosJointTrajectory(
   *jt = joint_trajectory;
 }
 
-inline void SobitProMain::checkPublishersConnection(rclcpp::PublisherBase::SharedPtr pub) {
-  rclcpp::Rate rate(10);
-  while (pub->get_subscription_count() == 0 && rclcpp::ok()) {
-    rate.sleep();
-  }
+inline bool SobitProMain::checkPublishersConnection(std::string pub_name) {
+  RCLCPP_INFO(this->get_logger(), "Number of publishers: %ld", this->count_publishers(pub_name));
+  return this->count_publishers(pub_name) > 1 ? false : true;
 }
 
 } // namespace sobit_pro
