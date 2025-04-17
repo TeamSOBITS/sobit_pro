@@ -1,0 +1,47 @@
+/**:
+  ros__parameters:
+    poses:
+      - initial_pose
+      - detecting_pose
+      - pass_high_pose
+      - pass_low_pose
+
+    initial_pose:
+      arm_shoulder_1_tilt_joint     : 1.57
+      arm_elbow_upper_1_tilt_joint  : 1.57
+      arm_elbow_lower_tilt_joint    : -1.57
+      arm_elbow_lower_pan_joint     : 0.00
+      arm_wrist_tilt_joint          : -1.57
+      hand_joint                    : 0.00
+      head_pan_joint                : 0.00
+      head_tilt_joint               : 0.00
+
+    detecting_pose:
+      arm_shoulder_1_tilt_joint     : 1.57
+      arm_elbow_upper_1_tilt_joint  : 1.57
+      arm_elbow_lower_tilt_joint    : -1.57
+      arm_elbow_lower_pan_joint     : -1.57
+      arm_wrist_tilt_joint          : -1.57
+      hand_joint                    : 0.00
+      head_pan_joint                : 0.00
+      head_tilt_joint               : -0.70
+
+    pass_high_pose:
+      arm_shoulder_1_tilt_joint     : 1.57
+      arm_elbow_upper_1_tilt_joint  : -0.78
+      arm_elbow_lower_tilt_joint    : -0.78
+      arm_elbow_lower_pan_joint     : 0.00
+      arm_wrist_tilt_joint          : -1.57
+      hand_joint                    : 0.00
+      head_pan_joint                : 0.00
+      head_tilt_joint               : 0.00
+
+    pass_low_pose:
+      arm_shoulder_1_tilt_joint     : 1.57
+      arm_elbow_upper_1_tilt_joint  : -1.57
+      arm_elbow_lower_tilt_joint    : -1.57
+      arm_elbow_lower_pan_joint     : 0.00
+      arm_wrist_tilt_joint          : 1.57
+      hand_joint                    : 0.00
+      head_pan_joint                : 0.00
+      head_tilt_joint               : 0.00
