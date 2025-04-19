@@ -14,7 +14,8 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
 
   // Configure the QoS profile
   rclcpp::QoS qos_profile(1);
-  qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT);
+  // qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_BEST_EFFORT);
+  qos_profile.reliability(RMW_QOS_POLICY_RELIABILITY_RELIABLE);
   qos_profile.history(RMW_QOS_POLICY_HISTORY_KEEP_LAST);
   qos_profile.durability(RMW_QOS_POLICY_DURABILITY_VOLATILE);
 
@@ -26,7 +27,7 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   this->pub_odometry_ = this->create_publisher<nav_msgs::msg::Odometry>(
       "odom", qos_profile);
   this->pub_steer_joint_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
-      "joint_trajectory_controller/joint_trajectory", qos_profile);
+      "steer_joint_trajectory_controller/joint_trajectory", qos_profile);
   this->pub_wheel_joint_ = this->create_publisher<std_msgs::msg::Float64MultiArray>(
       "velocity_controller/commands", qos_profile);
   this->pub_wheels_error_ = this->create_publisher<std_msgs::msg::Bool>(

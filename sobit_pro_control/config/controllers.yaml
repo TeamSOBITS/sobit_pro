@@ -8,6 +8,9 @@
       type: joint_trajectory_controller/JointTrajectoryController
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
+    
+    steer_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
 
 /**/velocity_controller:
   ros__parameters:
@@ -30,6 +33,22 @@
       - hand_joint
       - head_pan_joint
       - head_tilt_joint
+      # - wheel_f_l_steer_joint
+      # - wheel_f_r_steer_joint
+      # - wheel_b_l_steer_joint
+      # - wheel_b_r_steer_joint
+
+    allow_partial_joints_goal: true
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+
+/**/steer_joint_trajectory_controller:
+  ros__parameters:
+    joints:
       - wheel_f_l_steer_joint
       - wheel_f_r_steer_joint
       - wheel_b_l_steer_joint
