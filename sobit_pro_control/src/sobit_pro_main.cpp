@@ -104,6 +104,8 @@ SobitProMain::~SobitProMain()
 // Twist callback
 void SobitProMain::callback(const geometry_msgs::msg::Twist::SharedPtr vel_twist)
 {
+  curt_vel_twist = *vel_twist;
+
   // Translational
   if (((std::fabs(vel_twist->linear.x) > 0.000) || (std::fabs(vel_twist->linear.y) > 0.000))
       && (std::fabs(vel_twist->angular.z) <= 0.001)) {
@@ -239,11 +241,17 @@ void SobitProMain::control_callback()
   addPosJointTrajectory("wheel_b_l_steer_joint", set_steer_pos[2], 0.1, &steer_joint_trajectory);
   addPosJointTrajectory("wheel_b_r_steer_joint", set_steer_pos[3], 0.1, &steer_joint_trajectory);
 
-  // if (is_steer_movable && checkPublishersConnection("joint_trajectory_controller/joint_trajectory")) {
+  // TODO: find a better way to check if the steer joint is movable
   if (is_steer_movable) {
-    RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
-
-    pub_steer_joint_->publish(steer_joint_trajectory);
+    if (checkPublishersConnection("cmd_vel")
+        || checkPublishersConnection("navigate_to_pose/goal")) { // TODO: check the topic name
+      if (std::fabs(curt_vel_twist.linear.x) > 0.01
+          || std::fabs(curt_vel_twist.linear.y) > 0.01
+          || std::fabs(curt_vel_twist.angular.z) > 0.01) {
+        RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
+        pub_steer_joint_->publish(steer_joint_trajectory);
+      }
+    }
   }
   else {
     RCLCPP_DEBUG(this->get_logger(), "Steer joint is not movable.");
