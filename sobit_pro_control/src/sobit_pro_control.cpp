@@ -271,7 +271,7 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
           + (temp_y - wheel_point_br.y) * cosf(steer_br_rad)
           + wheel_point_br.y;
 
-      double vel_rads = ((base_vel * 180. / M_PI) / 360. * BODY_DIAMETER * M_PI) / (WHEEL_DIAMETER/2.); 
+      double vel_rads = base_vel * 2. / WHEEL_DIAMETER; 
       if (vel_rads > LIMIT_VEL_RADS) {
         wheel_fl_goal_vel = LIMIT_VEL_RADS * (vel_twist.angular.z / fabsf(vel_twist.angular.z));
         wheel_fr_goal_vel = LIMIT_VEL_RADS * (vel_twist.angular.z / fabsf(vel_twist.angular.z));

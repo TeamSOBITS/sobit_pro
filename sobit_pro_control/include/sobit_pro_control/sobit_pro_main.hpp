@@ -73,6 +73,7 @@ private:
   nav_msgs::msg::Odometry prev_odom;
 
   std_msgs::msg::Bool wheels_error;
+  geometry_msgs::msg::Twist curt_vel_twist;
 
   std::unique_ptr<SobitProControl> sobit_pro_control_;
   std::unique_ptr<SobitProOdometry> sobit_pro_odometry_;
@@ -128,8 +129,8 @@ inline void SobitProMain::addPosJointTrajectory(
 }
 
 inline bool SobitProMain::checkPublishersConnection(std::string pub_name) {
-  RCLCPP_INFO(this->get_logger(), "Number of publishers: %ld", this->count_publishers(pub_name));
-  return this->count_publishers(pub_name) > 1 ? false : true;
+  RCLCPP_DEBUG(this->get_logger(), "Number of publishers: %ld", this->count_publishers(pub_name));
+  return this->count_publishers(pub_name) > 0 ? true : false;
 }
 
 } // namespace sobit_pro
