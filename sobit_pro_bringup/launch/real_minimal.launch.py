@@ -13,12 +13,28 @@ from launch.substitutions import PathJoinSubstitution
 def generate_launch_description():
     robot_name = 'sobit_pro'
     robot_id = 0
+    bringup_pkg = robot_name + "_bringup"
+
+    urg_config = os.path.join(get_package_share_directory(
+        "robocup_opl_cml"), "config", "urg_node_params.yaml")
  
     return LaunchDescription([
+        # IncludeLaunchDescription(
+        #     PythonLaunchDescriptionSource([
+        #         PathJoinSubstitution([os.path.join(
+        #             get_package_share_directory('robocup_opl_cml'),
+        #             'launch',
+        #             'camera_with_cloud.launch.py')
+        #         ])
+        #     ]),
+        #     launch_arguments={
+        #         'namespace': robot_name + '/head_camera',
+        #     }.items()
+        # ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(
-                    get_package_share_directory('sobit_pro_bringup'),
+                    get_package_share_directory('robocup_opl_cml'),
                     'launch',
                     'robot.launch.py')
                 ])

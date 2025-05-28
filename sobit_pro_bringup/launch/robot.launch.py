@@ -60,7 +60,8 @@ def launch_gz(context, *args, **kwargs):
         'rviz',
         'gazebo.rviz'
     ]) if enable_gz == 'True' else PathJoinSubstitution([
-        FindPackageShare('sobit_pro_bringup'),
+        # FindPackageShare('sobit_pro_bringup'),
+        FindPackageShare('robocup_opl_cml'),
         'rviz',
         'real.rviz'
     ])
@@ -105,6 +106,16 @@ def launch_gz(context, *args, **kwargs):
             '--controller-manager', robot_name+'/controller_manager',
             # '--use-sim-time',
             'joint_trajectory_controller'
+        ],
+        output='screen'
+    )
+
+    steer_joint_trajectory_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+            '--set-state', 'active',
+            '--controller-manager', robot_name+'/controller_manager',
+            # '--use-sim-time',
+            'steer_joint_trajectory_controller'
         ],
         output='screen'
     )
@@ -192,6 +203,7 @@ def launch_gz(context, *args, **kwargs):
             controller_manager,
             joint_state_broadcaster,
             joint_trajectory_controller,
+            steer_joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
             RegisterEventHandler(
@@ -217,6 +229,12 @@ def launch_gz(context, *args, **kwargs):
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
                     on_exit=[joint_trajectory_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[steer_joint_trajectory_controller],
                 )
             ),
             RegisterEventHandler(

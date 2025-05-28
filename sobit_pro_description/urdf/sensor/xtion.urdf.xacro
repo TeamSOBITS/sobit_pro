@@ -2,8 +2,8 @@
 <robot name="sensor_asus_xtion_pro" xmlns:xacro="http://ros.org/wiki/xacro">
 
   <!-- Include external macros -->
-  <xacro:include filename="$(find turtlebot2_description)/urdf/turtlebot_gazebo.urdf.xacro"/>
-  <xacro:include filename="$(find turtlebot2_description)/urdf/turtlebot_properties.urdf.xacro"/>
+  <!-- <xacro:include filename="$(find turtlebot2_description)/urdf/turtlebot_gazebo.urdf.xacro"/>
+  <xacro:include filename="$(find turtlebot2_description)/urdf/turtlebot_properties.urdf.xacro"/> -->
 
   <!-- Xacro properties -->
   <xacro:property name="asus_xtion_pro_cam_py" value="0.0205"/>

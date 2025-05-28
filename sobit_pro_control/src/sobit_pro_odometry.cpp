@@ -45,6 +45,8 @@ bool SobitProOdometry::odom(
           node_->get_logger(),
           "fr_direction_deg = %.3f\tbl_direction_deg = %.3f\n",
           fr_direction_deg, bl_direction_deg);
+          RCLCPP_INFO(node_->get_logger(), "result: %.3f\n", fabsf(fr_direction_deg - bl_direction_deg));
+      // if (fabsf(fr_direction_deg - bl_direction_deg) >= 0.0f && fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f)
       if (fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f){
         // Convert Wheel Coordinates to Robot Coordinates
         fl_direction_deg = fl_direction_deg - 45.;

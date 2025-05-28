@@ -166,7 +166,7 @@ bool SobitProMain::start_up_sound()
   int rand_sound = distribution(gen);
 
   // Obtain the parameter value
-  this->declare_parameter("sound_param", int(75));
+  this->declare_parameter("sound_param", int(95));
   auto sound_param = this->get_parameter("sound_param").as_int();
 
   // Determine the sound to play
@@ -243,16 +243,20 @@ void SobitProMain::control_callback()
   addPosJointTrajectory("wheel_b_r_steer_joint", set_steer_pos[3], 0.1, &steer_joint_trajectory);
 
   // TODO: find a better way to check if the steer joint is movable
+  // if (is_steer_movable) {
+  //   if (checkPublishersConnection("cmd_vel")
+  //       || checkPublishersConnection("navigate_to_pose/goal")) { // TODO: check the topic name
+  //     if (std::fabs(curt_vel_twist.linear.x) > 0.001
+  //         || std::fabs(curt_vel_twist.linear.y) > 0.001
+  //         || std::fabs(curt_vel_twist.angular.z) > 0.001) {
+  //       RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
+  //       pub_steer_joint_->publish(steer_joint_trajectory);
+  //     }
+  //   }
+  // }
   if (is_steer_movable) {
-    if (checkPublishersConnection("cmd_vel")
-        || checkPublishersConnection("navigate_to_pose/goal")) { // TODO: check the topic name
-      if (std::fabs(curt_vel_twist.linear.x) > 0.01
-          || std::fabs(curt_vel_twist.linear.y) > 0.01
-          || std::fabs(curt_vel_twist.angular.z) > 0.01) {
-        RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
-        pub_steer_joint_->publish(steer_joint_trajectory);
-      }
-    }
+    RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
+    pub_steer_joint_->publish(steer_joint_trajectory);
   }
   else {
     RCLCPP_DEBUG(this->get_logger(), "Steer joint is not movable.");
@@ -268,6 +272,12 @@ void SobitProMain::control_callback()
   || (SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[2] - steer_bl_curt_pos))
   || (SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[3] - steer_br_curt_pos))){
     RCLCPP_INFO(this->get_logger(), "Waiting for the steering to reach the target position...");
+    RCLCPP_INFO(this->get_logger(), "set_steer_pos:%.5f,%.5f,%.5f,%.5f", set_steer_pos[0],set_steer_pos[1],set_steer_pos[2],set_steer_pos[3]);
+    RCLCPP_INFO(this->get_logger(), "set_steer_curt_pos:%.5f,%.5f,%.5f,%.5f", steer_fl_curt_pos, steer_fr_curt_pos, steer_bl_curt_pos, steer_br_curt_pos);
+    RCLCPP_INFO(this->get_logger(), "\n0.174533 to position result1: %.3f", fabs(set_steer_pos[0] - steer_fl_curt_pos));
+    RCLCPP_INFO(this->get_logger(), "0.174533 to position result2: %.3f", fabs(set_steer_pos[1] - steer_fl_curt_pos));
+    RCLCPP_INFO(this->get_logger(), "0.174533 to position result3: %.3f", fabs(set_steer_pos[2] - steer_fl_curt_pos));
+    RCLCPP_INFO(this->get_logger(), "0.174533 to position result4: %.3f", fabs(set_steer_pos[3] - steer_fl_curt_pos));
     set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
     is_steer_movable = false;
   }
