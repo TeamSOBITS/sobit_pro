@@ -1,5 +1,14 @@
 #include "sobit_pro_control/sobit_pro_main.hpp"
 
+#define COLOR_RED     "\033[1;31m"
+#define COLOR_GREEN   "\033[1;32m"
+#define COLOR_YELLOW  "\033[1;33m"
+#define COLOR_CYAN    "\033[1;36m"
+#define COLOR_RESET   "\033[0m"
+
+
+int sobit_pro::SobitProMain::recovery_publish_counter = 0; // Actual definition + init
+
 namespace sobit_pro{
 
 SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOptions())
@@ -45,6 +54,8 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   wheel_joint_vel.data.resize(4);
 
   is_steer_movable = true;
+
+
 
 
   // [SIM] Set the initial position of the wheel
@@ -221,70 +232,150 @@ bool SobitProMain::shut_down_sound()
 // Control wheel
 void SobitProMain::control_callback()
 {
-  // [SIM] Wait for the joint_states to be published
+  static std::array<double, 4> last_sent_steer_pos = {0.0, 0.0, 0.0, 0.0};
+  constexpr double STEER_PUBLISH_EPSILON = 0.005; // Minimum change to consider as new command [rad]
+
+  // Wait for joint states
   if (joints_pos.empty() || joints_vel.empty()) {
     RCLCPP_INFO(this->get_logger(), "Waiting for joint_states to be published...");
     return;
   }
 
+  // Calculate desired steer positions and update current ones
   set_steer_pos = sobit_pro_control_->setSteerPos();
 
-  steer_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_steer_joint");
-  steer_fr_curt_pos = SobitProMain::getJointPos("wheel_f_r_steer_joint");
-  steer_bl_curt_pos = SobitProMain::getJointPos("wheel_b_l_steer_joint");
-  steer_br_curt_pos = SobitProMain::getJointPos("wheel_b_r_steer_joint");
+  // Update current steer positions
+  steer_fl_curt_pos = getJointPos("wheel_f_l_steer_joint");
+  steer_fr_curt_pos = getJointPos("wheel_f_r_steer_joint");
+  steer_bl_curt_pos = getJointPos("wheel_b_l_steer_joint");
+  steer_br_curt_pos = getJointPos("wheel_b_r_steer_joint");
 
+
+  // 3. Check alignment
+bool all_aligned = 
+    fabs(set_steer_pos[0] - steer_fl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
+    fabs(set_steer_pos[1] - steer_fr_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
+    fabs(set_steer_pos[2] - steer_bl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
+    fabs(set_steer_pos[3] - steer_br_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD;
+
+
+  // 4. Prepare steer trajectory (always, for republishing)
   steer_joint_trajectory.joint_names.clear();
   steer_joint_trajectory.points.clear();
-
   setPosJointTrajectory("wheel_f_l_steer_joint", set_steer_pos[0], 0.1, &steer_joint_trajectory);
   addPosJointTrajectory("wheel_f_r_steer_joint", set_steer_pos[1], 0.1, &steer_joint_trajectory);
   addPosJointTrajectory("wheel_b_l_steer_joint", set_steer_pos[2], 0.1, &steer_joint_trajectory);
   addPosJointTrajectory("wheel_b_r_steer_joint", set_steer_pos[3], 0.1, &steer_joint_trajectory);
 
-  // TODO: find a better way to check if the steer joint is movable
-  // if (is_steer_movable) {
-  //   if (checkPublishersConnection("cmd_vel")
-  //       || checkPublishersConnection("navigate_to_pose/goal")) { // TODO: check the topic name
-  //     if (std::fabs(curt_vel_twist.linear.x) > 0.001
-  //         || std::fabs(curt_vel_twist.linear.y) > 0.001
-  //         || std::fabs(curt_vel_twist.angular.z) > 0.001) {
-  //       RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
-  //       pub_steer_joint_->publish(steer_joint_trajectory);
-  //     }
-  //   }
-  // }
-  if (is_steer_movable) {
-    RCLCPP_DEBUG(this->get_logger(), "Publishing steer joint trajectory...");
-    pub_steer_joint_->publish(steer_joint_trajectory);
-  }
-  else {
-    RCLCPP_DEBUG(this->get_logger(), "Steer joint is not movable.");
+  steer_joint_trajectory.points[0].time_from_start = rclcpp::Duration::from_seconds(0.3);
+
+  // 5. State machine
+  std::array<double, 4> set_wheel_vel = {0,0,0,0}; // Always define
+  bool should_publish_steer = false; // Whether to publish steer trajectory
+
+  prev_drive_state = drive_state;
+
+  switch (drive_state) {  
+    case DriveState::DRIVE:
+      
+      // Only publish new steer trajectory if setpoints changed meaningfully
+      should_publish_steer = false;
+      for (int i = 0; i < 4; ++i) {
+        if (std::abs(set_steer_pos[i] - last_sent_steer_pos[i]) > STEER_PUBLISH_EPSILON) {
+          should_publish_steer = true;
+          break;
+        }
+}
+        
+      // Check if the robot is stuck
+      if (all_aligned){
+          // If the robot is aligned, set wheel velocities
+          set_wheel_vel = sobit_pro_control_->setWheelVel();
+          stuck_counter = 0; // Reset the blocked counter
+
+
+      } else{
+            stuck_counter++;
+          // If the robot is stuck for too long, apply attenuation to wheel speeds
+          if (stuck_counter > ATTENUATION_FACTOR){
+            // Compute attenuation factor (0.0 to 1.0)
+            double factor = 1.0 - double(stuck_counter - ATTENUATION_FACTOR) / double(MAX_STUCK_CYCLES - ATTENUATION_FACTOR);
+            factor = std::max(factor, 0.1); // Ensure factor is not negative
+
+            // Apply attenuation to wheel velocities
+            for (int i = 0; i < 4; ++i) {
+              set_wheel_vel[i] *= factor; // Reduce speed based on factor
+            }
+          }
+          // Check if the robot is stuck for too long
+            RCLCPP_WARN(this->get_logger(), COLOR_RED
+              "🔁 Stuck detected! Stuck counter: %d", stuck_counter);
+            if (stuck_counter >= MAX_STUCK_CYCLES) {
+              RCLCPP_ERROR(this->get_logger(), COLOR_RED
+                "🔁 Stuck for too long! Switching to RECOVERY state.");
+                drive_state = DriveState::RECOVERY; // Switch to recovery state
+                stabilize_counter = 0; // Reset stabilize counter
+        }
+      }
+      break;
+
+
+    case DriveState::RECOVERY:
+      // 1. Stop the wheels
+      set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.0;
+      // Force steer alignment
+      should_publish_steer = false;
+      for (int i = 0; i < 4; ++i) {
+        if (std::abs(set_steer_pos[i] - last_sent_steer_pos[i]) > STEER_PUBLISH_EPSILON) {
+          should_publish_steer = true;
+          break;
+        }
+      }
+
+      recovery_publish_counter++;
+      if (!should_publish_steer && (recovery_publish_counter % 10) == 0) {
+      should_publish_steer = true;
+      }
+      if (should_publish_steer){
+        recovery_publish_counter = 0; // Reset counter
+      }
+
+      RCLCPP_WARN(this->get_logger(), COLOR_RED
+        "🔁 Recovery mode activated! Wheels stopped, force steer alignment.");
+
+      // 2. Check if the robot is still stuck
+      if (all_aligned){
+          stabilize_counter = 0; // Reset the stabilize counter
+          drive_state = DriveState::STABILIZE; // Switch to stabilize state
+          RCLCPP_INFO(this->get_logger(), COLOR_GREEN
+            "✅ Robot aligned! Switching to STABILIZE state.");
+      }
+      else if((stuck_counter % 40) == 0) { // Every 2 seconds at 50ms cycle
+          RCLCPP_WARN(this->get_logger(), COLOR_RED
+            "🛑 Robot still unaligned! Continuing recovery.");
+      }
+      break;
+
+    case DriveState::STABILIZE:
+      // wheel_vel needs to be zeroed in stabilize state for a while
+      set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.0;
+      should_publish_steer = true; // Always publish steer trajectory in stabilize state
+      stabilize_counter++;
+      RCLCPP_INFO(this->get_logger(), COLOR_YELLOW
+        "🟡 Stabilizing... Counter: %d", stabilize_counter);
+
+
+      // Check if stabilization is complete  
+      if (stabilize_counter >= 30) { // 1.5 seconds at 50ms cycle
+        RCLCPP_INFO(this->get_logger(), COLOR_GREEN
+          "✅ Stabilization complete! Resuming DRIVE state.");
+        drive_state = DriveState::DRIVE; // Switch back to drive state
+        stuck_counter = 0; // Reset stuck counter
+      }
+      
+      break;
   }
 
-  steer_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_steer_joint");
-  steer_fr_curt_pos = SobitProMain::getJointPos("wheel_f_r_steer_joint");
-  steer_bl_curt_pos = SobitProMain::getJointPos("wheel_b_l_steer_joint");
-  steer_br_curt_pos = SobitProMain::getJointPos("wheel_b_r_steer_joint");
-
-  if ((SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[0] - steer_fl_curt_pos))
-  || (SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[1] - steer_fr_curt_pos))
-  || (SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[2] - steer_bl_curt_pos))
-  || (SobitProControl::DXL_MOVING_STATUS_THRESHOLD < fabs(set_steer_pos[3] - steer_br_curt_pos))){
-    RCLCPP_INFO(this->get_logger(), "Waiting for the steering to reach the target position...");
-    RCLCPP_INFO(this->get_logger(), "set_steer_pos:%.5f,%.5f,%.5f,%.5f", set_steer_pos[0],set_steer_pos[1],set_steer_pos[2],set_steer_pos[3]);
-    RCLCPP_INFO(this->get_logger(), "set_steer_curt_pos:%.5f,%.5f,%.5f,%.5f", steer_fl_curt_pos, steer_fr_curt_pos, steer_bl_curt_pos, steer_br_curt_pos);
-    RCLCPP_INFO(this->get_logger(), "\n0.174533 to position result1: %.3f", fabs(set_steer_pos[0] - steer_fl_curt_pos));
-    RCLCPP_INFO(this->get_logger(), "0.174533 to position result2: %.3f", fabs(set_steer_pos[1] - steer_fl_curt_pos));
-    RCLCPP_INFO(this->get_logger(), "0.174533 to position result3: %.3f", fabs(set_steer_pos[2] - steer_fl_curt_pos));
-    RCLCPP_INFO(this->get_logger(), "0.174533 to position result4: %.3f", fabs(set_steer_pos[3] - steer_fl_curt_pos));
-    set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.;
-    is_steer_movable = false;
-  }
-  else {
-    set_wheel_vel = sobit_pro_control_->setWheelVel();
-    is_steer_movable = true;
-  }
 
 
   // [SIM] Publish Float64MultiArray [rad/s]
@@ -297,6 +388,12 @@ void SobitProMain::control_callback()
 
   // checkPublishersConnection("velocity_controller/commands");
   pub_wheel_joint_->publish(wheel_joint_vel);
+
+  if (should_publish_steer) {
+    pub_steer_joint_->publish(steer_joint_trajectory);
+    last_sent_steer_pos = set_steer_pos; // Remember last sent
+  }
+
 
   // [SIM] Update the current wheel position
   wheel_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_drive_joint");
@@ -339,6 +436,7 @@ void SobitProMain::control_callback()
   // Publish Odometry
   sobit_pro_odometry_->pose_broadcaster(result_odom);
   pub_odometry_->publish(result_odom);
+
 }
 
 } // namespace sobit_pro

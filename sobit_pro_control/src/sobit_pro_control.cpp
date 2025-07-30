@@ -321,20 +321,23 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
   }
 }
 
-double *SobitProControl::setSteerPos(){
-    steer_pos[0] = steer_fl_goal_pos;
-    steer_pos[1] = steer_fr_goal_pos;
-    steer_pos[2] = steer_bl_goal_pos;
-    steer_pos[3] = steer_br_goal_pos;
-
-    return steer_pos;
+// New:
+std::array<double, 4> SobitProControl::setSteerPos() {
+    return {
+        steer_fl_goal_pos,
+        steer_fr_goal_pos,
+        steer_bl_goal_pos,
+        steer_br_goal_pos
+    };
 }
 
-double *SobitProControl::setWheelVel(){
-    wheel_vel[0] = wheel_fl_goal_vel;
-    wheel_vel[1] = wheel_fr_goal_vel;
-    wheel_vel[2] = wheel_bl_goal_vel;
-    wheel_vel[3] = wheel_br_goal_vel;
-
-    return wheel_vel;
+std::array<double, 4> SobitProControl::setWheelVel() {
+    std::array<double, 4> out = {
+        wheel_fl_goal_vel,
+        wheel_fr_goal_vel,
+        wheel_bl_goal_vel,
+        wheel_br_goal_vel
+    };
+    return out;
 }
+
