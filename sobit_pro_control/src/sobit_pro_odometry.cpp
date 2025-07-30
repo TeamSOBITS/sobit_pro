@@ -3,8 +3,15 @@
 
 #include <iostream>
 
+namespace {
+  int g_trans_total = 0;
+  int g_trans_ok = 0;
+  int g_trans_skip = 0;
+}
+
 // Calculate Odometry
 bool SobitProOdometry::odom(
+  
   double steer_fl_curt_pos, double steer_fr_curt_pos,
   double steer_bl_curt_pos, double steer_br_curt_pos,
   double wheel_fl_curt_pos, double wheel_fr_curt_pos,
@@ -24,6 +31,8 @@ bool SobitProOdometry::odom(
   double bl_direction_deg = steer_bl_curt_pos / (M_PI/180.); // Record present position
   double br_direction_deg = steer_br_curt_pos / (M_PI/180.); // Record present position
 
+
+
   double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
   double distance_m;
   nav_msgs::msg::Odometry calculation_odom = *result_odom;
@@ -38,16 +47,35 @@ bool SobitProOdometry::odom(
   switch (motion_mode) {
     // Translational motion
     case TRANSLATIONAL_MOTION_MODE:{
+      RCLCPP_INFO(node_->get_logger(), "🟦 Entered TRANSLATIONAL_MOTION_MODE");
+
       
-      // Check the calculation
-      // if ((0 <= fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) && (fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) <= 1)) {
-      RCLCPP_INFO(
-          node_->get_logger(),
-          "fr_direction_deg = %.3f\tbl_direction_deg = %.3f\n",
-          fr_direction_deg, bl_direction_deg);
-          RCLCPP_INFO(node_->get_logger(), "result: %.3f\n", fabsf(fr_direction_deg - bl_direction_deg));
-      // if (fabsf(fr_direction_deg - bl_direction_deg) >= 0.0f && fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f)
-      if (fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f){
+      // // Check the calculation
+      // // if ((0 <= fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) && (fabsf(fabsf(fr_direction_deg) - fabsf(fl_direction_deg))) <= 1)) {
+      // RCLCPP_INFO(
+      //     node_->get_logger(),
+      //     "fr_direction_deg = %.3f\tbl_direction_deg = %.3f\n",
+      //     fr_direction_deg, bl_direction_deg);
+      //     RCLCPP_INFO(node_->get_logger(), "result: %.3f\n", fabsf(fr_direction_deg - bl_direction_deg));
+      // // if (fabsf(fr_direction_deg - bl_direction_deg) >= 0.0f && fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f)
+      // if (fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f){
+        const double delta = std::fabs(fr_direction_deg - bl_direction_deg);
+        const bool accepted_for_odom = (delta <= 14.0);
+
+          RCLCPP_INFO(node_->get_logger(), "fr_direction_deg = %.3f\tbl_direction_deg = %.3f", fr_direction_deg, bl_direction_deg);
+          RCLCPP_INFO(node_->get_logger(), "Steering Δ = %.3f → %s", delta, accepted_for_odom ? "Accepted ✅" : "Rejected ❌");
+
+          g_trans_total++;
+
+          if (accepted_for_odom) {
+            g_trans_ok++;
+          } else {
+            g_trans_skip++;
+          }
+
+
+          if (accepted_for_odom) {
+        RCLCPP_INFO(node_->get_logger(), "✅ Steering match → Odometry calculated");
         // Convert Wheel Coordinates to Robot Coordinates
         fl_direction_deg = fl_direction_deg - 45.;
         fr_direction_deg = fr_direction_deg + 45.;
@@ -65,15 +93,18 @@ bool SobitProOdometry::odom(
           else                      distance_m =  (fabsf(fr_distance_m) + fabsf(fl_distance_m)) / 2.;
         }
         else {
-          RCLCPP_ERROR(
-              node_->get_logger(),
-              "Calculation ERROR : Translational motion\n");
+          RCLCPP_WARN(node_->get_logger(), "❌ Steering mismatch → Skipping odometry update");
+          RCLCPP_ERROR(node_->get_logger(), "Odometry ERROR : Translational motion");
+
+
         }
       }
       else {
-        RCLCPP_ERROR(
-            node_->get_logger(), 
-            "Odometry ERROR : Translational motion\n");
+        RCLCPP_WARN(
+          node_->get_logger(),
+          "❌ Steering mismatch → fr: %.2f | bl: %.2f | Δ: %.2f",
+          fr_direction_deg, bl_direction_deg, fabsf(fr_direction_deg - bl_direction_deg));
+        RCLCPP_ERROR(node_->get_logger(), "Odometry ERROR : Translational motion (steering mismatch)");
         }
 
       // Transform euler to RPY (prev_odom)
@@ -118,6 +149,7 @@ bool SobitProOdometry::odom(
     // Rotational motion
     case ROTATIONAL_MOTION_MODE:{
       // Transform euler->RPY (prev_odom)
+      RCLCPP_INFO(node_->get_logger(), "🟨 Entered ROTATIONAL_MOTION_MODE");
       tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
       tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
@@ -138,6 +170,7 @@ bool SobitProOdometry::odom(
 
     // Swivel motion
     case SWIVEL_MOTION_MODE:{
+      RCLCPP_INFO(node_->get_logger(), "🟩 Entered SWIVEL_MOTION_MODE");
       // Transform euler->RPY (prev_odom)
       tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
       tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
