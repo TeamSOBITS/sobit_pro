@@ -15,8 +15,8 @@ def generate_launch_description():
     robot_id = 0
     bringup_pkg = robot_name + "_bringup"
 
-    urg_config = os.path.join(get_package_share_directory(
-        "robocup_opl_cml"), "config", "urg_node_params.yaml")
+    # urg_config = os.path.join(get_package_share_directory(
+    #     "robocup_opl_cml"), "config", "urg_node_params.yaml")
  
     return LaunchDescription([
         # IncludeLaunchDescription(
@@ -34,7 +34,8 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(
-                    get_package_share_directory('robocup_opl_cml'),
+                    # get_package_share_directory('robocup_opl_cml'),
+                    get_package_share_directory('sobit_pro_bringup'),
                     'launch',
                     'robot.launch.py')
                 ])

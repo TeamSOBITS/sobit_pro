@@ -60,8 +60,8 @@ def launch_gz(context, *args, **kwargs):
         'rviz',
         'gazebo.rviz'
     ]) if enable_gz == 'True' else PathJoinSubstitution([
-        # FindPackageShare('sobit_pro_bringup'),
-        FindPackageShare('robocup_opl_cml'),
+        FindPackageShare('sobit_pro_bringup'),
+        # FindPackageShare('robocup_opl_cml'),
         'rviz',
         'real.rviz'
     ])
