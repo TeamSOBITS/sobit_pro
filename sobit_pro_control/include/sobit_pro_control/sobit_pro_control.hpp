@@ -38,7 +38,7 @@ public:
   static constexpr double WHEEL_LENGTH    = M_PI * WHEEL_DIAMETER; // Wheel Length [m]
   static constexpr double BODY_DIAMETER   = 0.44775010;  // Robot Diameter [m] (respect to the center of wheels)
   static constexpr double TRACK           = 0.31660713;  // Distance between left and right wheels [m]
-  static constexpr double DXL_MOVING_STATUS_THRESHOLD = 0.5;//0.174533;//5.0; //0.174533; // Dynamixel moving status threshold  // old param : 10
+  static constexpr double DXL_MOVING_STATUS_THRESHOLD = 0.2;//0.174533;//5.0; //0.174533; // Dynamixel moving status threshold  // old param : 10
 
   double steer_fl_goal_pos, steer_fr_goal_pos, steer_bl_goal_pos, steer_br_goal_pos;
   double wheel_fl_goal_vel, wheel_fr_goal_vel, wheel_bl_goal_vel, wheel_br_goal_vel;
@@ -74,8 +74,8 @@ public:
 
   void setParams(const geometry_msgs::msg::Twist vel_twist);
   inline int getMotionMode() const { return static_cast<int>(motion_mode); }
-  double *setSteerPos();
-  double *setWheelVel();
+  std::array<double, 4> setSteerPos();
+  std::array<double, 4> setWheelVel();
 };
 
 #endif // SOBIT_PRO_CONTROL_HPP_

@@ -39,27 +39,32 @@ private:
   rclcpp::Publisher<std_msgs::msg::Float64MultiArray>::SharedPtr      pub_wheel_joint_;
   rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr                   pub_wheels_error_;
 
-  // Callback
+  // ==== Control & Sensing Callbacks ====
   void callback(const geometry_msgs::msg::Twist::SharedPtr msg);
   void joint_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
   void control_callback();
 
-  // Publish
+  // ==== Publishing Helpers ====
   double getJointPos(const std::string& joint_name);
   double getJointVel(const std::string& joint_name);
   void setPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
   void addPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
   bool checkPublishersConnection(std::string pub_name);
 
+  // ==== Control Variables ====
   trajectory_msgs::msg::JointTrajectory steer_joint_trajectory;
   std_msgs::msg::Float64MultiArray      wheel_joint_vel;
 
+  // Wheel positions (initial and current)
   double wheel_fl_init_pos, wheel_fr_init_pos, wheel_bl_init_pos, wheel_br_init_pos;
   double wheel_fl_curt_pos, wheel_fr_curt_pos, wheel_bl_curt_pos, wheel_br_curt_pos;
+
+  // Steering joint positions (current)
   double steer_fl_curt_pos, steer_fr_curt_pos, steer_bl_curt_pos, steer_br_curt_pos;
 
-  double* set_steer_pos;
-  double* set_wheel_vel;
+  // Desired (target) steering positions and wheel velocities
+  std::array<double, 4> set_steer_pos;
+  std::array<double, 4> set_wheel_vel;
 
   bool is_steer_movable;
 
@@ -79,6 +84,21 @@ private:
   std::unique_ptr<SobitProOdometry> sobit_pro_odometry_;
 
   rclcpp::TimerBase::SharedPtr control_timer_;
+
+  // ==== State Machine for Safe Swerve Control ====
+  // Used by control_callback() to manage motion safety:
+  // Defines the robot's current drive state:
+  //   DRIVE      : Normal operation, wheels move and steer follows goal
+  //   RECOVERY   : Robot detected as stuck or unaligned, zero wheels and force steer alignment
+  //   STABILIZE  : Buffer state after recovery, holds wheels at zero for a few cycles before resuming drive
+  enum class DriveState { DRIVE, RECOVERY, STABILIZE };
+  DriveState drive_state = DriveState::RECOVERY; // Current drive state
+  DriveState prev_drive_state = DriveState::RECOVERY; // Previous drive state (for logging and transition detection)
+  int stuck_counter = 0;  // Counts cycles the robot is unaligned (detects "stuck")
+  int stabilize_counter = 0; // Counts stabilization cycles after recovery (prevents immediate re-drive)
+  int MAX_STUCK_CYCLES = 40; // Max cycles to consider robot stuck (5s at 50ms cycle)
+  int ATTENUATION_FACTOR = 10; // Factor to reduce wheel speed in recovery state
+  static int recovery_publish_counter; // Counts recovery state cycles for publishing
 };
     
 // 実装部
