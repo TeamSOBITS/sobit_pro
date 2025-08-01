@@ -66,13 +66,13 @@ def launch_gz(context, *args, **kwargs):
         'real.rviz'
     ])
 
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        namespace=robot_name,
-        arguments=['-d', rviz_config],
-        output='screen',
-    )
+    # rviz_node = Node(
+    #     package='rviz2',
+    #     executable='rviz2',
+    #     namespace=robot_name,
+    #     arguments=['-d', rviz_config],
+    #     output='screen',
+    # )
 
     if enable_gz == 'False':
         controller_config = os.path.join(get_package_share_directory(
@@ -212,7 +212,7 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[move_base_node],
                 )
             ),
-            rviz_node,
+            # rviz_node,
         ]
 
     else:
@@ -250,5 +250,5 @@ def launch_gz(context, *args, **kwargs):
                 )
             ),
             robot_state_publisher_node,
-            rviz_node,
+            # rviz_node,
         ]
