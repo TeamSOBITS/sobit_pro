@@ -19,23 +19,23 @@ def generate_launch_description():
     #     "robocup_opl_cml"), "config", "urg_node_params.yaml")
  
     return LaunchDescription([
-        # IncludeLaunchDescription(
-        #     PythonLaunchDescriptionSource([
-        #         PathJoinSubstitution([os.path.join(
-        #             get_package_share_directory('robocup_opl_cml'),
-        #             'launch',
-        #             'camera_with_cloud.launch.py')
-        #         ])
-        #     ]),
-        #     launch_arguments={
-        #         'namespace': robot_name + '/head_camera',
-        #     }.items()
-        # ),
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(
-                    # get_package_share_directory('robocup_opl_cml'),
-                    get_package_share_directory('sobit_pro_bringup'),
+                    get_package_share_directory(bringup_pkg),
+                    'launch',
+                    'camera_with_cloud.launch.py')
+                    
+                ])
+            ]),
+            launch_arguments={
+                'namespace': robot_name + '/head_camera',
+            }.items()
+        ),
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([os.path.join(
+                    get_package_share_directory(bringup_pkg),
                     'launch',
                     'robot.launch.py')
                 ])
