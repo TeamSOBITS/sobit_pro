@@ -233,7 +233,7 @@ bool SobitProMain::shut_down_sound()
 void SobitProMain::control_callback()
 {
   static std::array<double, 4> last_sent_steer_pos = {0.0, 0.0, 0.0, 0.0};
-  constexpr double STEER_PUBLISH_EPSILON = 0.09; // Minimum change to consider as new command [rad]
+  constexpr double STEER_PUBLISH_EPSILON = 0.05; // Minimum change to consider as new command [rad]
 
   // Wait for joint states
   if (joints_pos.empty() || joints_vel.empty()) {
