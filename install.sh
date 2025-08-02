@@ -69,7 +69,8 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-urdf \
     ros-$ROS_DISTRO-urdf-launch \
     ros-$ROS_DISTRO-xacro \
-    ros-$ROS_DISTRO-tf-transformations
+    ros-$ROS_DISTRO-tf-transformations \
+    ros-$ROS_DISTRO-openni2-camera
 
 
 # Install Gazebo Fortress with binaries
