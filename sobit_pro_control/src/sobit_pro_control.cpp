@@ -321,14 +321,16 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
   }
 }
 
-// New:
+// Return wheel joint goal velocities as a fixed-size array.
+// std::array used to avoid raw pointer.
 std::array<double, 4> SobitProControl::setSteerPos() {
-    return {
+    std::array<double, 4> out = {
         steer_fl_goal_pos,
         steer_fr_goal_pos,
         steer_bl_goal_pos,
         steer_br_goal_pos
     };
+    return out;
 }
 
 std::array<double, 4> SobitProControl::setWheelVel() {

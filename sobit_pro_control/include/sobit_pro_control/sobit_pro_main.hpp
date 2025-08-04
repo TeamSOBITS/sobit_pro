@@ -88,17 +88,19 @@ private:
   // ==== State Machine for Safe Swerve Control ====
   // Used by control_callback() to manage motion safety:
   // Defines the robot's current drive state:
-  //   DRIVE      : Normal operation, wheels move and steer follows goal
-  //   RECOVERY   : Robot detected as stuck or unaligned, zero wheels and force steer alignment
-  //   STABILIZE  : Buffer state after recovery, holds wheels at zero for a few cycles before resuming drive
-  enum class DriveState { DRIVE, RECOVERY, STABILIZE };
-  DriveState drive_state = DriveState::RECOVERY; // Current drive state
-  DriveState prev_drive_state = DriveState::RECOVERY; // Previous drive state (for logging and transition detection)
-  int stuck_counter = 0;  // Counts cycles the robot is unaligned (detects "stuck")
-  int stabilize_counter = 0; // Counts stabilization cycles after recovery (prevents immediate re-drive)
-  int MAX_STUCK_CYCLES = 40; // Max cycles to consider robot stuck (5s at 50ms cycle)
-  int ATTENUATION_FACTOR = 10; // Factor to reduce wheel speed in recovery state
-  static int recovery_publish_counter; // Counts recovery state cycles for publishing
+enum class DriveState { 
+  DRIVE,       // Normal driving mode: move using wheel and steer commands
+  RECOVERY,    // Robot detected as stuck — stop wheels, force steer alignment
+  STABILIZE    // Post-recovery cooldown phase — ensure robot is stable before resuming
+};
+  DriveState drive_state = DriveState::RECOVERY; // Current drive state (initialized in RECOVERY to ensure stability on startup)
+  DriveState prev_drive_state = DriveState::RECOVERY; // Previous drive state (used to detect state transitions and for logging)
+
+  int stuck_counter = 0;        // Counts consecutive control cycles where the robot remains unaligned (used to detect if robot is stuck)
+  int stabilize_counter = 0;    // Counter for STABILIZE phase — delays transition back to DRIVE to allow full recovery
+  int MAX_STUCK_CYCLES = 40;    // Max number of cycles before triggering recovery mode (≈2s if control loop is 50ms) //TO DO: make static constexpr
+  static constexpr int ATTENUATION_FACTOR = 10;  // Number of cycles before attenuation of wheel speed begins during misalignment //TO DO: make static constexpr
+  static int recovery_publish_counter; // Counter to occasionally force republishing steer trajectory during RECOVERY
 };
     
 // 実装部

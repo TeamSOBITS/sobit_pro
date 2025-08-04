@@ -119,6 +119,7 @@ void SobitProMain::callback(const geometry_msgs::msg::Twist::SharedPtr vel_twist
   curt_vel_twist = *vel_twist;
 
   // Translational
+  // Changed  (std::fabs(vel_twist->angular.z) <= 0.001) to (std::fabs(vel_twist->angular.z) == 0.000)) to avoid wrong motion mode
   if (((std::fabs(vel_twist->linear.x) > 0.000) || (std::fabs(vel_twist->linear.y) > 0.000))
       && (std::fabs(vel_twist->angular.z) == 0.000)) {
     motion = SobitProControl::TRANSLATIONAL_MOTION;
@@ -232,10 +233,22 @@ bool SobitProMain::shut_down_sound()
 // Control wheel
 void SobitProMain::control_callback()
 {
-  static std::array<double, 4> last_sent_steer_pos = {0.0, 0.0, 0.0, 0.0};
-  constexpr double STEER_PUBLISH_EPSILON = 0.05; // Minimum change to consider as new command [rad]
+/**
+ * @brief Main control loop for SOBIT Pro wheel and steering motion.
+ * 
+ * - Computes desired steering angles and wheel velocities.
+ * - Runs a state machine to detect stuck conditions and trigger recovery.
+ * - Publishes wheel and steering commands.
+ * - Computes and publishes odometry from joint feedback.
+ */
 
-  // Wait for joint states
+  // Tracks the last sent steer command to avoid unnecessary republishing
+  static std::array<double, 4> last_sent_steer_pos = {0.0, 0.0, 0.0, 0.0};
+
+  // TODO: Move to sobit_pro_control.hpp
+  constexpr double STEER_PUBLISH_EPSILON = 0.05; // Minimum change to consider as new command [rad] (Needs further tuning)
+
+  // Wait until joint_states topic is populated (needed for steering and odometry calculations)
   if (joints_pos.empty() || joints_vel.empty()) {
     RCLCPP_INFO(this->get_logger(), "Waiting for joint_states to be published...");
     return;
@@ -251,7 +264,7 @@ void SobitProMain::control_callback()
   steer_br_curt_pos = getJointPos("wheel_b_r_steer_joint");
 
 
-  // 3. Check alignment
+  // 3. // Check if all current steering joint positions are within acceptable threshold of their targets
 bool all_aligned = 
     fabs(set_steer_pos[0] - steer_fl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
     fabs(set_steer_pos[1] - steer_fr_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
@@ -267,15 +280,21 @@ bool all_aligned =
   addPosJointTrajectory("wheel_b_l_steer_joint", set_steer_pos[2], 0.1, &steer_joint_trajectory);
   addPosJointTrajectory("wheel_b_r_steer_joint", set_steer_pos[3], 0.1, &steer_joint_trajectory);
 
+  // Set the execution time for the steering trajectory
   steer_joint_trajectory.points[0].time_from_start = rclcpp::Duration::from_seconds(0.3);
 
   // 5. State machine
   std::array<double, 4> set_wheel_vel = {0,0,0,0}; // Always define
   bool should_publish_steer = false; // Whether to publish steer trajectory
 
+  // Save the last sent steer positions for comparison, can be used for debugging or further logic
   prev_drive_state = drive_state;
 
   switch (drive_state) {  
+  // ---- Drive State Machine ----
+    // DRIVE: Normal movement. If stuck, attenuate velocity or switch to RECOVERY.
+    // RECOVERY: Stop wheels and re-align steer joints until aligned.
+    // STABILIZE: Hold still momentarily to stabilize robot before resuming movement.
     case DriveState::DRIVE:
       
       // Only publish new steer trajectory if setpoints changed meaningfully
@@ -297,6 +316,8 @@ bool all_aligned =
       } else{
             stuck_counter++;
           // If the robot is stuck for too long, apply attenuation to wheel speeds
+          // ATTENUATION_FACTOR(sobit_pro_main.hpp): how many cycles to wait before starting to reduce speed
+          // MAX_STUCK_CYCLES(sobit_pro_main.hpp): max allowed stuck duration before triggering recovery mode
           if (stuck_counter > ATTENUATION_FACTOR){
             // Compute attenuation factor (0.0 to 1.0)
             double factor = 1.0 - double(stuck_counter - ATTENUATION_FACTOR) / double(MAX_STUCK_CYCLES - ATTENUATION_FACTOR);
@@ -333,6 +354,7 @@ bool all_aligned =
       }
 
       recovery_publish_counter++;
+      // Force steer republishing every N cycles if alignment still not achieved
       if (!should_publish_steer && (recovery_publish_counter % 10) == 0) {
       should_publish_steer = true;
       }
@@ -389,6 +411,10 @@ bool all_aligned =
   // checkPublishersConnection("velocity_controller/commands");
   pub_wheel_joint_->publish(wheel_joint_vel);
 
+// Publish new steer command only when necessary:
+// - In DRIVE mode: only if target steer positions changed (avoid redundant publishes)
+// - In RECOVERY/STABILIZE: may be forced at intervals to ensure alignment
+// After publishing, update last_sent_steer_pos to track what was sent
   if (should_publish_steer) {
     pub_steer_joint_->publish(steer_joint_trajectory);
     last_sent_steer_pos = set_steer_pos; // Remember last sent

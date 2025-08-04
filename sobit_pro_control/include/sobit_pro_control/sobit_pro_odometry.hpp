@@ -35,6 +35,7 @@ public:
     RCLCPP_INFO(node_->get_logger(), "SobitProOdometry initialized.");
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(node_);
   }
+  // Check how much of odometry is accepted
   ~SobitProOdometry() {
   RCLCPP_INFO(node_->get_logger(),
               "🧮 Odometry Summary [TRANSLATIONAL]: total=%d accepted=%d skipped=%d (%.1f%% skipped)",

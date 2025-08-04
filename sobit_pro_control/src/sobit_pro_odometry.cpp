@@ -59,6 +59,8 @@ bool SobitProOdometry::odom(
       //     RCLCPP_INFO(node_->get_logger(), "result: %.3f\n", fabsf(fr_direction_deg - bl_direction_deg));
       // // if (fabsf(fr_direction_deg - bl_direction_deg) >= 0.0f && fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f)
       // if (fabsf(fr_direction_deg - bl_direction_deg) <= 2.0f){
+
+      //   Made into delta in order to track whow much of odometry is accepted, right now it is 14 degrees but needs adjustment
         const double delta = std::fabs(fr_direction_deg - bl_direction_deg);
         const bool accepted_for_odom = (delta <= 14.0);
 
