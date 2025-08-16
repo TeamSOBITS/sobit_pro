@@ -3,8 +3,14 @@
        xmlns:xacro="http://ros.org/wiki/xacro" >
   <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.transmission.xacro" />
   
-  <xacro:macro name="hand" params="prefix_hand prefix_finger parent">
+  <xacro:macro name="hand" params="prefix_hand prefix_finger parent
+                                   enable_inner_l:=true
+                                 enable_outer_l:=true
+                                 enable_outer_r:=true
+                                 enable_fingers:=true">
 
+
+    <!-- Joint: Hand base-->
     <joint name="${prefix_hand}_base_joint" type="fixed">
       <parent link="${parent}" />
       <child link="${prefix_hand}_base_link" />
@@ -33,14 +39,17 @@
                  izz="${1/12*0.08*(0.06102**2+0.102**2)}" />
       </inertial>
     </link>
+  
 
-
-    <joint name="${prefix_hand}_inner_l_joint" type="continuous">
+<xacro:if value="${enable_inner_l}">
+    <joint name="${prefix_hand}_inner_l_joint" type="revolute">
       <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_inner_l_link" />
       <origin xyz="0.0631932 0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <mimic joint="${prefix_hand}_joint" multiplier="-1.0" offset="0" />
+      <limit lower="0" upper="${M_PI/2.0}" effort="1.0" velocity="2.0"/>
+      <mimic joint="${prefix_hand}_joint" multiplier="1" offset="0" />
+      <!-- <dynamics damping="50.0" friction="5.0"/> -->
     </joint>
   
     <link name="${prefix_hand}_inner_l_link">
@@ -65,6 +74,7 @@
                  izz="${1/12*0.08*((0.06006-0.0071)**2+0.01**2)}" />
       </inertial>
     </link>
+    </xacro:if>
 
 
     <joint name="${prefix_hand}_joint" type="revolute">
@@ -72,7 +82,8 @@
       <child link="${prefix_hand}_link" />
       <origin xyz="0.0631932 -0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <limit lower="${-M_PI/2.0}" upper="0" effort="4.1" velocity="4.796165" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1.0" velocity="2.0" />
+
     </joint>
 
     <link name="${prefix_hand}_link">
@@ -99,12 +110,14 @@
     </link>
 
 
+<xacro:if value="${enable_outer_l}">
     <joint name="${prefix_hand}_outer_l_joint" type="continuous">
       <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_outer_l_link" />
       <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <mimic joint="${prefix_hand}_inner_l_joint" multiplier="1.0" offset="0" />
+      <!-- <mimic joint="{prefix_hand}_joint" multiplier="1.0" offset="0" /> -->
+      <limit lower="0" upper="${M_PI/2.0}" effort="1.0" velocity="2.0"/>
     </joint>
 
     <link name="${prefix_hand}_outer_l_link">
@@ -129,13 +142,15 @@
                  izz="${1/12*0.08*(0.04281**2+0.01**2)}" />
       </inertial>
     </link>
+  </xacro:if>
 
-
-    <joint name="${prefix_hand}_outer_r_joint" type="continuous">
+<xacro:if value="${enable_outer_r}">
+    <joint name="${prefix_hand}_outer_r_joint" type="revolute">
       <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_outer_r_link" />
       <origin xyz="0.043193 -0.04015 0.0282231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="1.0" velocity="2.0"/>
       <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
     </joint>
 
@@ -161,14 +176,17 @@
                  izz="${1/12*0.08*(0.04281**2+0.01**2)}" />
       </inertial>
     </link>
+  </xacro:if>
 
-
-    <joint name="${prefix_hand}_${prefix_finger}_l_joint" type="continuous">
+<xacro:if value="${enable_fingers}">
+    <joint name="${prefix_hand}_${prefix_finger}_l_joint" type="revolute">
       <parent link="${prefix_hand}_inner_l_link" />
       <child link="${prefix_hand}_${prefix_finger}_l_link" />
       <origin xyz="0.114316 0.0 -0.027729" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
       <mimic joint="${prefix_hand}_joint" multiplier="1.0" offset="0" />
+      <limit lower="${-M_PI/2.0}" upper="0" effort="4.1" velocity="4" />
+      <!-- <dynamics damping="0.05" friction="0.0"/> -->
     </joint>
 
     <link name="${prefix_hand}_${prefix_finger}_l_link">
@@ -195,12 +213,14 @@
     </link>
 
 
-    <joint name="${prefix_hand}_${prefix_finger}_r_joint" type="continuous">
+    <joint name="${prefix_hand}_${prefix_finger}_r_joint" type="revolute">
       <parent link="${prefix_hand}_link" />
       <child link="${prefix_hand}_${prefix_finger}_r_link" />
       <origin xyz="0.114316 0.0 -0.027729" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
       <mimic joint="${prefix_hand}_joint" multiplier="-1.0" offset="0" />
+      <limit lower="0" upper="${M_PI/2.0}" effort="4.1" velocity="1" />
+      <!-- <dynamics damping="50.0" friction="5.0"/> -->
     </joint>
 
     <link name="${prefix_hand}_${prefix_finger}_r_link">
@@ -225,9 +245,13 @@
                  izz="${1/12*0.08*((0.012042+0.061128)**2+0.01137**2)}" />
       </inertial>
     </link>
+   </xacro:if>
 
 
     <xacro:hand_transmission prefix_hand="${prefix_hand}" prefix_finger="${prefix_finger}" />
+
+    
+    
 
   </xacro:macro>
 </robot>
