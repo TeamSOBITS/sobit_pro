@@ -5,6 +5,7 @@
       - grasping_pose
       - detecting_pose
       - pass_high_pose
+      - putting_pose
       - pass_low_pose
       - bring_bag_pose
       - trash_pose
@@ -19,7 +20,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : 0.1
+      hand_joint                    : 0.00
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
     
@@ -42,9 +43,6 @@
       hand_joint                    : -0.1
       head_pan_joint                : 0.00
       head_tilt_joint               : -0.70
-
-
-
 
     detecting_pose:
       arm_shoulder_1_tilt_joint     : 1.57
