@@ -1,11 +1,11 @@
-urg_node:
+/**:
   ros__parameters:
     angle_max: 1.57
     angle_min: -1.57
     ip_address: "172.16.10.10"
     ip_port: 10940
     serial_baud: 115200
-    laser_frame_id: "sobit_pro/lidar_laser"
+    laser_frame_id: "lidar_laser"
     calibrate_time: true
     default_user_latency: 0.0
     diagnostics_tolerance: 0.05

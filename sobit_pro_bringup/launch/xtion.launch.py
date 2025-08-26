@@ -38,23 +38,25 @@ import launch_ros.descriptions
 from launch.substitutions import LaunchConfiguration, ThisLaunchFileDir, PathJoinSubstitution
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from ament_index_python.packages import get_package_share_directory
+import os
+
+
 
 
 def generate_launch_description():
 
     namespace_param_name = "namespace"
     namespace = LaunchConfiguration(namespace_param_name)
-    # namespace_launch_arg = DeclareLaunchArgument(namespace_param_name, default_value='head_camera')
-    namespace_launch_arg = DeclareLaunchArgument(namespace_param_name, default_value='sobit_pro/head_camera')
+    namespace_launch_arg = DeclareLaunchArgument(namespace_param_name, default_value='head_camera')
 
     tf_prefix_param_name = "tf_prefix"
     tf_prefix = LaunchConfiguration(tf_prefix_param_name)
-    # tf_prefix_launch_arg = DeclareLaunchArgument(tf_prefix_param_name, default_value='sobit_pro')
-    tf_prefix_launch_arg = DeclareLaunchArgument(tf_prefix_param_name, default_value='')
+    tf_prefix_launch_arg = DeclareLaunchArgument(tf_prefix_param_name, default_value='sobit_pro')
 
     container = launch_ros.actions.ComposableNodeContainer(
             name='container',
-            namespace=namespace,
+            namespace=[tf_prefix, "/", namespace],
             package='rclcpp_components',
             executable='component_container',
             composable_node_descriptions=[
@@ -63,15 +65,12 @@ def generate_launch_description():
                     package='openni2_camera',
                     plugin='openni2_wrapper::OpenNI2Driver',
                     name='driver',
-                    namespace=namespace,
+                    namespace=[tf_prefix, "/", namespace],
                     parameters=[{'depth_registration': True},
                                 {'use_device_time': True},
-                                # {'rgb_frame_id': [tf_prefix, '/', namespace, '_rgb_optical_frame']},
-                                # {'depth_frame_id': [tf_prefix, '/', namespace, '_depth_optical_frame']},
-                                # {'ir_frame_id': [tf_prefix, '/', namespace, '_ir_optical_frame']},],
-                                {'rgb_frame_id': [namespace,"_rgb_optical_frame"]},
-                                {'depth_frame_id': [namespace,"_depth_optical_frame"]},
-                                {'ir_frame_id': [namespace,"_ir_optical_frame"]},],
+                                {'rgb_frame_id': [tf_prefix, "/", namespace,"_rgb_optical_frame"]},
+                                {'depth_frame_id': [tf_prefix, "/", namespace,"_depth_optical_frame"]},
+                                {'ir_frame_id': [tf_prefix, "/", namespace,"_ir_optical_frame"]},],
                     remappings=[('depth/image', 'depth_registered/image_raw')],
                 ),
                 # Create XYZRGB point cloud
@@ -79,7 +78,7 @@ def generate_launch_description():
                     package='depth_image_proc',
                     plugin='depth_image_proc::PointCloudXyzrgbNode',
                     name='points_xyzrgb',
-                    namespace=namespace,
+                    namespace=[tf_prefix, "/", namespace],
                     parameters=[{'queue_size': 10}],
                     remappings=[('rgb/image_rect_color', 'rgb/image_raw'),
                                 ('rgb/camera_info', 'rgb/camera_info'),
@@ -91,7 +90,8 @@ def generate_launch_description():
     )
 
     tfs = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(PathJoinSubstitution([ThisLaunchFileDir(), "tfs.launch.py"])),
+        # PythonLaunchDescriptionSource(PathJoinSubstitution(["/opt/ros/humble/share/openni2_camera/launch", "tfs.launch.py"])),
+        PythonLaunchDescriptionSource(PathJoinSubstitution([os.path.join(get_package_share_directory('openni2_camera'), 'launch', 'tfs.launch.py')])),
         launch_arguments={namespace_param_name: namespace, tf_prefix_param_name: tf_prefix}.items(),
     )
 

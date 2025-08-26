@@ -4,7 +4,8 @@ from ament_index_python.packages import get_package_share_directory
 from launch_ros.actions import Node
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, ExecuteProcess, OpaqueFunction, RegisterEventHandler
+from launch.actions import DeclareLaunchArgument, ExecuteProcess, OpaqueFunction, RegisterEventHandler, IncludeLaunchDescription
+from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
 from launch.event_handlers import OnProcessExit
@@ -143,6 +144,20 @@ def launch_gz(context, *args, **kwargs):
         output="screen",
     )
 
+    library_server_launch = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource([
+            PathJoinSubstitution([
+                FindPackageShare('sobit_pro_library'),
+                'launch',
+                'library_server.launch.py'
+            ])
+        ]),
+        launch_arguments={
+            'robot_name': robot_name,
+            'enable_gz': enable_gz,
+        }.items(),
+    )
+
     move_base_node = Node(
         package="sobit_pro_control",
         executable="sobit_pro_control_node",
@@ -206,10 +221,17 @@ def launch_gz(context, *args, **kwargs):
             steer_joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
+            # library_server_launch,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
                     on_exit=[move_base_node],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[library_server_launch],
                 )
             ),
             # rviz_node,
@@ -249,6 +271,13 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[move_base_node],
                 )
             ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[library_server_launch],
+                )
+            ),
             robot_state_publisher_node,
+            # library_server_launch,
             # rviz_node,
         ]
