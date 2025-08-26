@@ -1,9 +1,0 @@
-<launch>
-    <node name="test_control_arm" 
-          pkg="sobit_pro_library" 
-          type="test_control_arm.py" 
-          respawn="false" 
-          output="screen" 
-          ns="sobit_pro" >
-    </node>
-</launch>

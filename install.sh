@@ -9,17 +9,17 @@ cd ..
 
 # Download required packages for SOBIT PRO
 ros_packages=(
-    "sobits_common" \
+    "dynamixel_hardware" \
     "sobits_msgs" \
     "urg_node" \
-    "azure_kinect_ros_driver" \
+    # "azure_kinect_ros_driver" \
     "realsense_ros"
 )
 
 # Clone all packages
 for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     echo "Clonning: ${ros_packages[i]}"
-    git clone https://github.com/TeamSOBITS/${ros_packages[i]}.git
+    git clone -b humble-devel https://github.com/TeamSOBITS/${ros_packages[i]}.git
 
     # Check if install.sh exists in each package
     if [ -f ${ros_packages[i]}/install.sh ]; then
@@ -38,24 +38,46 @@ sudo apt-get install -y \
 # Download ROS packages
 sudo apt-get update
 sudo apt-get install -y \
-    ros-$ROS_DISTRO-pybind11-catkin \
+    ros-$ROS_DISTRO-ecl-linear-algebra \
     ros-$ROS_DISTRO-robot-state-publisher \
-    ros-$ROS_DISTRO-joint-state-controller \
     ros-$ROS_DISTRO-joint-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher-gui \
-    ros-$ROS_DISTRO-joint-limits-interface \
+    ros-$ROS_DISTRO-joint-limits \
     ros-$ROS_DISTRO-hardware-interface \
     ros-$ROS_DISTRO-transmission-interface \
     ros-$ROS_DISTRO-controller-interface \
     ros-$ROS_DISTRO-controller-manager \
-    ros-$ROS_DISTRO-ros-control \
-    ros-$ROS_DISTRO-ros-controllers \
     ros-$ROS_DISTRO-tf2 \
     ros-$ROS_DISTRO-tf2-ros \
     ros-$ROS_DISTRO-sensor-msgs \
     ros-$ROS_DISTRO-trajectory-msgs \
     ros-$ROS_DISTRO-geometry-msgs \
-    ros-$ROS_DISTRO-joy
+    ros-$ROS_DISTRO-joy \
+    ros-$ROS_DISTRO-ros2-control \
+    ros-$ROS_DISTRO-ros2-controllers \
+    ros-$ROS_DISTRO-control-toolbox \
+    ros-$ROS_DISTRO-position-controllers \
+    ros-$ROS_DISTRO-velocity-controllers \
+    ros-$ROS_DISTRO-effort-controllers \
+    ros-$ROS_DISTRO-joint-trajectory-controller \
+    ros-$ROS_DISTRO-joint-group-impedance-controller \
+    ros-$ROS_DISTRO-joint-state-publisher \
+    ros-$ROS_DISTRO-joint-state-publisher-gui \
+    ros-$ROS_DISTRO-joint-state-broadcaster \
+    ros-$ROS_DISTRO-robot-controllers \
+    ros-$ROS_DISTRO-robot-controllers-interface \
+    ros-$ROS_DISTRO-urdf \
+    ros-$ROS_DISTRO-urdf-launch \
+    ros-$ROS_DISTRO-xacro \
+    ros-$ROS_DISTRO-tf-transformations \
+    ros-$ROS_DISTRO-openni2-camera
+
+
+# Install Gazebo Fortress with binaries
+sudo apt-get install -y \
+    ros-$ROS_DISTRO-ros-gz \
+    ros-$ROS_DISTRO-ign-ros2-control \
+    ros-$ROS_DISTRO-ign-ros2-control-demos
 
 
 # Setting up Dynamixel USB configuration (SOBIT PRO: Mobile Robot Mechanism)

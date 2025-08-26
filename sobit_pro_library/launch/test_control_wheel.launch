@@ -1,9 +1,0 @@
-<launch>
-    <node name="test_control_wheel" 
-          pkg="sobit_pro_library" 
-          type="test_control_wheel.py" 
-          respawn="false" 
-          output="screen" 
-          ns="sobit_pro" >
-    </node>
-</launch>

@@ -3,13 +3,13 @@
        xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="arm_transmission" params="prefix">
 
-    <xacro:position_joint_transmission joint="${prefix}_shoulder_1_tilt_joint"    reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_shoulder_2_tilt_joint"    reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_elbow_upper_1_tilt_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_elbow_upper_2_tilt_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_elbow_lower_tilt_joint"   reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_elbow_lower_pan_joint"    reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_wrist_tilt_joint"         reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_shoulder_1_tilt_joint"    reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_shoulder_2_tilt_joint"    reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_elbow_upper_1_tilt_joint" reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_elbow_upper_2_tilt_joint" reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_elbow_lower_tilt_joint"   reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_elbow_lower_pan_joint"    reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_wrist_tilt_joint"         reduction="1" />
 
   </xacro:macro>
 </robot>

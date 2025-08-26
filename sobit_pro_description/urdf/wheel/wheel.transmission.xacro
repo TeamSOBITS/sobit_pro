@@ -3,15 +3,15 @@
        xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:macro name="wheel_transmission" params="prefix">
 
-    <xacro:position_joint_transmission joint="${prefix}_f_l_steer_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_f_r_steer_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_b_l_steer_joint" reduction="1" />
-    <xacro:position_joint_transmission joint="${prefix}_b_r_steer_joint" reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_f_l_steer_joint" reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_f_r_steer_joint" reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_b_l_steer_joint" reduction="1" />
+    <xacro:SimpleTransmissionPosition joint="${prefix}_b_r_steer_joint" reduction="1" />
 
-    <xacro:velocity_joint_transmission joint="${prefix}_f_l_drive_joint" reduction="1" />
-    <xacro:velocity_joint_transmission joint="${prefix}_f_r_drive_joint" reduction="1" />
-    <xacro:velocity_joint_transmission joint="${prefix}_b_l_drive_joint" reduction="1" />
-    <xacro:velocity_joint_transmission joint="${prefix}_b_r_drive_joint" reduction="1" />
+    <xacro:SimpleTransmissionVelocity joint="${prefix}_f_l_drive_joint" reduction="1" />
+    <xacro:SimpleTransmissionVelocity joint="${prefix}_f_r_drive_joint" reduction="1" />
+    <xacro:SimpleTransmissionVelocity joint="${prefix}_b_l_drive_joint" reduction="1" />
+    <xacro:SimpleTransmissionVelocity joint="${prefix}_b_r_drive_joint" reduction="1" />
 
   </xacro:macro>
 </robot>

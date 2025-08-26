@@ -73,12 +73,20 @@
       <child link="${prefix}_shoulder_2_tilt_link" />
       <origin xyz="0.1560 0.0 0.0215" rpy="0.0 0.0 ${M_PI}" />
       <axis xyz="0.0 1.0 0.0 " />
-      <mimic joint="${prefix}_shoulder_1_tilt_joint" multiplier="1" offset="0" />
+      <!-- <mimic joint="${prefix}_shoulder_1_tilt_joint" multiplier="1" offset="0" /> -->
       <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="${10.6*2}" velocity="11.031179004" />
       <dynamics damping="0.2" friction="0" />
     </joint>
 
-    <link name="${prefix}_shoulder_2_tilt_link" />
+    <link name="${prefix}_shoulder_2_tilt_link" >
+      <inertial>
+        <origin xyz="${0.1166/2+0.0224} 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="${1/12*0.08*(0.1166**2+0.043**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.124**2 +0.043**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.1166**2+0.124**2)}" />
+      </inertial>
+    </link>
 
 
     <joint name="${prefix}_elbow_upper_1_tilt_joint" type="revolute" >
@@ -119,12 +127,20 @@
       <child link="${prefix}_elbow_upper_2_tilt_link" />
       <origin xyz="0.1500 0.0 0.0" rpy="0.0 0.0 ${M_PI}" />
       <axis xyz="0.0 1.0 0.0 " />
-      <mimic joint="${prefix}_elbow_upper_1_tilt_joint" multiplier="1" offset="0" />
+      <!-- <mimic joint="${prefix}_elbow_upper_1_tilt_joint" multiplier="1" offset="0" /> -->
       <limit lower="${-M_PI/2}" upper="${M_PI/2}" effort="${4.1*2}" velocity="9.59233" />
       <dynamics damping="0.2" friction="0" />
     </joint>
 
-    <link name="${prefix}_elbow_upper_2_tilt_link" />
+    <link name="${prefix}_elbow_upper_2_tilt_link" >
+      <inertial>
+        <origin xyz="${0.023+0.127/2} 0.0 0.0" rpy="0.0 0.0 ${M_PI/2}" />
+        <mass value="0.08" />
+        <inertia ixx="${1/12*0.08*(0.127**2+0.035**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.08*(0.048**2+0.035**2)}" iyz="0.0"
+                 izz="${1/12*0.08*(0.127**2+0.048**2)}" />
+      </inertial>
+    </link>
 
 
     <joint name="${prefix}_elbow_lower_tilt_joint" type="revolute" >

@@ -10,7 +10,7 @@ def generate_launch_description():
 
     use_gui = LaunchConfiguration('use_gui', default='True')
 
-    robot_namespace = "sobit_pro"
+    robot_name = "sobit_pro"
 
     rviz_config = os.path.join(get_package_share_directory(
         'sobit_pro_description'), "rviz", "display.rviz")
@@ -21,26 +21,24 @@ def generate_launch_description():
         'sobit_pro_robot.urdf.xacro'
     )
 
-    xacro_arguments = {
-        'enable_gz': 'True',
-        'enable_mb': 'True',
-        'enable_arm': 'True',
-        'enable_head': 'True',
-        'robot_namespace': robot_namespace
-    }
-
     robot_description_config = xacro.process_file(
         robot_description,
-        mappings=xacro_arguments
+        mappings={
+            'enable_gz' : 'True',
+            'robot_name' : robot_name,
+            'enable_mb': 'True',
+            'enable_arm': 'True',
+            'enable_head': 'True',
+        }
     )
 
     robot_state_publisher_node = Node(
         package="robot_state_publisher",
         executable="robot_state_publisher",
         name="robot_state_publisher",
-        namespace=robot_namespace,
+        namespace=robot_name,
         parameters=[{
-            "frame_prefix": robot_namespace + '/',
+            "frame_prefix": robot_name + '/',
             "robot_description": robot_description_config.toxml(),
             "use_sim_time": True,
         }],
@@ -51,7 +49,7 @@ def generate_launch_description():
         package='joint_state_publisher',
         executable='joint_state_publisher',
         output='screen',
-        namespace=robot_namespace,
+        namespace=robot_name,
         condition=UnlessCondition(use_gui)
     )
 
@@ -59,7 +57,7 @@ def generate_launch_description():
         package='joint_state_publisher_gui',
         executable='joint_state_publisher_gui',
         output='screen',
-        namespace=robot_namespace,
+        namespace=robot_name,
         condition=IfCondition(use_gui)
     )
 
