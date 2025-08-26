@@ -302,6 +302,8 @@ void JointActionServer::exe_move_to_pose(
     goal_handle->abort(result);
   }
 
+  initial_joint_state_ = curt_joint_state_;
+
 
   // Publish the joint trajectory
   trajectory_msgs::msg::JointTrajectory joint_trajectory;
@@ -360,8 +362,26 @@ void JointActionServer::exe_move_to_pose(
   // Check if goal was reached
   for (size_t i = 0; i < JointNames.size(); i++) {
     // TODO: set tolerance with parameter or msg
-    if (std::abs(this->curt_joint_state_[JointNames[i]] - target_joint_rad[i]) > 0.1) {
-      RCLCPP_ERROR(this->get_logger(), "Failed to reach the goal");
+      double diff = std::abs(this->curt_joint_state_[JointNames[i]] - target_joint_rad[i]);
+      double moved = std::abs(this->curt_joint_state_[JointNames[i]] - initial_joint_state_[JointNames[i]]);
+
+      if (diff > 0.1) {
+        if (moved < 0.01) {
+          RCLCPP_ERROR(this->get_logger(),
+            "Joint %s did not move! initial=%.3f, target=%.3f, final=%.3f",
+            JointNames[i].c_str(),
+            initial_joint_state_[JointNames[i]],
+            target_joint_rad[i],
+            this->curt_joint_state_[JointNames[i]]);
+        } else {
+          RCLCPP_ERROR(this->get_logger(),
+            "Joint %s failed to reach target. moved=%.3f, target=%.3f, final=%.3f, diff=%.3f",
+            JointNames[i].c_str(),
+            moved,
+            target_joint_rad[i],
+            this->curt_joint_state_[JointNames[i]],
+            diff);
+        }
 
       result->success = false;
       result->message = "[FAIL] Failed to reach the goal";

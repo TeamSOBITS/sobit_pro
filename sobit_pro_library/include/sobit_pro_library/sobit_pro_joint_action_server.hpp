@@ -166,6 +166,8 @@ private:
 
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
+  std::map<std::string, double> initial_joint_state_;
+
 
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
 }; // class JointActionServer
