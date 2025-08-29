@@ -11,6 +11,7 @@ def generate_launch_description():
     use_gui = LaunchConfiguration('use_gui', default='True')
 
     robot_name = "sobit_pro"
+    head_camera_name = "xtion" ## "xtion" or "azure_kinect"
 
     rviz_config = os.path.join(get_package_share_directory(
         'sobit_pro_description'), "rviz", "display.rviz")
@@ -26,6 +27,7 @@ def generate_launch_description():
         mappings={
             'enable_gz' : 'True',
             'robot_name' : robot_name,
+            'head_camera_name' : head_camera_name,
             'enable_mb': 'True',
             'enable_arm': 'True',
             'enable_head': 'True',

@@ -15,6 +15,7 @@ import xacro
 
 def generate_launch_description():
     arg_robot_name = DeclareLaunchArgument('robot_name', default_value='sobit_pro')
+    arg_head_camera = DeclareLaunchArgument('head_camera_name', default_value='xtion')
 
     arg_robot_coords_x = DeclareLaunchArgument('robot_coords_x', default_value='0')
     arg_robot_coords_y = DeclareLaunchArgument('robot_coords_y', default_value='0')
@@ -25,6 +26,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         arg_robot_name,
+        arg_head_camera,
         arg_robot_coords_x,
         arg_robot_coords_y,
         arg_robot_coords_z,
@@ -36,6 +38,7 @@ def generate_launch_description():
 
 def launch_gz(context, *args, **kwargs):
     robot_name = LaunchConfiguration('robot_name').perform(context)
+    head_camera_name = LaunchConfiguration('head_camera_name').perform(context)
 
     robot_coords_x = LaunchConfiguration('robot_coords_x').perform(context)
     robot_coords_y = LaunchConfiguration('robot_coords_y').perform(context)
@@ -54,6 +57,7 @@ def launch_gz(context, *args, **kwargs):
         mappings={
             'enable_gz' : enable_gz,
             'robot_name' : robot_name,
+            'head_camera_name': head_camera_name,
         })
     
     rviz_config = PathJoinSubstitution([
