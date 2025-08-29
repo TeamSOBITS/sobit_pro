@@ -6,7 +6,7 @@
     ip_port: 10940
     serial_baud: 115200
     laser_frame_id: "lidar_laser"
-    calibrate_time: true
+    calibrate_time: false
     default_user_latency: 0.0
     diagnostics_tolerance: 0.05
     diagnostics_window_time: 5.0
