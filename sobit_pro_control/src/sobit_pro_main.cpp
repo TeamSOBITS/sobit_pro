@@ -265,11 +265,11 @@ void SobitProMain::control_callback()
 
 
   // 3. // Check if all current steering joint positions are within acceptable threshold of their targets
-bool all_aligned = 
-    fabs(set_steer_pos[0] - steer_fl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
-    fabs(set_steer_pos[1] - steer_fr_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
-    fabs(set_steer_pos[2] - steer_bl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
-    fabs(set_steer_pos[3] - steer_br_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD;
+  bool all_aligned = 
+      fabs(set_steer_pos[0] - steer_fl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
+      fabs(set_steer_pos[1] - steer_fr_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
+      fabs(set_steer_pos[2] - steer_bl_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD &&
+      fabs(set_steer_pos[3] - steer_br_curt_pos) <= SobitProControl::DXL_MOVING_STATUS_THRESHOLD;
 
 
   // 4. Prepare steer trajectory (always, for republishing)
@@ -329,11 +329,7 @@ bool all_aligned =
             }
           }
           // Check if the robot is stuck for too long
-            RCLCPP_WARN(this->get_logger(), COLOR_RED
-              "🔁 Stuck detected! Stuck counter: %d", stuck_counter);
-            if (stuck_counter >= MAX_STUCK_CYCLES) {
-              RCLCPP_ERROR(this->get_logger(), COLOR_RED
-                "🔁 Stuck for too long! Switching to RECOVERY state.");
+            if (stuck_counter >= MAX_STUCK_CYCLES) {\
                 drive_state = DriveState::RECOVERY; // Switch to recovery state
                 stabilize_counter = 0; // Reset stabilize counter
         }
@@ -362,20 +358,13 @@ bool all_aligned =
         recovery_publish_counter = 0; // Reset counter
       }
 
-      RCLCPP_WARN(this->get_logger(), COLOR_RED
-        "🔁 Recovery mode activated! Wheels stopped, force steer alignment.");
-
       // 2. Check if the robot is still stuck
       if (all_aligned){
           stabilize_counter = 0; // Reset the stabilize counter
           drive_state = DriveState::STABILIZE; // Switch to stabilize state
-          RCLCPP_INFO(this->get_logger(), COLOR_GREEN
-            "✅ Robot aligned! Switching to STABILIZE state.");
       }
-      else if((stuck_counter % 40) == 0) { // Every 2 seconds at 50ms cycle
-          RCLCPP_WARN(this->get_logger(), COLOR_RED
-            "🛑 Robot still unaligned! Continuing recovery.");
-      }
+      // else if((stuck_counter % 40) == 0) { // Every 2 seconds at 50ms cycle
+      // }
       break;
 
     case DriveState::STABILIZE:
@@ -383,14 +372,10 @@ bool all_aligned =
       set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.0;
       should_publish_steer = true; // Always publish steer trajectory in stabilize state
       stabilize_counter++;
-      RCLCPP_INFO(this->get_logger(), COLOR_YELLOW
-        "🟡 Stabilizing... Counter: %d", stabilize_counter);
 
 
       // Check if stabilization is complete  
       if (stabilize_counter >= 30) { // 1.5 seconds at 50ms cycle
-        RCLCPP_INFO(this->get_logger(), COLOR_GREEN
-          "✅ Stabilization complete! Resuming DRIVE state.");
         drive_state = DriveState::DRIVE; // Switch back to drive state
         stuck_counter = 0; // Reset stuck counter
       }
@@ -460,6 +445,7 @@ bool all_aligned =
 
 
   // Publish Odometry
+  result_odom.header.stamp = this->now();
   sobit_pro_odometry_->pose_broadcaster(result_odom);
   pub_odometry_->publish(result_odom);
 
