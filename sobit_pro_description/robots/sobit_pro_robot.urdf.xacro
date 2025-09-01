@@ -60,6 +60,7 @@
     <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
 
+    <!-- <xacro:xtion_fixed prefix="head_camera" parent="head_tilt_link"/> -->
     <!-- Xtion -->
     <xacro:if value="$(eval head_camera_name == 'xtion')">
       <xacro:xtion_fixed prefix="head_camera" parent="head_tilt_link"/>

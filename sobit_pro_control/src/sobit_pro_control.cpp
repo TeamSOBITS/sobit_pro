@@ -222,10 +222,21 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
         wheel_br_goal_vel *= -1;
       }
 
-      wheel_fl_goal_vel *= (r_wheel_fl / r);
-      wheel_fr_goal_vel *= (r_wheel_fr / r);
-      wheel_bl_goal_vel *= (r_wheel_bl / r);
-      wheel_br_goal_vel *= (r_wheel_br / r);
+      if (0.01 < fabsf(vel_twist.linear.y)) {
+        wheel_fl_goal_vel *= (r_wheel_fl / r);
+        wheel_fr_goal_vel *= (r_wheel_fr / r);
+        wheel_bl_goal_vel *= (r_wheel_bl / r);
+        wheel_br_goal_vel *= (r_wheel_br / r);
+      } else {
+        if (0. < steer_fl_rad) wheel_fl_goal_vel = -1 * fabsf(wheel_fl_goal_vel);
+        else                   wheel_fl_goal_vel = fabsf(wheel_fl_goal_vel);
+        if (0. < steer_fr_rad) wheel_fr_goal_vel = -1 * fabsf(wheel_fr_goal_vel);
+        else                   wheel_fr_goal_vel = fabsf(wheel_fr_goal_vel);
+        if (0. < steer_bl_rad) wheel_bl_goal_vel = fabsf(wheel_bl_goal_vel);
+        else                   wheel_bl_goal_vel = -1 * fabsf(wheel_bl_goal_vel);
+        if (0. < steer_br_rad) wheel_br_goal_vel = fabsf(wheel_br_goal_vel);
+        else                   wheel_br_goal_vel = -1 * fabsf(wheel_br_goal_vel);
+      }
 
       steer_fl_goal_pos = steer_fl_rad;
       steer_fr_goal_pos = steer_fr_rad;

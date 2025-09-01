@@ -16,7 +16,7 @@ def generate_launch_description():
     robot_name = 'sobit_pro'
     robot_id = 0
     bringup_pkg = robot_name + '_bringup'
-    head_camera_name = "xtion" # 'xtion' or 'azure_kinect'  ## TODO : orbbec femt bolt??
+    head_camera_name = "azure_kinect" # 'xtion' or 'azure_kinect'  ## TODO : orbbec femt bolt??
 
     rviz_config = os.path.join(get_package_share_directory(bringup_pkg), 'rviz', 'real.rviz')
 
@@ -43,6 +43,7 @@ def generate_launch_description():
         camera_node = None
 
     return LaunchDescription([
+        camera_node,
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([os.path.join(
@@ -74,6 +75,5 @@ def generate_launch_description():
                 "namespace" : robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
             }.items(),
         ),
-        camera_node,
         rviz_node,
     ])
