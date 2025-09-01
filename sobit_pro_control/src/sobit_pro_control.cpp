@@ -82,7 +82,8 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       break;
     }
 
-    //Swivel motion
+    // Swivel motion
+    // TODO: Many bugs still remain...
     case SWIVEL_MOTION_MODE:{
       double base_vel = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.));
       double r = base_vel / fabsf(vel_twist.angular.z);
