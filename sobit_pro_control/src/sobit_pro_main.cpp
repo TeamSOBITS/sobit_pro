@@ -1,12 +1,5 @@
 #include "sobit_pro_control/sobit_pro_main.hpp"
 
-#define COLOR_RED     "\033[1;31m"
-#define COLOR_GREEN   "\033[1;32m"
-#define COLOR_YELLOW  "\033[1;33m"
-#define COLOR_CYAN    "\033[1;36m"
-#define COLOR_RESET   "\033[0m"
-
-
 int sobit_pro::SobitProMain::recovery_publish_counter = 0; // Actual definition + init
 
 namespace sobit_pro{
@@ -304,7 +297,7 @@ void SobitProMain::control_callback()
           should_publish_steer = true;
           break;
         }
-}
+      }
         
       // Check if the robot is stuck
       if (all_aligned){

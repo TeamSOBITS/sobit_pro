@@ -28,36 +28,6 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       if (vel_rads > LIMIT_VEL_RADS) wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = LIMIT_VEL_RADS;
       else                           wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = vel_rads;
 
-      // 
-      steer_fl_goal_pos = steer_fl_goal_pos - (2*M_PI) * ((int)(steer_fl_goal_pos / (2*M_PI)));
-      steer_fr_goal_pos = steer_fr_goal_pos - (2*M_PI) * ((int)(steer_fr_goal_pos / (2*M_PI)));
-      steer_bl_goal_pos = steer_bl_goal_pos - (2*M_PI) * ((int)(steer_bl_goal_pos / (2*M_PI)));
-      steer_br_goal_pos = steer_br_goal_pos - (2*M_PI) * ((int)(steer_br_goal_pos / (2*M_PI)));
-
-      // 
-      if (M_PI < fabsf(steer_fl_goal_pos)) steer_fl_goal_pos -= 2*M_PI*steer_fl_goal_pos/fabsf(steer_fl_goal_pos);
-      if (M_PI < fabsf(steer_fr_goal_pos)) steer_fr_goal_pos -= 2*M_PI*steer_fr_goal_pos/fabsf(steer_fr_goal_pos);
-      if (M_PI < fabsf(steer_bl_goal_pos)) steer_bl_goal_pos -= 2*M_PI*steer_bl_goal_pos/fabsf(steer_bl_goal_pos);
-      if (M_PI < fabsf(steer_br_goal_pos)) steer_br_goal_pos -= 2*M_PI*steer_br_goal_pos/fabsf(steer_br_goal_pos);
-
-      // 
-      if (M_PI/2. < fabsf(steer_fl_goal_pos)) {
-        steer_fl_goal_pos -= M_PI*steer_fl_goal_pos/fabsf(steer_fl_goal_pos);
-        wheel_fl_goal_vel *= -1;
-      }
-      if (M_PI/2. < fabsf(steer_fr_goal_pos)) {
-        steer_fr_goal_pos -= M_PI*steer_fr_goal_pos/fabsf(steer_fr_goal_pos);
-        wheel_fr_goal_vel *= -1;
-      }
-      if (M_PI/2. < fabsf(steer_bl_goal_pos)) {
-        steer_bl_goal_pos -= M_PI*steer_bl_goal_pos/fabsf(steer_bl_goal_pos);
-        wheel_bl_goal_vel *= -1;
-      }
-      if (M_PI/2. < fabsf(steer_br_goal_pos)) {
-        steer_br_goal_pos -= M_PI*steer_br_goal_pos/fabsf(steer_br_goal_pos);
-        wheel_br_goal_vel *= -1;
-      }
-
       break;
     }
 
@@ -71,39 +41,53 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       steer_fl_goal_pos = steer_fr_goal_pos = steer_bl_goal_pos = steer_br_goal_pos = 0.;
 
       // Velocity of wheel
-      if (vel_twist.angular.z < 0.) {
-        if (vel_rads < -LIMIT_VEL_RADS) wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = -LIMIT_VEL_RADS;
-        else                            wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = vel_rads;
-      } else {
-        if (vel_rads > LIMIT_VEL_RADS)  wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = LIMIT_VEL_RADS;
-        else                            wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = vel_rads;
-      }
+      if (fabsf(vel_rads) < LIMIT_VEL_RADS)
+            wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = vel_rads;
+      else  wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = LIMIT_VEL_RADS * (vel_rads/fabsf(vel_rads));
 
       break;
     }
 
     // Swivel motion
-    // TODO: Many bugs still remain...
     case SWIVEL_MOTION_MODE:{
       double base_vel = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.));
       double r = base_vel / fabsf(vel_twist.angular.z);
       double base_angle = atan2(vel_twist.linear.y , vel_twist.linear.x);
+      int angle_pn = (0. < vel_twist.angular.z) ? 1 : -1;
 
       geometry_msgs::msg::Point base_center;
-      base_center.x = r * cosf(base_angle + (M_PI/2.) * (vel_twist.angular.z/fabsf(vel_twist.angular.z)));
-      base_center.y = r * sinf(base_angle + (M_PI/2.) * (vel_twist.angular.z/fabsf(vel_twist.angular.z)));
+      base_center.x = r * cosf(base_angle + (M_PI/2.) * angle_pn);
+      base_center.y = r * sinf(base_angle + (M_PI/2.) * angle_pn);
 
-      /*
-      wheel_fl_goal_vel
-      wheel_fr_goal_vel
-      wheel_bl_goal_vel
-      wheel_br_goal_vel
+      // each wheel point from robot base
+      geometry_msgs::msg::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
+      wheel_point_fl.x = TRACK / 2.;
+      wheel_point_fl.y = TRACK / 2.;
+      wheel_point_fr.x = TRACK / 2.;
+      wheel_point_fr.y = TRACK / 2. * (-1);
+      wheel_point_bl.x = TRACK / 2. * (-1);
+      wheel_point_bl.y = TRACK / 2.;
+      wheel_point_br.x = TRACK / 2. * (-1);
+      wheel_point_br.y = TRACK / 2. * (-1);
 
-      steer_fl_goal_pos
-      steer_fr_goal_pos
-      steer_bl_goal_pos
-      steer_br_goal_pos
-      */
+      // calculate the direction of each wheel (|direction| > 2PI is okay. )
+      steer_fl_goal_pos = atan2(wheel_point_fl.y - base_center.y, wheel_point_fl.x - base_center.x) + M_PI/2.*angle_pn;
+      steer_fr_goal_pos = atan2(wheel_point_fr.y - base_center.y, wheel_point_fr.x - base_center.x) + M_PI/2.*angle_pn;
+      steer_bl_goal_pos = atan2(wheel_point_bl.y - base_center.y, wheel_point_bl.x - base_center.x) + M_PI/2.*angle_pn;
+      steer_br_goal_pos = atan2(wheel_point_br.y - base_center.y, wheel_point_br.x - base_center.x) + M_PI/2.*angle_pn;
+
+      // Align the reference angle in the direction of the base
+      steer_fl_goal_pos -= ( 3./ 4.) * M_PI;
+      steer_fr_goal_pos -= ( 1./ 4.) * M_PI;
+      steer_bl_goal_pos -= (-3./ 4.) * M_PI;
+      steer_br_goal_pos -= (-1./ 4.) * M_PI;
+
+      // calculate the velocity of each wheel ([rad/s])
+      double base_vel_rads = base_vel / (WHEEL_DIAMETER/2.);
+      wheel_fl_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_fl.x - base_center.x, 2.) + powf(wheel_point_fl.y - base_center.y, 2.)) / r;
+      wheel_fr_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_fr.x - base_center.x, 2.) + powf(wheel_point_fr.y - base_center.y, 2.)) / r;
+      wheel_bl_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_bl.x - base_center.x, 2.) + powf(wheel_point_bl.y - base_center.y, 2.)) / r;
+      wheel_br_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_br.x - base_center.x, 2.) + powf(wheel_point_br.y - base_center.y, 2.)) / r;
 
       break;
     }
@@ -113,6 +97,36 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = 0.;
       break;
     }
+  }
+  
+  // Normalize steering angles into [0, 2π)
+  steer_fl_goal_pos = steer_fl_goal_pos - (2*M_PI) * ((int)(steer_fl_goal_pos / (2*M_PI)));
+  steer_fr_goal_pos = steer_fr_goal_pos - (2*M_PI) * ((int)(steer_fr_goal_pos / (2*M_PI)));
+  steer_bl_goal_pos = steer_bl_goal_pos - (2*M_PI) * ((int)(steer_bl_goal_pos / (2*M_PI)));
+  steer_br_goal_pos = steer_br_goal_pos - (2*M_PI) * ((int)(steer_br_goal_pos / (2*M_PI)));
+
+  // Wrap angles to [-π, π]
+  if (M_PI < fabsf(steer_fl_goal_pos)) steer_fl_goal_pos -= 2*M_PI*steer_fl_goal_pos/fabsf(steer_fl_goal_pos);
+  if (M_PI < fabsf(steer_fr_goal_pos)) steer_fr_goal_pos -= 2*M_PI*steer_fr_goal_pos/fabsf(steer_fr_goal_pos);
+  if (M_PI < fabsf(steer_bl_goal_pos)) steer_bl_goal_pos -= 2*M_PI*steer_bl_goal_pos/fabsf(steer_bl_goal_pos);
+  if (M_PI < fabsf(steer_br_goal_pos)) steer_br_goal_pos -= 2*M_PI*steer_br_goal_pos/fabsf(steer_br_goal_pos);
+
+  // Flip steering by 180° if angle > 90°, invert wheel velocity
+  if (M_PI/2. < fabsf(steer_fl_goal_pos)) {
+    steer_fl_goal_pos -= M_PI*steer_fl_goal_pos/fabsf(steer_fl_goal_pos);
+    wheel_fl_goal_vel *= -1;
+  }
+  if (M_PI/2. < fabsf(steer_fr_goal_pos)) {
+    steer_fr_goal_pos -= M_PI*steer_fr_goal_pos/fabsf(steer_fr_goal_pos);
+    wheel_fr_goal_vel *= -1;
+  }
+  if (M_PI/2. < fabsf(steer_bl_goal_pos)) {
+    steer_bl_goal_pos -= M_PI*steer_bl_goal_pos/fabsf(steer_bl_goal_pos);
+    wheel_bl_goal_vel *= -1;
+  }
+  if (M_PI/2. < fabsf(steer_br_goal_pos)) {
+    steer_br_goal_pos -= M_PI*steer_br_goal_pos/fabsf(steer_br_goal_pos);
+    wheel_br_goal_vel *= -1;
   }
 }
 
