@@ -10,9 +10,9 @@ cd ..
 # Download required packages for SOBIT PRO
 ros_packages=(
     "dynamixel_hardware" \
-    "sobits_msgs" \
+    "sobits_interfaces" \
     "urg_node" \
-    # "azure_kinect_ros_driver" \
+    "azure_kinect_ros_driver" \
     "realsense_ros"
 )
 
@@ -92,6 +92,9 @@ echo "KERNEL==\"uinput\", MODE=\"0666\"
       KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", KERNELS==\"0005:054C:05C4.*\", MODE=\"0666\"
       KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"054c\", ATTRS{idProduct}==\"09cc\", MODE=\"0666\"
       KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", KERNELS==\"0005:054C:09CC.*\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/50-ds4drv.rules
+
+# Setting the udev rules to use xtion
+echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="1d27", ATTR{idProduct}=="0601", MODE="0666"' | sudo tee /etc/udev/rules.d/99-openni2.rules
 
 # Reload udev rules
 sudo udevadm control --reload-rules

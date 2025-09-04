@@ -16,9 +16,6 @@
 
 class SobitProOdometry{
 private:
-  static inline int g_trans_total = 0;
-  static inline int g_trans_ok = 0;
-  static inline int g_trans_skip = 0;
   enum MODE {
     NONE = -1,
     STOP_MOTION_MODE,
@@ -37,10 +34,6 @@ public:
   }
   // Check how much of odometry is accepted
   ~SobitProOdometry() {
-  RCLCPP_INFO(node_->get_logger(),
-              "🧮 Odometry Summary [TRANSLATIONAL]: total=%d accepted=%d skipped=%d (%.1f%% skipped)",
-              g_trans_total, g_trans_ok, g_trans_skip,
-              g_trans_total ? 100.0 * g_trans_skip / g_trans_total : 0.0);
   RCLCPP_INFO(node_->get_logger(), "SobitProOdometry destroyed.");
   }
 
