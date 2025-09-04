@@ -3,12 +3,6 @@
 
 #include <iostream>
 
-// namespace {
-//   int g_trans_total = 0;
-//   int g_trans_ok = 0;
-//   int g_trans_skip = 0;
-// }
-
 // Calculate Odometry
 bool SobitProOdometry::odom(
   
@@ -26,25 +20,16 @@ bool SobitProOdometry::odom(
   double bl_distance_m    = distance_calculation(wheel_bl_curt_pos - wheel_bl_init_pos); // Calculation distance[m]
   double br_distance_m    = distance_calculation(wheel_br_curt_pos - wheel_br_init_pos); // Calculation distance[m]
 
-  // double fl_direction_deg = steer_fl_curt_pos / (M_PI/180.); // Record present position
-  // double fr_direction_deg = steer_fr_curt_pos / (M_PI/180.); // Record present position
-  // double bl_direction_deg = steer_bl_curt_pos / (M_PI/180.); // Record present position
-  // double br_direction_deg = steer_br_curt_pos / (M_PI/180.); // Record present position
-
-
-
-  double prev_roll = 0., prev_pitch = 0., prev_yaw = 0.;
-  double distance_m = 0.;
   nav_msgs::msg::Odometry calculation_odom = *result_odom;
+
   tf2::Quaternion quat_tf;
+  double prev_roll, prev_pitch, prev_yaw;
+  double distance_m = 0.;
+  // Transform euler->RPY (prev_odom)
+  tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
+  tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
-  if      (prev_motion == STOP_MOTION_MODE )          motion_mode = STOP_MOTION_MODE;
-  else if (prev_motion == TRANSLATIONAL_MOTION_MODE ) motion_mode = TRANSLATIONAL_MOTION_MODE;
-  else if (prev_motion == ROTATIONAL_MOTION_MODE )    motion_mode = ROTATIONAL_MOTION_MODE;
-  else if (prev_motion == SWIVEL_MOTION_MODE )        motion_mode = SWIVEL_MOTION_MODE;
-
-
-  switch (motion_mode) {
+  switch (prev_motion) {
     // Translational motion
     case TRANSLATIONAL_MOTION_MODE:{
 
@@ -57,43 +42,25 @@ bool SobitProOdometry::odom(
       if (fabsf(delta) <= 14.*(M_PI/180.)) {
         //
         direction = (steer_bl_curt_pos - M_PI*3./4.) + delta/2.;
-        if (bl_distance_m < 0.) {
-          direction += M_PI;
-        }
+        if (bl_distance_m < 0.) direction += M_PI;
 
         // 
         distance_m = (fabsf(fr_distance_m) + fabsf(bl_distance_m)) / 2.;
       }
 
-      // Transform euler to RPY (prev_odom)
-      tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
-      tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
-
       // Add the amount of movement to the odometry
-      calculation_odom.pose.pose.position.x =
-          prev_odom.pose.pose.position.x
-          + distance_m * cosf(direction + prev_yaw);
-          // + distance_m * cosf(direction) * cosf(prev_yaw)
-          // + distance_m * sinf(direction) * cosf(prev_yaw + M_PI_2);
-      calculation_odom.pose.pose.position.y =
-          prev_odom.pose.pose.position.y
-          + distance_m * sinf(direction + prev_yaw);
-          // + distance_m * cosf(direction) * sinf(prev_yaw)
-          // + distance_m * sinf(direction) * sinf(prev_yaw + M_PI_2);
+      calculation_odom.pose.pose.position.x = prev_odom.pose.pose.position.x + distance_m * cosf(direction + prev_yaw);
+      calculation_odom.pose.pose.position.y = prev_odom.pose.pose.position.y + distance_m * sinf(direction + prev_yaw);
       calculation_odom.pose.pose.position.z = prev_odom.pose.pose.position.z; 
 
       calculation_odom.pose.pose.orientation = prev_odom.pose.pose.orientation;
       *result_odom = calculation_odom;
-
 
       return true;
     }
 
     // Rotational motion
     case ROTATIONAL_MOTION_MODE:{
-      // Transform euler->RPY (prev_odom)
-      tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
-      tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
 
       double yaw = 0.;
       yaw = 
@@ -106,19 +73,16 @@ bool SobitProOdometry::odom(
 
       *result_odom = calculation_odom;
 
-
       return true;
     }
 
     // Swivel motion
-    case SWIVEL_MOTION_MODE:{
-      // Transform euler->RPY (prev_odom)
-      tf2::fromMsg(prev_odom.pose.pose.orientation, quat_tf);
-      tf2::Matrix3x3(quat_tf).getRPY(prev_roll, prev_pitch, prev_yaw);
+    case SWIVEL_MOTION_MODE: {
       
       double pose_x = 0., pose_y = 0., yaw = 0.;
-      geometry_msgs::msg::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
 
+      // each wheel point from robot base
+      geometry_msgs::msg::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
       wheel_point_fl.x = SobitProControl::TRACK / 2.;
       wheel_point_fl.y = SobitProControl::TRACK / 2.;
       wheel_point_fr.x = SobitProControl::TRACK / 2.;

@@ -11,7 +11,7 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
     }
 
     // Translational motion
-    case TRANSLATIONAL_MOTION_MODE:{
+    case TRANSLATIONAL_MOTION_MODE: {
       // Goal velocity calculation
       double vel_ms    = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.)); // vel_twist [m/s] to vel_ms [m/s]
       double vel_rads  = vel_ms / (WHEEL_DIAMETER/2.); // vel_ms   [m/s]   to vel_rads  [rad/s]
@@ -32,7 +32,7 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
     }
 
     // Rotational motion
-    case ROTATIONAL_MOTION_MODE:{
+    case ROTATIONAL_MOTION_MODE: {
       // Goal velocity calculation
       double vel_ms    = vel_twist.angular.z * (BODY_DIAMETER/2.); // vel_deg  [deg/s] to vel_ms    [m/s]
       double vel_rads  = vel_ms / (WHEEL_DIAMETER/2.);             // vel_ms   [m/s]   to vel_rads  [rad/s]
@@ -49,7 +49,7 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
     }
 
     // Swivel motion
-    case SWIVEL_MOTION_MODE:{
+    case SWIVEL_MOTION_MODE: {
       double base_vel = sqrtf(powf(vel_twist.linear.x, 2.) + powf(vel_twist.linear.y, 2.));
       double r = base_vel / fabsf(vel_twist.angular.z);
       double base_angle = atan2(vel_twist.linear.y , vel_twist.linear.x);
@@ -93,7 +93,7 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
     }
 
     // Other motion
-    default:{
+    default: {
       wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = 0.;
       break;
     }

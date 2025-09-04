@@ -281,14 +281,14 @@ void SobitProMain::control_callback()
   bool should_publish_steer = false; // Whether to publish steer trajectory
 
   // Save the last sent steer positions for comparison, can be used for debugging or further logic
-  prev_drive_state = drive_state;
+  // prev_drive_state = drive_state;
 
-  switch (drive_state) {  
-  // ---- Drive State Machine ----
+  switch (drive_state) {
+    // ---- Drive State Machine ----
     // DRIVE: Normal movement. If stuck, attenuate velocity or switch to RECOVERY.
     // RECOVERY: Stop wheels and re-align steer joints until aligned.
     // STABILIZE: Hold still momentarily to stabilize robot before resuming movement.
-    case DriveState::DRIVE:
+    case DriveState::DRIVE: {
       
       // Only publish new steer trajectory if setpoints changed meaningfully
       should_publish_steer = false;
@@ -300,37 +300,34 @@ void SobitProMain::control_callback()
       }
         
       // Check if the robot is stuck
-      if (all_aligned){
-          // If the robot is aligned, set wheel velocities
-          set_wheel_vel = sobit_pro_control_->setWheelVel();
-          stuck_counter = 0; // Reset the blocked counter
+      if (all_aligned) {
+        // If the robot is aligned, set wheel velocities
+        set_wheel_vel = sobit_pro_control_->setWheelVel();
+        stuck_counter = 0; // Reset the blocked counter
 
+      } else {
+        stuck_counter++;
+        // If the robot is stuck for too long, apply attenuation to wheel speeds
+        // ATTENUATION_FACTOR(sobit_pro_main.hpp): how many cycles to wait before starting to reduce speed
+        // MAX_STUCK_CYCLES(sobit_pro_main.hpp): max allowed stuck duration before triggering recovery mode
+        if (stuck_counter > ATTENUATION_FACTOR) {
+          // Compute attenuation factor (0.0 to 1.0)
+          double factor = 1.0 - double(stuck_counter - ATTENUATION_FACTOR) / double(MAX_STUCK_CYCLES - ATTENUATION_FACTOR);
+          factor = std::max(factor, 0.1); // Ensure factor is not negative
 
-      } else{
-            stuck_counter++;
-          // If the robot is stuck for too long, apply attenuation to wheel speeds
-          // ATTENUATION_FACTOR(sobit_pro_main.hpp): how many cycles to wait before starting to reduce speed
-          // MAX_STUCK_CYCLES(sobit_pro_main.hpp): max allowed stuck duration before triggering recovery mode
-          if (stuck_counter > ATTENUATION_FACTOR){
-            // Compute attenuation factor (0.0 to 1.0)
-            double factor = 1.0 - double(stuck_counter - ATTENUATION_FACTOR) / double(MAX_STUCK_CYCLES - ATTENUATION_FACTOR);
-            factor = std::max(factor, 0.1); // Ensure factor is not negative
-
-            // Apply attenuation to wheel velocities
-            for (int i = 0; i < 4; ++i) {
-              set_wheel_vel[i] *= factor; // Reduce speed based on factor
-            }
-          }
-          // Check if the robot is stuck for too long
-            if (stuck_counter >= MAX_STUCK_CYCLES) {\
-                drive_state = DriveState::RECOVERY; // Switch to recovery state
-                stabilize_counter = 0; // Reset stabilize counter
+          // Apply attenuation to wheel velocities
+          for (int i = 0; i < 4; ++i) set_wheel_vel[i] *= factor; // Reduce speed based on factor
+        }
+        // Check if the robot is stuck for too long
+        if (stuck_counter >= MAX_STUCK_CYCLES) {
+          drive_state = DriveState::RECOVERY; // Switch to recovery state
+          stabilize_counter = 0; // Reset stabilize counter
         }
       }
       break;
+    }
 
-
-    case DriveState::RECOVERY:
+    case DriveState::RECOVERY: {
       // 1. Stop the wheels
       set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.0;
       // Force steer alignment
@@ -344,28 +341,22 @@ void SobitProMain::control_callback()
 
       recovery_publish_counter++;
       // Force steer republishing every N cycles if alignment still not achieved
-      if (!should_publish_steer && (recovery_publish_counter % 10) == 0) {
-      should_publish_steer = true;
-      }
-      if (should_publish_steer){
-        recovery_publish_counter = 0; // Reset counter
-      }
+      if (!should_publish_steer && (recovery_publish_counter % 10) == 0) should_publish_steer = true;
+      if (should_publish_steer) recovery_publish_counter = 0; // Reset counter
 
       // 2. Check if the robot is still stuck
       if (all_aligned){
-          stabilize_counter = 0; // Reset the stabilize counter
-          drive_state = DriveState::STABILIZE; // Switch to stabilize state
+        stabilize_counter = 0; // Reset the stabilize counter
+        drive_state = DriveState::STABILIZE; // Switch to stabilize state
       }
-      // else if((stuck_counter % 40) == 0) { // Every 2 seconds at 50ms cycle
-      // }
       break;
+    }
 
-    case DriveState::STABILIZE:
+    case DriveState::STABILIZE: {
       // wheel_vel needs to be zeroed in stabilize state for a while
       set_wheel_vel[0] = set_wheel_vel[1] = set_wheel_vel[2] = set_wheel_vel[3] = 0.0;
       should_publish_steer = true; // Always publish steer trajectory in stabilize state
       stabilize_counter++;
-
 
       // Check if stabilization is complete  
       if (stabilize_counter >= 30) { // 1.5 seconds at 50ms cycle
@@ -374,13 +365,11 @@ void SobitProMain::control_callback()
       }
       
       break;
+    }
   }
-
-
 
   // [SIM] Publish Float64MultiArray [rad/s]
   wheel_joint_vel.data.clear();
-
   wheel_joint_vel.data.push_back(set_wheel_vel[0]);
   wheel_joint_vel.data.push_back(set_wheel_vel[1]);
   wheel_joint_vel.data.push_back(set_wheel_vel[2]);
@@ -389,15 +378,14 @@ void SobitProMain::control_callback()
   // checkPublishersConnection("velocity_controller/commands");
   pub_wheel_joint_->publish(wheel_joint_vel);
 
-// Publish new steer command only when necessary:
-// - In DRIVE mode: only if target steer positions changed (avoid redundant publishes)
-// - In RECOVERY/STABILIZE: may be forced at intervals to ensure alignment
-// After publishing, update last_sent_steer_pos to track what was sent
+  // Publish new steer command only when necessary:
+  // - In DRIVE mode: only if target steer positions changed (avoid redundant publishes)
+  // - In RECOVERY/STABILIZE: may be forced at intervals to ensure alignment
+  // After publishing, update last_sent_steer_pos to track what was sent
   if (should_publish_steer) {
     pub_steer_joint_->publish(steer_joint_trajectory);
     last_sent_steer_pos = set_steer_pos; // Remember last sent
   }
-
 
   // [SIM] Update the current wheel position
   wheel_fl_curt_pos = SobitProMain::getJointPos("wheel_f_l_drive_joint");
@@ -435,7 +423,6 @@ void SobitProMain::control_callback()
   prev_odom.twist.twist.angular.x   = result_odom.twist.twist.angular.x;
   prev_odom.twist.twist.angular.y   = result_odom.twist.twist.angular.y;
   prev_odom.twist.twist.angular.z   = result_odom.twist.twist.angular.z;
-
 
   // Publish Odometry
   result_odom.header.stamp = this->now();

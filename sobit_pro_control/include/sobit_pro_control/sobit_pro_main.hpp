@@ -94,7 +94,7 @@ enum class DriveState {
   STABILIZE    // Post-recovery cooldown phase — ensure robot is stable before resuming
 };
   DriveState drive_state = DriveState::RECOVERY; // Current drive state (initialized in RECOVERY to ensure stability on startup)
-  DriveState prev_drive_state = DriveState::RECOVERY; // Previous drive state (used to detect state transitions and for logging)
+  // DriveState prev_drive_state = DriveState::RECOVERY; // Previous drive state (used to detect state transitions and for logging)
 
   int stuck_counter = 0;        // Counts consecutive control cycles where the robot remains unaligned (used to detect if robot is stuck)
   int stabilize_counter = 0;    // Counter for STABILIZE phase — delays transition back to DRIVE to allow full recovery
