@@ -1,6 +1,5 @@
 #include "sobit_pro_control/sobit_pro_control.hpp"
 
-// void SobitProControl::setParams( geometry_msgs::msg::Twist vel_twist )
 void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
 {
   switch (motion_mode) {
@@ -19,15 +18,14 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       // Goal position calculation
       double goal_rad = atan2(vel_twist.linear.y, vel_twist.linear.x);
 
-      steer_fl_goal_pos = goal_rad - ((3./4.)*M_PI);
-      steer_fr_goal_pos = goal_rad - ((1./4.)*M_PI);
-      steer_bl_goal_pos = goal_rad - ((3./4.)*M_PI*(-1));
-      steer_br_goal_pos = goal_rad - ((1./4.)*M_PI*(-1));
+      steer_fl_goal_pos = goal_rad - ( 3./4.)*M_PI;
+      steer_fr_goal_pos = goal_rad - ( 1./4.)*M_PI;
+      steer_bl_goal_pos = goal_rad - (-3./4.)*M_PI;
+      steer_br_goal_pos = goal_rad - (-1./4.)*M_PI;
 
       // Direction of wheel rotation
       if (vel_rads > LIMIT_VEL_RADS) wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = LIMIT_VEL_RADS;
       else                           wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = vel_rads;
-
       break;
     }
 
@@ -44,7 +42,6 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       if (fabsf(vel_rads) < LIMIT_VEL_RADS)
             wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = vel_rads;
       else  wheel_fl_goal_vel = wheel_fr_goal_vel = wheel_bl_goal_vel = wheel_br_goal_vel = LIMIT_VEL_RADS * (vel_rads/fabsf(vel_rads));
-
       break;
     }
 
@@ -61,14 +58,10 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
 
       // each wheel point from robot base
       geometry_msgs::msg::Point wheel_point_fl, wheel_point_fr, wheel_point_bl, wheel_point_br;
-      wheel_point_fl.x = TRACK / 2.;
-      wheel_point_fl.y = TRACK / 2.;
-      wheel_point_fr.x = TRACK / 2.;
-      wheel_point_fr.y = TRACK / 2. * (-1);
-      wheel_point_bl.x = TRACK / 2. * (-1);
-      wheel_point_bl.y = TRACK / 2.;
-      wheel_point_br.x = TRACK / 2. * (-1);
-      wheel_point_br.y = TRACK / 2. * (-1);
+      wheel_point_fl.x = wheel_point_fr.x = TRACK / 2.;        // X position of front wheel is (+)
+      wheel_point_bl.x = wheel_point_br.x = TRACK / 2. * (-1); // X position of  back wheel is (-)
+      wheel_point_fl.y = wheel_point_bl.y = TRACK / 2.;        // Y position of  left wheel is (+)
+      wheel_point_fr.y = wheel_point_br.y = TRACK / 2. * (-1); // Y position of right wheel is (i)
 
       // calculate the direction of each wheel (|direction| > 2PI is okay. )
       steer_fl_goal_pos = atan2(wheel_point_fl.y - base_center.y, wheel_point_fl.x - base_center.x) + M_PI/2.*angle_pn;
@@ -88,7 +81,6 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
       wheel_fr_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_fr.x - base_center.x, 2.) + powf(wheel_point_fr.y - base_center.y, 2.)) / r;
       wheel_bl_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_bl.x - base_center.x, 2.) + powf(wheel_point_bl.y - base_center.y, 2.)) / r;
       wheel_br_goal_vel = base_vel_rads * sqrtf(powf(wheel_point_br.x - base_center.x, 2.) + powf(wheel_point_br.y - base_center.y, 2.)) / r;
-
       break;
     }
 
@@ -130,8 +122,7 @@ void SobitProControl::setParams(const geometry_msgs::msg::Twist vel_twist)
   }
 }
 
-// Return wheel joint goal velocities as a fixed-size array.
-// std::array used to avoid raw pointer.
+// Return wheel joint goal velocities. 
 std::array<double, 4> SobitProControl::setSteerPos() {
     std::array<double, 4> out = {
         steer_fl_goal_pos,
