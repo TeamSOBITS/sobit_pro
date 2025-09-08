@@ -78,7 +78,7 @@ private:
     RECOVERY,    // Stop wheels and re-align steer joints until aligned.
     STABILIZE    // Hold still momentarily to stabilize robot before resuming movement.
   };
-  DriveState drive_state = DriveState::RECOVERY; // initialized in RECOVERY to ensure stability on startup
+  DriveState drive_state = DriveState::STABILIZE; // initialized in STABILIZE to ensure stability on startup
 
   std::string robot_name;           // topic name space
   int stuck_counter = 0;            // Counts consecutive control cycles where the robot remains unaligned (used to detect if robot is stuck)

@@ -35,10 +35,10 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   // rclcpp::Rate rate(50);
   joints_pos.clear();
   while (joints_pos.empty()) rclcpp::spin_some(this->get_node_base_interface());/* rate.sleep();*/
-  sobit_pro_control_->steer_fl_goal_pos = ( 1./4.) * M_PI;
-  sobit_pro_control_->steer_fr_goal_pos = (-1./4.) * M_PI;
-  sobit_pro_control_->steer_bl_goal_pos = (-1./4.) * M_PI;
-  sobit_pro_control_->steer_br_goal_pos = ( 1./4.) * M_PI;
+  sobit_pro_control_->steer_fl_goal_pos = ( 1./4.) * M_PI; // 0.0[rad] is okay
+  sobit_pro_control_->steer_fr_goal_pos = (-1./4.) * M_PI; // 0.0[rad] is okay
+  sobit_pro_control_->steer_bl_goal_pos = (-1./4.) * M_PI; // 0.0[rad] is okay
+  sobit_pro_control_->steer_br_goal_pos = ( 1./4.) * M_PI; // 0.0[rad] is okay
   wheel_fl_prev_pos = joints_pos["wheel_f_l_drive_joint"];
   wheel_fr_prev_pos = joints_pos["wheel_f_r_drive_joint"];
   wheel_bl_prev_pos = joints_pos["wheel_b_l_drive_joint"];
@@ -48,12 +48,6 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   this->control_timer_ = this->create_wall_timer(
       std::chrono::milliseconds(10),
       std::bind(&SobitProMain::control_callback, this));
-
-  // Initialize the wheel and steer positions
-  // steer_joint_trajectory.joint_names.resize(4);
-  // steer_joint_trajectory.points.resize(1);
-  // steer_joint_trajectory.points[0].positions.resize(4);
-  // wheel_joint_vel.data.resize(4);
 
   // Get the robot namespace
   robot_name = (std::strcmp(this->get_namespace(), "/") != 0)
@@ -293,7 +287,8 @@ void SobitProMain::control_callback()
   // - In DRIVE mode: only if target steer positions changed (avoid redundant publishes)
   // - In RECOVERY/STABILIZE: may be forced at intervals to ensure alignment
   // After publishing, update last_sent_steer_pos to track what was sent
-  if (should_publish_steer) {
+  // if (should_publish_steer) {
+  if (should_publish_steer && (stabilize_counter != 0)) {
     pub_steer_joint_->publish(steer_joint_trajectory);
     last_sent_steer_pos = set_steer_pos; // Remember last sent
   }
