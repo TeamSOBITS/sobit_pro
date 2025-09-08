@@ -16,14 +16,6 @@
 
 class SobitProOdometry{
 private:
-  enum MODE {
-    NONE = -1,
-    STOP_MOTION_MODE,
-    TRANSLATIONAL_MOTION_MODE,
-    ROTATIONAL_MOTION_MODE,
-    SWIVEL_MOTION_MODE // Motion can be added
-  } motion_mode;
-
   rclcpp::Node* node_;
   std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
@@ -32,35 +24,21 @@ public:
     RCLCPP_INFO(node_->get_logger(), "SobitProOdometry initialized.");
     tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(node_);
   }
-  // Check how much of odometry is accepted
   ~SobitProOdometry() {
   RCLCPP_INFO(node_->get_logger(), "SobitProOdometry destroyed.");
   }
 
-  bool odom(
+  nav_msgs::msg::Odometry odom(
     double steer_fl_curt_pos, double steer_fr_curt_pos,
     double steer_bl_curt_pos, double steer_br_curt_pos,
     double wheel_fl_curt_pos, double wheel_fr_curt_pos,
     double wheel_bl_curt_pos, double wheel_br_curt_pos,
-    double wheel_fl_init_pos, double wheel_fr_init_pos,
-    double wheel_bl_init_pos, double wheel_br_init_pos,
-    double prev_motion,
-    nav_msgs::msg::Odometry prev_odom, nav_msgs::msg::Odometry* result_odom);
+    double wheel_fl_prev_pos, double wheel_fr_prev_pos,
+    double wheel_bl_prev_pos, double wheel_br_prev_pos,
+    nav_msgs::msg::Odometry prev_odom);
 
-  double distance_calculation(double wheel_curt_pos);
-  double position_calculation(double steer_curt_pos);
+  double distance_calculation(double wheel_delta_pos);
   void pose_broadcaster(const nav_msgs::msg::Odometry &tf_odom);
-
-  MODE getMotion(int motion) {
-    switch (motion) {
-      case STOP_MOTION_MODE:          motion_mode = STOP_MOTION_MODE;          break;
-      case TRANSLATIONAL_MOTION_MODE: motion_mode = TRANSLATIONAL_MOTION_MODE; break;
-      case ROTATIONAL_MOTION_MODE:    motion_mode = ROTATIONAL_MOTION_MODE;    break;
-      case SWIVEL_MOTION_MODE:        motion_mode = SWIVEL_MOTION_MODE;        break;
-      default:                        motion_mode = NONE;                      break;
-    }
-    return motion_mode;
-  }
 };
 
 #endif // SOBIT_PRO_ODOMETRY_HPP_

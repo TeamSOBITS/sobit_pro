@@ -13,7 +13,8 @@ ros_packages=(
     "sobits_interfaces" \
     "urg_node" \
     "azure_kinect_ros_driver" \
-    "realsense_ros"
+    "realsense_ros" \
+    "sobits_gazebo_worlds"
 )
 
 # Clone all packages

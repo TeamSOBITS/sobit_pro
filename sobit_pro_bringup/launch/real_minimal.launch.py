@@ -7,16 +7,14 @@ from launch_ros.actions import Node
 from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import PathJoinSubstitution, PythonExpression
-from launch.conditions import IfCondition
-# from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch.substitutions import PathJoinSubstitution
 
 
 def generate_launch_description():
     robot_name = 'sobit_pro'
     robot_id = 0
     bringup_pkg = robot_name + '_bringup'
-    head_camera_name = "azure_kinect" # 'xtion' or 'azure_kinect'  ## TODO : orbbec femt bolt??
+    head_camera_name = "xtion" # 'xtion' or 'azure_kinect'  ## TODO : orbbec femt bolt??
 
     rviz_config = os.path.join(get_package_share_directory(bringup_pkg), 'rviz', 'real.rviz')
 
