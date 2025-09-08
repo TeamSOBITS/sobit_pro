@@ -27,9 +27,9 @@ def generate_launch_description():
     )
 
     world_file = os.path.join(get_package_share_directory(
-        'sobit_pro_description'), 
+        'sobits_gazebo_worlds'), 
         'worlds',
-        'empty_w_physics.sdf'
+        'rcjo2025_arena.world.xacro'
     )
 
     return LaunchDescription([
@@ -60,8 +60,8 @@ def generate_launch_description():
                 'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
                 'head_camera_name': head_camera_name,
                 'enable_gz' : 'True',
-                'robot_coords_x': '0',    # x 
-                'robot_coords_y': '0',    # y
+                'robot_coords_x': '-5.5',    # x 
+                'robot_coords_y': '1.5',    # y
                 'robot_coords_z': '0.01', # z
                 'robot_coords_Y': '0',    # yaw
             }.items()
@@ -72,15 +72,15 @@ def generate_launch_description():
         #         PathJoinSubstitution([
         #             os.path.join(get_package_share_directory(bringup_pkg),
         #             'launch',
-        #             'gz_robot.launch.py')
+        #             'robot.launch.py')
         #         ])
         #     ]),
         #     launch_arguments={
         #         'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
-        #         'enable_gz' : 'True',
         #         'head_camera_name': head_camera_name,
-        #         'robot_coords_x': '0', # x 
-        #         'robot_coords_y': '2', # y
+        #         'enable_gz' : 'True',
+        #         'robot_coords_x': '-5.5', # x 
+        #         'robot_coords_y': '-2.5', # y
         #         'robot_coords_z': '0.01', # z
         #         'robot_coords_Y': '0', # yaw
         #     }.items()

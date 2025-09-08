@@ -66,7 +66,6 @@ def launch_gz(context, *args, **kwargs):
         'gazebo.rviz'
     ]) if enable_gz == 'True' else PathJoinSubstitution([
         FindPackageShare('sobit_pro_bringup'),
-        # FindPackageShare('robocup_opl_cml'),
         'rviz',
         'real.rviz'
     ])
@@ -210,8 +209,8 @@ def launch_gz(context, *args, **kwargs):
                         # "/" + robot_name + "/hand_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
                         # "/" + robot_name + "/hand_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
                         # "/" + robot_name + "/hand_camera/depth/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
-                        # "/" + robot_name + "/lidar/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
-                        # "/" + robot_name + "/lidar/scan/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
+                        "/" + robot_name + "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
+                        # "/" + robot_name + "/scan/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
                         # "/" + robot_name + "/imu" + "@sensor_msgs/msg/Imu" + "[ignition.msgs.IMU",
                     ],
             output='screen'
