@@ -149,9 +149,9 @@
         <xacro:unless value="${$(arg enable_gz)}">
           <param name="id">18</param>
           <param name="control_mode">6</param>
-          <param name="Goal_Current">50</param>  <!-- TODO: Check correct goal value -->
+          <param name="Goal_Current">150</param>
           <param name="interface">rs</param>
-          <param name="gear_ratio">-59.504383354</param>  <!-- TODO: Check correct gear_ratio value -->
+          <param name="gear_ratio">1.0</param>
         </xacro:unless>
         <command_interface name="position">
           <param name="min">-1.570796327</param>
