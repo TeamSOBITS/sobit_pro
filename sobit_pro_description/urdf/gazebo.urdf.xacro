@@ -192,13 +192,13 @@
     </xacro:if> -->
 
     <!-- Sensor - LiDAR -->
-    <!-- <xacro:if value="${enable_gz_lidar}">
-      <gazebo reference="sim_laser_frame">
+    <xacro:if value="${enable_gz_lidar}">
+      <gazebo reference="lidar_laser">
         <sensor name="lidar" type="gpu_lidar">
           <pose>0 0 0 0 0 0</pose>
 
-          <ignition_frame_id>${robot_name}/sim_laser_frame</ignition_frame_id>
-          <topic>${robot_name}/lidar/scan</topic>
+          <ignition_frame_id>${robot_name}/lidar_laser</ignition_frame_id>
+          <topic>${robot_name}/scan</topic>
 
           <always_on>1</always_on>
           <visualize>true</visualize>
@@ -227,7 +227,7 @@
           </ray>
         </sensor>
       </gazebo>
-    </xacro:if> -->
+    </xacro:if>
 
     <!-- Publish Joint States -->
     <gazebo>
