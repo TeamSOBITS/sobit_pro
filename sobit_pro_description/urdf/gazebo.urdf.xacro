@@ -198,6 +198,16 @@
           <pose>0 0 0 0 0 0</pose>
 
           <ignition_frame_id>${robot_name}/lidar_laser</ignition_frame_id>
+          <!-- <qos>
+            <topic name=${robot_name}/scan>
+              <publisher>
+                <reliability>best_effort</reliability>
+                <durability>volatile</durability>
+                <history>keep_last</history>
+                <depth>5</depth>
+              </publisher>
+            </topic>
+          </qos> -->
           <topic>${robot_name}/scan</topic>
 
           <always_on>1</always_on>
@@ -209,8 +219,10 @@
               <horizontal>
                 <samples>640</samples>
                 <resolution>1</resolution>
-                <min_angle>-2.4870942</min_angle>
-                <max_angle>2.4870942</max_angle>
+                <!-- <min_angle>-2.4870942</min_angle>
+                <max_angle>2.4870942</max_angle> -->
+                <min_angle>-1.5708</min_angle>
+                <max_angle>1.5708</max_angle>
               </horizontal>
               <vertical>
                 <samples>1</samples>
