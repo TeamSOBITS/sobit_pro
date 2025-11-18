@@ -27,12 +27,12 @@ JointActionServer::JointActionServer(const rclcpp::NodeOptions & options = rclcp
       std::bind(&JointActionServer::handle_move_to_pose_goal, this, std::placeholders::_1, std::placeholders::_2),
       std::bind(&JointActionServer::handle_move_to_pose_cancel, this, std::placeholders::_1),
       std::bind(&JointActionServer::handle_move_to_pose_accepted, this, std::placeholders::_1));
-  this->service_server_move_hand_to_coord_ = this->create_service<MoveHandToTargetCoord>(
-      "move_hand_to_coord",
-      std::bind(&JointActionServer::serve_move_hand_to_coord, this, std::placeholders::_1, std::placeholders::_2));
-  this->service_server_move_hand_to_tf_ = this->create_service<MoveHandToTargetTF>(
-      "move_hand_to_tf",
-      std::bind(&JointActionServer::serve_move_hand_to_tf, this, std::placeholders::_1, std::placeholders::_2));
+  this->service_server_get_hand_to_coord_ = this->create_service<GetHandToTargetCoord>(
+      "get_hand_to_coord",
+      std::bind(&JointActionServer::serve_get_hand_to_coord, this, std::placeholders::_1, std::placeholders::_2));
+  this->service_server_get_hand_to_tf_ = this->create_service<GetHandToTargetTF>(
+      "get_hand_to_tf",
+      std::bind(&JointActionServer::serve_get_hand_to_tf, this, std::placeholders::_1, std::placeholders::_2));
 
   this->sub_joint_state_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "joint_states", qos_profile, std::bind(&JointActionServer::joint_state_callback, this, std::placeholders::_1));
@@ -405,9 +405,9 @@ void JointActionServer::exe_move_to_pose(
   goal_handle->succeed(result);
 }
 
-void JointActionServer::serve_move_hand_to_coord(
-  const std::shared_ptr<MoveHandToTargetCoord::Request> request,
-  std::shared_ptr<MoveHandToTargetCoord::Response> response)
+void JointActionServer::serve_get_hand_to_coord(
+  const std::shared_ptr<GetHandToTargetCoord::Request> request,
+  std::shared_ptr<GetHandToTargetCoord::Response> response)
 {
 
   // Get namespace
@@ -478,9 +478,9 @@ void JointActionServer::serve_move_hand_to_coord(
   return;
 }
 
-void JointActionServer::serve_move_hand_to_tf(
-  const std::shared_ptr<MoveHandToTargetTF::Request> request,
-  std::shared_ptr<MoveHandToTargetTF::Response> response)
+void JointActionServer::serve_get_hand_to_tf(
+  const std::shared_ptr<GetHandToTargetTF::Request> request,
+  std::shared_ptr<GetHandToTargetTF::Response> response)
 {
 
   // Get namespace
