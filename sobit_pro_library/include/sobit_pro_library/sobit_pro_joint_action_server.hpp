@@ -25,6 +25,10 @@
 #include <rclcpp_action/rclcpp_action.hpp>
 #include <rclcpp_components/register_node_macro.hpp>
 
+#include <std_msgs/msg/float64.hpp>
+#include <rclcpp/publisher.hpp>
+
+
 
 namespace sobit_pro
 {
@@ -95,6 +99,10 @@ public:
   explicit JointActionServer(const rclcpp::NodeOptions & options);
   ~JointActionServer();
 
+  bool detect_user_open_intent(
+      const std::vector<std::string>& joint_names,
+      const std::vector<double>& joint_values);
+
   geometry_msgs::msg::Vector3 get_euler_from_quat(
     const geometry_msgs::msg::Quaternion& quat);
   geometry_msgs::msg::Quaternion get_quat_from_euler(
@@ -163,6 +171,10 @@ private:
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_joint_control_;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_head_joint_control_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr sub_joint_state_;
+
+
+  rclcpp::Publisher<std_msgs::msg::Float64>::SharedPtr pub_hand_goal_raw_;
+  double latest_hand_goal_ = std::numeric_limits<double>::quiet_NaN();
 
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;

@@ -38,6 +38,10 @@ JointActionServer::JointActionServer(const rclcpp::NodeOptions & options = rclcp
       "joint_states", qos_profile, std::bind(&JointActionServer::joint_state_callback, this, std::placeholders::_1));
   this->pub_joint_control_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
       "joint_trajectory_controller/joint_trajectory", qos_profile);
+  this->pub_hand_goal_raw_ =
+      this->create_publisher<std_msgs::msg::Float64>("hand_goal_raw", 1);
+
+
 
 
   //Declare the pose parameters
@@ -139,6 +143,25 @@ void JointActionServer::handle_move_to_pose_accepted(
   std::thread{std::bind(&JointActionServer::exe_move_to_pose, this, std::placeholders::_1), goal_handle}.detach();
 }
 
+bool JointActionServer::detect_user_open_intent(
+    const std::vector<std::string>& joint_names,
+    const std::vector<double>& joint_values
+) {
+    for (size_t i = 0; i < joint_names.size(); i++) {
+        if (joint_names[i] == "hand_joint") {
+            double v = joint_values[i];
+
+            // OPEN threshold → more negative than -0.2 rad
+            if (v < -0.2) {
+                return true;   // user wants to OPEN
+            } else {
+                return false;  // user wants to CLOSE or neutral
+            }
+        }
+    }
+    // If hand_joint not included, NO OPEN INTENT
+    return false;
+}
 
 void JointActionServer::exe_move_joints(
   const std::shared_ptr<GoalHandleMoveJoints> goal_handle)
@@ -147,6 +170,29 @@ void JointActionServer::exe_move_joints(
 
   const auto goal = goal_handle->get_goal();
   auto result = std::make_shared<MoveJoint::Result>();
+
+  // Save TRUE user hand goal (before interpolation)
+  for (size_t i = 0; i < goal->target_joint_names.size(); i++) {
+      if (goal->target_joint_names[i] == "hand_joint") {
+          latest_hand_goal_ = goal->target_joint_rad[i];
+          RCLCPP_WARN(this->get_logger(),
+              "[HAND_GOAL] Captured user hand target = %.3f rad",
+              latest_hand_goal_);
+      }
+  }
+
+  // Publish REAL user hand goal
+  {
+      std_msgs::msg::Float64 msg;
+      msg.data = latest_hand_goal_;
+      pub_hand_goal_raw_->publish(msg);
+
+      RCLCPP_INFO(this->get_logger(),
+          "[HAND_GOAL][PUB] Published real hand goal = %.3f rad",
+          latest_hand_goal_);
+  }
+
+
 
   // Check if the number of joint names and joint rad are the same
   if (goal->target_joint_names.size() != goal->target_joint_rad.size()) {
@@ -173,6 +219,19 @@ void JointActionServer::exe_move_joints(
   }
 
   // TODO: Check if the joint rad are within the joint limits
+
+  // --------------------------------------------
+  // Detect hand open/close intent
+  // --------------------------------------------
+  bool open_intent =
+      detect_user_open_intent(goal->target_joint_names, goal->target_joint_rad);
+
+
+
+  RCLCPP_INFO(this->get_logger(),
+      "Hand intent detected (move_joints): %s",
+      open_intent ? "OPEN" : "CLOSE/IGNORE");
+
 
   // Publish the joint trajectory
   trajectory_msgs::msg::JointTrajectory joint_trajectory;
@@ -291,6 +350,32 @@ void JointActionServer::exe_move_to_pose(
       break;
     }
   }
+
+  // Publish REAL hand goal from preset pose
+  {
+      // index 5 corresponds to hand_joint in your JointNames order
+      latest_hand_goal_ = target_joint_rad[5];
+
+      std_msgs::msg::Float64 msg;
+      msg.data = latest_hand_goal_;
+      pub_hand_goal_raw_->publish(msg);
+
+      RCLCPP_INFO(this->get_logger(),
+          "[HAND_GOAL][PUB][POSE] Published real hand goal = %.3f rad",
+          latest_hand_goal_);
+  }
+
+  // --------------------------------------------
+  // Detect hand open/close intent for preset pose
+  // --------------------------------------------
+  std::vector<std::string> names = JointNames;
+  bool open_intent = detect_user_open_intent(names, target_joint_rad);
+
+
+  RCLCPP_INFO(this->get_logger(),
+      "Hand intent detected (move_to_pose): %s",
+      open_intent ? "OPEN" : "CLOSE/IGNORE");
+
 
   if (target_joint_rad.size() == 0) {
     RCLCPP_ERROR(this->get_logger(), "Failed to not find the pose name : %s", goal->pose_name.c_str());

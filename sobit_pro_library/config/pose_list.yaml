@@ -30,7 +30,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : -0.1
+      hand_joint                    : -0.15
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
     
@@ -60,7 +60,7 @@
       arm_elbow_lower_tilt_joint    : -1.18
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -0.97
-      hand_joint                    : 0.00
+      hand_joint                    : -0.10
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
 
