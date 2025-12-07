@@ -34,7 +34,7 @@
     </link>
 
 
-    <xacro:hokuyo_ust_mount prefix="${prefix}" parent="${prefix}_base_link" topic="scan" >
+    <xacro:hokuyo_ust_mount prefix="${prefix}" parent="${prefix}_base_link" topic="/scan" >
       <origin xyz="0.067 0.0 0.0" rpy="0.0 0.0 0.0" />
     </xacro:hokuyo_ust_mount>
 
