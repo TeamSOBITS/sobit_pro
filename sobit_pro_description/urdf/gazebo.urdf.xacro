@@ -1,90 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- SOBIT Light (Gazebo) -->
+<!-- SOBIT PRO (Gazebo) -->
 <robot name="sobit_pro_gazebo" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="gazebo_sensors" params="robot_name enable_gz_front_cam_color:=True enable_gz_back_cam_color:=True enable_gz_head_cam_color:=True enable_gz_head_cam_depth:=True enable_gz_hand_cam_color:=True enable_gz_hand_cam_depth:=True enable_gz_lidar:=True enable_gz_imu:=True">
-
-    <!-- Sensor - Base Front Camera (Color) -->
-    <!-- <xacro:if value="${enable_gz_front_cam_color}">
-      <gazebo reference="imu_link">
-        <sensor name="imu_sensor" type="imu">
-          <pose>0 0 0 0 0 0</pose>
-
-          <ignition_frame_id>${robot_name}/imu_link</ignition_frame_id>
-          <topic>${robot_name}/imu</topic>
-          
-          <always_on>1</always_on>
-          <visualize>true</visualize>
-          <update_rate>1</update_rate>
-        </sensor>
-      </gazebo>
-    </xacro:if> -->
-
-    <!-- Sensor - Base Front Camera (Color) -->
-    <!-- <xacro:if value="${enable_gz_front_cam_color}">
-      <gazebo reference="camera_front_link">
-        <sensor name="base_front_camera_color" type="camera">
-          <pose>0 0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0 </pose>
-          
-          <ignition_frame_id>${robot_name}/base_front_camera_color</ignition_frame_id>
-          <topic>${robot_name}/base_front_camera/color</topic>
-
-          <always_on>1</always_on>
-          <visualize>true</visualize>
-          <update_rate>1</update_rate>
-
-          <camera name="base_front_camera">
-            <horizontal_fov>1.21126</horizontal_fov>
-            <image>
-              <width>640</width>
-              <height>480</height>
-              <format>RGB_INT8</format>
-            </image>
-            <clip>
-              <near>0.1</near>
-              <far>10</far>
-            </clip>
-          </camera>
-        </sensor>
-      </gazebo>
-    </xacro:if> -->
-
-    <!-- Sensor - Base Back Camera (Color) -->
-    <!-- <xacro:if value="${enable_gz_back_cam_color}">
-      <gazebo reference="camera_back_link">
-        <sensor name="base_back_camera_color" type="camera">
-          <pose>0 0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0 </pose>
-          
-          <ignition_frame_id>${robot_name}/camera_back_link</ignition_frame_id>
-          <topic>${robot_name}/base_back_camera/color</topic>
-
-          <always_on>1</always_on>
-          <visualize>true</visualize>
-          <update_rate>1</update_rate>
-
-          <camera name="base_back_camera">
-            <horizontal_fov>1.21126</horizontal_fov>
-            <image>
-              <width>640</width>
-              <height>480</height>
-              <format>RGB_INT8</format>
-            </image>
-            <clip>
-              <near>0.1</near>
-              <far>10</far>
-            </clip>
-          </camera>
-        </sensor>
-      </gazebo>
-    </xacro:if> -->
+  <xacro:macro name="gazebo_sensors" params="robot_name enable_gz_head_cam_color:=True enable_gz_head_cam_depth:=True enable_gz_lidar:=True">
 
     <!-- Sensor - Head Camera (Color) -->
-    <!-- <xacro:if value="${enable_gz_head_cam_color}">
-      <gazebo reference="head_camera_color_optical_frame">
+    <xacro:if value="${enable_gz_head_cam_color}">
+      <gazebo reference="head_camera_link">
         <sensor name="head_camera_color" type="camera">
-          <pose>0 0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0 </pose>
+          <pose>0.0 0.0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0.0</pose>
           
-          <ignition_frame_id>${robot_name}/head_camera_color_optical_frame</ignition_frame_id>
-          <topic>${robot_name}/head_camera/color</topic>
+          <ignition_frame_id>${robot_name}/head_camera_link</ignition_frame_id>
+          <topic>${robot_name}/head_camera/rgb/image_raw</topic>
 
           <always_on>1</always_on>
           <visualize>true</visualize>
@@ -104,16 +30,16 @@
           </camera>
         </sensor>
       </gazebo>
-    </xacro:if> -->
+    </xacro:if>
 
     <!-- Sensor - Head Camera (Depth) -->
-    <!-- <xacro:if value="${enable_gz_head_cam_depth}">
+    <xacro:if value="${enable_gz_head_cam_depth}">
       <gazebo reference="head_camera_depth_optical_frame">
         <sensor name="head_camera_depth" type="depth">
-          <pose>0 0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0 </pose>
-          
+          <pose>0.0 0.0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0.0</pose>
+
           <ignition_frame_id>${robot_name}/head_camera_depth_optical_frame</ignition_frame_id>
-          <topic>${robot_name}/head_camera/depth</topic>
+          <topic>${robot_name}/head_camera/depth_registered/image_raw</topic>
 
           <always_on>1</always_on>
           <visualize>true</visualize>
@@ -121,38 +47,9 @@
 
           <camera name="head_camera_depth">
             <horizontal_fov>1.48702</horizontal_fov>
-            <image>
-              <width>1280</width>
-              <height>720</height>
-            </image>
-            <clip>
-              <near>0.1</near>
-              <far>10</far>
-            </clip>
-          </camera>
-        </sensor>
-      </gazebo>
-    </xacro:if> -->
-
-    <!-- Sensor - Hand Camera (Color) -->
-    <!-- <xacro:if value="${enable_gz_hand_cam_color}">
-      <gazebo reference="hand_camera_color_optical_frame">
-        <sensor name="hand_camera_color" type="camera">
-          <pose>0 0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0 </pose>
-          
-          <ignition_frame_id>${robot_name}/hand_camera_color_optical_frame</ignition_frame_id>
-          <topic>${robot_name}/hand_camera/color</topic>
-
-          <always_on>1</always_on>
-          <visualize>true</visualize>
-          <update_rate>1</update_rate>
-
-          <camera name="hand_camera_color">
-            <horizontal_fov>1.21126</horizontal_fov>
             <image>
               <width>640</width>
               <height>480</height>
-              <format>RGB_INT8</format>
             </image>
             <clip>
               <near>0.1</near>
@@ -161,35 +58,7 @@
           </camera>
         </sensor>
       </gazebo>
-    </xacro:if> -->
-
-    <!-- Sensor - Hand Camera (Depth) -->
-    <!-- <xacro:if value="${enable_gz_hand_cam_depth}">
-      <gazebo reference="hand_camera_depth_optical_frame">
-        <sensor name="hand_camera_depth" type="depth">
-          <pose>0 0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0 </pose>
-          
-          <ignition_frame_id>${robot_name}/hand_camera_depth_optical_frame</ignition_frame_id>
-          <topic>${robot_name}/hand_camera/depth</topic>
-
-          <always_on>1</always_on>
-          <visualize>true</visualize>
-          <update_rate>1</update_rate>
-
-          <camera name="head_camera_depth">
-            <horizontal_fov>1.48702</horizontal_fov>
-            <image>
-              <width>1280</width>
-              <height>720</height>
-            </image>
-            <clip>
-              <near>0.1</near>
-              <far>10</far>
-            </clip>
-          </camera>
-        </sensor>
-      </gazebo>
-    </xacro:if> -->
+    </xacro:if>
 
     <!-- Sensor - LiDAR -->
     <xacro:if value="${enable_gz_lidar}">

@@ -24,6 +24,16 @@ def generate_launch_description():
 
     arg_enable_gz = DeclareLaunchArgument('enable_gz', default_value='False')
 
+    arg_enable_mb = DeclareLaunchArgument('enable_mb', default_value='True')
+    arg_enable_arm = DeclareLaunchArgument('enable_arm', default_value='True')
+    arg_enable_head = DeclareLaunchArgument('enable_head', default_value='True')
+
+    arg_enable_gz_lidar = DeclareLaunchArgument('enable_gz_lidar', default_value='True')
+    arg_enable_gz_head_cam_color = DeclareLaunchArgument('enable_gz_head_cam_color', default_value='True')
+    arg_enable_gz_head_cam_depth = DeclareLaunchArgument('enable_gz_head_cam_depth', default_value='True')
+
+    arg_use_serial_urg = DeclareLaunchArgument('use_serial_urg', default_value='False')
+
     return LaunchDescription([
         arg_robot_name,
         arg_head_camera,
@@ -32,6 +42,13 @@ def generate_launch_description():
         arg_robot_coords_z,
         arg_robot_coords_Y,
         arg_enable_gz,
+        arg_enable_mb,
+        arg_enable_arm,
+        arg_enable_head,
+        arg_enable_gz_lidar,
+        arg_enable_gz_head_cam_color,
+        arg_enable_gz_head_cam_depth,
+        arg_use_serial_urg,
         OpaqueFunction(function = launch_gz),
     ])
 
@@ -47,6 +64,16 @@ def launch_gz(context, *args, **kwargs):
 
     enable_gz = LaunchConfiguration('enable_gz').perform(context)
 
+    enable_mb = LaunchConfiguration('enable_mb').perform(context)
+    enable_arm = LaunchConfiguration('enable_arm').perform(context)
+    enable_head = LaunchConfiguration('enable_head').perform(context)
+
+    enable_gz_lidar = LaunchConfiguration('enable_gz_lidar').perform(context)
+    enable_gz_head_cam_color = LaunchConfiguration('enable_gz_head_cam_color').perform(context)
+    enable_gz_head_cam_depth = LaunchConfiguration('enable_gz_head_cam_depth').perform(context)
+
+    use_serial_urg = LaunchConfiguration('use_serial_urg').perform(context)
+
     robot_description = os.path.join(get_package_share_directory(
         'sobit_pro_description'), 
         'robots',
@@ -55,28 +82,23 @@ def launch_gz(context, *args, **kwargs):
     robot_description_config = xacro.process_file(
         robot_description,
         mappings={
-            'enable_gz' : enable_gz,
-            'robot_name' : robot_name,
+            'enable_mb'   : enable_mb,
+            'enable_arm'  : enable_arm,
+            'enable_head' : enable_head,
+            'enable_gz'   : enable_gz,
+            'robot_name'  : robot_name,
             'head_camera_name': head_camera_name,
+            'enable_gz_lidar': enable_gz_lidar,
+            'enable_gz_head_cam_color': enable_gz_head_cam_color,
+            'enable_gz_head_cam_depth': enable_gz_head_cam_depth,
         })
-    
-    rviz_config = PathJoinSubstitution([
-        FindPackageShare('sobit_pro_bringup'),
-        'rviz',
-        'gazebo.rviz'
-    ]) if enable_gz == 'True' else PathJoinSubstitution([
-        FindPackageShare('sobit_pro_bringup'),
-        'rviz',
-        'real.rviz'
-    ])
 
-    # rviz_node = Node(
-    #     package='rviz2',
-    #     executable='rviz2',
-    #     namespace=robot_name,
-    #     arguments=['-d', rviz_config],
-    #     output='screen',
-    # )
+
+    if (use_serial_urg == 'False'):
+        urg_config = os.path.join(get_package_share_directory("sobit_pro_bringup"), "config", "ethernet_urg_node_params.yaml")
+    else:
+        urg_config = os.path.join(get_package_share_directory("sobit_pro_bringup"), "config", "serial_urg_node_params.yaml")
+
 
     if enable_gz == 'False':
         controller_config = os.path.join(get_package_share_directory(
@@ -84,8 +106,7 @@ def launch_gz(context, *args, **kwargs):
             'config',
             'controllers.yaml'
         )
-
-        controller_manager = Node(
+        ros2_control_node = Node(
             package="controller_manager",
             executable="ros2_control_node",
             namespace=robot_name,
@@ -93,6 +114,69 @@ def launch_gz(context, *args, **kwargs):
                 {"robot_description": robot_description_config.toxml()}, controller_config],
             output="screen",
         )
+        urg_node = IncludeLaunchDescription(
+            PythonLaunchDescriptionSource([
+                PathJoinSubstitution([
+                    FindPackageShare('urg_node'),
+                    'launch',
+                    'urg.launch.py'
+                ])
+            ]),
+            launch_arguments={
+                "config_file" : urg_config,
+                "use_namespace" : "true",
+                "namespace" : robot_name,
+            }.items()
+        )
+
+        if (head_camera_name == "xtion"):
+            camera_node = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    PathJoinSubstitution([os.path.join(
+                        get_package_share_directory('sobit_pro_bringup'),
+                        'launch',
+                        'xtion.launch.py')
+                    ])
+                ]),
+                launch_arguments={
+                    'tf_prefix': robot_name,
+                    'namespace': 'head_camera',
+                }.items()
+            )
+        elif (head_camera_name == "azure_kinect"):
+            camera_node = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    PathJoinSubstitution([os.path.join(
+                        get_package_share_directory('sobit_pro_bringup'),
+                        'launch',
+                        'azure_kinect.launch.py')
+                    ])
+                ]),
+                launch_arguments={
+                    'namespace': robot_name,
+                }.items()
+            )
+        elif (head_camera_name == "femtobolt"): # TODO
+            camera_node = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource([
+                    PathJoinSubstitution([os.path.join(
+                        get_package_share_directory('sobit_pro_bringup'),
+                        'launch',
+                        'femtobolt.launch.py')
+                    ])
+                ]),
+                launch_arguments={
+                    'namespace': robot_name,
+                }.items()
+            )
+        else:
+            camera_node = None
+
+        rviz_config = PathJoinSubstitution([
+            FindPackageShare('sobit_pro_bringup'),
+            'rviz',
+            'real.rviz'
+        ])
 
     joint_state_broadcaster = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
@@ -147,6 +231,51 @@ def launch_gz(context, *args, **kwargs):
         output="screen",
     )
 
+    if enable_gz == 'True':
+        gz_spawn_entity_node = Node(
+            package='ros_gz_sim',
+            executable='create',
+            namespace=robot_name,
+            arguments=[
+                '-topic', '/' + robot_name + '/robot_description',
+                '-name', robot_name,
+                '-x', robot_coords_x,
+                '-y', robot_coords_y,
+                '-z', robot_coords_z,
+                '-Y', robot_coords_Y,
+            ],
+            output='screen',
+        )
+
+        gz_bridge_node = Node(
+            package='ros_gz_bridge',
+            executable='parameter_bridge',
+            namespace=robot_name,
+            arguments=[
+                        "/" + robot_name + "/joint_states" + "@sensor_msgs/msg/JointState" + "[ignition.msgs.Model",
+                        "/" + robot_name + "/head_camera/rgb/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
+                        "/" + robot_name + "/head_camera/rgb/image_raw" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
+                        "/" + robot_name + "/head_camera/depth_registered/image_raw" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
+                        "/" + robot_name + "/head_camera/depth_registered/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
+                        # "/" + robot_name + "/hand_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
+                        # "/" + robot_name + "/hand_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
+                        # "/" + robot_name + "/hand_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
+                        # "/" + robot_name + "/hand_camera/depth/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
+                        "/" + robot_name + "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
+
+                        "/" + robot_name + "/scan/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
+                        # "/" + robot_name + "/imu" + "@sensor_msgs/msg/Imu" + "[ignition.msgs.IMU",
+                    ],
+            output='screen'
+        )
+
+        rviz_config = PathJoinSubstitution([
+            FindPackageShare('sobit_pro_bringup'),
+            'rviz',
+            'gazebo.rviz'
+        ])
+
+
     library_server_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
             PathJoinSubstitution([
@@ -170,61 +299,24 @@ def launch_gz(context, *args, **kwargs):
             {"use_sim_time": True if enable_gz == 'True' else False},
         ],
         output="screen",
-        )
+    )
 
-    if enable_gz == 'True':
-        gz_spawn_entity_node = Node(
-            package='ros_gz_sim',
-            executable='create',
-            namespace=robot_name,
-            arguments=[
-                '-topic', '/' + robot_name + '/robot_description',
-                '-name', robot_name,
-                '-x', robot_coords_x,
-                '-y', robot_coords_y,
-                '-z', robot_coords_z,
-                '-Y', robot_coords_Y,
-            ],
-            output='screen',
-        )
-
-        gz_bridge_node = Node(
-            package='ros_gz_bridge',
-            executable='parameter_bridge',
-            namespace=robot_name,
-            arguments=[
-                        "/" + robot_name + "/joint_states" + "@sensor_msgs/msg/JointState" + "[ignition.msgs.Model",
-                        # "/model/" + robot_name + "/pose" + "@geometry_msgs/msg/Pose" + "[ignition.msgs.Pose",
-                        # "/" + robot_name + "/base_front_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
-                        # "/" + robot_name + "/base_front_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/base_front_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/base_back_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
-                        # "/" + robot_name + "/base_back_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/base_back_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/head_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
-                        # "/" + robot_name + "/head_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/head_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/head_camera/depth/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
-                        # "/" + robot_name + "/hand_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
-                        # "/" + robot_name + "/hand_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/hand_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        # "/" + robot_name + "/hand_camera/depth/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
-                        "/" + robot_name + "/scan" + "@sensor_msgs/msg/LaserScan" + "[ignition.msgs.LaserScan",
-                        # "/" + robot_name + "/scan/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
-                        # "/" + robot_name + "/imu" + "@sensor_msgs/msg/Imu" + "[ignition.msgs.IMU",
-                    ],
-            output='screen'
-        )
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name=robot_name+'_rviz2',
+        output='screen',
+        arguments=['-d', rviz_config],
+    )
 
     if enable_gz == 'False':
         return [
-            controller_manager,
+            ros2_control_node,
             joint_state_broadcaster,
             joint_trajectory_controller,
             steer_joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
-            # library_server_launch,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
@@ -237,7 +329,9 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=[library_server_launch],
                 )
             ),
-            # rviz_node,
+            urg_node,
+            camera_node,
+            rviz_node,
         ]
 
     else:
@@ -281,6 +375,5 @@ def launch_gz(context, *args, **kwargs):
                 )
             ),
             robot_state_publisher_node,
-            # library_server_launch,
-            # rviz_node,
+            rviz_node,
         ]
