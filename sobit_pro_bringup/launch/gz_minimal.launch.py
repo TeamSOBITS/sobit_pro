@@ -13,8 +13,7 @@ from launch.substitutions import PathJoinSubstitution
 def generate_launch_description():
     robot_name = 'sobit_pro'
     robot_id = 0
-    bringup_pkg = robot_name + '_bringup'
-    head_camera_name = "xtion" # 'xtion' or 'azure_kinect'  ## TODO : orbbec femt bolt??
+    head_camera_name = "xtion" # 'xtion' or 'azure_kinect' or 'femtobolt
 
     gz_bridge_node = Node(
         package='ros_gz_bridge',
@@ -51,38 +50,50 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource([
                 PathJoinSubstitution([
-                    os.path.join(get_package_share_directory(bringup_pkg),
+                    os.path.join(get_package_share_directory('sobit_pro_bringup'),
                     'launch',
                     'robot.launch.py')
                 ])
             ]),
             launch_arguments={
                 'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
-                'head_camera_name': head_camera_name,
-                'enable_gz' : 'True',
-                'robot_coords_x': '-5.5',    # x 
-                'robot_coords_y': '1.5',    # y
-                'robot_coords_z': '0.01', # z
-                'robot_coords_Y': '0',    # yaw
+                'head_camera_name'        : head_camera_name,
+                'enable_mb'               : 'True',
+                'enable_arm'              : 'True',
+                'enable_head'             : 'True',
+                'robot_coords_x'          : '-5.5', # x 
+                'robot_coords_y'          : '1.5',  # y
+                'robot_coords_z'          : '0.01', # z
+                'robot_coords_Y'          : '0.0',  # yaw
+                'enable_gz_lidar'         : 'True',
+                'enable_gz_head_cam_color': 'True',
+                'enable_gz_head_cam_depth': 'True',
+                'enable_gz'               : 'True',
             }.items()
         ),
         # Launch Robot No. 2
         # IncludeLaunchDescription(
         #     PythonLaunchDescriptionSource([
         #         PathJoinSubstitution([
-        #             os.path.join(get_package_share_directory(bringup_pkg),
+        #             os.path.join(get_package_share_directory('sobit_pro_bringup'),
         #             'launch',
         #             'robot.launch.py')
         #         ])
         #     ]),
         #     launch_arguments={
-        #         'robot_name': robot_name if robot_id == 0 else robot_name + '_' + str(robot_id),
-        #         'head_camera_name': head_camera_name,
-        #         'enable_gz' : 'True',
-        #         'robot_coords_x': '-5.5', # x 
-        #         'robot_coords_y': '-2.5', # y
-        #         'robot_coords_z': '0.01', # z
-        #         'robot_coords_Y': '0', # yaw
+        #         'robot_name': robot_name if (robot_id+1) == 0 else robot_name + '_' + str(robot_id+1),
+        #         'head_camera_name'        : head_camera_name,
+        #         'enable_mb'               : 'True',
+        #         'enable_arm'              : 'True',
+        #         'enable_head'             : 'True',
+        #         'robot_coords_x'          : '-5.5', # x 
+        #         'robot_coords_y'          : '-2.5', # y
+        #         'robot_coords_z'          : '0.01', # z
+        #         'robot_coords_Y'          : '0.0',  # yaw
+        #         'enable_gz_lidar'         : 'True',
+        #         'enable_gz_head_cam_color': 'True',
+        #         'enable_gz_head_cam_depth': 'True',
+        #         'enable_gz'               : 'True',
         #     }.items()
         # ),
     ])

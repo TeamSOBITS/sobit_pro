@@ -18,15 +18,12 @@
   <xacro:include filename="$(find sobit_pro_description)/urdf/hand/hand.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/head/head.urdf.xacro" />
 
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_camera.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/matrix.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/mic.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/lidar.urdf.xacro" />
   <!-- <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_l515.urdf.xacro" /> -->
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_d405.urdf.xacro" />
   <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/realsense_d415.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/xtion.urdf.xacro" />
-  <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/xtion_fixed.urdf.xacro" />
 
   <xacro:include filename="$(find urg_node)/urdf/hokuyo_ust.urdf.xacro" />
   <xacro:include filename="$(find azure_kinect_ros_driver)/urdf/azure_kinect.urdf.xacro" />
@@ -43,6 +40,9 @@
   <!-- Add variables -->
   <xacro:arg name="enable_gz"                 default="False" />
   <xacro:arg name="enable_gz_lidar"           default="True" />
+  <xacro:arg name="enable_gz_head_cam_color"  default="True" />
+  <xacro:arg name="enable_gz_head_cam_depth"  default="True" />
+
   <xacro:arg name="robot_name"                default="sobit_pro" />
   <xacro:arg name="head_camera_name"          default="xtion" />
 
@@ -59,16 +59,6 @@
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
     <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
-
-    <!-- <xacro:xtion_fixed prefix="head_camera" parent="head_tilt_link"/> -->
-    <!-- Xtion -->
-    <xacro:if value="$(eval head_camera_name == 'xtion')">
-      <xacro:xtion_fixed prefix="head_camera" parent="head_tilt_link"/>
-    </xacro:if>
-    <!-- Azure Kinect -->
-    <xacro:if value="$(eval head_camera_name == 'azure_kinect')">
-      <xacro:azure_camera prefix="camera" parent="head_tilt_link" />
-    </xacro:if>
 
     <!-- <xacro:matrix prefix="matrix" parent="head_camera_base" /> -->
     <!-- <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" /> -->
@@ -100,7 +90,7 @@
     <xacro:head  prefix="head"  parent="back_base_link" />
     <xacro:mic   prefix="mic"   parent="back_base_link" />
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
-    <xacro:azure_camera prefix="head_camera" parent="head_tilt_link" />
+
     <xacro:matrix prefix="matrix" parent="head_camera_base" />
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
   </xacro:if>
@@ -124,7 +114,7 @@
     <xacro:mic   prefix="mic"   parent="back_base_link" />
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
     <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
-    <!-- <xacro:azure_camera prefix="head_camera" parent="head_tilt_link" /> -->
+
     <xacro:matrix prefix="matrix" parent="head_camera_base" />
     <!-- <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" /> -->
     <xacro:realsense_d405 prefix="hand_camera" parent="arm_wrist_tilt_link" />
@@ -151,8 +141,23 @@
     <xacro:back  prefix="back"  parent="plate_top_link" />
     <xacro:head  prefix="head"  parent="back_base_link" />
     <xacro:mic   prefix="mic"   parent="back_base_link" />
-    <!-- <xacro:azure_camera prefix="head_camera" parent="head_tilt_link" /> -->
+
     <xacro:matrix prefix="matrix" parent="head_camera_base" />
+  </xacro:if>
+
+
+  <xacro:if value="${$(arg enable_head)}">
+    <!-- Xtion -->
+    <xacro:if value="$(eval head_camera_name == 'xtion')">
+    <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/xtion.urdf.xacro" />
+    <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/xtion_fixed.urdf.xacro" />
+      <xacro:xtion_fixed prefix="head_camera" parent="head_tilt_link"/>
+    </xacro:if>
+    <!-- Azure Kinect -->
+    <xacro:if value="$(eval head_camera_name == 'azure_kinect')">
+      <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_camera.urdf.xacro" />
+      <xacro:azure_camera prefix="head_camera" parent="head_tilt_link" />
+    </xacro:if>
   </xacro:if>
 
   <!-- Add Dynamixel plugins -->
@@ -161,7 +166,7 @@
   <!-- Add Gazebo plugins -->
   <xacro:if value="${$(arg enable_gz)}">
     <xacro:include filename="$(find sobit_pro_description)/urdf/gazebo.urdf.xacro" />
-    <xacro:gazebo_sensors robot_name="$(arg robot_name)" />
+    <xacro:gazebo_sensors robot_name="$(arg robot_name)" enable_gz_lidar="$(arg enable_gz_lidar)" enable_gz_head_cam_color="$(arg enable_gz_head_cam_color)" enable_gz_head_cam_depth="$(arg enable_gz_head_cam_depth)" />
   </xacro:if>
 
 </robot>

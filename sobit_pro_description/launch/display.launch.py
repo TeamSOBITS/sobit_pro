@@ -15,7 +15,7 @@ def generate_launch_description():
 
     rviz_config = os.path.join(get_package_share_directory(
         'sobit_pro_description'), "rviz", "display.rviz")
-    
+
     robot_description = os.path.join(get_package_share_directory(
         'sobit_pro_description'), 
         'robots',
