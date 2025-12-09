@@ -256,7 +256,7 @@ def launch_gz(context, *args, **kwargs):
                         "/" + robot_name + "/head_camera/rgb/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
                         "/" + robot_name + "/head_camera/rgb/image_raw" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
                         "/" + robot_name + "/head_camera/depth_registered/image_raw" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
-                        "/" + robot_name + "/head_camera/depth_registered/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
+                        # "/" + robot_name + "/head_camera/depth_registered/points" + "@sensor_msgs/msg/PointCloud2" + "[ignition.msgs.PointCloudPacked",
                         # "/" + robot_name + "/hand_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[ignition.msgs.CameraInfo",
                         # "/" + robot_name + "/hand_camera/color" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
                         # "/" + robot_name + "/hand_camera/depth" + "@sensor_msgs/msg/Image" + "[ignition.msgs.Image",
@@ -267,6 +267,20 @@ def launch_gz(context, *args, **kwargs):
                         # "/" + robot_name + "/imu" + "@sensor_msgs/msg/Imu" + "[ignition.msgs.IMU",
                     ],
             output='screen'
+        )
+
+        point_cloud_node = Node(
+            package='depth_image_proc',
+            executable='point_cloud_xyzrgb_node',
+            name='point_cloud_node',
+            namespace=robot_name,
+            parameters=[{'queue_size': 10}],
+            remappings=[
+                ('/'+robot_name+'/rgb/image_rect_color',        '/'+robot_name+'/head_camera/rgb/image_raw'),
+                ('/'+robot_name+'/depth_registered/image_rect', '/'+robot_name+'/head_camera/depth_registered/image_raw'),
+                ('/'+robot_name+'/rgb/camera_info',             '/'+robot_name+'/head_camera/rgb/camera_info'),
+                ('/'+robot_name+'/points',                      '/'+robot_name+'/head_camera/depth_registered/points'),
+            ],
         )
 
         rviz_config = PathJoinSubstitution([
@@ -338,6 +352,7 @@ def launch_gz(context, *args, **kwargs):
         return [
             gz_spawn_entity_node,
             gz_bridge_node,
+            point_cloud_node,
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=gz_spawn_entity_node,

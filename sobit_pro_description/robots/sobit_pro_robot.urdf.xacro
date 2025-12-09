@@ -166,7 +166,11 @@
   <!-- Add Gazebo plugins -->
   <xacro:if value="${$(arg enable_gz)}">
     <xacro:include filename="$(find sobit_pro_description)/urdf/gazebo.urdf.xacro" />
-    <xacro:gazebo_sensors robot_name="$(arg robot_name)" enable_gz_lidar="$(arg enable_gz_lidar)" enable_gz_head_cam_color="$(arg enable_gz_head_cam_color)" enable_gz_head_cam_depth="$(arg enable_gz_head_cam_depth)" />
+    <xacro:gazebo_sensors robot_name="$(arg robot_name)" 
+      enable_gz_lidar="$(arg enable_gz_lidar)" 
+      enable_gz_head_cam_color="$(arg enable_gz_head_cam_color)" 
+      enable_gz_head_cam_depth="$(arg enable_gz_head_cam_depth)" 
+    />
   </xacro:if>
 
 </robot>

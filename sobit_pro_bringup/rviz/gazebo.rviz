@@ -412,11 +412,11 @@ Visualization Manager:
       Value: true
     - Class: rviz_default_plugins/Image
       Enabled: true
-      Max Value: 1
+      Max Value: 10
       Median window: 5
       Min Value: 0
       Name: Image
-      Normalize Range: true
+      Normalize Range: false
       Topic:
         Depth: 5
         Durability Policy: Volatile
@@ -434,7 +434,7 @@ Visualization Manager:
       Channel Name: intensity
       Class: rviz_default_plugins/PointCloud2
       Color: 255; 255; 255
-      Color Transformer: Intensity
+      Color Transformer: RGB8
       Decay Time: 0
       Enabled: true
       Invert Rainbow: false
@@ -504,7 +504,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz_default_plugins/ThirdPersonFollower
-      Distance: 4.485558986663818
+      Distance: 4.711774826049805
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -519,10 +519,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.8153980374336243
+      Pitch: 0.46539801359176636
       Target Frame: sobit_pro/base_footprint
       Value: ThirdPersonFollower (rviz_default_plugins)
-      Yaw: 5.453582286834717
+      Yaw: 2.2485809326171875
     Saved: ~
 Window Geometry:
   Displays:
@@ -543,4 +543,4 @@ Window Geometry:
     collapsed: false
   Width: 1296
   X: 70
-  Y: 27
+  Y: 32
