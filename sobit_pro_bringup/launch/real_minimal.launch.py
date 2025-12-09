@@ -23,8 +23,8 @@ def generate_launch_description():
                 'robot_name': robot_name,
                 'head_camera_name': head_camera_name,
                 'enable_mb' : 'True',
-                'enable_arm' : 'False',
-                'enable_head' : 'False',
+                'enable_arm' : 'True',
+                'enable_head' : 'True',
                 'enable_gz' : 'False',
                 'use_serial_urg': 'True' if (only_mobile_base_hardware) else 'False',
             }.items()
