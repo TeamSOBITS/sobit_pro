@@ -18,6 +18,7 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(trajectory_msgs REQUIRED)
 find_package(control_msgs REQUIRED)
+find_package(ament_index_cpp REQUIRED)
 
 ###########
 ## Build ##
@@ -48,6 +49,7 @@ ament_target_dependencies(${PROJECT_NAME}
   sensor_msgs
   trajectory_msgs
   control_msgs
+  ament_index_cpp
 )
 
 install(TARGETS ${PROJECT_NAME}

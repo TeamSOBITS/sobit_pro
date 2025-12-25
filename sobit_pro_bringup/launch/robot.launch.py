@@ -178,34 +178,64 @@ def launch_gz(context, *args, **kwargs):
             'real.rviz'
         ])
 
-    joint_state_broadcaster = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            # '--use-sim-time',
-            'joint_state_broadcaster'
-        ],
-        output='screen'
+    # joint_state_broadcaster = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller',
+    #         '--set-state', 'active',
+    #         '--controller-manager', robot_name+'/controller_manager',
+    #         # '--use-sim-time',
+    #         'joint_state_broadcaster'
+    #     ],
+    #     output='screen'
+    # )
+    joint_state_broadcaster = Node(
+        package='controller_manager',
+        executable='spawner',
+        name='joint_state_broadcaster',
+        namespace=robot_name,
+        arguments=[
+            'joint_state_broadcaster',
+            '-c', 'controller_manager',
+            ],
     )
 
-    joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            # '--use-sim-time',
-            'joint_trajectory_controller'
-        ],
-        output='screen'
+    # joint_trajectory_controller = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller',
+    #         '--set-state', 'active',
+    #         '--controller-manager', robot_name+'/controller_manager',
+    #         # '--use-sim-time',
+    #         'joint_trajectory_controller'
+    #     ],
+    #     output='screen'
+    # )
+    joint_trajectory_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        name='joint_trajectory_controller',
+        namespace=robot_name,
+        arguments=[
+            'joint_trajectory_controller',
+            '-c', 'controller_manager', '--activate'
+            ],
     )
 
-    steer_joint_trajectory_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            # '--use-sim-time',
-            'steer_joint_trajectory_controller'
-        ],
-        output='screen'
+    # steer_joint_trajectory_controller = ExecuteProcess(
+    #     cmd=['ros2', 'control', 'load_controller',
+    #         '--set-state', 'active',
+    #         '--controller-manager', robot_name+'/controller_manager',
+    #         # '--use-sim-time',
+    #         'steer_joint_trajectory_controller'
+    #     ],
+    #     output='screen'
+    # )
+    steer_joint_trajectory_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        name='steer_joint_trajectory_controller',
+        namespace=robot_name,
+        arguments=[
+            'steer_joint_trajectory_controller',
+            '-c', 'controller_manager', '--activate'
+            ],
     )
 
     velocity_controller = ExecuteProcess(
@@ -334,13 +364,13 @@ def launch_gz(context, *args, **kwargs):
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[move_base_node],
+                    on_exit=move_base_node,
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[library_server_launch],
+                    on_exit=library_server_launch,
                 )
             ),
             urg_node,
@@ -356,37 +386,37 @@ def launch_gz(context, *args, **kwargs):
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=gz_spawn_entity_node,
-                    on_exit=[joint_state_broadcaster],
+                    on_exit=joint_state_broadcaster,
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[joint_trajectory_controller],
+                    on_exit=joint_trajectory_controller,
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[steer_joint_trajectory_controller],
+                    on_exit=steer_joint_trajectory_controller,
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[velocity_controller],
+                    on_exit=velocity_controller,
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[move_base_node],
+                    on_exit=move_base_node,
                 )
             ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[library_server_launch],
+                    on_exit=library_server_launch,
                 )
             ),
             robot_state_publisher_node,

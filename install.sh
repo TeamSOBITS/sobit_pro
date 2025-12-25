@@ -12,7 +12,7 @@ ros_packages=(
     "dynamixel_hardware" \
     "sobits_interfaces" \
     "urg_node" \
-    "azure_kinect_ros_driver" \
+    # "azure_kinect_ros_driver" \ # TODO
     "realsense_ros" \
     "sobits_gazebo_worlds"
 )
@@ -20,7 +20,7 @@ ros_packages=(
 # Clone all packages
 for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     echo "Clonning: ${ros_packages[i]}"
-    git clone -b humble-devel https://github.com/TeamSOBITS/${ros_packages[i]}.git
+    git clone -b $ROS_DISTRO-devel https://github.com/TeamSOBITS/${ros_packages[i]}.git
 
     # Check if install.sh exists in each package
     if [ -f ${ros_packages[i]}/install.sh ]; then
@@ -61,12 +61,7 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-velocity-controllers \
     ros-$ROS_DISTRO-effort-controllers \
     ros-$ROS_DISTRO-joint-trajectory-controller \
-    ros-$ROS_DISTRO-joint-group-impedance-controller \
-    ros-$ROS_DISTRO-joint-state-publisher \
-    ros-$ROS_DISTRO-joint-state-publisher-gui \
     ros-$ROS_DISTRO-joint-state-broadcaster \
-    ros-$ROS_DISTRO-robot-controllers \
-    ros-$ROS_DISTRO-robot-controllers-interface \
     ros-$ROS_DISTRO-urdf \
     ros-$ROS_DISTRO-urdf-launch \
     ros-$ROS_DISTRO-xacro \
@@ -77,8 +72,8 @@ sudo apt-get install -y \
 # Install Gazebo Fortress with binaries
 sudo apt-get install -y \
     ros-$ROS_DISTRO-ros-gz \
-    ros-$ROS_DISTRO-ign-ros2-control \
-    ros-$ROS_DISTRO-ign-ros2-control-demos
+    ros-$ROS_DISTRO-gz-ros2-control \
+    ros-$ROS_DISTRO-gz-ros2-control-demos
 
 
 # Setting up Dynamixel USB configuration (SOBIT PRO: Mobile Robot Mechanism)

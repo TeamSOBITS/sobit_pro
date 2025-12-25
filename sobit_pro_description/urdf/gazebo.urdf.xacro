@@ -9,7 +9,8 @@
         <sensor name="head_camera_color" type="camera">
           <pose>0.0 0.0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0.0</pose>
           
-          <ignition_frame_id>${robot_name}/head_camera_link</ignition_frame_id>
+          <!-- <ignition_frame_id>${robot_name}/head_camera_link</ignition_frame_id> -->
+          <gz_frame_id>${robot_name}/head_camera_link</gz_frame_id>
           <topic>${robot_name}/head_camera/rgb/image_raw</topic>
 
           <always_on>1</always_on>
@@ -38,7 +39,8 @@
         <sensor name="head_camera_depth" type="depth">
           <pose>0.0 0.0 ${0.0175/2} ${M_PI/2} -${M_PI/2} 0.0</pose>
 
-          <ignition_frame_id>${robot_name}/head_camera_link</ignition_frame_id>
+          <!-- <ignition_frame_id>${robot_name}/head_camera_link</ignition_frame_id> -->
+          <gz_frame_id>${robot_name}/head_camera_link</gz_frame_id>
           <topic>${robot_name}/head_camera/depth_registered/image_raw</topic>
 
           <always_on>1</always_on>
@@ -66,7 +68,8 @@
         <sensor name="lidar" type="gpu_lidar">
           <pose>0 0 0 0 0 0</pose>
 
-          <ignition_frame_id>${robot_name}/lidar_laser</ignition_frame_id>
+          <!-- <ignition_frame_id>${robot_name}/lidar_laser</ignition_frame_id> -->
+          <gz_frame_id>${robot_name}/lidar_laser</gz_frame_id>
           <!-- <qos>
             <topic name=${robot_name}/scan>
               <publisher>
