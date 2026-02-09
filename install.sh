@@ -9,11 +9,11 @@ cd ..
 
 # Download required packages for SOBIT PRO
 ros_packages=(
-    "dynamixel_hardware" \
-    "sobits_interfaces" \
+    "sobits_interfaces"
+    "dynamixel_hardware"
+    "realsense_ros" \
     "urg_node" \
     # "azure_kinect_ros_driver" \ # TODO
-    "realsense_ros" \
     "sobits_gazebo_worlds"
 )
 
@@ -31,15 +31,18 @@ for ((i = 0; i < ${#ros_packages[@]}; i++)) {
     fi
 }
 
+
 # Download required dependencies
-sudo apt-get update
-sudo apt-get install -y \
+python3 -m pip install --break-system-packages \
+    transforms3d
+
+# Download required dependencies
+sudo apt update
+sudo apt install -y \
     mpg321 
 
 # Download ROS packages
-sudo apt-get update
-sudo apt-get install -y \
-    ros-$ROS_DISTRO-ecl-linear-algebra \
+sudo apt install -y \
     ros-$ROS_DISTRO-robot-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher \
     ros-$ROS_DISTRO-joint-state-publisher-gui \
@@ -54,6 +57,7 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-trajectory-msgs \
     ros-$ROS_DISTRO-geometry-msgs \
     ros-$ROS_DISTRO-joy \
+    ros-$ROS_DISTRO-joy-linux \
     ros-$ROS_DISTRO-ros2-control \
     ros-$ROS_DISTRO-ros2-controllers \
     ros-$ROS_DISTRO-control-toolbox \
@@ -66,40 +70,17 @@ sudo apt-get install -y \
     ros-$ROS_DISTRO-urdf-launch \
     ros-$ROS_DISTRO-xacro \
     ros-$ROS_DISTRO-tf-transformations \
-    ros-$ROS_DISTRO-openni2-camera
-
-
-# Install Gazebo Fortress with binaries
-sudo apt-get install -y \
-    ros-$ROS_DISTRO-ros-gz \
     ros-$ROS_DISTRO-gz-ros2-control \
-    ros-$ROS_DISTRO-gz-ros2-control-demos
+    ros-$ROS_DISTRO-actuator-msgs \
+    ros-$ROS_DISTRO-gps-msgs \
+    ros-$ROS_DISTRO-openni2-camera \
+    ros-$ROS_DISTRO-ros-gz \
+    ros-$ROS_DISTRO-ros-gz-bridge \
+    ros-$ROS_DISTRO-ros-gz-sim \
+    ros-$ROS_DISTRO-ros-gz-interfaces \
 
-
-# Setting up Dynamixel USB configuration (SOBIT PRO: Mobile Robot Mechanism)
-echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6014\", SYMLINK+=\"input/dx_lower\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dx_lower.rules
-
-# Setting up Dynamixel USB configuration (SOBIT PRO: Head and Arm Robot Mechanism)
-echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"0403\", ATTRS{idProduct}==\"6015\", SYMLINK+=\"input/dx_upper\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/dx_upper.rules
-
-# Setting up PS4 Joystick USB configuration
-echo "KERNEL==\"uinput\", MODE=\"0666\"
-      KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"054c\", ATTRS{idProduct}==\"05c4\", MODE=\"0666\"
-      KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", KERNELS==\"0005:054C:05C4.*\", MODE=\"0666\"
-      KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", ATTRS{idVendor}==\"054c\", ATTRS{idProduct}==\"09cc\", MODE=\"0666\"
-      KERNEL==\"hidraw*\", SUBSYSTEM==\"hidraw\", KERNELS==\"0005:054C:09CC.*\", MODE=\"0666\"" | sudo tee /etc/udev/rules.d/50-ds4drv.rules
-
-# Setting the udev rules to use xtion
-echo 'SUBSYSTEM=="usb", ATTR{idVendor}=="1d27", ATTR{idProduct}=="0601", MODE="0666"' | sudo tee /etc/udev/rules.d/99-openni2.rules
-
-# Reload udev rules
-sudo udevadm control --reload-rules
-
-# Trigger the new rules
-sudo udevadm trigger
 
 # Go back to previous directory
 cd ${DIR}
-
 
 echo "╚══╣ Setup: SOBIT PRO (FINISHED) ╠══╝"

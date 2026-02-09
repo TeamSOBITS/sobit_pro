@@ -33,10 +33,6 @@
       - hand_joint
       - head_pan_joint
       - head_tilt_joint
-      # - wheel_f_l_steer_joint
-      # - wheel_f_r_steer_joint
-      # - wheel_b_l_steer_joint
-      # - wheel_b_r_steer_joint
 
     allow_partial_joints_goal: true
     command_interfaces:

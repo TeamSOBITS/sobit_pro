@@ -178,15 +178,6 @@ def launch_gz(context, *args, **kwargs):
             'real.rviz'
         ])
 
-    # joint_state_broadcaster = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller',
-    #         '--set-state', 'active',
-    #         '--controller-manager', robot_name+'/controller_manager',
-    #         # '--use-sim-time',
-    #         'joint_state_broadcaster'
-    #     ],
-    #     output='screen'
-    # )
     joint_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
@@ -198,15 +189,6 @@ def launch_gz(context, *args, **kwargs):
             ],
     )
 
-    # joint_trajectory_controller = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller',
-    #         '--set-state', 'active',
-    #         '--controller-manager', robot_name+'/controller_manager',
-    #         # '--use-sim-time',
-    #         'joint_trajectory_controller'
-    #     ],
-    #     output='screen'
-    # )
     joint_trajectory_controller = Node(
         package='controller_manager',
         executable='spawner',
@@ -218,15 +200,6 @@ def launch_gz(context, *args, **kwargs):
             ],
     )
 
-    # steer_joint_trajectory_controller = ExecuteProcess(
-    #     cmd=['ros2', 'control', 'load_controller',
-    #         '--set-state', 'active',
-    #         '--controller-manager', robot_name+'/controller_manager',
-    #         # '--use-sim-time',
-    #         'steer_joint_trajectory_controller'
-    #     ],
-    #     output='screen'
-    # )
     steer_joint_trajectory_controller = Node(
         package='controller_manager',
         executable='spawner',
@@ -238,14 +211,15 @@ def launch_gz(context, *args, **kwargs):
             ],
     )
 
-    velocity_controller = ExecuteProcess(
-        cmd=['ros2', 'control', 'load_controller',
-            '--set-state', 'active',
-            '--controller-manager', robot_name+'/controller_manager',
-            # '--use-sim-time',
-            'velocity_controller'
-        ],
-        output='screen'
+    velocity_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        name='velocity_controller',
+        namespace=robot_name,
+        arguments=[
+            'velocity_controller',
+            '-c', 'controller_manager', '--activate'
+            ],
     )
 
     robot_state_publisher_node = Node(
