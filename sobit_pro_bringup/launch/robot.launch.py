@@ -156,17 +156,18 @@ def launch_gz(context, *args, **kwargs):
                     'namespace': robot_name,
                 }.items()
             )
-        elif (head_camera_name == "femtobolt"): # TODO
+        elif (head_camera_name == "femtobolt" or head_camera_name == "orbbec_femtobolt"):
             camera_node = IncludeLaunchDescription(
                 PythonLaunchDescriptionSource([
                     PathJoinSubstitution([os.path.join(
                         get_package_share_directory('sobit_pro_bringup'),
                         'launch',
-                        'femtobolt.launch.py')
+                        'orbbec_femtobolt.launch.py')
                     ])
                 ]),
                 launch_arguments={
-                    'namespace': robot_name,
+                    'tf_prefix': robot_name,
+                    'namespace': 'head_camera',
                 }.items()
             )
         else:
