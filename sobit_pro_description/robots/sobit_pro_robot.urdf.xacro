@@ -158,6 +158,11 @@
       <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/azure_camera.urdf.xacro" />
       <xacro:azure_camera prefix="head_camera" parent="head_tilt_link" />
     </xacro:if>
+    <!-- Orbbec FemtoBolt -->
+    <xacro:if value="$(eval head_camera_name == 'femtobolt' or head_camera_name == 'orbbec_femtobolt')">
+      <xacro:include filename="$(find sobit_pro_description)/urdf/sensor/femtobolt_camera.urdf.xacro" />
+      <xacro:femtobolt_camera prefix="head_camera" parent="head_tilt_link" />
+    </xacro:if>
   </xacro:if>
 
   <!-- Add Dynamixel plugins -->
