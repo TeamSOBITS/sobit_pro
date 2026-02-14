@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<robot name="sobit_pro"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <material name="femtobolt_body_silver">
+    <color rgba="0.80 0.82 0.86 1.0" />
+  </material>
+
+  <material name="femtobolt_glass_dark">
+    <color rgba="0.02 0.02 0.02 1.0" />
+  </material>
+
+  <!-- Visual-only FemtoBolt model for RobotModel.
+       Keep TF frames managed by runtime launch to avoid duplicate TF publishers. -->
+  <xacro:macro name="femtobolt_camera" params="prefix parent
+                                               mount_xyz:='-0.0065 0.0 0.0395'
+                                               mount_rpy:='0.0 0.0 0.0'
+                                               mesh_rpy:='0.0 0.0 ${M_PI/2.0}'">
+
+    <joint name="${prefix}_femtobolt_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${prefix}_femtobolt_link" />
+      <origin xyz="${mount_xyz}" rpy="${mount_rpy}" />
+    </joint>
+
+    <link name="${prefix}_femtobolt_link">
+      <visual>
+        <origin xyz="0.0 0.0 0.0" rpy="${mesh_rpy}" />
+        <geometry>
+          <mesh filename="file://$(find sobit_pro_description)/meshes/sensor/femto_bolt.dae" scale="1.0 1.0 1.0" />
+        </geometry>
+      </visual>
+
+      <collision>
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0" />
+        <geometry>
+          <box size="0.1153 0.06495 0.04026" />
+        </geometry>
+      </collision>
+    </link>
+
+  </xacro:macro>
+</robot>

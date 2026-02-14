@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="sobit_pro"
        xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:macro name="mic" params="prefix parent">
+  <xacro:macro name="mic" params="prefix parent
+                                  mic_mount_offset_xyz:='0.0 0.0 0.5400'
+                                  mic_mount_visual_xyz:='0.017 0.015 0.12'
+                                  mic_mount_visual_rpy:='0.0 0.0 ${-M_PI/2.0}'
+                                  mic_on_mount_xyz:='0.0 0.005 0.280'
+                                  mic_on_mount_rpy:='0.0 0.0 0.0'">
 
     <joint name="${prefix}_base_joint" type="fixed">
       <parent link="${parent}" />
       <child link="${prefix}_base_link" />
-      <origin xyz="0.0 0.0 0.5400" rpy="0.0 0.0 0.0" />
+      <origin xyz="${mic_mount_offset_xyz}" rpy="0.0 0.0 0.0" />
     </joint>
 
     <link name="${prefix}_base_link">
       <visual>
-        <origin xyz="0.0 0.0 0.0" rpy="${M_PI/2} 0.0 ${M_PI}" />
+        <origin xyz="${mic_mount_visual_xyz}" rpy="${mic_mount_visual_rpy}" />
         <geometry>
-          <mesh filename="file://$(find sobit_pro_description)/meshes/sensor/mic_base.stl" scale="0.001 0.001 0.001" />
+          <mesh filename="file://$(find sobit_pro_description)/meshes/sensor/mic_mount.stl" scale="1.0 1.0 1.0" />
         </geometry>
         <material name="black" />
       </visual>
       <collision>
-        <origin xyz="0.0 ${(0.02-0.1146-0.0146)/2} -${0.02/2}" rpy="0.0 0.0 0.0" />
+        <origin xyz="-0.015 -0.0042 0.0005" rpy="0.0 0.0 0.0" />
         <geometry>
-          <box size="0.0292 ${0.1146+0.0146} 0.03"/>
+          <box size="0.03 0.3517 0.0655"/>
         </geometry>
         <material name="black" />
       </collision>
       <inertial>
-        <origin xyz="0.0 ${(0.02-0.1146-0.0146)/2} -${0.02/2}" rpy="0.0 0.0 0.0" />
+        <origin xyz="-0.015 -0.0042 0.0005" rpy="0.0 0.0 0.0" />
         <!-- APPROX -->
         <mass value="0.15" />
-        <inertia ixx="${1/12*0.15*(0.0292**2+0.03**2)}"            ixy="0.0" ixz="0.0"
-                 iyy="${1/12*0.15*((0.1146+0.0146)**2+0.03**2)}"   iyz="0.0"
-                 izz="${1/12*0.15*(0.0292**2+(0.1146+0.0146)**2)}" />
+        <inertia ixx="${1/12*0.15*(0.3517**2+0.0655**2)}" ixy="0.0" ixz="0.0"
+                 iyy="${1/12*0.15*(0.03**2+0.0655**2)}"   iyz="0.0"
+                 izz="${1/12*0.15*(0.03**2+0.3517**2)}" />
       </inertial>
     </link>
 
@@ -38,7 +43,7 @@
     <joint name="${prefix}_joint" type="fixed">
       <parent link="${prefix}_base_link" />
       <child link="${prefix}_link" />
-      <origin xyz="0.0 -0.099 0.0240" rpy="0.0 0.0 0.0" />
+      <origin xyz="${mic_on_mount_xyz}" rpy="${mic_on_mount_rpy}" />
     </joint>
 
     <link name="${prefix}_link">

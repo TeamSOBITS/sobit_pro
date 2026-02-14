@@ -46,7 +46,7 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
 
   // create looped function of 50hz
   this->control_timer_ = this->create_wall_timer(
-      std::chrono::milliseconds(10),
+      std::chrono::milliseconds(20),
       std::bind(&SobitProMain::control_callback, this));
 
   // Get the robot namespace
