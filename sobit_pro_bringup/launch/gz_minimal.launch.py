@@ -19,16 +19,16 @@ def generate_launch_description():
         package='ros_gz_bridge',
         executable='parameter_bridge',
         arguments=[
-                    "/clock" + "@rosgraph_msgs/msg/Clock" + "[ignition.msgs.Clock",
-                    "/tf" + "@tf2_msgs/msg/TFMessage" + "[ignition.msgs.Pose_V",
+                    "/clock" + "@rosgraph_msgs/msg/Clock" + "[gz.msgs.Clock",
+                    "/tf" + "@tf2_msgs/msg/TFMessage" + "[gz.msgs.Pose_V",
                    ],
         output='screen'
     )
 
     world_file = os.path.join(get_package_share_directory(
-        'sobits_gazebo_worlds'), 
+        'sobit_pro_description'), 
         'worlds',
-        'rcjo2025_arena.world.xacro'
+        'empty_w_physics.sdf'
     )
 
     return LaunchDescription([
