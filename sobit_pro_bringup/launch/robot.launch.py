@@ -189,12 +189,22 @@ def launch_gz(context, *args, **kwargs):
         output='screen'
     )
 
-    joint_trajectory_controller = ExecuteProcess(
+    arm_trajectory_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
             '--set-state', 'active',
             '--controller-manager', robot_name+'/controller_manager',
             # '--use-sim-time',
-            'joint_trajectory_controller'
+            'arm_trajectory_controller'
+        ],
+        output='screen'
+    )
+
+    head_trajectory_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+            '--set-state', 'active',
+            '--controller-manager', robot_name+'/controller_manager',
+            # '--use-sim-time',
+            'head_trajectory_controller'
         ],
         output='screen'
     )
@@ -328,7 +338,8 @@ def launch_gz(context, *args, **kwargs):
         return [
             ros2_control_node,
             joint_state_broadcaster,
-            joint_trajectory_controller,
+            arm_trajectory_controller,
+            head_trajectory_controller,
             steer_joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
@@ -363,7 +374,13 @@ def launch_gz(context, *args, **kwargs):
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[joint_trajectory_controller],
+                    on_exit=[arm_trajectory_controller],
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[head_trajectory_controller],
                 )
             ),
             RegisterEventHandler(

@@ -25,7 +25,7 @@ def generate_launch_description():
         {"enable_color": True},
         {"enable_depth": True},
         {"enable_point_cloud": True},
-        {"enable_colored_point_cloud": True},
+        {"enable_colored_point_cloud": False},
         {"depth_registration": True},
         {"ordered_pc": True},
         {"align_mode": "SW"},

@@ -4,7 +4,9 @@
 
     velocity_controller:
       type: velocity_controllers/JointGroupVelocityController
-    joint_trajectory_controller:
+    arm_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    head_trajectory_controller:
       type: joint_trajectory_controller/JointTrajectoryController
     joint_state_broadcaster:
       type: joint_state_broadcaster/JointStateBroadcaster
@@ -20,7 +22,7 @@
       - wheel_b_l_drive_joint
       - wheel_b_r_drive_joint
 
-/**/joint_trajectory_controller:
+/**/arm_trajectory_controller:
   ros__parameters:
     joints:
       - arm_shoulder_1_tilt_joint
@@ -31,6 +33,17 @@
       - arm_elbow_lower_pan_joint
       - arm_wrist_tilt_joint
       - hand_joint
+
+    allow_partial_joints_goal: true
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+/**/head_trajectory_controller:
+  ros__parameters:
+    joints:
       - head_pan_joint
       - head_tilt_joint
       # - wheel_f_l_steer_joint

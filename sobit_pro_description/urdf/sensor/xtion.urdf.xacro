@@ -36,8 +36,7 @@
     <joint name="${prefix}_head_camera_joint" type="fixed">
       <!-- <origin xyz="0 ${asus_xtion_pro_cam_rel_rgb_py} 0" rpy="0.0 0.0 0.0"/> -->
       <origin xyz="${-asus_xtion_pro_cam_rel_rgb_py} 0 -0.019" rpy="0.0 0.0 0.0"/>
-      <!-- <parent link="${parent}"/> -->
-      <parent link="${prefix}_rgb_optical_frame"/>
+      <parent link="${parent}"/>
       <child link="${prefix}_link"/>
     </joint>
 
