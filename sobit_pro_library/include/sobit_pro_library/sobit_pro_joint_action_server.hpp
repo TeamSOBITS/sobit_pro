@@ -1,4 +1,6 @@
+#include <atomic>
 #include <map>
+#include <mutex>
 
 #include "sobits_interfaces/action/move_joint.hpp"
 #include "sobits_interfaces/action/move_to_pose.hpp"
@@ -117,6 +119,11 @@ public:
     const builtin_interfaces::msg::Duration &time_allowance);
 
 private:
+  const std::vector<std::string> HeadJointNames = {
+    "head_pan_joint",
+    "head_tilt_joint"
+  };
+
   const std::vector<std::string> JointNames = {
     "arm_shoulder_1_tilt_joint", 
     // "arm_shoulder_2_tilt_joint",
@@ -165,6 +172,14 @@ private:
 
   void exe_move_joints(const std::shared_ptr<GoalHandleMoveJoints> goal_handle);
   void exe_move_to_pose(const std::shared_ptr<GoalHandleMoveToPose> goal_handle);
+  bool is_head_joint(const std::string &joint_name) const;
+  void split_joint_targets(
+    const std::vector<std::string> &target_joint_names,
+    const std::vector<double> &target_joint_rad,
+    std::vector<std::string> &head_joint_names,
+    std::vector<double> &head_joint_rad,
+    std::vector<std::string> &arm_joint_names,
+    std::vector<double> &arm_joint_rad) const;
   void serve_get_hand_to_coord(const std::shared_ptr<GetHandToTargetCoord::Request> request, std::shared_ptr<GetHandToTargetCoord::Response> response);
   void serve_get_hand_to_tf(const std::shared_ptr<GetHandToTargetTF::Request> request, std::shared_ptr<GetHandToTargetTF::Response> response);
 
@@ -179,6 +194,8 @@ private:
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
   std::shared_ptr<tf2_ros::TransformListener> tf_listener_;
   std::map<std::string, double> initial_joint_state_;
+  std::atomic<bool> motion_goal_active_{false};
+  mutable std::mutex joint_state_mutex_;
 
 
   void joint_state_callback(const sensor_msgs::msg::JointState::SharedPtr msg);
@@ -210,4 +227,3 @@ inline geometry_msgs::msg::Quaternion JointActionServer::get_quat_from_euler(
 } // namespace sobit_pro
 
 RCLCPP_COMPONENTS_REGISTER_NODE(sobit_pro::JointActionServer)
-
