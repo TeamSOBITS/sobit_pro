@@ -36,6 +36,7 @@
   <xacro:arg name="enable_mb"   default="True" />
   <xacro:arg name="enable_arm"  default="True" />
   <xacro:arg name="enable_head" default="True" />
+  <xacro:arg name="enable_hand" default="True" />
 
   <!-- Add variables -->
   <xacro:arg name="enable_gz"                 default="False" />
@@ -57,7 +58,9 @@
     <xacro:head  prefix="head"  parent="back_base_link" />
     <xacro:mic   prefix="mic"   parent="back_base_link" />
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
-    <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    <xacro:if value="${$(arg enable_hand)}">
+      <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    </xacro:if>
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
 
     <!-- <xacro:matrix prefix="matrix" parent="head_camera_base" /> -->
@@ -73,7 +76,9 @@
     <xacro:wheel prefix="wheel" parent="plate_middle_link" />
     <xacro:cover prefix="cover" parent="plate_top_link" />
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
-    <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    <xacro:if value="${$(arg enable_hand)}">
+      <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    </xacro:if>
     <xacro:lidar prefix="lidar" parent="plate_bottom_link" />
     <!-- <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" /> -->
     <xacro:realsense_d405 prefix="hand_camera" parent="arm_wrist_tilt_link" />
@@ -113,7 +118,9 @@
     <xacro:head  prefix="head"  parent="back_base_link" />
     <xacro:mic   prefix="mic"   parent="back_base_link" />
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
-    <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    <xacro:if value="${$(arg enable_hand)}">
+      <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    </xacro:if>
 
     <xacro:matrix prefix="matrix" parent="head_camera_base" />
     <!-- <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" /> -->
@@ -127,7 +134,9 @@
     <xacro:plate prefix="plate" parent="base_link" />
     <xacro:cover prefix="cover" parent="plate_top_link" />
     <xacro:arm   prefix="arm"   parent="plate_top_link" />
-    <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    <xacro:if value="${$(arg enable_hand)}">
+      <xacro:hand  prefix_hand="hand" prefix_finger="finger" parent="arm_wrist_tilt_link" />
+    </xacro:if>
     <!-- <xacro:realsense_l515 prefix="hand_camera" parent="arm_wrist_tilt_link" /> -->
     <xacro:realsense_d405 prefix="hand_camera" parent="arm_wrist_tilt_link" />
     <xacro:realsense_d415 prefix="plate_top_camera" parent="plate_top_link" />
@@ -166,7 +175,7 @@
   </xacro:if>
 
   <!-- Add Dynamixel plugins -->
-  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
+  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" enable_hand="$(arg enable_hand)" robot_name="$(arg robot_name)" />
 
   <!-- Add Gazebo plugins -->
   <xacro:if value="${$(arg enable_gz)}">

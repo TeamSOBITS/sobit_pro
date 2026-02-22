@@ -68,6 +68,9 @@ def generate_launch_description():
                     namespace=[tf_prefix, "/", namespace],
                     parameters=[{'depth_registration': True},
                                 {'use_device_time': True},
+                                # Keep default device selection; fixed bus id "3@0" did not resolve reconnect issues.
+                                # {'device_id': '3@0'},
+                                {'enable_reconnect': True},
                                 {'rgb_frame_id': [tf_prefix, "/", namespace,"_rgb_optical_frame"]},
                                 {'depth_frame_id': [tf_prefix, "/", namespace,"_depth_optical_frame"]},
                                 {'ir_frame_id': [tf_prefix, "/", namespace,"_ir_optical_frame"]},],

@@ -27,6 +27,7 @@ def generate_launch_description():
     arg_enable_mb = DeclareLaunchArgument('enable_mb', default_value='True')
     arg_enable_arm = DeclareLaunchArgument('enable_arm', default_value='True')
     arg_enable_head = DeclareLaunchArgument('enable_head', default_value='True')
+    arg_enable_hand = DeclareLaunchArgument('enable_hand', default_value='True')
 
     arg_enable_gz_lidar = DeclareLaunchArgument('enable_gz_lidar', default_value='True')
     arg_enable_gz_head_cam_color = DeclareLaunchArgument('enable_gz_head_cam_color', default_value='True')
@@ -45,6 +46,7 @@ def generate_launch_description():
         arg_enable_mb,
         arg_enable_arm,
         arg_enable_head,
+        arg_enable_hand,
         arg_enable_gz_lidar,
         arg_enable_gz_head_cam_color,
         arg_enable_gz_head_cam_depth,
@@ -67,6 +69,11 @@ def launch_gz(context, *args, **kwargs):
     enable_mb = LaunchConfiguration('enable_mb').perform(context)
     enable_arm = LaunchConfiguration('enable_arm').perform(context)
     enable_head = LaunchConfiguration('enable_head').perform(context)
+    enable_hand = LaunchConfiguration('enable_hand').perform(context)
+    use_mb = enable_mb == 'True'
+    use_arm = enable_arm == 'True'
+    use_head = enable_head == 'True'
+    use_hand = enable_hand == 'True'
 
     enable_gz_lidar = LaunchConfiguration('enable_gz_lidar').perform(context)
     enable_gz_head_cam_color = LaunchConfiguration('enable_gz_head_cam_color').perform(context)
@@ -85,6 +92,7 @@ def launch_gz(context, *args, **kwargs):
             'enable_mb'   : enable_mb,
             'enable_arm'  : enable_arm,
             'enable_head' : enable_head,
+            'enable_hand' : enable_hand,
             'enable_gz'   : enable_gz,
             'robot_name'  : robot_name,
             'head_camera_name': head_camera_name,
@@ -209,6 +217,15 @@ def launch_gz(context, *args, **kwargs):
         output='screen'
     )
 
+    hand_trajectory_controller = ExecuteProcess(
+        cmd=['ros2', 'control', 'load_controller',
+            '--set-state', 'active',
+            '--controller-manager', robot_name+'/controller_manager',
+            'hand_trajectory_controller'
+        ],
+        output='screen'
+    )
+
     steer_joint_trajectory_controller = ExecuteProcess(
         cmd=['ros2', 'control', 'load_controller',
             '--set-state', 'active',
@@ -312,6 +329,11 @@ def launch_gz(context, *args, **kwargs):
         launch_arguments={
             'robot_name': robot_name,
             'enable_gz': enable_gz,
+            'enable_joint_action_server': 'True' if (use_arm or use_head or use_hand) else 'False',
+            'enable_wheel_action_server': enable_mb,
+            'enable_arm': enable_arm,
+            'enable_head': enable_head,
+            'enable_hand': enable_hand,
         }.items(),
     )
 
@@ -335,20 +357,10 @@ def launch_gz(context, *args, **kwargs):
     )
 
     if enable_gz == 'False':
-        return [
+        nodes = [
             ros2_control_node,
             joint_state_broadcaster,
-            arm_trajectory_controller,
-            head_trajectory_controller,
-            steer_joint_trajectory_controller,
-            velocity_controller,
             robot_state_publisher_node,
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
-                    on_exit=[move_base_node],
-                )
-            ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
@@ -359,9 +371,27 @@ def launch_gz(context, *args, **kwargs):
             camera_node,
             rviz_node,
         ]
+        if use_arm:
+            nodes.append(arm_trajectory_controller)
+        if use_head:
+            nodes.append(head_trajectory_controller)
+        if use_hand:
+            nodes.append(hand_trajectory_controller)
+        if use_mb:
+            nodes.extend([
+                steer_joint_trajectory_controller,
+                velocity_controller,
+                RegisterEventHandler(
+                    event_handler=OnProcessExit(
+                        target_action=joint_state_broadcaster,
+                        on_exit=[move_base_node],
+                    )
+                ),
+            ])
+        return nodes
 
     else:
-        return [
+        nodes = [
             gz_spawn_entity_node,
             gz_bridge_node,
             point_cloud_node,
@@ -374,39 +404,52 @@ def launch_gz(context, *args, **kwargs):
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=[arm_trajectory_controller],
-                )
-            ),
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
-                    on_exit=[head_trajectory_controller],
-                )
-            ),
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
-                    on_exit=[steer_joint_trajectory_controller],
-                )
-            ),
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
-                    on_exit=[velocity_controller],
-                )
-            ),
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
-                    on_exit=[move_base_node],
-                )
-            ),
-            RegisterEventHandler(
-                event_handler=OnProcessExit(
-                    target_action=joint_state_broadcaster,
                     on_exit=[library_server_launch],
                 )
             ),
             robot_state_publisher_node,
             rviz_node,
         ]
+        if use_arm:
+            nodes.append(RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[arm_trajectory_controller],
+                )
+            ))
+        if use_head:
+            nodes.append(RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[head_trajectory_controller],
+                )
+            ))
+        if use_hand:
+            nodes.append(RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=[hand_trajectory_controller],
+                )
+            ))
+        if use_mb:
+            nodes.extend([
+                RegisterEventHandler(
+                    event_handler=OnProcessExit(
+                        target_action=joint_state_broadcaster,
+                        on_exit=[steer_joint_trajectory_controller],
+                    )
+                ),
+                RegisterEventHandler(
+                    event_handler=OnProcessExit(
+                        target_action=joint_state_broadcaster,
+                        on_exit=[velocity_controller],
+                    )
+                ),
+                RegisterEventHandler(
+                    event_handler=OnProcessExit(
+                        target_action=joint_state_broadcaster,
+                        on_exit=[move_base_node],
+                    )
+                ),
+            ])
+        return nodes

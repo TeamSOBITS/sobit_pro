@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <robot name="sobit_pro_controllers" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:macro name="controllers" params="name enable_gz:=False enable_mb:=True enable_arm:=True enable_head:=True robot_name:=sobit_pro">
+  <xacro:macro name="controllers" params="name enable_gz:=False enable_mb:=True enable_arm:=True enable_head:=True enable_hand:=True robot_name:=sobit_pro">
 
     <ros2_control name="${name}" type="system">
       <hardware>
@@ -145,75 +145,77 @@
           <state_interface name="effort"/>
         </joint>
 
-        <!-- Position Drive: Hand -->
-        <joint name="hand_joint">
-          <xacro:unless value="${$(arg enable_gz)}">
-            <param name="id">18</param>
-            <param name="control_mode">6</param>
-            <param name="Goal_Current">150</param>
-            <param name="interface">rs</param>
-            <param name="gear_ratio">1.0</param>
-          </xacro:unless>
-          <command_interface name="position">
-            <param name="min">-1.570796327</param>
-            <param name="max">0.0</param>
-          </command_interface>
-          <!-- <command_interface name="velocity"/> -->
-          <state_interface name="position">
-            <param name="initial_value">0.0</param>
-          </state_interface>  
-          <state_interface name="velocity"/>
-          <state_interface name="effort"/>
-        </joint>
-        <xacro:if value="${$(arg enable_gz)}">
-          <joint name="hand_inner_l_joint">
-            <param name="mimic">hand_joint</param>
-            <param name="multiplier">-1</param>
-            <command_interface name="position"/>
+        <xacro:if value="${$(arg enable_hand)}">
+          <!-- Position Drive: Hand -->
+          <joint name="hand_joint">
+            <xacro:unless value="${$(arg enable_gz)}">
+              <param name="id">18</param>
+              <param name="control_mode">6</param>
+              <param name="Goal_Current">150</param>
+              <param name="interface">rs</param>
+              <param name="gear_ratio">1.0</param>
+            </xacro:unless>
+            <command_interface name="position">
+              <param name="min">-1.570796327</param>
+              <param name="max">0.0</param>
+            </command_interface>
             <!-- <command_interface name="velocity"/> -->
-            <state_interface name="position"/>
+            <state_interface name="position">
+              <param name="initial_value">0.0</param>
+            </state_interface>
             <state_interface name="velocity"/>
             <state_interface name="effort"/>
           </joint>
-        
-            <!-- Outer Left -->
-          <joint name="hand_outer_l_joint">
-            <param name="mimic">hand_joint</param>
-            <param name="multiplier">-1</param> <!-- flip if needed -->
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-          </joint>
+          <xacro:if value="${$(arg enable_gz)}">
+            <joint name="hand_inner_l_joint">
+              <param name="mimic">hand_joint</param>
+              <param name="multiplier">-1</param>
+              <command_interface name="position"/>
+              <!-- <command_interface name="velocity"/> -->
+              <state_interface name="position"/>
+              <state_interface name="velocity"/>
+              <state_interface name="effort"/>
+            </joint>
 
-          <!-- Outer Right -->
-          <joint name="hand_outer_r_joint">
-            <param name="mimic">hand_joint</param>
-            <param name="multiplier">1</param> <!-- same direction as hand_joint -->
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
-                  <!-- Outer Left -->
-          <joint name="hand_finger_l_joint">
-            <param name="mimic">hand_joint</param>
-            <param name="multiplier">-0.5</param> <!-- flip if needed -->
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-          </joint>
+              <!-- Outer Left -->
+            <joint name="hand_outer_l_joint">
+              <param name="mimic">hand_joint</param>
+              <param name="multiplier">-1</param> <!-- flip if needed -->
+              <command_interface name="position"/>
+              <state_interface name="position"/>
+              <state_interface name="velocity"/>
+              <state_interface name="effort"/>
+            </joint>
 
-          <!-- Outer Right -->
-          <joint name="hand_finger_r_joint">
-            <param name="mimic">hand_joint</param>
-            <param name="multiplier">0.5</param> <!-- same direction as hand_joint -->
-            <command_interface name="position"/>
-            <state_interface name="position"/>
-            <state_interface name="velocity"/>
-            <state_interface name="effort"/>
-        </joint>
+            <!-- Outer Right -->
+            <joint name="hand_outer_r_joint">
+              <param name="mimic">hand_joint</param>
+              <param name="multiplier">1</param> <!-- same direction as hand_joint -->
+              <command_interface name="position"/>
+              <state_interface name="position"/>
+              <state_interface name="velocity"/>
+              <state_interface name="effort"/>
+          </joint>
+                    <!-- Outer Left -->
+            <joint name="hand_finger_l_joint">
+              <param name="mimic">hand_joint</param>
+              <param name="multiplier">-0.5</param> <!-- flip if needed -->
+              <command_interface name="position"/>
+              <state_interface name="position"/>
+              <state_interface name="velocity"/>
+              <state_interface name="effort"/>
+            </joint>
+
+            <!-- Outer Right -->
+            <joint name="hand_finger_r_joint">
+              <param name="mimic">hand_joint</param>
+              <param name="multiplier">0.5</param> <!-- same direction as hand_joint -->
+              <command_interface name="position"/>
+              <state_interface name="position"/>
+              <state_interface name="velocity"/>
+              <state_interface name="effort"/>
+          </joint>
+          </xacro:if>
         </xacro:if>
       </xacro:if>
 

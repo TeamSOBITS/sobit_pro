@@ -36,12 +36,21 @@ JointActionServer::JointActionServer(const rclcpp::NodeOptions & options = rclcp
 
   this->sub_joint_state_ = this->create_subscription<sensor_msgs::msg::JointState>(
       "joint_states", qos_profile, std::bind(&JointActionServer::joint_state_callback, this, std::placeholders::_1));
-  this->pub_joint_control_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+  this->pub_arm_joint_control_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
       "arm_trajectory_controller/joint_trajectory", qos_profile);
+  this->pub_hand_joint_control_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
+      "hand_trajectory_controller/joint_trajectory", qos_profile);
   this->pub_head_joint_control_ = this->create_publisher<trajectory_msgs::msg::JointTrajectory>(
       "head_trajectory_controller/joint_trajectory", qos_profile);
   this->pub_hand_goal_raw_ =
       this->create_publisher<std_msgs::msg::Float64>("hand_goal_raw", 1);
+
+  this->declare_parameter<bool>("enable_arm", true);
+  this->declare_parameter<bool>("enable_head", true);
+  this->declare_parameter<bool>("enable_hand", true);
+  enable_arm_ = this->get_parameter("enable_arm").as_bool();
+  enable_head_ = this->get_parameter("enable_head").as_bool();
+  enable_hand_ = this->get_parameter("enable_hand").as_bool();
 
 
 
@@ -86,7 +95,8 @@ JointActionServer::~JointActionServer()
   this->action_server_move_to_pose_.reset();
 
   this->sub_joint_state_.reset();
-  this->pub_joint_control_.reset();
+  this->pub_arm_joint_control_.reset();
+  this->pub_hand_joint_control_.reset();
   this->pub_head_joint_control_.reset();
 
   RCLCPP_INFO(this->get_logger(), "JointActionServer has been terminated.");
@@ -156,6 +166,16 @@ void JointActionServer::handle_move_to_pose_accepted(
   std::thread{std::bind(&JointActionServer::exe_move_to_pose, this, std::placeholders::_1), goal_handle}.detach();
 }
 
+bool JointActionServer::is_arm_joint(const std::string &joint_name) const
+{
+  return std::find(ArmJointNames.begin(), ArmJointNames.end(), joint_name) != ArmJointNames.end();
+}
+
+bool JointActionServer::is_hand_joint(const std::string &joint_name) const
+{
+  return std::find(HandJointNames.begin(), HandJointNames.end(), joint_name) != HandJointNames.end();
+}
+
 bool JointActionServer::is_head_joint(const std::string &joint_name) const
 {
   return std::find(HeadJointNames.begin(), HeadJointNames.end(), joint_name) != HeadJointNames.end();
@@ -166,11 +186,15 @@ void JointActionServer::split_joint_targets(
   const std::vector<double> &target_joint_rad,
   std::vector<std::string> &head_joint_names,
   std::vector<double> &head_joint_rad,
+  std::vector<std::string> &hand_joint_names,
+  std::vector<double> &hand_joint_rad,
   std::vector<std::string> &arm_joint_names,
   std::vector<double> &arm_joint_rad) const
 {
   head_joint_names.clear();
   head_joint_rad.clear();
+  hand_joint_names.clear();
+  hand_joint_rad.clear();
   arm_joint_names.clear();
   arm_joint_rad.clear();
 
@@ -178,6 +202,9 @@ void JointActionServer::split_joint_targets(
     if (is_head_joint(target_joint_names[i])) {
       head_joint_names.push_back(target_joint_names[i]);
       head_joint_rad.push_back(target_joint_rad[i]);
+    } else if (is_hand_joint(target_joint_names[i])) {
+      hand_joint_names.push_back(target_joint_names[i]);
+      hand_joint_rad.push_back(target_joint_rad[i]);
     } else {
       arm_joint_names.push_back(target_joint_names[i]);
       arm_joint_rad.push_back(target_joint_rad[i]);
@@ -263,6 +290,18 @@ void JointActionServer::exe_move_joints(
       goal_handle->abort(result);
       return;
     }
+    const std::string &joint_name = goal->target_joint_names[i];
+    if ((is_arm_joint(joint_name) && !enable_arm_) ||
+        (is_head_joint(joint_name) && !enable_head_) ||
+        (is_hand_joint(joint_name) && !enable_hand_)) {
+      RCLCPP_ERROR(this->get_logger(), "Requested joint '%s' is disabled by server configuration", joint_name.c_str());
+      result->success = false;
+      result->message = "Requested joint is disabled: " + joint_name;
+      result->total_elapsed_time.sec = 0;
+      result->total_elapsed_time.nanosec = 0;
+      goal_handle->abort(result);
+      return;
+    }
   }
 
   // TODO: Check if the joint rad are within the joint limits
@@ -283,6 +322,8 @@ void JointActionServer::exe_move_joints(
   // Publish split trajectories so head and arm do not interfere with each other.
   std::vector<std::string> head_joint_names;
   std::vector<double> head_joint_rad;
+  std::vector<std::string> hand_joint_names;
+  std::vector<double> hand_joint_rad;
   std::vector<std::string> arm_joint_names;
   std::vector<double> arm_joint_rad;
   split_joint_targets(
@@ -290,13 +331,19 @@ void JointActionServer::exe_move_joints(
     goal->target_joint_rad,
     head_joint_names,
     head_joint_rad,
+    hand_joint_names,
+    hand_joint_rad,
     arm_joint_names,
     arm_joint_rad);
 
   try {
     if (!arm_joint_names.empty()) {
       auto arm_trajectory = set_joints(arm_joint_names, arm_joint_rad, goal->time_allowance);
-      this->pub_joint_control_->publish(arm_trajectory);
+      this->pub_arm_joint_control_->publish(arm_trajectory);
+    }
+    if (!hand_joint_names.empty()) {
+      auto hand_trajectory = set_joints(hand_joint_names, hand_joint_rad, goal->time_allowance);
+      this->pub_hand_joint_control_->publish(hand_trajectory);
     }
     if (!head_joint_names.empty()) {
       auto head_trajectory = set_joints(head_joint_names, head_joint_rad, goal->time_allowance);
@@ -331,7 +378,8 @@ void JointActionServer::exe_move_joints(
       builtin_interfaces::msg::Duration dt;
       dt.sec = 0;
       dt.nanosec = 100000000U;
-      this->pub_joint_control_->publish(set_joints({}, {}, dt));
+      this->pub_arm_joint_control_->publish(set_joints({}, {}, dt));
+      this->pub_hand_joint_control_->publish(set_joints({}, {}, dt));
       this->pub_head_joint_control_->publish(set_joints({}, {}, dt));
 
       return;
@@ -471,6 +519,8 @@ void JointActionServer::exe_move_to_pose(
   // Publish split trajectories so preset pose updates do not jitter unrelated joints.
   std::vector<std::string> head_joint_names;
   std::vector<double> head_joint_rad;
+  std::vector<std::string> hand_joint_names;
+  std::vector<double> hand_joint_rad;
   std::vector<std::string> arm_joint_names;
   std::vector<double> arm_joint_rad;
   split_joint_targets(
@@ -478,13 +528,19 @@ void JointActionServer::exe_move_to_pose(
     target_joint_rad,
     head_joint_names,
     head_joint_rad,
+    hand_joint_names,
+    hand_joint_rad,
     arm_joint_names,
     arm_joint_rad);
 
   try {
     if (!arm_joint_names.empty()) {
       auto arm_trajectory = set_joints(arm_joint_names, arm_joint_rad, goal->time_allowance);
-      this->pub_joint_control_->publish(arm_trajectory);
+      this->pub_arm_joint_control_->publish(arm_trajectory);
+    }
+    if (!hand_joint_names.empty()) {
+      auto hand_trajectory = set_joints(hand_joint_names, hand_joint_rad, goal->time_allowance);
+      this->pub_hand_joint_control_->publish(hand_trajectory);
     }
     if (!head_joint_names.empty()) {
       auto head_trajectory = set_joints(head_joint_names, head_joint_rad, goal->time_allowance);
@@ -519,7 +575,8 @@ void JointActionServer::exe_move_to_pose(
       builtin_interfaces::msg::Duration dt;
       dt.sec = 0;
       dt.nanosec = 100000000U;
-      this->pub_joint_control_->publish(set_joints({}, {}, dt));
+      this->pub_arm_joint_control_->publish(set_joints({}, {}, dt));
+      this->pub_hand_joint_control_->publish(set_joints({}, {}, dt));
       this->pub_head_joint_control_->publish(set_joints({}, {}, dt));
   
       return;
