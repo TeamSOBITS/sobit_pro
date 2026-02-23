@@ -20,7 +20,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : 0.00
+      # hand_joint                    : 0.00
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
     
@@ -30,7 +30,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : -0.1
+      # hand_joint                    : -0.1
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
     
@@ -40,7 +40,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : -1.57
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : -0.1
+      # hand_joint                    : -0.1
       head_pan_joint                : 0.00
       head_tilt_joint               : -0.70
 
@@ -50,7 +50,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : -1.57
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : 0.00
+      # hand_joint                    : 0.00
       head_pan_joint                : 0.00
       head_tilt_joint               : -0.70
 
@@ -60,7 +60,7 @@
       arm_elbow_lower_tilt_joint    : -1.18
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -0.97
-      hand_joint                    : 0.00
+      # hand_joint                    : 0.00
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
 
@@ -70,7 +70,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : 1.57
-      hand_joint                    : 0.00
+      # hand_joint                    : 0.00
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
     
@@ -80,7 +80,7 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : 0.00
       arm_wrist_tilt_joint          : -0.6
-      hand_joint                    : -0.8
+      # hand_joint                    : -0.8
       head_pan_joint                : 0.00
       head_tilt_joint               : 0.00
 
@@ -90,7 +90,7 @@
       arm_elbow_lower_tilt_joint: 1.57
       arm_elbow_lower_pan_joint: 0.00
       arm_wrist_tilt_joint: -0.08
-      hand_joint: 0.00
+      # hand_joint: 0.00
       head_pan_joint  : 0.00
       head_tilt_joint : -0.70
 
@@ -100,7 +100,7 @@
       arm_elbow_lower_tilt_joint: -1.57
       arm_elbow_lower_pan_joint: 0.00
       arm_wrist_tilt_joint: -1.57
-      hand_joint: 0.00
+      # hand_joint: 0.00
       head_pan_joint  : 0.00
       head_tilt_joint : -0.05
 
@@ -110,7 +110,7 @@
       arm_elbow_lower_tilt_joint: -1.57
       arm_elbow_lower_pan_joint: 0.00
       arm_wrist_tilt_joint: -1.57
-      hand_joint: 0.00
+      # hand_joint: 0.00
       head_pan_joint  : 0.00
       head_tilt_joint : 0.00
 
@@ -120,7 +120,7 @@
       arm_elbow_lower_tilt_joint: -1.57
       arm_elbow_lower_pan_joint: 0.00
       arm_wrist_tilt_joint: -1.57
-      hand_joint: 0.00
+      # hand_joint: 0.00
       head_pan_joint  : 0.00
       head_tilt_joint : 0.00
 
@@ -130,6 +130,6 @@
       arm_elbow_lower_tilt_joint    : -1.57
       arm_elbow_lower_pan_joint     : -1.57
       arm_wrist_tilt_joint          : -1.57
-      hand_joint                    : -0.20
+      # hand_joint                    : -0.20
       head_pan_joint  : 0.00
       head_tilt_joint : -0.6

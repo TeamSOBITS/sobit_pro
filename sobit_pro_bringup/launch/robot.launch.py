@@ -26,6 +26,7 @@ def generate_launch_description():
 
     arg_enable_mb = DeclareLaunchArgument('enable_mb', default_value='True')
     arg_enable_arm = DeclareLaunchArgument('enable_arm', default_value='True')
+    arg_enable_hand = DeclareLaunchArgument('enable_hand', default_value='True')
     arg_enable_head = DeclareLaunchArgument('enable_head', default_value='True')
 
     arg_enable_gz_lidar = DeclareLaunchArgument('enable_gz_lidar', default_value='True')
@@ -44,6 +45,7 @@ def generate_launch_description():
         arg_enable_gz,
         arg_enable_mb,
         arg_enable_arm,
+        arg_enable_hand,
         arg_enable_head,
         arg_enable_gz_lidar,
         arg_enable_gz_head_cam_color,
@@ -66,6 +68,7 @@ def launch_gz(context, *args, **kwargs):
 
     enable_mb = LaunchConfiguration('enable_mb').perform(context)
     enable_arm = LaunchConfiguration('enable_arm').perform(context)
+    enable_hand = LaunchConfiguration('enable_hand').perform(context)
     enable_head = LaunchConfiguration('enable_head').perform(context)
 
     enable_gz_lidar = LaunchConfiguration('enable_gz_lidar').perform(context)
@@ -84,6 +87,7 @@ def launch_gz(context, *args, **kwargs):
         mappings={
             'enable_mb'   : enable_mb,
             'enable_arm'  : enable_arm,
+            'enable_hand' : enable_hand,
             'enable_head' : enable_head,
             'enable_gz'   : enable_gz,
             'robot_name'  : robot_name,
@@ -189,13 +193,45 @@ def launch_gz(context, *args, **kwargs):
             ],
     )
 
-    joint_trajectory_controller = Node(
+    # joint_trajectory_controller = Node(
+    #     package='controller_manager',
+    #     executable='spawner',
+    #     name='joint_trajectory_controller',
+    #     namespace=robot_name,
+    #     arguments=[
+    #         'joint_trajectory_controller',
+    #         '-c', 'controller_manager', '--activate'
+    #         ],
+    # )
+    head_trajectory_controller = Node(
         package='controller_manager',
         executable='spawner',
-        name='joint_trajectory_controller',
+        # name='head_trajectory_controller',
         namespace=robot_name,
         arguments=[
-            'joint_trajectory_controller',
+            'head_trajectory_controller',
+            '-c', 'controller_manager', '--activate'
+            ],
+    )
+
+    arm_trajectory_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        # name='arm_trajectory_controller',
+        namespace=robot_name,
+        arguments=[
+            'arm_trajectory_controller',
+            '-c', 'controller_manager', '--activate'
+            ],
+    )
+
+    hand_trajectory_controller = Node(
+        package='controller_manager',
+        executable='spawner',
+        # name='hand_trajectory_controller',
+        namespace=robot_name,
+        arguments=[
+            'hand_trajectory_controller',
             '-c', 'controller_manager', '--activate'
             ],
     )
@@ -317,7 +353,10 @@ def launch_gz(context, *args, **kwargs):
         return [
             ros2_control_node,
             joint_state_broadcaster,
-            joint_trajectory_controller,
+            # joint_trajectory_controller,
+            head_trajectory_controller,
+            arm_trajectory_controller,
+            hand_trajectory_controller,
             steer_joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
@@ -348,10 +387,28 @@ def launch_gz(context, *args, **kwargs):
                     on_exit=joint_state_broadcaster,
                 )
             ),
+            # RegisterEventHandler(
+            #     event_handler=OnProcessExit(
+            #         target_action=joint_state_broadcaster,
+            #         on_exit=joint_trajectory_controller,
+            #     )
+            # ),
             RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=joint_state_broadcaster,
-                    on_exit=joint_trajectory_controller,
+                    on_exit=head_trajectory_controller,
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=arm_trajectory_controller,
+                )
+            ),
+            RegisterEventHandler(
+                event_handler=OnProcessExit(
+                    target_action=joint_state_broadcaster,
+                    on_exit=hand_trajectory_controller,
                 )
             ),
             RegisterEventHandler(

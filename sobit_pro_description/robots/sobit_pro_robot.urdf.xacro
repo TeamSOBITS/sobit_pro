@@ -34,6 +34,7 @@
   <!-- Activate Mobile-Base (true), Arm (true), Head (true) -->
   <xacro:arg name="enable_mb"   default="True" />
   <xacro:arg name="enable_arm"  default="True" />
+  <xacro:arg name="enable_hand" default="True" />
   <xacro:arg name="enable_head" default="True" />
 
   <!-- Add variables -->

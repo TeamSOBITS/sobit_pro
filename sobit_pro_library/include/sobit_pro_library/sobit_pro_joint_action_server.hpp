@@ -37,7 +37,7 @@ struct PoseParams
   double arm_elbow_lower_tilt_joint;
   double arm_elbow_lower_pan_joint;
   double arm_wrist_tilt_joint;
-  double hand_joint;
+  // double hand_joint;
   double head_pan_joint;
   double head_tilt_joint;
 
@@ -51,30 +51,30 @@ struct PoseParams
   // double wheel_b_r_drive_joint;
 };
 
-enum JointIds
-{
-  ARM_SHOULDER_1_TILT_JOINT,
-  // ARM_SHOULDER_2_TILT_JOINT,
-  ARM_ELBOW_UPPER_1_TILT_JOINT,
-  // ARM_ELBOW_UPPER_2_TILT_JOINT,
-  ARM_ELBOW_LOWER_TILT_JOINT,
-  ARM_ELBOW_LOWER_PAN_JOINT,
-  ARM_WRIST_TILT_JOINT,
-  HAND_JOINT,
-  HEAD_PAN_JOINT,
-  HEAD_TILT_JOINT,
+// enum JointIds
+// {
+//   ARM_SHOULDER_1_TILT_JOINT,
+//   // ARM_SHOULDER_2_TILT_JOINT,
+//   ARM_ELBOW_UPPER_1_TILT_JOINT,
+//   // ARM_ELBOW_UPPER_2_TILT_JOINT,
+//   ARM_ELBOW_LOWER_TILT_JOINT,
+//   ARM_ELBOW_LOWER_PAN_JOINT,
+//   ARM_WRIST_TILT_JOINT,
+//   // HAND_JOINT,
+//   HEAD_PAN_JOINT,
+//   HEAD_TILT_JOINT,
 
-  // WHEEL_F_L_STEER_JOINT,
-  // WHEEL_F_R_STEER_JOINT,
-  // WHEEL_B_L_STEER_JOINT,
-  // WHEEL_B_R_STEER_JOINT,
-  // WHEEL_F_L_DRIVE_JOINT,
-  // WHEEL_F_R_DRIVE_JOINT,
-  // WHEEL_B_L_DRIVE_JOINT,
-  // WHEEL_B_R_DRIVE_JOINT,
+//   // WHEEL_F_L_STEER_JOINT,
+//   // WHEEL_F_R_STEER_JOINT,
+//   // WHEEL_B_L_STEER_JOINT,
+//   // WHEEL_B_R_STEER_JOINT,
+//   // WHEEL_F_L_DRIVE_JOINT,
+//   // WHEEL_F_R_DRIVE_JOINT,
+//   // WHEEL_B_L_DRIVE_JOINT,
+//   // WHEEL_B_R_DRIVE_JOINT,
 
-  JOINT_NUM
-};
+//   JOINT_NUM
+// };
 
 class JointActionServer : public rclcpp::Node
 {
@@ -103,10 +103,15 @@ public:
     const std::vector<double> &target_joint_rad);  // target_yaw should be eliminated in the future.
   std::vector<double> inverse_kinematics(
     const geometry_msgs::msg::TransformStamped &goal_coord);  // target_yaw should be eliminated in the future.
+  // trajectory_msgs::msg::JointTrajectory set_joints(
+  //   const std::vector<std::string> &target_joint_names,
+  //   const std::vector<double> &target_joint_rad,
+  //   const builtin_interfaces::msg::Duration &time_allowance);
   trajectory_msgs::msg::JointTrajectory set_joints(
     const std::vector<std::string> &target_joint_names,
     const std::vector<double> &target_joint_rad,
-    const builtin_interfaces::msg::Duration &time_allowance);
+    const builtin_interfaces::msg::Duration &time_allowance,
+    const std::string &group_name);
 
 private:
   const std::vector<std::string> JointNames = {
@@ -117,7 +122,7 @@ private:
     "arm_elbow_lower_tilt_joint",
     "arm_elbow_lower_pan_joint",
     "arm_wrist_tilt_joint",
-    "hand_joint",
+    // "hand_joint",
     "head_pan_joint",
     "head_tilt_joint",
 
@@ -129,6 +134,25 @@ private:
     // "wheel_f_r_drive_joint",
     // "wheel_b_l_drive_joint",
     // "wheel_b_r_drive_joint"
+  };
+
+  const std::vector<std::string> JointNamesHead = {
+    "head_pan_joint",
+    "head_tilt_joint",
+  };
+
+  const std::vector<std::string> JointNamesArm = {
+    "arm_shoulder_1_tilt_joint", 
+    // "arm_shoulder_2_tilt_joint",
+    "arm_elbow_upper_1_tilt_joint",
+    // "arm_elbow_upper_2_tilt_joint",
+    "arm_elbow_lower_tilt_joint",
+    "arm_elbow_lower_pan_joint",
+    "arm_wrist_tilt_joint",
+  };
+
+  const std::vector<std::string> JointNamesHand = {
+    "hand_joint",
   };
 
   static constexpr double ARM_UPPER = 0.15;
@@ -160,8 +184,10 @@ private:
   void serve_get_hand_to_coord(const std::shared_ptr<GetHandToTargetCoord::Request> request, std::shared_ptr<GetHandToTargetCoord::Response> response);
   void serve_get_hand_to_tf(const std::shared_ptr<GetHandToTargetTF::Request> request, std::shared_ptr<GetHandToTargetTF::Response> response);
 
-  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_joint_control_;
   rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_head_joint_control_;
+  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_arm_joint_control_;
+  rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_hand_joint_control_;
+  // rclcpp::Publisher<trajectory_msgs::msg::JointTrajectory>::SharedPtr pub_joint_control_;
   rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr sub_joint_state_;
 
   std::shared_ptr<tf2_ros::Buffer> tf_buffer_;
