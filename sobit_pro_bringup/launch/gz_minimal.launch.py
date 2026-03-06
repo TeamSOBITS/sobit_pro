@@ -14,6 +14,7 @@ def generate_launch_description():
     robot_name = 'sobit_pro'
     robot_id = 0
     head_camera_name = "xtion" # 'xtion' or 'azure_kinect' or 'femtobolt
+    world_model = 'rcjo2025_arena' # empty, wrs, small_house, rcjo2025_arena
 
     gz_bridge_node = Node(
         package='ros_gz_bridge',
@@ -25,11 +26,31 @@ def generate_launch_description():
         output='screen'
     )
 
-    world_file = os.path.join(get_package_share_directory(
-        'sobit_pro_description'), 
-        'worlds',
-        'empty_w_physics.sdf'
-    )
+    world_file = ''
+    if world_model == 'empty':
+        world_file = os.path.join(get_package_share_directory(
+            'sobit_pro_description'), 
+            'worlds',
+            'empty_w_physics.sdf'
+        )
+    elif world_model == 'wrs':
+        world_file = os.path.join(get_package_share_directory(
+            'tmc_wrs_gz_worlds'), 
+            'worlds',
+            'wrs2020.world.xacro'
+        )
+    elif world_model == 'small_house':
+        world_file = os.path.join(get_package_share_directory(
+            'aws_small_house_world'), 
+            'worlds',
+            'small_house.world'
+        )
+    elif world_model == 'rcjo2025_arena':
+        world_file = os.path.join(get_package_share_directory(
+            'sobits_gazebo_worlds'), 
+            'worlds',
+            'rcjo2025_arena.world.xacro'
+        )
 
     return LaunchDescription([
         # Launch gazebo environment
