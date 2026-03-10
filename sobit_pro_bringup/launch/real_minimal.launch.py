@@ -3,12 +3,26 @@ from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
 from launch_ros.substitutions import FindPackageShare
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
     robot_name = 'sobit_pro'
     head_camera_name = "xtion" # 'xtion' or 'azure_kinect' or 'femtobolt
     only_mobile_base_hardware = False # You use only mobile base to URG serial
+
+    rviz_config = PathJoinSubstitution([
+            FindPackageShare('sobit_pro_bringup'),
+            'rviz',
+            'real.rviz'
+    ])
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        name='rviz2',
+        arguments=['-d', rviz_config],
+        output='screen',
+    )
 
     return LaunchDescription([
         IncludeLaunchDescription(
@@ -29,4 +43,5 @@ def generate_launch_description():
                 'use_serial_urg': 'True' if (only_mobile_base_hardware) else 'False',
             }.items()
         ),
+        rviz_node,
     ])

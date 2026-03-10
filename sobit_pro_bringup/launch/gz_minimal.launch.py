@@ -8,6 +8,7 @@ from launch import LaunchDescription
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import PathJoinSubstitution
+from launch_ros.substitutions import FindPackageShare
 
 
 def generate_launch_description():
@@ -51,6 +52,18 @@ def generate_launch_description():
             'worlds',
             'rcjo2025_arena.world.xacro'
         )
+
+    rviz_config = PathJoinSubstitution([
+            FindPackageShare('sobit_pro_bringup'),
+            'rviz',
+            'gazebo.rviz'
+    ])
+    rviz_node = Node(
+        package='rviz2',
+        executable='rviz2',
+        output='screen',
+        arguments=['-d', rviz_config],
+    )
 
     return LaunchDescription([
         # Launch gazebo environment
@@ -117,4 +130,5 @@ def generate_launch_description():
         #         'enable_gz'               : 'True',
         #     }.items()
         # ),
+        rviz_node,
     ])

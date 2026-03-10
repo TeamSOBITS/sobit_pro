@@ -176,12 +176,6 @@ def launch_gz(context, *args, **kwargs):
         else:
             camera_node = None
 
-        rviz_config = PathJoinSubstitution([
-            FindPackageShare('sobit_pro_bringup'),
-            'rviz',
-            'real.rviz'
-        ])
-
     joint_state_broadcaster = Node(
         package='controller_manager',
         executable='spawner',
@@ -309,12 +303,6 @@ def launch_gz(context, *args, **kwargs):
             output='screen'
         )
 
-        rviz_config = PathJoinSubstitution([
-            FindPackageShare('sobit_pro_bringup'),
-            'rviz',
-            'gazebo.rviz'
-        ])
-
 
     library_server_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource([
@@ -339,14 +327,6 @@ def launch_gz(context, *args, **kwargs):
             {"use_sim_time": True if enable_gz == 'True' else False},
         ],
         output="screen",
-    )
-
-    rviz_node = Node(
-        package='rviz2',
-        executable='rviz2',
-        name=robot_name+'_rviz2',
-        output='screen',
-        arguments=['-d', rviz_config],
     )
 
     if enable_gz == 'False':
@@ -374,7 +354,6 @@ def launch_gz(context, *args, **kwargs):
             ),
             urg_node,
             camera_node,
-            rviz_node,
         ]
 
     else:
@@ -436,5 +415,4 @@ def launch_gz(context, *args, **kwargs):
                 )
             ),
             robot_state_publisher_node,
-            rviz_node,
         ]
