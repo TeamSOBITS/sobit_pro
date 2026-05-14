@@ -48,7 +48,7 @@
       <origin xyz="0.0631932 0.0151495 0.0372231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
       <limit lower="0" upper="${M_PI/2.0}" effort="1.0" velocity="4.796165"/>
-      <mimic joint="${prefix_hand}_joint" multiplier="1" offset="0" />
+      <mimic joint="${prefix_hand}_joint" multiplier="-1.0" offset="0" />
       <!-- <dynamics damping="50.0" friction="5.0"/> -->
     </joint>
   
@@ -111,12 +111,12 @@
 
 
 <xacro:if value="${enable_outer_l}">
-    <joint name="${prefix_hand}_outer_l_joint" type="continuous">
+    <joint name="${prefix_hand}_outer_l_joint" type="revolute">
       <parent link="${prefix_hand}_base_link" />
       <child link="${prefix_hand}_outer_l_link" />
       <origin xyz="0.043193 0.04015 0.0282231" rpy="0.0 0.0 0.0" />
       <axis xyz="0.0 0.0 1.0" />
-      <!-- <mimic joint="{prefix_hand}_joint" multiplier="1.0" offset="0" /> -->
+      <mimic joint="${prefix_hand}_joint" multiplier="-1.0" offset="0" />
       <limit lower="0" upper="${M_PI/2.0}" effort="1.0" velocity="4.796165"/>
     </joint>
 
