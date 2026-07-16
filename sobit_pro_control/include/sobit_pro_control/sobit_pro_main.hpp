@@ -81,6 +81,7 @@ private:
   DriveState drive_state = DriveState::STABILIZE; // initialized in STABILIZE to ensure stability on startup
 
   std::string robot_name;           // topic name space
+  double angular_z_sign = 1.0;      // Sign applied to cmd_vel angular.z. The gz model's wheel joint axes make the base spin opposite to REP-103, so the launch sets -1.0 in simulation; real hardware keeps +1.0.
   int stuck_counter = 0;            // Counts consecutive control cycles where the robot remains unaligned (used to detect if robot is stuck)
   int stabilize_counter = 0;        // Counter for STABILIZE phase — delays transition back to DRIVE to allow full recovery
   int recovery_publish_counter = 0; // Counter to occasionally force republishing steer trajectory during RECOVERY
