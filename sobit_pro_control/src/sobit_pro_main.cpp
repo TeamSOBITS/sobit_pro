@@ -53,6 +53,9 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
   robot_name = (std::strcmp(this->get_namespace(), "/") != 0)
               ? std::string(this->get_namespace()).substr(1) + "/"
               : "";
+
+  this->declare_parameter("angular_z_sign", 1.0);
+  angular_z_sign = this->get_parameter("angular_z_sign").as_double();
   
   // Initilize Odometry
   prev_odom.header.stamp            = this->get_clock()->now();
@@ -71,6 +74,8 @@ SobitProMain::~SobitProMain()
 // Twist callback
 void SobitProMain::callback(const geometry_msgs::msg::Twist::SharedPtr vel_twist)
 {
+  vel_twist->angular.z *= angular_z_sign;
+
   // Translational
   if (((std::fabs(vel_twist->linear.x) > 0.000) || (std::fabs(vel_twist->linear.y) > 0.000))
       && (std::fabs(vel_twist->angular.z) == 0.000))
@@ -287,8 +292,12 @@ void SobitProMain::control_callback()
   // - In DRIVE mode: only if target steer positions changed (avoid redundant publishes)
   // - In RECOVERY/STABILIZE: may be forced at intervals to ensure alignment
   // After publishing, update last_sent_steer_pos to track what was sent
-  // if (should_publish_steer) {
-  if (should_publish_steer && (stabilize_counter != 0)) {
+  // NOTE: do not gate this on stabilize_counter — it is reset to 0 on entering
+  // RECOVERY, which used to block all steer republishing exactly when it was
+  // needed (e.g. the initial alignment command is lost because the steer
+  // controller is not active yet), leaving the robot stuck with zero wheel
+  // velocity forever.
+  if (should_publish_steer) {
     pub_steer_joint_->publish(steer_joint_trajectory);
     last_sent_steer_pos = set_steer_pos; // Remember last sent
   }

@@ -286,6 +286,10 @@ def launch_gz(context, *args, **kwargs):
             executable='parameter_bridge',
             namespace=robot_name,
             arguments=[
+                        # gz -> ROS: lets the Gazebo GUI "Teleop" plugin (publishing
+                        # gz.msgs.Twist on /<robot_name>/cmd_vel) drive the robot
+                        # through sobit_pro_control's normal cmd_vel pipeline.
+                        "/" + robot_name + "/cmd_vel" + "@geometry_msgs/msg/Twist" + "[gz.msgs.Twist",
                         "/" + robot_name + "/joint_states" + "@sensor_msgs/msg/JointState" + "[gz.msgs.Model",
                         "/" + robot_name + "/head_camera/camera_info" + "@sensor_msgs/msg/CameraInfo" + "[gz.msgs.CameraInfo",
                         "/" + robot_name + "/head_camera/color" + "@sensor_msgs/msg/Image" + "[gz.msgs.Image",
@@ -325,6 +329,9 @@ def launch_gz(context, *args, **kwargs):
         namespace=robot_name,
         parameters=[
             {"use_sim_time": True if enable_gz == 'True' else False},
+            # The gz model's wheel joint axes make rotation come out opposite
+            # to REP-103 (+z should be CCW), so flip angular.z in sim only.
+            {"angular_z_sign": -1.0 if enable_gz == 'True' else 1.0},
         ],
         output="screen",
     )

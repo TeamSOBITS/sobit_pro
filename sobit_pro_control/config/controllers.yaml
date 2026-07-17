@@ -1,3 +1,14 @@
+# Gazebo (gz_ros2_control) only: P-gain for position-commanded joints.
+# The default of 0.1 makes steer/head/arm joints track their targets with a
+# ~10 s time constant, so the base never finishes steer alignment and
+# teleop looks dead. 5.0 was too aggressive: the four grounded steer joints
+# whip around and the wheel/floor friction makes the base jump. 1.0 gives a
+# ~1 s time constant — fast enough for teleop, gentle on contacts. The real
+# robot does not run this node, so this section has no effect on hardware.
+/**/gz_ros_control:
+  ros__parameters:
+    position_proportional_gain: 1.0
+
 /**/controller_manager:
   ros__parameters:
     update_rate: 10  # Hz
