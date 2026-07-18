@@ -225,11 +225,21 @@ void JointActionServer::exe_move_joints(
       result->total_elapsed_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
       goal_handle->canceled(result);
 
-      // TODO: Stop of current joint...
-      // builtin_interfaces::msg::Duration dt;
-      // dt.sec = 0;
-      // dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
-      // this->pub_joint_control_->publish(set_joints({}, {}, dt));
+      // Stop joint movement of goal->target_joint_names joints.
+      builtin_interfaces::msg::Duration dt;
+      dt.sec = 0;
+      dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
+      // When canceling, keep the current joint positions by sending them as new targets with empty target_joint_rad.
+      head_joint_trajectory = set_joints(goal->target_joint_names, {}, dt, "head");
+      arm_joint_trajectory = set_joints(goal->target_joint_names, {}, dt, "arm");
+      hand_joint_trajectory = set_joints(goal->target_joint_names, {}, dt, "hand");
+
+      if (!head_joint_trajectory.joint_names.empty())
+        this->pub_head_joint_control_->publish(head_joint_trajectory);
+      if (!arm_joint_trajectory.joint_names.empty())
+        this->pub_arm_joint_control_->publish(arm_joint_trajectory);
+      if (!hand_joint_trajectory.joint_names.empty())
+        this->pub_hand_joint_control_->publish(hand_joint_trajectory);
 
       return;
     }
@@ -365,12 +375,22 @@ void JointActionServer::exe_move_to_pose(
       result->total_elapsed_time.nanosec = (this->now() - start_time).nanoseconds() % int(10E9);
       goal_handle->canceled(result);
 
-      // TODO: Stop of current joint...
-      // builtin_interfaces::msg::Duration dt;
-      // dt.sec = 0;
-      // dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
-      // this->pub_joint_control_->publish(set_joints({}, {}, dt));
-  
+      // Stop joint movement of JointNames joints.
+      builtin_interfaces::msg::Duration dt;
+      dt.sec = 0;
+      dt.nanosec = static_cast<uint32_t>(0.1 * 10E9);
+      // When canceling, keep the current joint positions by sending them as new targets with empty target_joint_rad.
+      head_joint_trajectory = set_joints(JointNames, {}, dt, "head");
+      arm_joint_trajectory = set_joints(JointNames, {}, dt, "arm");
+      // hand_joint_trajectory = set_joints(JointNames, {}, dt, "hand");
+
+      if (!head_joint_trajectory.joint_names.empty())
+        this->pub_head_joint_control_->publish(head_joint_trajectory);
+      if (!arm_joint_trajectory.joint_names.empty())
+        this->pub_arm_joint_control_->publish(arm_joint_trajectory);
+      // if (!hand_joint_trajectory.joint_names.empty())
+      //   this->pub_hand_joint_control_->publish(hand_joint_trajectory);
+
       return;
     }
 
@@ -648,17 +668,26 @@ trajectory_msgs::msg::JointTrajectory JointActionServer::set_joints(
     }
 
     joint_trajectory.joint_names.push_back(target_joint_names[i]);
-    point.positions.push_back(target_joint_rad[i]);
+    if (target_joint_rad.size() == 0) {
+      // If target_joint_rad is empty, regard it as a cancel request 
+      // and hold the current joint positions instead of sending new targets.
+      point.positions.push_back(curt_joint_state_[target_joint_names[i]]);
+    } else { 
+      // Apply the requested target joint positions.
+      point.positions.push_back(target_joint_rad[i]);
+    }
 
     // Subjoint to turn opposite direction
+    // Last value in point.positions is the target joint position of main joint
+    // Don't use target_joint_rad[i] because it can be empty when canceling
     if (target_joint_names[i] == "arm_shoulder_1_tilt_joint") {
       joint_trajectory.joint_names.push_back("arm_shoulder_2_tilt_joint");
-      point.positions.push_back(-target_joint_rad[i]);
+      point.positions.push_back(-point.positions.back());
       continue;
     }
     if (target_joint_names[i] == "arm_elbow_upper_1_tilt_joint") {
       joint_trajectory.joint_names.push_back("arm_elbow_upper_2_tilt_joint");
-      point.positions.push_back(-target_joint_rad[i]);
+      point.positions.push_back(-point.positions.back());
       continue;
     } 
   }
