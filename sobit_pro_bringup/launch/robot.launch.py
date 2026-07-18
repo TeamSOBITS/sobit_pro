@@ -133,48 +133,50 @@ def launch_gz(context, *args, **kwargs):
             }.items()
         )
 
-        if (head_camera_name == "xtion"):
-            camera_node = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    PathJoinSubstitution([os.path.join(
-                        get_package_share_directory('sobit_pro_bringup'),
-                        'launch',
-                        'xtion.launch.py')
-                    ])
-                ]),
-                launch_arguments={
-                    'tf_prefix': robot_name,
-                    'namespace': 'head_camera',
-                }.items()
-            )
-        elif (head_camera_name == "azure_kinect"):
-            camera_node = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    PathJoinSubstitution([os.path.join(
-                        get_package_share_directory('sobit_pro_bringup'),
-                        'launch',
-                        'azure_kinect.launch.py')
-                    ])
-                ]),
-                launch_arguments={
-                    'namespace': robot_name,
-                }.items()
-            )
-        elif (head_camera_name == "femtobolt"): # TODO
-            camera_node = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource([
-                    PathJoinSubstitution([os.path.join(
-                        get_package_share_directory('sobit_pro_bringup'),
-                        'launch',
-                        'femtobolt.launch.py')
-                    ])
-                ]),
-                launch_arguments={
-                    'namespace': robot_name,
-                }.items()
-            )
-        else:
-            camera_node = None
+        camera_node = None
+        if enable_head == 'True':
+            if head_camera_name == "xtion":
+                camera_node = IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource([
+                        PathJoinSubstitution([os.path.join(
+                            get_package_share_directory('sobit_pro_bringup'),
+                            'launch',
+                            'xtion.launch.py')
+                        ])
+                    ]),
+                    launch_arguments={
+                        'tf_prefix': robot_name,
+                        'namespace': 'head_camera',
+                    }.items()
+                )
+            elif head_camera_name == "azure_kinect":
+                camera_node = IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource([
+                        PathJoinSubstitution([os.path.join(
+                            get_package_share_directory('sobit_pro_bringup'),
+                            'launch',
+                            'azure_kinect.launch.py')
+                        ])
+                    ]),
+                    launch_arguments={
+                        'namespace': robot_name,
+                    }.items()
+                )
+            elif head_camera_name == "femtobolt": # TODO
+                camera_node = IncludeLaunchDescription(
+                    PythonLaunchDescriptionSource([
+                        PathJoinSubstitution([os.path.join(
+                            get_package_share_directory('sobit_pro_bringup'),
+                            'launch',
+                            'femtobolt.launch.py')
+                        ])
+                    ]),
+                    launch_arguments={
+                        'namespace': robot_name,
+                    }.items()
+                )
+            else:
+                camera_node = None
 
     joint_state_broadcaster = Node(
         package='controller_manager',
@@ -337,13 +339,10 @@ def launch_gz(context, *args, **kwargs):
     )
 
     if enable_gz == 'False':
-        return [
+        actions = [
             ros2_control_node,
             joint_state_broadcaster,
             # joint_trajectory_controller,
-            head_trajectory_controller,
-            arm_trajectory_controller,
-            hand_trajectory_controller,
             steer_joint_trajectory_controller,
             velocity_controller,
             robot_state_publisher_node,
@@ -360,8 +359,16 @@ def launch_gz(context, *args, **kwargs):
                 )
             ),
             urg_node,
-            camera_node,
         ]
+
+        if camera_node is not None:
+            actions.append(camera_node)
+        if enable_arm == 'True':
+            actions.append(arm_trajectory_controller) 
+            actions.append(hand_trajectory_controller)
+        if enable_head == 'True':
+            actions.append(head_trajectory_controller)
+        return actions
 
     else:
         return [

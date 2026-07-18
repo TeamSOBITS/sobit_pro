@@ -162,7 +162,7 @@
   </xacro:if>
 
   <!-- Add Dynamixel plugins -->
-  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" robot_name="$(arg robot_name)" />
+  <xacro:controllers name="joints_control" enable_gz="$(arg enable_gz)" enable_mb="$(arg enable_mb)" enable_arm="$(arg enable_arm)" enable_head="$(arg enable_head)" robot_name="$(arg robot_name)" />
 
   <!-- Add Gazebo plugins -->
   <xacro:if value="${$(arg enable_gz)}">
