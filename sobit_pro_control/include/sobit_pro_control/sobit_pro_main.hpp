@@ -85,8 +85,15 @@ private:
   int stuck_counter = 0;            // Counts consecutive control cycles where the robot remains unaligned (used to detect if robot is stuck)
   int stabilize_counter = 0;        // Counter for STABILIZE phase — delays transition back to DRIVE to allow full recovery
   int recovery_publish_counter = 0; // Counter to occasionally force republishing steer trajectory during RECOVERY
-  static constexpr int MAX_STUCK_CYCLES = 40;    // Max number of cycles before triggering recovery mode (≈2s if control loop is 50ms) //TO DO: make static constexpr
-  static constexpr int ATTENUATION_FACTOR = 10;  // Number of cycles before attenuation of wheel speed begins during misalignment //TO DO: make static constexpr
+  // control_timer_ ticks every 10ms (100Hz -- see the constructor), not the
+  // 50ms these two were originally sized for: at the old 40/10 cycle counts
+  // (400ms/100ms of real time) a normal ~0.4s steer realignment was enough
+  // to look "stuck", tripping RECOVERY and its STABILIZE tail on almost
+  // every direction change and adding an extra ~0.3s dead stop on top of
+  // the realignment itself. Rescaled 5x to restore the original real-time
+  // budget (2s / 0.5s) against the actual 10ms period.
+  static constexpr int MAX_STUCK_CYCLES = 200;   // ~2s: cycles before triggering recovery mode
+  static constexpr int ATTENUATION_FACTOR = 50;  // ~0.5s: cycles before attenuation of wheel speed begins during misalignment
 };
 
 inline void SobitProMain::setPosJointTrajectory(

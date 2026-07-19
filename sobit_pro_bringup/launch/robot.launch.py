@@ -35,8 +35,11 @@ def generate_launch_description():
 
     arg_use_serial_urg = DeclareLaunchArgument('use_serial_urg', default_value='False')
 
+    arg_spawn_entity = DeclareLaunchArgument('spawn_entity', default_value='True')
+
     return LaunchDescription([
         arg_robot_name,
+        arg_spawn_entity,
         arg_head_camera,
         arg_robot_coords_x,
         arg_robot_coords_y,
@@ -57,6 +60,7 @@ def generate_launch_description():
 
 def launch_gz(context, *args, **kwargs):
     robot_name = LaunchConfiguration('robot_name').perform(context)
+    spawn_entity = LaunchConfiguration('spawn_entity').perform(context)
     head_camera_name = LaunchConfiguration('head_camera_name').perform(context)
 
     robot_coords_x = LaunchConfiguration('robot_coords_x').perform(context)
@@ -364,15 +368,24 @@ def launch_gz(context, *args, **kwargs):
         ]
 
     else:
-        return [
-            gz_spawn_entity_node,
-            gz_bridge_node,
-            RegisterEventHandler(
+        actions = [gz_bridge_node]
+        if spawn_entity == 'True':
+            # Normal path: create the gz entity, then load controllers once
+            # it exists.
+            actions.append(gz_spawn_entity_node)
+            actions.append(RegisterEventHandler(
                 event_handler=OnProcessExit(
                     target_action=gz_spawn_entity_node,
                     on_exit=joint_state_broadcaster,
                 )
-            ),
+            ))
+        else:
+            # Reattach path (see arg_spawn_entity above): the entity
+            # already exists, so load controllers straight away instead of
+            # waiting on a spawn that is not happening.
+            actions.append(joint_state_broadcaster)
+
+        actions += [
             # RegisterEventHandler(
             #     event_handler=OnProcessExit(
             #         target_action=joint_state_broadcaster,
@@ -423,3 +436,4 @@ def launch_gz(context, *args, **kwargs):
             ),
             robot_state_publisher_node,
         ]
+        return actions
