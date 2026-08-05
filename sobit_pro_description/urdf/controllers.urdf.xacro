@@ -383,7 +383,7 @@
           <ros>
             <namespace>$(arg robot_name)</namespace>
           </ros>
-          <parameters>$(find sobit_pro_control)/config/controllers.yaml</parameters>
+          <parameters>$(find sobit_pro_control)/config/controllers_gz.yaml</parameters>
         </plugin>
       </gazebo>
     </xacro:if>

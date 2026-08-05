@@ -47,6 +47,8 @@ private:
   // double getJointPos(const std::string& joint_name);
   void setPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
   void addPosJointTrajectory(const std::string& joint_name, double rad, double sec, trajectory_msgs::msg::JointTrajectory* jt);
+  std::array<double, 4> ScaleWheelVelByCos(const std::array<double, 4>& goal_vel,
+                                           const std::array<double, 4>& curt_steer) const;
 
   // Control Variables
   trajectory_msgs::msg::JointTrajectory steer_joint_trajectory;
@@ -82,6 +84,12 @@ private:
 
   std::string robot_name;           // topic name space
   double angular_z_sign = 1.0;      // Sign applied to cmd_vel angular.z. The gz model's wheel joint axes make the base spin opposite to REP-103, so the launch sets -1.0 in simulation; real hardware keeps +1.0.
+  // Cosine steer compensation. See the long comment on ScaleWheelVelByCos()
+  // in the .cpp -- it replaces the binary all_aligned wheel freeze with a
+  // per-wheel cos(steer error) scale. Off by default so hardware behaviour
+  // is unchanged; sobit_pro_bringup/robot.launch.py turns it on for gz only
+  // (same pattern as angular_z_sign above).
+  bool cosine_steer_compensation = false;
   int stuck_counter = 0;            // Counts consecutive control cycles where the robot remains unaligned (used to detect if robot is stuck)
   int stabilize_counter = 0;        // Counter for STABILIZE phase — delays transition back to DRIVE to allow full recovery
   int recovery_publish_counter = 0; // Counter to occasionally force republishing steer trajectory during RECOVERY

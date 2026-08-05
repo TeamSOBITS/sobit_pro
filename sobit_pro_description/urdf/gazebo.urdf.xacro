@@ -1,6 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- SOBIT PRO (Gazebo) -->
 <robot name="sobit_pro_gazebo" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!--
+    guider: rendering sensors are always_on=0
+
+    Every rendering sensor in this file is <always_on>0</always_on>, so gz
+    only renders it while something is actually subscribed to its gz topic.
+    That is what makes the Guider Robot Manager panel's per-sensor
+    checkboxes (each starts/stops a ros_gz_bridge) a real throttle:
+    unchecking one stops the GPU work, not just the ROS topic.
+
+    With always_on=1 these rendered continuously for every spawned robot no
+    matter what, so a robot the user had hidden (or "deleted", which parks
+    the entity rather than destroying it) kept costing full render time for
+    the rest of the session. That was a major reason real time factor
+    decayed as robots were spawned and removed.
+
+    Non rendering sensors (IMU, contact, force torque) are deliberately
+    left alone: they cost almost nothing and switching them off would only
+    risk starving something that depends on them.
+
+    Applied by guider_setup_robots (guide_robot). Re running it is safe.
+  -->
   <xacro:macro name="gazebo_sensors" params="robot_name enable_gz_head_cam_color:=True enable_gz_head_cam_depth:=True enable_gz_lidar:=True">
 
     <!-- Sensor - Head Camera (Color) -->
@@ -12,7 +33,7 @@
           <gz_frame_id>${robot_name}/head_camera_link</gz_frame_id>
           <topic>${robot_name}/head_camera/color</topic>
 
-          <always_on>1</always_on>
+          <always_on>0</always_on>
           <visualize>true</visualize>
           <update_rate>1</update_rate>
 
@@ -41,7 +62,7 @@
           <gz_frame_id>${robot_name}/head_camera_link</gz_frame_id>
           <topic>${robot_name}/head_camera/depth</topic>
 
-          <always_on>1</always_on>
+          <always_on>0</always_on>
           <visualize>true</visualize>
           <update_rate>1</update_rate>
 
@@ -79,7 +100,7 @@
           </qos> -->
           <topic>${robot_name}/scan</topic>
 
-          <always_on>1</always_on>
+          <always_on>0</always_on>
           <visualize>true</visualize>
           <update_rate>10</update_rate>
 

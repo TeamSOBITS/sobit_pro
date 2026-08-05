@@ -336,6 +336,15 @@ def launch_gz(context, *args, **kwargs):
             # The gz model's wheel joint axes make rotation come out opposite
             # to REP-103 (+z should be CCW), so flip angular.z in sim only.
             {"angular_z_sign": -1.0 if enable_gz == 'True' else 1.0},
+            # Drive each wheel at its cos(steer error) share while the steer
+            # joints are still swinging, instead of holding all four at zero
+            # until every one of them has arrived. Removes the ~0.45 s dead
+            # stop the base took every time a steer target flipped by pi at
+            # the +-90 deg joint limit (measured; see ScaleWheelVelByCos()).
+            # Sim only for now: the argument applies to the real base too, but
+            # it has not been tried on hardware, and the default in
+            # sobit_pro_main is the old behaviour.
+            {"cosine_steer_compensation": True if enable_gz == 'True' else False},
         ],
         output="screen",
     )

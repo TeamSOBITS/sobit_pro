@@ -56,7 +56,11 @@ SobitProMain::SobitProMain(const rclcpp::NodeOptions & options = rclcpp::NodeOpt
 
   this->declare_parameter("angular_z_sign", 1.0);
   angular_z_sign = this->get_parameter("angular_z_sign").as_double();
-  
+
+  this->declare_parameter("cosine_steer_compensation", false);
+  cosine_steer_compensation =
+      this->get_parameter("cosine_steer_compensation").as_bool();
+
   // Initilize Odometry
   prev_odom.header.stamp            = this->get_clock()->now();
   prev_odom.header.frame_id         = robot_name + "odom";
@@ -155,6 +159,52 @@ bool SobitProMain::shut_down_sound()
   return is_sound;
 }
 
+/**
+ * @brief Scale each wheel by the cosine of its own steer error.
+ *
+ * Why this exists (measured in Gazebo, empty world, 2026-08-05):
+ *
+ * setParams() normalises every steer target into (-pi/2, pi/2], because that
+ * is the joint's mechanical range, flipping the target by pi and inverting
+ * the wheel velocity when the raw angle leaves it. Steering to `t` at speed
+ * `v` and steering to `t - pi` at speed `-v` are the same physical motion,
+ * so the flip is correct -- but it is a *discontinuity in the setpoint*: one
+ * degree of stick movement across the boundary makes the target jump by pi
+ * and the joint has to sweep its whole range to follow.
+ *
+ * With the binary all_aligned gate, all four wheels are held at zero for the
+ * entire sweep. Measured: ~0.45 s of dead stop per boundary crossing, and
+ * with the left stick swept around its rim at 90 deg/s the base was frozen
+ * ~50 % of the time. That -- not the steer servo's speed -- is what "the
+ * switching is slow" actually was. The servo saturates at the URDF velocity
+ * limit (4.796 rad/s) in every configuration tested, so no controller gain
+ * can shorten the sweep.
+ *
+ * Cosine scaling (the standard swerve-drive answer) makes the flip free.
+ * Just before the flip the wheel sits at `t`, driving at `+v`. Right after,
+ * the target is `t - pi` and the velocity `-v`, while the wheel has not moved
+ * yet, so the error is -pi and cos is -1: the product is `+v` again, i.e. the
+ * base keeps moving in exactly the direction it was. Halfway through the
+ * sweep the wheel is 90 deg off, cos is 0, and it contributes nothing --
+ * which is right, a sideways wheel cannot push forward. At the end the error
+ * is 0 and the wheel drives at `-v` pointing the opposite way: same motion as
+ * before the flip. The sign is never clamped; clamping at zero would throw
+ * away the first half of the sweep and reintroduce the stop.
+ *
+ * The same argument holds for an ordinary turn with no flip: a wheel that is
+ * still swinging into place contributes its projection instead of blocking
+ * the other three.
+ */
+std::array<double, 4> SobitProMain::ScaleWheelVelByCos(
+  const std::array<double, 4>& goal_vel,
+  const std::array<double, 4>& curt_steer) const
+{
+  std::array<double, 4> out{};
+  for (int i = 0; i < 4; ++i)
+    out[i] = goal_vel[i] * std::cos(set_steer_pos[i] - curt_steer[i]);
+  return out;
+}
+
 // Control wheel
 void SobitProMain::control_callback()
 {
@@ -222,6 +272,17 @@ void SobitProMain::control_callback()
         stuck_counter = 0; // Reset the blocked counter
 
       } else {
+        // Misaligned. With cosine compensation the wheels keep their
+        // projected share of the commanded motion instead of being held at
+        // zero until the last steer joint arrives -- see ScaleWheelVelByCos().
+        // stuck_counter still runs, so a steer joint that is genuinely jammed
+        // still escalates to RECOVERY exactly as before.
+        if (cosine_steer_compensation) {
+          set_wheel_vel = ScaleWheelVelByCos(
+            sobit_pro_control_->setWheelVel(),
+            {steer_fl_curt_pos, steer_fr_curt_pos,
+             steer_bl_curt_pos, steer_br_curt_pos});
+        }
         stuck_counter++;
         // If the robot is stuck for too long, apply attenuation to wheel speeds
         // ATTENUATION_FACTOR(sobit_pro_main.hpp): how many cycles to wait before starting to reduce speed

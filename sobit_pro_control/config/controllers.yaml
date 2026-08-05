@@ -9,6 +9,9 @@
   ros__parameters:
     position_proportional_gain: 1.0
 
+# 実機用。Dynamixel バスの通信頻度そのものなので上げていない。
+# **Gazebo は controllers_gz.yaml（50 Hz）を読む** — 走行の切り替えの
+# 遅さがこの 10 Hz だったため分離した。理由はあちらのコメント。
 /**/controller_manager:
   ros__parameters:
     update_rate: 10  # Hz

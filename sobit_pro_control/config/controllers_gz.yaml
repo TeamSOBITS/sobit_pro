@@ -1,0 +1,130 @@
+# Gazebo (gz_ros2_control) だけが読む設定。実機は controllers.yaml を使う。
+#
+# 分けた理由: 走行の「切り替えの遅さ」の原因が update_rate だったため。
+# SOBIT PRO は4輪独立ステアで、`sobit_pro_main` は**4つのステア関節が
+# 全部そろう(all_aligned)までホイール速度を0に保つ**。つまり直進と旋回を
+# 行き来するたびに、ステア関節が目標角へ回りきるのを待つ。その待ち時間を
+# 決めているのが、ステア関節の位置サーボの速さ = この2つの値。
+#
+#   update_rate 10 Hz は他機種から見て極端に低い
+#   （sobit_mini 50 Hz / sobit_edu の gz 用 100 Hz / HSRB 200 Hz）。
+#   位置サーボが 100 ms に1回しか更新されないので収束が遅く、
+#   ゲインを上げると今度は荒くなって「接地したステア関節が暴れて
+#   車体が跳ねる」(controllers.yaml の元コメントの 5.0 の話)。
+#   **先に update_rate を上げないと、ゲインは上げられない。**
+#
+# 実機側を 10 Hz のままにしてあるのは、あちらの update_rate が
+# Dynamixel バスの通信頻度そのものなので、5倍にすると帯域を圧迫しうる
+# ため。Gazebo にはその制約が無い。
+#
+# **実測済み**（2026-08-05, headless gz sim / empty_w_physics.sdf /
+# 直進⇄旋回を繰り返す cmd_vel を流して joint_states を記録）:
+#
+#   update_rate 10 Hz, gain 1.0 → 切り替えの停止 0.24 s
+#   update_rate 50 Hz, gain 1.0 → 切り替えの停止 0.14 s   ← 今の設定
+#   update_rate 50 Hz, gain 2.0 → 切り替えの停止 0.16 s（悪化）
+#
+# **ゲインはもう上げないこと。** どの条件でもステア関節の実速度は
+# 4.796 rad/s ちょうど、つまり **URDF の velocity limit で飽和** していた
+# （`sobit_pro_description/urdf/wheel/wheel.urdf.xacro` の
+# `<limit ... velocity="4.796165">`）。サーボは既に振り切れているので、
+# ゲインを上げても回る速さは変わらず、行き過ぎ（overshoot）だけが
+# 0.012 → 0.017〜0.034 rad に増えた。10 Hz と 50 Hz の差 0.10 s も
+# ちょうど 10 Hz の1周期分＝指令が届くまでの遅れであって、
+# サーボの収束の速さではない。
+#
+# 50 Hz は据え置き（0.1 s 分は確かに速い。害も出ていない）。ただし
+# **「切り替えが遅い」の主因はここではなかった**。残っていた 0.3〜0.45 s の
+# 停止は `sobit_pro_main.cpp` の all_aligned ゲート側で、そちらは
+# ScaleWheelVelByCos()（cosine_steer_compensation）で解消した。
+# 詳細はその関数のコメントと CLAUDE.md 罠12。
+/**/gz_ros_control:
+  ros__parameters:
+    position_proportional_gain: 1.0
+
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 50  # Hz
+
+    head_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    arm_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    hand_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    
+    steer_joint_trajectory_controller:
+      type: joint_trajectory_controller/JointTrajectoryController
+    velocity_controller:
+      type: velocity_controllers/JointGroupVelocityController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+
+/**/head_trajectory_controller:
+  ros__parameters:
+    joints:
+      - head_pan_joint
+      - head_tilt_joint
+
+    allow_partial_joints_goal: true
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+/**/arm_trajectory_controller:
+  ros__parameters:
+    joints:
+      - arm_shoulder_1_tilt_joint
+      - arm_shoulder_2_tilt_joint
+      - arm_elbow_upper_1_tilt_joint
+      - arm_elbow_upper_2_tilt_joint
+      - arm_elbow_lower_tilt_joint
+      - arm_elbow_lower_pan_joint
+      - arm_wrist_tilt_joint
+
+    allow_partial_joints_goal: true
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+/**/hand_trajectory_controller:
+  ros__parameters:
+    joints:
+      - hand_joint
+
+    allow_partial_joints_goal: true
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+
+/**/steer_joint_trajectory_controller:
+  ros__parameters:
+    joints:
+      - wheel_f_l_steer_joint
+      - wheel_f_r_steer_joint
+      - wheel_b_l_steer_joint
+      - wheel_b_r_steer_joint
+
+    allow_partial_joints_goal: true
+    command_interfaces:
+      - position
+    state_interfaces:
+      - position
+      - velocity
+
+/**/velocity_controller:
+  ros__parameters:
+    joints:
+      - wheel_f_l_drive_joint
+      - wheel_f_r_drive_joint
+      - wheel_b_l_drive_joint
+      - wheel_b_r_drive_joint
